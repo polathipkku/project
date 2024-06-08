@@ -17,8 +17,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col">ลำดับ</th>
-                                    <th scope="col">ชื่อห้อง</th>
-                                    <th scope="col">รายละเอียดห้อง</th>
+                                    <th scope="col">ชื่อสินค้า</th>
+                                    <th scope="col">รายละเอียดสินค้า</th>
                                     <th scope="col">แก้ไขห้อง</th>
                                     <th scope="col">ลบห้อง</th>
                                 </tr>
@@ -29,10 +29,10 @@
                                     <th scope="row">{{ $loop->index + 1 }}</th>
                                     <td>{{ $productItem->product_name }}</td>
                                     <td>
-                                        <a href="{{ url('/roomdetail') }}">รายละเอียดห้อง</a>
+                                        <a href="{{ url('/roomdetail') }}">รายละเอียดสินค้า</a>
                                     </td>
-                                    <td><a href="{{url('/product/edit/'.$productItem->id)}}" class="btn btn-primary">แก้ไขห้อง</a></td>
-                                    <td><a href="{{url('/product/delete/'.$productItem->id)}}" class="btn btn-danger">ลบห้อง</a></td>
+                                    <td><a href="{{url('/product/edit/'.$productItem->id)}}" class="btn btn-primary">แก้ไขสินค้า</a></td>
+                                    <td><a href="{{url('/product/delete/'.$productItem->id)}}" class="btn btn-danger">ลบสินค้า</a></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -75,12 +75,23 @@
                                 <br>
                                 <div class="room-group">
                                     <label for="product_type">ประเภทสินค้า</label>
+                                    <!-- <div>
+                                        <select class="form-select" name="product_type_name" id="product_type" required>
+                                            <option value="" selected disabled>เลือกประเภทสินค้า</option>
+                                            @php
+                                            $uniqueProductTypes = array_unique($product_types);
+                                            @endphp
+
+                                            @foreach($uniqueProductTypes as $product_type)
+                                            <option value="{{ $product_type }}">{{ $product_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> -->
                                     <div>
                                         <select class="form-select" name="product_type_name" id="product_type" required>
                                             <option value="" selected disabled>เลือกประเภทสินค้า</option>
-                                            @foreach($product_types as $product_type)
-                                            <option value="{{ $product_type }}">{{ $product_type }}</option>
-                                            @endforeach
+                                            <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                                            <option value="เครื่องนอน">เครื่องนอน</option>
                                         </select>
                                     </div>
                                 </div>

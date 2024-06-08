@@ -4,126 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-    <link href="css/style-employee.css" rel="stylesheet" />
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/hero.css">
 
-    <title>Thunthree</title>
+
+    <title>Tunthree</title>
+
+
+    <script>
+        function showToast(toastId) {
+            var toast = document.getElementById(toastId);
+            toast.classList.remove('toast');
+            setTimeout(function() {
+                toast.classList.add('toast');
+            }, 3000); // แสดง toast นาน 3 วินาที (3000 มิลลิวินาที)
+        }
+    </script>
+
 </head>
 
 <body>
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
 
-    <div class="container">
+    <div style="display: flex; background-color: #F5F3FF;">
 
-        <aside>
-            <div class="toggle">
-                <div class="logo">
-                    <img src="images/no bg logo.png">
-                    <h2>Thun<span class="danger">three</span></h2>
+        <section class="sticky bg-white rounded-2xl p-2" id="nav-content" style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
+
+                <div style="display: grid; place-items: center; margin-bottom: 30px;">
+                    <img src="images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                    <div class="text-black text-lg ">Tunthree</div>
                 </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">
-                        close
-                    </span>
+
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Dashboard">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        Dashboard
+                    </div>
+                </a>
+
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Users">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-user mr-2"></i>Users
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-users mr-1"></i>Employee
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('room') }}" id="Room">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-door-open mr-1"></i>Room
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Promotion">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-regular fa-envelope mr-1"></i>Review
+                    </div>
+                </a>
+
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                    </div>
+                </a>
+                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                    @csrf
+                </form>
+        </section>
+
+        <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
+            <div class="max-w-screen-xl mx-auto py-10 ">
+                <div class="px-2 p-2  flex justify-between items-center">
+                    <h1 class="text-4xl mb-10 max-xl:px-4">จัดการพนักงาน</h1>
+                    <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/add_employee'">
+                        <span class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มพนักงาน</span>
+                        <i class="fa-solid fa-circle-plus text-4xl text-gray-500 group-hover:text-gray-900"></i>
+                    </button>
+
+
+
                 </div>
-            </div>
-
-            <div class="sidebar">
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        dashboard
-                    </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="{{ route('dashboard') }}">
-                    <span class="material-icons-sharp">
-                        person_outline
-                    </span>
-                    <h3>Users</h3>
-                </a>
-                <a href="{{ route('employee') }}">
-                    <span class="material-icons-sharp">
-                        badge
-                    </span>
-                    <h3>Employee</h3>
-                </a>
-                <a href="{{ route('room') }}" class="active">
-                    <span class="material-icons-sharp">
-                        room_preferences
-                    </span>
-                    <h3>Room</h3>
-                </a>
-                <a href="{{ route('product') }}">
-                    <span class="material-icons-sharp">
-                        inventory
-                    </span>
-                    <h3>Stock</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        campaign
-                    </span>
-                    <h3>Promotion</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        receipt_long
-                    </span>
-                    <h3>History</h3>
-                </a>
-                <a href="A_analy.html">
-                    <span class="material-icons-sharp">
-                        insights
-                    </span>
-                    <h3>Analytics</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        mail_outline
-                    </span>
-                    <h3>Review</h3>
-                    <span class="message-count">35</span>
-                </a>
-
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        add
-                    </span>
-                    <h3>New Login</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        logout
-                    </span>
-                    <h3>Logout</h3>
-                </a>
-            </div>
-        </aside>
-
-        <main>
-            <h1>Employee Information</h1>
-            <div class="main-table">
-                <table>
+                <table class="w-full border-collapse text-center">
                     <thead>
-                        <tr>
-                        <th>Employee Number</th>
-                            <th>Name</th>
-                            <th>Details</th>
-                            <th>Register Date</th>
-                            <th>Action</th>
+                        <tr class="text-l bg-gray-300">
+                            <th class=" px-4 py-2">ลำดับ</th>
+                            <th class=" px-4 py-2">ชื่อ</th>
+                            <th class=" px-4 py-2">วันสมัคร</th>
+                            <th class=" px-4 py-2">รายละเอียด</th>
+                            <th class=" px-4 py-2 ">ดำเนินการ</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         @foreach($employee as $employee)
-                        <tr>
-                            <th scope="row">{{ $loop->index + 1 }}</th>
-                            <td>{{ $employee->name }}</td>
-                            <td><a href="{{ url('/employeedetail') }}">รายละเอียดพนักงาน</a></td>
-                            <td>{{ $employee->created_at }}</td>
-                            <td> <a href="{{ url('/employee/edit/'.$employee->id) }}" class="edit">
-                                    <button type="button">Edit</button>
+                        <tr class="">
+                            <td class=" px-4 py-2">{{ $loop->index + 1 }}</td>
+                            <td class=" px-4 py-2">{{ $employee->name }}</td>
+                            <td class=" px-4 py-2">{{ $employee->created_at }}</td>
+                            <td class="px-4 py-2 text-blue-500 hover:text-blue-700"><a href="{{ url('/employeedetail') }}">Detail</a></td>
+
+                            <td class="px-4 py-2">
+                                <a href="{{ url('/employee/edit/'.$employee->id) }}" class="edit">
+                                    <button class="text-black hover:text-blue-500" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
                                 </a>
                                 <a href="{{ url('/employee/delete/'.$employee->id) }}" class="delete-link">
-                                    <button class="delete" type="button">Delete</button>
+                                    <button class="text-black hover:text-red-500 ml-4" type="button"><i class="fa-solid fa-trash"></i></button>
                                 </a>
                             </td>
                         </tr>
@@ -131,98 +136,56 @@
                     </tbody>
                 </table>
             </div>
-        </main>
-        <div class="right-section">
-            <div class="nav">
-                <div class="profile">
-                    <div class="info">
-                        <p>Hey, <b>admin</b></p>
-                        <small class="text-muted">Admin</small>
-                    </div>
-                    <div class="profile-photo">
-                        <img src="images/profile-1.jpg">
-                    </div>
+        </section>
+
+        <section id="toast" class="hidden">
+            <div id="toast-success" class=" flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                    </svg>
+                    <span class="sr-only">Check icon</span>
                 </div>
+                <div class="ms-3 text-sm font-normal">Item moved successfully.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
             </div>
-            <!-- End of Nav -->
-            <div class="room-form">
-                <h2>Add New Employee</h2>
-                <form method="POST" action="{{ route('owner.create') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div>
-                        <x-jet-label for="name" value="{{ __('Name') }}" />
-                        <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="email" value="{{ __('Email') }}" />
-                        <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="password" value="{{ __('Password') }}" />
-                        <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                        <x-jet-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-                    </div>
-
-                    {{-- ส่วนของ employee information --}}
-                    <div class="mt-4">
-                        <x-jet-label for="tel" value="{{ __('Telephone') }}" />
-                        <x-jet-input id="tel" class="block mt-1 w-full" type="text" name="tel" :value="old('tel')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="start_date" value="{{ __('Start Date') }}" />
-                        <x-jet-input id="start_date" class="block mt-1 w-full" type="date" name="start_date" :value="old('start_date')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="birthday" value="{{ __('Birthday') }}" />
-                        <x-jet-input id="birthday" class="block mt-1 w-full" type="date" name="birthday" :value="old('birthday')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="address" value="{{ __('Address') }}" />
-                        <x-jet-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="image" value="{{ __('Image') }}" />
-                        <x-jet-input id="image" class="block mt-1 w-full" type="file" name="image" :value="old('image')" required />
-                    </div>
-
-
-                    @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                    <div class="mt-4">
-                        <x-jet-label for="terms">
-                            <div class="flex items-center">
-                                <x-jet-checkbox name="terms" id="terms" />
-                                <div class="ml-2">
-                                    {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                    'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
-                                    'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
-                                    ]) !!}
-                                </div>
-                            </div>
-                        </x-jet-label>
-                    </div>
-                    @endif
-
-                    {{-- เพิ่มฟิลด์ userType --}}
-                    <input type="hidden" name="userType" value="1">
-
-                    <div class="flex items-center justify-end mt-4">
-                        <x-jet-button type="submit" class="ml-4">
-                            {{ __('Register') }}
-                        </x-jet-button>
-                    </div>
-                </form>
+            <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Item has been deleted.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
             </div>
-        </div>
-        <script src="orders.js"></script>
-        <script src="index.js"></script>
+            <div id="toast-warning" class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+                    </svg>
+                    <span class="sr-only">Warning icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Improve password difficulty.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-warning" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </div>
 </body>
+
+</html>

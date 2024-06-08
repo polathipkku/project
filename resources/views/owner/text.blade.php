@@ -4,223 +4,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-    <link rel="stylesheet" href="style-employee.css">
-    <title>Thunthree</title>
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/hero.css">
+
+
+    <title>Tunthree</title>
+
 </head>
 
 <body>
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
 
-    <div class="container">
+    <div style="display: flex; background-color: #F5F3FF;">
 
-        <aside>
-            <div class="toggle">
-                <div class="logo">
-                    <img src="images/no bg logo.png">
-                    <h2>Thun<span class="danger">three</span></h2>
+        <section class="sticky bg-white rounded-2xl p-2" id="nav-content" style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
+
+                <div style="display: grid; place-items: center; margin-bottom: 30px;">
+                    <img src="/public/Logo.png" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                    <div class="text-black text-lg ">Tunthree</div>
                 </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">
-                        close
-                    </span>
-                </div>
-            </div>
 
-            <div class="sidebar">
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        dashboard
-                    </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="A_user.html">
-                    <span class="material-icons-sharp">
-                        person_outline
-                    </span>
-                    <h3>Users</h3>
-                </a>
-                <a href="A_employee.html" class="active">
-                    <span class="material-icons-sharp">
-                        badge
-                    </span>
-                    <h3>Employee</h3>
-                </a>
-                <a href="A_room.html">
-                    <span class="material-icons-sharp">
-                        room_preferences
-                    </span>
-                    <h3>Room</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        inventory
-                    </span>
-                    <h3>Stock</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        campaign
-                    </span>
-                    <h3>Promotion</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        receipt_long
-                    </span>
-                    <h3>History</h3>
-                </a>
-                <a href="A_analy.html">
-                    <span class="material-icons-sharp">
-                        insights
-                    </span>
-                    <h3>Analytics</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        mail_outline
-                    </span>
-                    <h3>Review</h3>
-                    <span class="message-count">35</span>
+
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="em_user.html" id="Users">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-user mr-2"></i>Users
+                    </div>
                 </a>
 
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        add
-                    </span>
-                    <h3>New Login</h3>
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="em_room.html">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-door-open mr-1"></i>Room
+                    </div>
                 </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        logout
-                    </span>
-                    <h3>Logout</h3>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('checkin') }}" id="checkin">
+                    <div class="mr-2 text-base flex items-center ">
+                        <i class="fa-solid fa-person-walking-luggage mr-1"></i>Check In
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="em_check-out.html" id="Stock">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Out
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
+                    </div>
+                </a>
+
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" href="#" style="position: absolute; bottom: 10px;" id="Logout">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                    </div>
                 </a>
             </div>
-        </aside>
+        </section>
 
-        <main>
-            <h1>Employee Information</h1>
-            <div class="main-table">
-                <table>
+        <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); ">
+            <div class="max-w-screen-xl mx-auto py-10 ">
+                <div class="px-2 p-2  flex justify-between items-center">
+                    <h1 class="text-4xl mb-10 max-xl:px-4">Check-In</h1>
+
+                </div>
+                @if(count($bookings) > 0)
+                <table class="w-full border-collapse">
                     <thead>
-                        <tr>
-                            <th scope="col">ลำดับ</th>
-                            <th scope="col">ชื่อพนักงาน</th>
-                            <th scope="col">รายละเอียดพนักงาน</th>
-                            <th scope="col">วันที่สมัคร</th>
-                            <th scope="col">แก้ไขพนักงาน</th>
-                            <th scope="col">ลบพนักงาน</th>
+                        <tr class="text-l bg-gray-300">
+                            <th class="px-4 py-2">หมายเลขห้อง</th>
+                            <th class="px-4 py-2">สถานะ</th>
+                            <th class="px-4 py-2">เหลือเวลาเข้าพัก</th>
+                            <th class="px-4 py-2">รายละเอียด</th>
+                            <th class="px-4 py-2" style="padding-right: 5%;">Check-out</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($employee as $employee)
+                    <tbody class="text-center">
+                        @foreach($bookings as $booking)
+                        @if($booking->booking_status !== 'เช็คเอาท์')
                         <tr>
-                            <th scope="row">{{ $loop->index + 1 }}</th>
-                            <td>{{ $employee->name }}</td>
-                            <td><a href="{{ url('/employeedetail') }}">รายละเอียดพนักงาน</a></td>
-                            <td>{{ $employee->created_at }}</td>
-                            <td><a href="{{ url('/employee/edit/'.$employee->id) }}" class="btn btn-primary">แก้ไขบัญชี</a></td>
+                            <td class="px-4 py-2">{{ $booking->room->room_name}}</td>
+                            <td class="px-4 py-2">{{ $booking->booking_status }}</td>
+                            <td class="px-4 py-2">{{ $booking->checkout_date }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ url('/roomdetail') }}" class="detail">
+                                    <button class="text-blue-500 hover:text-blue-700">Detail</button>
+                                </a>
                             </td>
-                            <td>
-                                <a href="{{ url('/employee/delete/'.$employee->id) }}" class="btn btn-danger">ลบบัญชี</a>
+                            <td class="px-4 py-2">
+                                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                    <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
+                                    @if($booking->booking_status === 'เช็คอินแล้ว')
+                                    <form action="{{ route('checkoutuser') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                        <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline-green active:bg-green-800">
+                                            เช็คเอาท์
+                                        </button>
+                                    </form>
+                                    @else
+                                    <p class="text-gray-600">ไม่สามารถเช็คเอาท์ได้</p>
+                                    @endif
+                                </span>
                             </td>
+
                         </tr>
+                        @endif
                         @endforeach
+                        <!-- End of example rows -->
                     </tbody>
                 </table>
+                @else
+                <p class="text-gray-600">ไม่พบการจอง</p>
+                @endif
             </div>
-        </main>
-        <div class="right-section">
-            <div class="nav">
-                <div class="profile">
-                    <div class="info">
-                        <p>Hey, <b>admin</b></p>
-                        <small class="text-muted">Admin</small>
-                    </div>
-                    <div class="profile-photo">
-                        <img src="images/profile-1.jpg">
-                    </div>
-                </div>
-            </div>
-            <!-- End of Nav -->
-            <div class="room-form">
-                <h2>Add New Employee</h2>
-                <form method="POST" action="{{ route('owner.create') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div>
-                        <x-jet-label for="name" value="{{ __('Name') }}" />
-                        <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-                    </div>
+        </section>
 
-                    <div class="mt-4">
-                        <x-jet-label for="email" value="{{ __('Email') }}" />
-                        <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-                    </div>
+    </div>
 
-                    <div class="mt-4">
-                        <x-jet-label for="password" value="{{ __('Password') }}" />
-                        <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-                    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+    <script>
+        // Attach event listener to check-in button
+        const checkInButtons = document.querySelectorAll('.fa-square-minus');
+        checkInButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Show SweetAlert dialog with custom styling
+                Swal.fire({
+                    title: 'เพิ่มรายการ',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'เพิ่ม',
+                    cancelButtonText: 'ไม่เพิ่ม',
+                    customClass: {
+                        confirmButton: 'btn btn-success btn-xl w-24 h-20 mr-12', // กำหนดคลาสของปุ่ม Confirm เป็น btn-success และ btn-lg
+                        cancelButton: 'btn btn-danger btn-xl w-24 h-20' // กำหนดคลาสของปุ่ม Cancel เป็น btn-danger และ btn-lg
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'check-out_add.html'
 
-                    <div class="mt-4">
-                        <x-jet-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                        <x-jet-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-                    </div>
-
-                    {{-- ส่วนของ employee information --}}
-                    <div class="mt-4">
-                        <x-jet-label for="tel" value="{{ __('Telephone') }}" />
-                        <x-jet-input id="tel" class="block mt-1 w-full" type="text" name="tel" :value="old('tel')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="start_date" value="{{ __('Start Date') }}" />
-                        <x-jet-input id="start_date" class="block mt-1 w-full" type="date" name="start_date" :value="old('start_date')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="birthday" value="{{ __('Birthday') }}" />
-                        <x-jet-input id="birthday" class="block mt-1 w-full" type="date" name="birthday" :value="old('birthday')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="address" value="{{ __('Address') }}" />
-                        <x-jet-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-jet-label for="image" value="{{ __('Image') }}" />
-                        <x-jet-input id="image" class="block mt-1 w-full" type="file" name="image" :value="old('image')" required />
-                    </div>
-
-
-                    @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                    <div class="mt-4">
-                        <x-jet-label for="terms">
-                            <div class="flex items-center">
-                                <x-jet-checkbox name="terms" id="terms" />
-                                <div class="ml-2">
-                                    {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                    'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
-                                    'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
-                                    ]) !!}
-                                </div>
-                            </div>
-                        </x-jet-label>
-                    </div>
-                    @endif
-
-                    {{-- เพิ่มฟิลด์ userType --}}
-                    <input type="hidden" name="userType" value="1">
-
-                    <div class="flex items-center justify-end mt-4">
-                        <x-jet-button type="submit" class="ml-4">
-                            {{ __('Register') }}
-                        </x-jet-button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <script src="orders.js"></script>
-        <script src="index.js"></script>
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire('สำเร็จ!', 'การเพิ่มรายการเสร็จสิ้น', 'success');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
+
+</html>

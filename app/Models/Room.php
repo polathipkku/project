@@ -22,5 +22,9 @@ class Room extends Model
         'room_bed',
         'room_bathroom'
     ];
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'room_id');
+    }
 
 }

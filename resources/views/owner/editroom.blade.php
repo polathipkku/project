@@ -4,1137 +4,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-    <link href="css/style-employee.css" rel="stylesheet" />
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/hero.css">
 
-    <title>Thunthree</title>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+    <title>Tunthree</title>
 </head>
 
 <body>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-        :root {
-            --color-primary: #1f2d3e;
-            --color-danger: #FF0060;
-            --color-success: #1B9C85;
-            --color-warning: #F7D060;
-            --color-white: #fff;
-            --color-info-dark: #7d8da1;
-            --color-dark: #5d6696;
-            --color-light: rgba(132, 139, 200, 0.18);
-            --color-dark-variant: #000000;
-            --color-background: #f6f6f9;
+    <div style="display: flex; background-color: #F5F3FF;">
+        <section class="sticky bg-white rounded-2xl p-2" id="nav-content" style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
 
-            --card-border-radius: 2rem;
-            --border-radius-1: 0.4rem;
-            --border-radius-2: 1.2rem;
-
-            --card-padding: 1.8rem;
-            --padding-1: 1.2rem;
-
-            --box-shadow: 0 2rem 3rem var(--color-light);
-        }
-
-        .dark-mode-variables {
-            --color-background: #181a1e;
-            --color-white: #202528;
-            --color-dark: #edeffd;
-            --color-dark-variant: #a3bdcc;
-            --color-light: rgba(0, 0, 0, 0.4);
-            --box-shadow: 0 2rem 3rem var(--color-light);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            outline: 0;
-            appearance: 0;
-            border: 0;
-            text-decoration: none;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 14px;
-        }
-
-        body {
-            width: 100vw;
-            height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.88rem;
-            user-select: none;
-            overflow-x: hidden;
-            color: var(--color-dark);
-            background-color: var(--color-background);
-        }
-
-        a {
-            color: var(--color-dark);
-        }
-
-        img {
-            display: block;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        h1 {
-            font-weight: 800;
-            font-size: 1.8rem;
-        }
-
-        h2 {
-            font-weight: 600;
-            font-size: 1.4rem;
-        }
-
-        h3 {
-            font-weight: 500;
-            font-size: 0.87rem;
-        }
-
-        small {
-            font-size: 0.76rem;
-        }
-
-        p {
-            color: var(--color-dark-variant);
-        }
-
-        b {
-            color: var(--color-dark);
-        }
-
-        .text-muted {
-            color: var(--color-info-dark);
-        }
-
-        .primary {
-            color: var(--color-primary);
-        }
-
-        .danger {
-            color: var(--color-danger);
-        }
-
-        .success {
-            color: var(--color-success);
-        }
-
-        .warning {
-            color: var(--color-warning);
-        }
-
-        .container {
-            display: grid;
-            width: 96%;
-            margin: 0 auto;
-            gap: 1.8rem;
-            grid-template-columns: 12rem auto 23rem;
-        }
-
-        aside {
-            height: 100vh
-        }
-
-        aside .toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 1.4rem;
-        }
-
-        aside .toggle .logo {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        aside .toggle .logo img {
-            width: 2rem;
-            height: 2rem;
-        }
-
-        aside .toggle .close {
-            padding-right: 1rem;
-            display: none;
-        }
-
-        aside .sidebar {
-            display: flex;
-            flex-direction: column;
-            background-color: var(--color-white);
-            box-shadow: var(--box-shadow);
-            border-radius: 15px;
-            margin-top: 3dvb;
-            height: 88vh;
-            position: relative;
-            top: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        /* aside .sidebar:hover{
-    box-shadow: none;
-} */
-
-        aside .sidebar a {
-            display: flex;
-            align-items: center;
-            color: var(--color-info-dark);
-            height: 3.7rem;
-            gap: 1rem;
-            position: relative;
-            margin-left: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        aside .sidebar a span {
-            font-size: 1.6rem;
-            transition: all 0.3s ease;
-        }
-
-        aside .sidebar a:last-child {
-            position: absolute;
-            bottom: 2rem;
-            width: 100%;
-        }
-
-        aside .sidebar a.active {
-            width: 100%;
-            color: var(--color-primary);
-            background-color: var(--color-light);
-            margin-left: 0;
-        }
-
-        aside .sidebar a.active::before {
-            content: '';
-            width: 6px;
-            height: 18px;
-            background-color: var(--color-primary);
-        }
-
-        aside .sidebar a.active span {
-            color: var(--color-primary);
-            margin-left: calc(1rem - 3px);
-        }
-
-        aside .sidebar a:hover {
-            color: var(--color-primary);
-        }
-
-        /* aside .sidebar a:hover span{
-    margin-left: 0.6rem;
-} */
-
-        aside .sidebar .message-count {
-            background-color: var(--color-danger);
-            padding: 2px 6px;
-            color: var(--color-white);
-            font-size: 11px;
-            border-radius: var(--border-radius-1);
-        }
-
-        main {
-            margin-top: 1.4rem;
-        }
-
-        main .analyse {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.6rem;
-        }
-
-        main .analyse>div {
-            background-color: var(--color-white);
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            margin-top: 1rem;
-            box-shadow: var(--box-shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        main .analyse>div:hover {
-            box-shadow: none;
-        }
-
-        main .analyse>div .status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        main .analyse h3 {
-            margin-left: 0.6rem;
-            font-size: 1rem;
-        }
-
-        main .analyse .progresss {
-            position: relative;
-            width: 92px;
-            height: 92px;
-            border-radius: 50%;
-        }
-
-        main .analyse svg {
-            width: 7rem;
-            height: 7rem;
-        }
-
-        main .analyse svg circle {
-            fill: none;
-            stroke-width: 10;
-            stroke-linecap: round;
-            transform: translate(5px, 5px);
-        }
-
-        main .analyse .sales svg circle {
-            stroke: var(--color-success);
-            stroke-dashoffset: -30;
-            stroke-dasharray: 200;
-        }
-
-        main .analyse .visits svg circle {
-            stroke: var(--color-danger);
-            stroke-dashoffset: -30;
-            stroke-dasharray: 200;
-        }
-
-        main .analyse .searches svg circle {
-            stroke: var(--color-primary);
-            stroke-dashoffset: -30;
-            stroke-dasharray: 200;
-        }
-
-        main .analyse .progresss .percentage {
-            position: absolute;
-            top: -3px;
-            left: -1px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-        }
-
-        main h1 {
-            margin-top: 1.3rem;
-            font-size: 1.8rem;
-            /* Adjust the font size as needed */
-        }
-
-        .main-table {
-            margin-top: 1.3rem;
-        }
-
-        .main-table table {
-            width: 100%;
-            background-color: var(--color-white);
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            margin-top: 1rem;
-            box-shadow: var(--box-shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .main-table table:hover {
-            box-shadow: none;
-        }
-
-        .main-table th,
-        .main-table td {
-            padding: 1rem;
-            /* Adjust padding as needed */
-            border-bottom: 1px solid var(--color-dark);
-            justify-content: center;
-        }
-
-        .main-table th {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-        }
-
-        .main-table td button {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: var(--border-radius-1);
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            margin: 0 2rem;
-
-        }
-
-        .main-table td button.detail {
-            background-color: var(--color-info-dark);
-            color: var(--color-white);
-        }
-
-        .main-table td button.detail:hover {
-            background-color: var(--color-dark-variant);
-        }
-
-        .main-table td button.edit:hover {
-            background-color: var(--color-dark);
-        }
-
-        .main-table td button.delete {
-            background-color: var(--color-danger);
-            margin-left: 2rem;
-        }
-
-        .main-table td button.delete:hover {
-            background-color: var(--color-dark);
-        }
-
-        main .new-users {
-            margin-top: 1.3rem;
-        }
-
-        main .new-users .user-list {
-            background-color: var(--color-white);
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            margin-top: 1rem;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 1.4rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        main .new-users .user-list:hover {
-            box-shadow: none;
-        }
-
-        main .new-users .user-list .user {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        /* Responsive layout for smaller screens */
-        @media screen and (max-width: 600px) {
-            .room-form {
-                width: 90%;
-                /* Adjust the width for smaller screens */
-            }
-        }
-
-
-        main .new-users .user-list .user img {
-            width: 5rem;
-            height: 5rem;
-            margin-bottom: 0.4rem;
-            border-radius: 50%;
-        }
-
-        main .recent-orders {
-            margin-top: 1.3rem;
-        }
-
-        main .recent-orders h2 {
-            margin-bottom: 0.8rem;
-        }
-
-        main .recent-orders table {
-            background-color: var(--color-white);
-            width: 100%;
-            padding: var(--card-padding);
-            text-align: center;
-            box-shadow: var(--box-shadow);
-            border-radius: var(--card-border-radius);
-            transition: all 0.3s ease;
-        }
-
-        main .recent-orders table:hover {
-            box-shadow: none;
-        }
-
-        main table tbody td {
-            height: 2.8rem;
-            border-bottom: 1px solid var(--color-light);
-            color: var(--color-dark-variant);
-        }
-
-        main table tbody tr:last-child td {
-            border: none;
-        }
-
-        main .recent-orders a {
-            text-align: center;
-            display: block;
-            margin: 1rem auto;
-            color: var(--color-primary);
-        }
-
-        #detailModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        .close-modal {
-            float: right;
-            background: none;
-            font-size: 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 36px;
-            /* ปรับขนาดไอคอน close ใหญ่ขึ้น */
-            margin-bottom: 10px;
-        }
-
-        td,
-        th {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .right-section {
-            background-color: var(--color-light);
-            /* Set background color similar to the main table */
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            box-shadow: var(--box-shadow);
-            margin-top: 1.8rem;
-        }
-
-        .room-form {
-            max-width: 400px;
-            /* Set max width for the form */
-            margin: 0 auto;
-            /* Center the form horizontally */
-        }
-
-        .room-form h2 {
-            color: var(--color-primary);
-            /* Set heading color similar to the main table */
-        }
-
-        .room-form form {
-            display: grid;
-            gap: 1.2rem;
-        }
-
-        .room-form label {
-            color: var(--color-dark);
-        }
-
-        .room-form input,
-        .room-form textarea,
-        .room-form select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid var(--color-info-dark);
-            border-radius: var(--border-radius-1);
-            box-sizing: border-box;
-        }
-
-        .room-form button {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: var(--border-radius-1);
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* สไตล์ทั่วไปสำหรับป้ายระบุและฟิลด์อัปโหลด */
-        label[for="em_image"] {
-            display: block;
-            margin-top: 0.5rem;
-            font-weight: light;
-        }
-
-        #em_image {
-            display: block;
-            margin-top: 0.25rem;
-        }
-
-        /* สไตล์เพิ่มเติมสำหรับการดูและจัดการรูปภาพที่เลือก */
-        #em_image {
-            border: 1px solid #909090;
-            padding: 0.5rem;
-            border-radius: 0.3rem;
-            background: rgb(255, 255, 255);
-        }
-
-        #em_image:hover {
-            border-color: #000000;
-        }
-
-        /* สไตล์เพื่อซ่อนบทความ 'Choose File' ที่มีคำสั่ง style ไว้เอาไว้เพื่อการดูแลบนหลายบราวเซอร์ */
-        #em_image::file-selector-button {
-            display: none;
-        }
-
-        #employeeImage::file-selector-button {
-            display: none;
-        }
-
-        /* สไตล์เพื่อแสดงที่ถูกเลือก */
-        #em_image::file-selected {
-            font-weight: normal;
-            color: #2b2b2b;
-        }
-
-        #roomImage::file-selector-button {
-            display: none;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1.5rem;
-            /* เพิ่ม margin-top ตามต้องการ */
-        }
-
-        .button-group button {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            border-radius: var(--border-radius-1);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .button-group button:hover {
-            background-color: var(--color-dark);
-        }
-
-        /* เพิ่ม margin เพื่อปรับระยะห่างระหว่างปุ่ม */
-        .button-group button:first-child {
-            margin-right: 1rem;
-            /* เพิ่ม margin-right ตามต้องการ */
-        }
-
-        .button-group button:last-child {
-            margin-left: 1rem;
-            /* เพิ่ม margin-left ตามต้องการ */
-        }
-
-        .room-form button:hover {
-            background-color: rgba(94, 103, 171, 0.4);
-        }
-
-        .right-section {
-            background-color: var(--color-light);
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            box-shadow: var(--box-shadow);
-            margin-top: 1.8rem;
-            max-width: 800px;
-            /* เพิ่มคุณสมบัติ max-width */
-            margin: 1 auto;
-            /* เพิ่มคุณสมบัติ margin */
-        }
-
-        .right-section .nav {
-            display: flex;
-            justify-content: end;
-            gap: 2rem;
-        }
-
-        .right-section .nav button {
-            display: none;
-        }
-
-        .right-section .dark-mode {
-            background-color: var(--color-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 1.6rem;
-            width: 4.2rem;
-            cursor: pointer;
-            border-radius: var(--border-radius-1);
-        }
-
-        .right-section .dark-mode span {
-            font-size: 1.2rem;
-            width: 50%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .right-section .dark-mode span.active {
-            background-color: var(--color-primary);
-            color: white;
-            border-radius: var(--border-radius-1);
-        }
-
-        .right-section .nav .profile {
-            display: flex;
-            gap: 2rem;
-            text-align: right;
-        }
-
-        .right-section .nav .profile .profile-photo {
-            width: 2.8rem;
-            height: 2.8rem;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .right-section .user-profile {
-            display: flex;
-            justify-content: center;
-            text-align: center;
-            margin-top: 1rem;
-            background-color: var(--color-white);
-            padding: var(--card-padding);
-            border-radius: var(--card-border-radius);
-            box-shadow: var(--box-shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .right-section .user-profile:hover {
-            box-shadow: none;
-        }
-
-        .right-section .user-profile img {
-            width: 11rem;
-            height: auto;
-            margin-bottom: 0.8rem;
-            border-radius: 50%;
-        }
-
-        .right-section .user-profile h2 {
-            margin-bottom: 0.2rem;
-        }
-
-        .right-section .reminders {
-            margin-top: 2rem;
-        }
-
-        .right-section .reminders .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-        }
-
-        .right-section .reminders .header span {
-            padding: 10px;
-            box-shadow: var(--box-shadow);
-            background-color: var(--color-white);
-            border-radius: 50%;
-        }
-
-        .right-section .reminders .notification {
-            background-color: var(--color-white);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.7rem;
-            padding: 1.4rem var(--card-padding);
-            border-radius: var(--border-radius-2);
-            box-shadow: var(--box-shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .right-section .reminders .notification:hover {
-            box-shadow: none;
-        }
-
-        .right-section .reminders .notification .content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0;
-            width: 100%;
-        }
-
-        .right-section .reminders .notification .icon {
-            padding: 0.6rem;
-            color: var(--color-white);
-            background-color: var(--color-success);
-            border-radius: 20%;
-            display: flex;
-        }
-
-        .right-section .reminders .notification.deactive .icon {
-            background-color: var(--color-danger);
-        }
-
-        .right-section .reminders .add-reminder {
-            background-color: var(--color-white);
-            border: 2px dashed var(--color-primary);
-            color: var(--color-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .right-section .reminders .add-reminder:hover {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        .right-section .reminders .add-reminder div {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        @media screen and (max-width: 1200px) {
-            .container {
-                width: 95%;
-                grid-template-columns: 7rem auto 23rem;
-            }
-
-            aside .logo h2 {
-                display: none;
-            }
-
-            aside .sidebar h3 {
-                display: none;
-            }
-
-            aside .sidebar a {
-                width: 5.6rem;
-            }
-
-            aside .sidebar a:last-child {
-                position: relative;
-                margin-top: 1.8rem;
-            }
-
-            main .analyse {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            main .new-users .user-list .user {
-                flex-basis: 40%;
-            }
-
-            main .recent-orders {
-                width: 94%;
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                margin: 2rem 0 0 0.8rem;
-            }
-
-            main .recent-orders table {
-                width: 83vw;
-            }
-
-            main table thead tr th:last-child,
-            main table thead tr th:first-child {
-                display: none;
-            }
-
-            main table tbody tr td:last-child,
-            main table tbody tr td:first-child {
-                display: none;
-            }
-
-        }
-
-        @media screen and (max-width: 768px) {
-            .right-section {
-                max-width: 90%;
-                /* ปรับ max-width ตามต้องการ */
-                margin: 0 auto;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .container {
-                width: 100%;
-                grid-template-columns: 1fr;
-                padding: 0 var(--padding-1);
-            }
-
-            aside {
-                position: fixed;
-                background-color: var(--color-white);
-                width: 15rem;
-                z-index: 3;
-                box-shadow: 1rem 3rem 4rem var(--color-light);
-                height: 100vh;
-                left: -100%;
-                display: none;
-                animation: showMenu 0.4s ease forwards;
-            }
-
-            @keyframes showMenu {
-                to {
-                    left: 0;
-                }
-            }
-
-            aside .logo {
-                margin-left: 1rem;
-            }
-
-            aside .logo h2 {
-                display: inline;
-            }
-
-            aside .sidebar h3 {
-                display: inline;
-            }
-
-            aside .sidebar a {
-                width: 100%;
-                height: 3.4rem;
-            }
-
-            aside .sidebar a:last-child {
-                position: absolute;
-                bottom: 5rem;
-            }
-
-            aside .toggle .close {
-                display: inline-block;
-                cursor: pointer;
-            }
-
-            main {
-                margin-top: 8rem;
-                padding: 0 1rem;
-            }
-
-            main .new-users .user-list .user {
-                flex-basis: 35%;
-            }
-
-            main .recent-orders {
-                position: relative;
-                margin: 3rem 0 0 0;
-                width: 100%;
-            }
-
-            main .recent-orders table {
-                width: 100%;
-                margin: 0;
-            }
-
-            .right-section {
-                width: 94%;
-                margin: 0 auto 4rem;
-            }
-
-            .right-section .nav {
-                position: fixed;
-                top: 0;
-                left: 0;
-                align-items: center;
-                background-color: var(--color-white);
-                padding: 0 var(--padding-1);
-                height: 4.6rem;
-                width: 100%;
-                z-index: 2;
-                box-shadow: 0 1rem 1rem var(--color-light);
-                margin: 0;
-            }
-
-            .right-section .nav .dark-mode {
-                width: 4.4rem;
-                position: absolute;
-                left: 66%;
-            }
-
-            .right-section .profile .info {
-                display: none;
-            }
-
-
-            #em_image {
-                background-color: coral;
-            }
-
-            /* สไตล์ปุ่ม file upload เมื่อ hover */
-            #em_image:hover {
-                background-color: var(--color-info-dark);
-                /* สีพื้นหลังเมื่อ hover */
-                color: var(--color-white);
-                /* สีของตัวอักษรเมื่อ hover */
-            }
-
-
-            .right-section .nav button {
-                display: inline-block;
-                background-color: transparent;
-                cursor: pointer;
-                color: var(--color-dark);
-                position: absolute;
-                left: 1rem;
-            }
-
-            .right-section .nav button span {
-                font-size: 2rem;
-            }
-
-        }
-    </style>
-
-    <div class="container">
-        <!-- Sidebar Section -->
-        <aside>
-            <div class="toggle">
-                <div class="logo">
-                    <img src="images/no bg logo.png">
-                    <h2>Thun<span class="danger">three</span></h2>
+                <div style="display: grid; place-items: center; margin-bottom: 30px;">
+                    <img src="images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                    <div class="text-black text-lg ">Tunthree</div>
                 </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">
-                        close
-                    </span>
-                </div>
-            </div>
 
-            <div class="sidebar">
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        dashboard
-                    </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="A_user.html">
-                    <span class="material-icons-sharp">
-                        person_outline
-                    </span>
-                    <h3>Users</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        badge
-                    </span>
-                    <h3>Employee</h3>
-                </a>
-                <a href="#" class="active">
-                    <span class="material-icons-sharp">
-                        room_preferences
-                    </span>
-                    <h3>Room</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        inventory
-                    </span>
-                    <h3>Stock</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        campaign
-                    </span>
-                    <h3>Promotion</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        receipt_long
-                    </span>
-                    <h3>History</h3>
-                </a>
-                <a href="A_analy.html">
-                    <span class="material-icons-sharp">
-                        insights
-                    </span>
-                    <h3>Analytics</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        mail_outline
-                    </span>
-                    <h3>Review</h3>
-                    <span class="message-count">35</span>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Dashboard">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        Dashboard
+                    </div>
                 </a>
 
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        add
-                    </span>
-                    <h3>New Login</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        logout
-                    </span>
-                    <h3>Logout</h3>
-                </a>
-            </div>
-        </aside>
 
-        <main class="main-content">
-            <div class="room-form">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Users">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-user mr-2"></i>Users
+                    </div>
+                </a>
 
-                <h2>Edit Room</h2>
-                <form action="{{url('/room/update/'.$rooms->id)}}" method="post" enctype="multipart/form-data">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-users mr-1"></i>Employee
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-blue-700 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Room.html">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-door-open mr-1"></i>Room
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Promotion">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-regular fa-envelope mr-1"></i>Review
+                    </div>
+                </a>
+
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                    </div>
+                </a>
+                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                     @csrf
-                    <div class="room-group">
-                        <label for="room_name">ชื่อห้อง</label>
-                        <input type="text" class="form-control" name="room_name" value="{{$rooms->room_name}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_occupancy">จำนวนที่สามารถเข้าพัก</label>
-                        <input type="text" class="form-control" name="room_occupancy" value="{{$rooms->room_occupancy}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_bed">จำนวนเตียง</label>
-                        <input type="text" class="form-control" name="room_bed" value="{{$rooms->room_bed}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_bathroom">จำนวนห้องน้ำ</label>
-                        <input type="text" class="form-control" name="room_bathroom" value="{{$rooms->room_bathroom}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_description">รายละเอียดห้อง</label>
-                        <textarea class="form-control" name="room_description">{{$rooms->room_description}}</textarea>
-                    </div>
-                    <div class="room-group">
-                        <label for="price_night">ราคาค้างคืน</label>
-                        <input type="text" class="form-control" name="price_night" value="{{$rooms->price_night}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="price_temporary">ราคาชั่วคราว</label>
-                        <input type="text" class="form-control" name="price_temporary" value="{{$rooms->price_temporary}}">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_image">รูปห้อง</label>
-                        <input type="file" class="form-control" name="room_image" value="{{$rooms->room_image}}">
-                    </div>
-                    <div class="room-group">
-                        <div class="room-group">
-                            <label for="room_status">สถานะห้อง</label>
-                            <div>
-                                <select id="room_status" name="room_status" required>
-                                    <option value="พร้อมให้บริการ" {{ $rooms->room_status == 'พร้อมให้บริการ' ? 'selected' : '' }}>พร้อมให้บริการ</option>
-                                    <option value="ไม่พร้อมให้บริการ" {{ $rooms->room_status == 'ไม่พร้อมให้บริการ' ? 'selected' : '' }}>ไม่พร้อมให้บริการ</option>
-                                </select>
-                            </div>
-                        </div>
-                        <br>
-
-
-                        <input type="submit" value="บันทึก" class="btn btn-primary">
                 </form>
             </div>
-        </main>
+        </section>
+
+        <section class="ml-10 bg-white" id="room-edit" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
+            <div class="max-w-screen-xl mx-auto py-10 ">
+                <div class="px-2 p-2  flex justify-between items-center">
+                    <h1 class="text-4xl mb-10 max-xl:px-4">แก้ไขห้อง</h1>
+                    <button class="relative pr-12 mb-4 group">
+
+                    </button>
+
+                </div>
+
+                <form action="{{url('/room/update/'.$rooms->id)}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div class="room-group">
+                            <label for="หมายเลขห้อง" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ชื่อห้อง</label>
+                            <input type="text" id="หมายเลขห้อง" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_name" value="{{$rooms->room_name}}" required />
+                        </div>
+                        <div class="room-group">
+                            <label for="จำนวนที่สามารถเข้าพัก" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">จำนวนที่สามารถเข้าพัก</label>
+                            <input type="text" id="จำนวนที่สามารถเข้าพัก" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_occupancy" value="{{$rooms->room_occupancy}}" required />
+                        </div>
+                        <div class="room-group">
+                            <label for="จำนวนเตียง" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">จำนวนเตียง</label>
+                            <input type="text" id="จำนวนเตียง" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_bed" value="{{$rooms->room_bed}}" required />
+                        </div>
+                        <div class="room-group">
+                            <label for="จำนวนห้องน้ำ" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">จำนวนห้องน้ำ</label>
+                            <input type="text" id="จำนวนห้องน้ำ" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_bathroom" value="{{$rooms->room_bathroom}}" required />
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div class="room-group">
+                            <label for="ราคาค้างคืน" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ราคาค้างคืน</label>
+                            <input type="text" id="ราคาค้างคืน" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="price_night" value="{{$rooms->price_night}}" required />
+                        </div>
+                        <div class="room-group">
+                            <label for="ราคาชั่วคราว" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ราคาชั่วคราว</label>
+                            <input type="text" id="ราคาชั่วคราว" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="price_temporary" value="{{$rooms->price_temporary}}" required />
+                        </div>
+                    </div>
+                    <label for="room_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">สถานะห้อง </label>
+                    <div>
+                        <div class="mb-6 room-group">
+                            <select id="room_status" name="room_status" required class="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="พร้อมให้บริการ" {{ $rooms->room_status == 'พร้อมให้บริการ' ? 'selected' : ''
+                                }}>พร้อมให้บริการ</option>
+                                <option value="ไม่พร้อมให้บริการ" {{ $rooms->room_status == 'ไม่พร้อมให้บริการ' ? 'selected' :
+                                '' }}>ไม่พร้อมให้บริการ</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-6 room-group">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="room_image">รูปห้อง</label>
+                        <input class="block w-full text-l text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="room_image" type="file" name="room_image" value="{{$rooms->room_image}}">
+                        <img id="current_image" src="{{ asset('images/' . $rooms->room_image) }}" alt="Current Room Image" width="100px" height="100px">
+                    </div>
+
+
+
+
+                    <div class="mb-6 room-group">
+                        <label for="room_description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รายละเอียดห้อง</label>
+                        <textarea id="room_description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-32 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_description">{{$rooms->room_description}}</textarea>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <input type="submit" value="Update" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <button id="cancel" class="ml-4 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cancel</button>
+                    </div>
+            </div>
+            </form>
+
+    </div>
+    </section>
+
+    <section id="toast" class="hidden">
+        <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span class="sr-only">Check icon</span>
+            </div>
+            <div class="ms-3 text-sm font-normal">Item moved successfully.</div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+        <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ms-3 text-sm font-normal">Item has been deleted.</div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+        <div id="toast-warning" class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+                </svg>
+                <span class="sr-only">Warning icon</span>
+            </div>
+            <div class="ms-3 text-sm font-normal">Improve password difficulty.</div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-warning" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+        </div>
+    </section>
+    </div>
+
+</body>
+
+</html>

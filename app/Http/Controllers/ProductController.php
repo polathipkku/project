@@ -22,8 +22,6 @@ class ProductController extends Controller
     }
     public function addProduct(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
             'product_name' => 'required|unique:products,product_name',
             'product_price' => 'required',

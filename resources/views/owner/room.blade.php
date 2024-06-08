@@ -4,198 +4,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-    <link href="css/style-admin.css" rel="stylesheet" />
-    <title>Thaitaree</title>
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/hero.css">
+
+
+    <title>Tunthree</title>
+
+
+    <script>
+        function showToast(toastId) {
+            var toast = document.getElementById(toastId);
+            toast.classList.remove('toast');
+            setTimeout(function() {
+                toast.classList.add('toast');
+            }, 3000); // แสดง toast นาน 3 วินาที (3000 มิลลิวินาที)
+        }
+    </script>
+
 </head>
 
 <body>
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
 
-    <div class="container">
+    <div style="display: flex; background-color: #F5F3FF;">
 
-        <aside>
-            <div class="toggle">
-                <div class="logo">
-                    <img src="images/no bg logo.png">
-                    <h2>Thai<span class="danger">taree</span></h2>
+        <x-aside />
+        <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
+            <div class="max-w-screen-xl mx-auto py-10 ">
+                <div class="px-2 p-2  flex justify-between items-center">
+                    <h1 class="text-4xl mb-10 max-xl:px-4">จัดการห้อง</h1>
+                    <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/add_room'">
+                        <span class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มห้อง</span>
+                        <i class="fa-solid fa-circle-plus text-4xl text-gray-500 group-hover:text-gray-900"></i>
+                    </button>
+
                 </div>
-                <div class="close" id="close-btn">
-                    <span class="material-icons-sharp">
-                        close
-                    </span>
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        dashboard
-                    </span>
-                    <h3>Dashboard</h3>
-                </a>
-                <a href="{{ route('dashboard') }}">
-                    <span class="material-icons-sharp">
-                        person_outline
-                    </span>
-                    <h3>Users</h3>
-                </a>
-                <a href="{{ route('employee') }}">
-                    <span class="material-icons-sharp">
-                        badge
-                    </span>
-                    <h3>Employee</h3>
-                </a>
-                <a href="#" class="active">
-                    <span class="material-icons-sharp">
-                        room_preferences
-                    </span>
-                    <h3>Room</h3>
-                </a>
-                <a href="{{ route('product') }}">
-                    <span class="material-icons-sharp">
-                        inventory
-                    </span>
-                    <h3>Stock</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        campaign
-                    </span>
-                    <h3>Promotion</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        receipt_long
-                    </span>
-                    <h3>History</h3>
-                </a>
-                <a href="A_analy.html">
-                    <span class="material-icons-sharp">
-                        insights
-                    </span>
-                    <h3>Analytics</h3>
-                </a>
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        mail_outline
-                    </span>
-                    <h3>Review</h3>
-                    <span class="message-count">35</span>
-                </a>
-
-                <a href="#">
-                    <span class="material-icons-sharp">
-                        add
-                    </span>
-                    <h3>New Login</h3>
-                </a>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <span class="material-icons-sharp">
-                        logout
-                    </span>
-                    <h3>Logout</h3>
-                </a>
-
-                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                    @csrf
-                </form>
-            </div>
-        </aside>
-
-        <main>
-            <h1>Room Information</h1>
-            <div class="main-table">
-                <table>
+                <table class="w-full border-collapse ">
                     <thead>
-                        <tr>
-                            <th>Room Name</th>
-                            <th>Details</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                        <tr class="text-l bg-gray-300">
+                            <th class=" px-4 py-2">หมายเลขห้อง</th>
+                            <th class=" px-4 py-2">สถานะ</th>
+                            <th class=" px-4 py-2">รายละเอียด</th>
+                            <th class=" px-4 py-2 " style="padding-right: 10%;"><span class="hidden">sdss</span>ดำเนินการ</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         @foreach($rooms as $room)
-                        <tr>
+                        <tr class="">
                             <td>{{ $room->room_name }}</td>
-                            <td>
-                                <a href="{{ url('/roomdetail') }}" class="detail">
-                                    <button class="detail" type="button">Detail</button>
+                            <td class=" px-4 py-2">
+                                @if($room->room_status == 'พร้อมให้บริการ')
+                                <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                    <span class="w-2 h-2 me-1 bg-green-300 rounded-full mr-1"></span>
+                                    {{ $room->room_status }}
+                                </span>
+                                @else
+                                <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                    <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
+                                    {{ $room->room_status }}
+                                </span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-2">
+                                <a href="{{ route('roomdetail', ['id' => $room->id]) }}" class="detail">
+                                    <button class="text-blue-500 hover:text-blue-700">Detail</button>
                                 </a>
                             </td>
-                            <td>{{ $room->room_status }}</td>
-                            <td>
+
+                            <td class="px-4 py-2" style="padding-right: 10%;">
                                 <a href="{{ url('/room/edit/'.$room->id) }}" class="edit">
-                                    <button type="button">Edit</button>
+                                    <button class="text-black hover:text-blue-500">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
                                 </a>
                                 <a href="{{ url('/room/delete/'.$room->id) }}" class="delete-link">
-                                    <button class="delete" type="button">Delete</button>
+                                    <button class="text-black hover:text-red-500 ml-4" onclick="showToast('toast-danger')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </a>
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </main>
-        <div class="right-section">
-            <div class="room-form">
-                <h2>Add New Room</h2>
-                <form action="{{ route('addRoom') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="room-group">
-                        <label for="room_name">ชื่อห้อง</label>
-                        <input type="text" class="form-control" name="room_name">
-                        @error('room_name')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="room-group">
-                        <label for="room_occupancy">จำนวนที่สามารถเข้าพัก</label>
-                        <input type="text" class="form-control" name="room_occupancy">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_bed">จำนวนเตียง</label>
-                        <input type="text" class="form-control" name="room_bed">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_bathroom">จำนวนห้องน้ำ</label>
-                        <input type="text" class="form-control" name="room_bathroom">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_description">รายละเอียดห้อง</label>
-                        <textarea class="form-control" name="room_description"></textarea>
-                    </div>
-                    <div class="room-group">
-                        <label for="price_night">ราคาค้างคืน</label>
-                        <input type="text" class="form-control" name="price_night">
-                    </div>
-                    <div class="room-group">
-                        <label for="price_temporary">ราคาชั่วคราว</label>
-                        <input type="text" class="form-control" name="price_temporary">
-                    </div>
-                    <div class="room-group">
-                        <label for="room_image">รูปห้อง</label>
-                        <input type="file" class="form-control" name="room_image">
-                    </div>
+        </section>
 
-
-                    <div class="room-group">
-                        <label for="room_status">สถานะห้อง</label>
-                        <div>
-                            <select id="room_status" name="room_status" required>
-                                <option value="พร้อมให้บริการ">พร้อมให้บริการ</option>
-                                <option value="ไม่พร้อมให้บริการ">ไม่พร้อมให้บริการ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <input type="submit" value="บันทึก">
-                </form>
+        <section id="toast" class="hidden">
+            <div id="toast-success" class=" flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                    </svg>
+                    <span class="sr-only">Check icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Item moved successfully.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
             </div>
-        </div>
+            <div id="toast-danger" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Item has been deleted.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
+            </div>
+            <div id="toast-warning" class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+                    </svg>
+                    <span class="sr-only">Warning icon</span>
+                </div>
+                <div class="ms-3 text-sm font-normal">Improve password difficulty.</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-warning" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                </button>
+            </div>
     </div>
-    <script src="orders.js"></script>
-    <script src="index.js"></script>
+    </section>
+
+
+    </div>
 </body>
 
 </html>
