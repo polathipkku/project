@@ -48,7 +48,7 @@
 
                 <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Out
+                        <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Outsssss
                     </div>
                 </a>
 

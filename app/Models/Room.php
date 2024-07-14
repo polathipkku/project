@@ -26,5 +26,9 @@ class Room extends Model
     {
         return $this->hasMany(Booking::class, 'room_id');
     }
+    public function maintenances()
+    {
+        return $this->hasMany(Maintenance::class, 'room_id');
+    }
 
 }

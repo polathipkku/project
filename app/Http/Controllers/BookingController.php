@@ -81,7 +81,7 @@ class BookingController extends Controller
             'number_of_guests' => 'required|integer|min:1',
             'checkin_date' => 'required|date',
             'checkout_date' => 'required|date|after:checkin_date',
-            'room_type' => 'required|string|',
+            'room_type' => 'required|string',
         ]);
 
         $room = Room::find($id);
@@ -94,8 +94,17 @@ class BookingController extends Controller
             return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
         }
 
-        $room->room_status = 'พร้อมให้บริการ';
+        $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
+
+        // คำนวณราคาห้อง
+        $checkinDate = new \DateTime($request->checkin_date);
+        $checkoutDate = new \DateTime($request->checkout_date);
+        $interval = $checkinDate->diff($checkoutDate);
+        $days = $interval->days;
+
+        $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? 500 : 300;
+        $totalCost = $days * $roomPricePerDay;
 
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
@@ -105,14 +114,16 @@ class BookingController extends Controller
         $booking->checkin_date = $request->checkin_date;
         $booking->checkout_date = $request->checkout_date;
         $booking->checkin_by = auth()->user()->id;
-        $booking->total_cost = 0;
+        $booking->total_cost = $totalCost;
         $booking->booking_status = 'ทำการจอง';
         $booking->room_type = $request->room_type;
         $booking->occupancy_person = $request->number_of_guests;
         $booking->booking_status = $request['booking_status'];
         $booking->save();
+
         return redirect()->route('home')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
     public function emaddBooking(Request $request, $id)
     {
         $request->validate([
@@ -121,7 +132,7 @@ class BookingController extends Controller
             'number_of_guests' => 'required|integer|min:1',
             'checkin_date' => 'required|date',
             'checkout_date' => 'required|date|after:checkin_date',
-            'room_type' => 'required|string|',
+            'room_type' => 'required|string',
         ]);
 
         $room = Room::find($id);
@@ -134,8 +145,17 @@ class BookingController extends Controller
             return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
         }
 
-        $room->room_status = 'พร้อมให้บริการ';
+        $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
+
+        // คำนวณราคาห้อง
+        $checkinDate = new \DateTime($request->checkin_date);
+        $checkoutDate = new \DateTime($request->checkout_date);
+        $interval = $checkinDate->diff($checkoutDate);
+        $days = $interval->days;
+
+        $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? 500 : 300;
+        $totalCost = $days * $roomPricePerDay;
 
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
@@ -145,14 +165,16 @@ class BookingController extends Controller
         $booking->checkin_date = $request->checkin_date;
         $booking->checkout_date = $request->checkout_date;
         $booking->checkin_by = auth()->user()->id;
-        $booking->total_cost = 0;
+        $booking->total_cost = $totalCost;
         $booking->booking_status = 'ทำการจอง';
         $booking->room_type = $request->room_type;
         $booking->occupancy_person = $request->number_of_guests;
         $booking->booking_status = $request['booking_status'];
         $booking->save();
+
         return redirect()->route('checkin')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
 
     private function isRoomAvailable($room, $checkinDate, $checkoutDate)

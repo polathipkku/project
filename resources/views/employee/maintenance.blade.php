@@ -60,7 +60,7 @@
             </div>
 
             <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0 w-full z-40 bg-white" style="padding: 5%;">
-                <a href="{{route('home')}}" class="text-black text-4xl font-bold">Tunthree Resort</a>
+                <a href="{{route('emroom')}}" class="text-black text-4xl font-bold">Tunthree Resort</a>
                 <div class="relative">
                     <nav class="space-x-10 text-xl">
 
@@ -95,95 +95,59 @@
     <!--------------------------End Topbar-------------------------------------->
     <div class="mx-auto pt-4 pb-4 bg-gray-100">
         <p class="text-gray-600 text-lg max-xl:px-4 pt-8" style="margin-left: 7%;">
-            <a href="{{route('home')}}" class="text-black hover:text-blue-400">Home</a>
+            <a href="{{route('emroom')}}" class="text-black hover:text-blue-400">Home</a>
             <i class="fa-solid fa-chevron-right ml-2 mr-2"></i>
-            <a href="#" class="text-blue-600 hover:text-black">จองห้อง</a>
+            <a href="#" class="text-blue-600 hover:text-black">แจ้งซ่อมห้อง</a>
         </p>
     </div>
     <div class="max-w-screen-xl mx-auto pt-8 pb-16 ">
-        <h1 class="text-5xl mb-10 max-xl:px-4">จองห้อง</h1>
-        <form action="{{ url('/reserve/'.$rooms->id) }}" method="post" enctype="multipart/form-data">
+        <div class="flex justify-between items-start">
+            <h1 class="text-5xl mb-10 max-xl:px-4">แจ้งซ่อมห้อง</h1>
+            <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/maintenanceroom'">
+                <i class="fa-solid fa-circle-xmark text-4xl text-red-500 group-hover:text-red-900"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('submit_maintenance') }}" method="POST" class="space-y-4">
             @csrf
-            <div class="grid grid-cols-1 gap-4">
+            <div>
+                <label for="room_id" class="block text-sm font-medium text-gray-700">หมายเลขห้อง</label>
+                <input type="text" id="room_id" name="room_id" value="{{ $room->id }}" readonly class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+            </div>
 
-                <!-- ส่วนของชื่อ -->
-                <div class="flex flex-col">
-                    <label for="booking_name" class="text-sm font-medium">ชื่อผู้จอง</label>
-                    <input type="text" id="booking_name" name="booking_name" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                </div>
-
-                <!-- ส่วนของเบอร์โทรศัพท์ และ จำนวนผู้เข้าพัก -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label for="phone" class="text-sm font-medium">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phone" name="phone" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="number_of_guests" class="text-sm font-medium">จำนวนผู้เข้าพัก</label>
-                        <input type="number" id="number_of_guests" name="number_of_guests" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label for="checkin_date" class="text-sm font-medium">วันที่เข้าพัก</label>
-                        <input type="date" id="checkin_date" name="checkin_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="checkout_date" class="text-sm font-medium">วันที่ออก</label>
-                        <input type="date" id="checkout_date" name="checkout_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                </div>
-
-                <!-- ส่วนของประเภทห้องพัก -->
-                <div class="flex flex-col">
-                    <label for="room_type" class="text-sm font-medium">ประเภทห้องพัก</label>
-                    <select id="room_type" name="room_type" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                        <option value="ห้องพักค้างคืน" data-price="500">ห้องพักค้างคืน</option>
-                        <option value="ห้องพักชั่วคราว" data-price="300">ห้องพักชั่วคราว</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="room_price" class="text-sm font-medium">ราคาห้อง</label>
-                    <input type="text" id="room_price" name="room_price" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" readonly>
-                </div>
-                <input type="hidden" id="booking_status" name="booking_status" value="ทำการจอง">
-
-                <script>
-                    function calculatePrice() {
-                        var checkinDate = new Date(document.getElementById('checkin_date').value);
-                        var checkoutDate = new Date(document.getElementById('checkout_date').value);
-                        var roomType = document.getElementById('room_type');
-                        var roomPricePerDay = parseInt(roomType.options[roomType.selectedIndex].getAttribute('data-price'));
-
-                        // คำนวณจำนวนวันที่เข้าพัก
-                        var timeDifference = checkoutDate - checkinDate;
-                        var daysDifference = timeDifference / (1000 * 3600 * 24);
-
-                        // คำนวณราคาห้อง
-                        var totalPrice = daysDifference * roomPricePerDay;
-
-                        // แสดงราคาห้อง
-                        document.getElementById('room_price').value = totalPrice > 0 ? totalPrice : 0;
-                    }
-
-                    document.getElementById('checkin_date').addEventListener('change', calculatePrice);
-                    document.getElementById('checkout_date').addEventListener('change', calculatePrice);
-                    document.getElementById('room_type').addEventListener('change', calculatePrice);
-                </script>
-
-
-
-                <div class="flex flex-col">
-                    <button type="submit" class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">ยืนยันการจอง</button>
-                </div>
-
+            <div>
+                <label for="Problem_detail" class="block text-sm font-medium text-gray-700">รายละเอียดปัญหา</label>
+                <textarea id="Problem_detail" name="Problem_detail" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required></textarea>
+            </div>
+            <div>
+                <label for="Maintenance_StartDate" class="block text-sm font-medium text-gray-700">วันที่เริ่มซ่อม</label>
+                <input type="date" id="Maintenance_StartDate" name="Maintenance_StartDate" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+            </div>
+            <div>
+                <label for="problemType" class="block text-sm font-medium text-gray-700">ประเภทของปัญหา</label>
+                <select id="problemType" name="problemType" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <option value="" disabled selected>เลือกประเภทของปัญหา</option>
+                    <option value="ไฟฟ้า">ไฟฟ้า</option>
+                    <option value="ประปา">ประปา</option>
+                    <option value="เครื่องใช้ไฟฟ้า">เครื่องใช้ไฟฟ้า</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+            </div>
+            <div>
+                <label for="room_status" class="block text-sm font-medium text-gray-700">สถานะห้อง</label>
+                <select id="room_status" name="room_status" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <option value="พร้อมให้บริการ" {{ $room->room_status == 'พร้อมให้บริการ' ? 'selected' : '' }}>พร้อมให้บริการ</option>
+                    <option value="ไม่พร้อมให้บริการ" {{ $room->room_status == 'ไม่พร้อมให้บริการ' ? 'selected' : '' }}>ไม่พร้อมให้บริการ</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">ส่งรายงาน</button>
             </div>
         </form>
+    </div>
 
 
     </div>
-
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -230,7 +194,7 @@
 
                         </h4>
                         <div class="info_links">
-                            <a class="active" href="{{route('home')}}">
+                            <a class="active" href="{{route('emroom')}}">
                                 <img src="images/nav-bullet.png" alt="">
                                 Home
                             </a>
@@ -259,26 +223,6 @@
             </div>
         </div>
     </section>
-    <script>
-        function submitForm() {
-            const contactName = document.getElementById("contactName").value;
-            const phoneNumber = document.getElementById("phoneNumber").value;
-            const numberOfGuests = document.getElementById("numberOfGuests").value;
-            const checkInDate = document.getElementById("checkInDate").value;
-            const checkOutDate = document.getElementById("checkOutDate").value;
-            const accommodationType = document.getElementById("accommodationType").value;
-
-            console.log("Form submitted with:", {
-                contactName,
-                phoneNumber,
-                numberOfGuests,
-                checkInDate,
-                checkOutDate,
-                accommodationType,
-            });
-        }
-    </script>
-
 </body>
 
 </html>

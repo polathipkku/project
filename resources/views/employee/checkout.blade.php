@@ -59,6 +59,11 @@
                     </div>
                 </a>
 
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('maintenanceroom') }}" id="maintenanceroom">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-tools mr-1"></i>Maintenance
+                    </div>
+                </a>
 
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
                     <div class="mr-2 text-base flex items-center">

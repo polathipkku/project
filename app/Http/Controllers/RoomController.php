@@ -7,11 +7,23 @@ use App\Models\Room;
 
 class RoomController extends Controller
 {
-    public function room()
+    protected function getAllRooms()
     {
-        $rooms = Room::all();
-        return view('owner.room', compact('rooms'));
+        return Room::all();
     }
+    public function room(Request $request)
+    {
+        $search = $request->input('search');
+        if ($search) {
+            $rooms = Room::where('room_name', 'LIKE', "%{$search}%")
+                ->orWhere('room_description', 'LIKE', "%{$search}%")
+                ->get();
+        } else {
+            $rooms = $this->getAllRooms();
+        }
+        return view('owner.room', compact('rooms', 'search'));
+    }
+
     public function add_room()
     {
         $rooms = Room::all();

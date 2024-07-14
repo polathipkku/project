@@ -7,6 +7,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MaintenanceceController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -80,6 +81,11 @@ Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');
 Route::post('/emaddBooking/{id}', [BookingController::class, 'emaddBooking'])->name('emaddBooking');
 Route::post('/em_reserve/{id}', [BookingController::class, 'emaddBooking']);
 Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('em_reserve');
+Route::get('/maintenance/{id}', [MaintenanceceController::class, 'maintenance'])->name('maintenance');
+Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
+Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');
+Route::get('/maintenancedetail/{id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');
+Route::post('/toggleRoomStatus/{id}', [MaintenanceceController::class, 'toggleRoomStatus'])->name('toggleRoomStatus');
 
 
 Route::get('/', [OwnerController::class, 'checkUserType']);
@@ -95,6 +101,8 @@ Route::middleware(['auth', 'owner'])->group(function () {
     Route::get('/employee/edit/{id}', [OwnerController::class, 'edit']);
     Route::post('/employee/update/{id}', [OwnerController::class, 'update']);
     Route::get('/employee/delete/{id}', [OwnerController::class, 'delete']);
+    Route::get('/employee/search', [OwnerController::class, 'searchEmployee'])->name('searchEmployee');
+
 });
 
 Route::group(['middleware' => [OwnerMiddleware::class]], function () {

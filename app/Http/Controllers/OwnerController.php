@@ -12,17 +12,26 @@ use Illuminate\Support\Facades\Storage;
 
 class OwnerController extends Controller
 {
+    public function searchEmployee(Request $request)
+    {
+        $search = $request->input('search');
+        $employee = User::where('userType', '1')
+        ->where('name', 'like', "%$search%")
+        ->get();        
+        return view('owner.employee', compact('employee'));
+    }
+    
+    public function employee()
+    {
+        $employee = User::where('userType', '1')->get();
+        return view('owner.employee', compact('employee'));
+    }
     public function users()
     {
         $ีusers = User::all();
         return view('owner.employee', compact('users'));
     }
 
-    public function employee()
-    {
-        $employee = User::where('userType', '1')->get();
-        return view('owner.employee', compact('employee'));
-    }
     public function add_employee()
     {
         $employee = User::where('userType', '1')->get();

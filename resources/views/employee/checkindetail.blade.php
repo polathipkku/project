@@ -22,7 +22,8 @@
             <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
 
                 <div style="display: grid; place-items: center; margin-bottom: 30px;">
-                <img src="images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                <img src="/images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+
                     <div class="text-black text-lg ">Tunthree</div>
                 </div>
 

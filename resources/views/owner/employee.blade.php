@@ -34,7 +34,7 @@
             <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
 
                 <div style="display: grid; place-items: center; margin-bottom: 30px;">
-                    <img src="images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                    <img src="/images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
                     <div class="text-black text-lg ">Tunthree</div>
                 </div>
 
@@ -97,12 +97,15 @@
             <div class="max-w-screen-xl mx-auto py-10 ">
                 <div class="px-2 p-2  flex justify-between items-center">
                     <h1 class="text-4xl mb-10 max-xl:px-4">จัดการพนักงาน</h1>
+                    <form action="{{ route('searchEmployee') }}" method="GET" class="flex items-center">
+                        <input type="text" name="search" placeholder="ค้นหา" class="border border-gray-300 p-2 rounded-lg">
+                        <button type="submit" class="ml-2 p-2 bg-blue-500 text-white rounded-lg">ค้นหา</button>
+                    </form>
+
                     <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/add_employee'">
                         <span class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มพนักงาน</span>
                         <i class="fa-solid fa-circle-plus text-4xl text-gray-500 group-hover:text-gray-900"></i>
                     </button>
-
-
 
                 </div>
                 <table class="w-full border-collapse text-center">
@@ -133,6 +136,7 @@
                             </td>
                         </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>
