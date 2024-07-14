@@ -121,7 +121,7 @@ class BookingController extends Controller
         $booking->booking_status = $request['booking_status'];
         $booking->save();
 
-        return redirect()->route('home')->with('success', 'บันทึกข้อมูลสำเร็จ');
+        return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 
     public function emaddBooking(Request $request, $id)
