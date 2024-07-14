@@ -48,6 +48,10 @@ Route::get('/employee', function () {
     return view('owner.employee');
 })->name('employee');
 
+Route::get('/payment', function () {
+    return view('user.payment');
+})->name('payment');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -70,6 +74,12 @@ Route::get('/employeehome', [BookingController::class, 'employeehome'])->name('e
 Route::post('/reserve/{id}', [BookingController::class, 'addBooking']);
 Route::get('/reservation', [BookingController::class, 'reservation'])->name('reservation');
 Route::delete('/cancelbooking/{id}', [BookingController::class, 'cancelBooking'])->name('cancelBooking');
+//payment
+// สร้าง Payment Intent
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+// รับ booking_id
+Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
+
 Route::get('/checkin', [BookingController::class, 'checkin'])->name('checkin');
 Route::get('/checkindetail/{id}', [BookingController::class, 'checkindetail'])->name('checkindetail');
 Route::get('/checkoutdetail/{id}', [BookingController::class, 'checkoutdetail'])->name('checkoutdetail');
