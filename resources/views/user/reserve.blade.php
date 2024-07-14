@@ -138,6 +138,7 @@
                 <div class="flex flex-col">
                     <label for="room_type" class="text-sm font-medium">ประเภทห้องพัก</label>
                     <select id="room_type" name="room_type" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
+                        <option value="" selected disabled hidden >ห้องพักค้างคืน</option>
                         <option value="ห้องพักค้างคืน" data-price="500">ห้องพักค้างคืน</option>
                         <option value="ห้องพักชั่วคราว" data-price="300">ห้องพักชั่วคราว</option>
                     </select>
