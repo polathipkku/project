@@ -119,8 +119,7 @@
 
         <a href="#" class="text-black text-4xl font-bold">Tunthree Resort</a>
         <nav class="space-x-10 text-xl ">
-          <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-          <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
+        
           <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i class="fa-solid fa-comments ml-2"></i></a>
 
           <a href="#" onclick="showLoginForm()" class="text-black hover:text-blue-400">Login<i class="fa-solid fa-right-to-bracket ml-2"></i></a>
