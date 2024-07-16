@@ -83,14 +83,14 @@
 
         <div class="flex items-center mt-4">
             <div class="mr-4 ">
-                <span class="font-semibold text-white">Check-in Date</span>
+                <span class="font-semibold text-white">Check-in</span>
                 <input type="date" id="checkin_date" name="checkin_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1">
             </div>
         </div>
 
         <div class="flex items-center mt-4">
             <div class="mr-4 ">
-                <span class="font-semibold text-white">Check-out Date</span>
+                <span class="font-semibold text-white">Check-out</span>
                 <input type="date" id="checkout_date" name="checkout_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1">
             </div>
         </div>

@@ -140,12 +140,12 @@
         </div>
         <div class="flex justify-center items-center my-3 col-span-2 max-md:col-span-3 xl:mx-0">
           <div class="relative">
-            <p class="pb-2">Check out</p>
-            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <p class="pb-2">Check-in</p>
+            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
           </div>
           <div class="relative">
-            <p class="pb-2">Check in</p>
-            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <p class="pb-2">Check-out</p>
+            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
           </div>
         </div>
         <div class="relative">
