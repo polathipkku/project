@@ -38,7 +38,7 @@ class MaintenanceceController extends Controller
             'Problem_detail' => 'required|string',
             'Maintenance_StartDate' => 'required|date',
             'problemType' => 'required|string',
-            'room_status' => 'required|in:พร้อมให้บริการ,ไม่พร้อมให้บริการ',
+            'room_status' => 'required|in:พร้อมให้บริการ,ไม่พร้อมให้บริการ,แจ้งซ่อมห้อง',
         ]);
 
         // Create a new maintenance record

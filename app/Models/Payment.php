@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,9 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'payment_date',
@@ -21,16 +18,19 @@ class Payment extends Model
         'pay_change',
         'booking_id',
         'payment_type_id',
+        'payment_intent_id',
+        'expiration_time',
+        'transaction_id',
+        'amount',
     ];
 
-
-    public function bookings()
+    public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
     }
 
-    public function paymentType()
-    {
-        return $this->belongsTo(Payment_type::class, 'payment_type_id');
-    }
+    // public function paymentType()
+    // {
+    //     return $this->belongsTo(PaymentType::class, 'payment_type_id');
+    // }
 }

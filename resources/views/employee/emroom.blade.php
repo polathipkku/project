@@ -121,6 +121,11 @@
                                     <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
                                     ไม่ว่าง
                                 </span>
+                                @elseif($room->room_status === 'แจ้งซ่อมห้อง')
+                                <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                                    <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
+                                    แจ้งซ่อมห้อง
+                                </span>
                                 @elseif($room->booking_status !== 'ทำการจอง' && $room->booking_status !== 'รอชำระเงิน' && $room->booking_status !== 'เช็คอินแล้ว')
                                 <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                     <span class="w-2 h-2 me-1 bg-green-300 rounded-full mr-1"></span>

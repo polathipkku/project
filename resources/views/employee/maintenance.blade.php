@@ -137,6 +137,7 @@
                 <label for="room_status" class="block text-sm font-medium text-gray-700">สถานะห้อง</label>
                 <select id="room_status" name="room_status" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
                     <option value="พร้อมให้บริการ" {{ $room->room_status == 'พร้อมให้บริการ' ? 'selected' : '' }}>พร้อมให้บริการ</option>
+                    <option value="แจ้งซ่อมห้อง" {{ $room->room_status == 'แจ้งซ่อมห้อง' ? 'selected' : '' }}>แจ้งซ่อมห้อง</option>
                     <option value="ไม่พร้อมให้บริการ" {{ $room->room_status == 'ไม่พร้อมให้บริการ' ? 'selected' : '' }}>ไม่พร้อมให้บริการ</option>
                 </select>
             </div>

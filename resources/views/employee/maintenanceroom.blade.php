@@ -115,7 +115,7 @@
                             <td class="px-4 py-2">{{ $room->room_name }}</td>
                             <td class="px-4 py-2">
 
-                                @if($room->room_status === 'ไม่พร้อมให้บริการ')
+                                @if($room->room_status === 'แจ้งซ่อมห้อง')
                                 <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
                                     <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
                                     แจ้งซ่อม
@@ -139,7 +139,7 @@
                             </td>
 
                             <td class="px-4 py-4 flex justify-center items-center">
-                                @if($room->room_status === 'ไม่พร้อมให้บริการ')
+                                @if($room->room_status === 'แจ้งซ่อมห้อง')
                                 <form action="{{ route('toggleRoomStatus', $room->id) }}" method="post">
                                     @csrf
                                     <button class="text-black hover:text-blue-500 ">

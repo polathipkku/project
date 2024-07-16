@@ -12,11 +12,9 @@ class PaymentController extends Controller
 {
     public function showPaymentPage($id)
 {
-    // Fetch bookings from the database based on the booking_id or some criteria
     $booking = Booking::find($id);
     $bookings = Booking::where('id', $id)->get();
 
-    // Pass the bookings to the view
     return view('user.payment', compact('bookings'));
 }
 

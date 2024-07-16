@@ -245,15 +245,25 @@ class BookingController extends Controller
     {
         $bookingId = $request->input('booking_id');
         $booking = Booking::find($bookingId);
-
+    
         if ($booking && $booking->booking_status === 'เช็คอินแล้ว') {
             $booking->booking_status = 'เช็คเอาท์';
+    
+            // Assuming there is a room relationship in the booking model
+            $room = $booking->room;
+            if ($room) {
+                $room->room_status = 'พร้อมให้บริการ';
+                $room->save();
+            }
+    
             $booking->save();
-
+    
             return redirect()->back()->with('success', 'เช็คเอาท์สำเร็จ');
         }
+    
         return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
+    
 
     public function getAvailableRooms(Request $request)
     {
