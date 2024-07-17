@@ -100,14 +100,15 @@
 
 
                 </div>
-                <table class="w-full border-collapse ">
+                <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
-                            <th class=" px-4 py-2">หมายเลขห้อง</th>
-                            <th class=" px-4 py-2">สถานะ</th>
-                            <th class=" px-4 py-2">รายละเอียด</th>
-                            <th class=" px-4 py-2 " style="padding-right: 8%;"><span class="hidden">sdss</span>จองห้องพัก</th>
-                            <th class=" px-4 py-2 " style="padding-right: 7%;"><span class="hidden">sdss</span>แจ้งซ่อม</th>
+                            <th class="px-4 py-2">หมายเลขห้อง</th>
+                            <th class="px-4 py-2">สถานะ</th>
+                            <th class="px-4 py-2">รายละเอียด</th>
+                            <th class="px-4 py-2">จองห้องพัก</th>
+                            <th class="px-4 py-2">ยืนยันทำความสะอาด</th>
+                            <th class="px-4 py-2">แจ้งซ่อม</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
@@ -115,7 +116,6 @@
                         <tr class="">
                             <td class="px-4 py-2">{{ $room->room_name }}</td>
                             <td class="px-4 py-2">
-
                                 @if($room->room_status === 'ไม่พร้อมให้บริการ')
                                 <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
                                     <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
@@ -125,6 +125,11 @@
                                 <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
                                     <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
                                     แจ้งซ่อมห้อง
+                                </span>
+                                @elseif($room->room_status === 'รอทำความสะอาด')
+                                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                                    <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
+                                    รอทำความสะอาด
                                 </span>
                                 @elseif($room->booking_status !== 'ทำการจอง' && $room->booking_status !== 'รอชำระเงิน' && $room->booking_status !== 'เช็คอินแล้ว')
                                 <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
@@ -137,26 +142,40 @@
                                     ไม่ว่าง
                                 </span>
                                 @endif
-
                             </td>
-
                             <td class="px-4 py-2">
                                 <a href="" class="text-blue-500 hover:text-blue-700">Detail</a>
                             </td>
-
-                            <td class="px-4 py-2" style="padding-right: 10%;">
+                            <td class="px-4 py-2">
                                 <a href="/em_reserve/{{ $room->id }}" class="text-black hover:text-blue-500">
                                     <i class="fa-solid fa-book-open"></i>
                                 </a>
                             </td>
-                            <td class="px-4 py-2" style="padding-right: 10%;">
+                            <td class="px-4 py-2">
+                                @if($room->room_status === 'รอทำความสะอาด')
+                                <form action="{{ route('cleanroom', $room->id) }}" method="post">
+                                    @csrf
+                                    <button class="text-black hover:text-blue-500" type="submit">
+                                        <i class="fa-solid fa-bucket"></i>
+                                    </button>
+                                </form>
+                                @endif
+                            </td>
+
+
+
+
+
+                            <td class="px-4 py-2">
                                 <a href="/maintenance/{{ $room->id }}" class="text-black hover:text-blue-500">
                                     <i class="fa-solid fa-tools"></i>
                                 </a>
                             </td>
                         </tr>
-                        @endforeach 
+                        @endforeach
+                    </tbody>
                 </table>
+
             </div>
         </section>
 

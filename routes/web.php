@@ -91,6 +91,8 @@ Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');
 Route::post('/emaddBooking/{id}', [BookingController::class, 'emaddBooking'])->name('emaddBooking');
 Route::post('/em_reserve/{id}', [BookingController::class, 'emaddBooking']);
 Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('em_reserve');
+Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
+
 Route::get('/maintenance/{id}', [MaintenanceceController::class, 'maintenance'])->name('maintenance');
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
 Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');
@@ -112,7 +114,6 @@ Route::middleware(['auth', 'owner'])->group(function () {
     Route::post('/employee/update/{id}', [OwnerController::class, 'update']);
     Route::get('/employee/delete/{id}', [OwnerController::class, 'delete']);
     Route::get('/employee/search', [OwnerController::class, 'searchEmployee'])->name('searchEmployee');
-
 });
 
 Route::group(['middleware' => [OwnerMiddleware::class]], function () {
@@ -123,6 +124,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::post('/room/update/{id}', [RoomController::class, 'update']);
     Route::get('/room/delete/{id}', [RoomController::class, 'delete']);
     Route::get('/roomdetail/{id}', [RoomController::class, 'roomdetail'])->name('roomdetail');
+
     Route::get('/employee', [OwnerController::class, 'employee'])->name('employee');
     Route::get('/add_employee', [OwnerController::class, 'add_employee'])->name('add_employee');
     Route::get('/employeedetail', [OwnerController::class, 'employeedetail'])->name('employeedetail');
@@ -137,5 +139,4 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
     Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
-    
 });

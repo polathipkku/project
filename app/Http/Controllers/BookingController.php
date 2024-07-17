@@ -252,7 +252,7 @@ class BookingController extends Controller
             // Assuming there is a room relationship in the booking model
             $room = $booking->room;
             if ($room) {
-                $room->room_status = 'พร้อมให้บริการ';
+                $room->room_status = 'รอทำความสะอาด';
                 $room->save();
             }
     
