@@ -25,19 +25,22 @@
   <!-- <link href="css/font-awesome.min.css" rel="stylesheet" /> -->
   <!-- <link rel="stylesheet" href="/css/hero.css"> -->
   <link href="css/style.css" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
   <title> Tunthree </title>
 
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!--  Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-  <!--owl slider stylesheet -->
-
+{{-- flatpickr --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="css/style-head.css">
   <!-- Magnific Popup CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
@@ -47,7 +50,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
 
   <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -130,22 +133,27 @@
       <h1 class="text-white text-5xl mb-8 ">เริ่มต้นการจอง</h1>
       <form action="" class="grid grid-cols-5  justify-items-stretch items-center  bg-white border-1 rounded-2xl">
         <div class="relative">
-
         </div>
-        <div class="flex justify-center items-center my-3 col-span-2 max-md:col-span-3 xl:mx-0">
+        <div class="flex justify-center items-center my-3 mb-4 col-span-2 max-md:col-span-3 xl:mx-0">
           <div class="relative">
             <p class="pb-2">Check-in</p>
-            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <div class="relative">
+              <input type="date" id="Check-in" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl"></i>
+            </div>
           </div>
           <div class="relative">
             <p class="pb-2">Check-out</p>
-            <input type="date" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <div class="relative">
+              <input type="date" id="Check-out" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl "></i>
+            </div>
           </div>
         </div>
         <div class="relative">
           <p class="pb-3 invisible"> </p>
           <a href="{{route('userbooking') }}" style="color: azure;">
-            <div class="w-full bg-blue-500 hover:bg-blue-600 text-xl rounded-lg px-10 py-2.5 text-center" style="margin-left:20% ;">
+            <div class="w-full bg-blue-500 hover:bg-blue-600 text-xl rounded-lg px-10  py-2.5 text-center" style="margin-left:20% ; margin-top:1em ; ">
               จอง
             </div>
           </a>
@@ -387,7 +395,7 @@
     </div>
   </section>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     $(document).ready(function() {
       $('.owl-carousel').owlCarousel({
@@ -398,11 +406,10 @@
         autoplayHoverPause: true
       });
     });
-    // เมื่อคลิกที่เมนูหรือพื้นหลังเว็บ
+    
     document.addEventListener("click", function(event) {
       var profileButton = document.getElementById("profileButton");
       var profileDropdown = document.getElementById("profileDropdown");
-      ก
       // ตรวจสอบว่าคลิกที่ปุ่มโปรไฟล์หรือไม่
       var isProfileButtonClicked = profileButton.contains(event.target);
 
@@ -421,8 +428,18 @@
       profileDropdown.classList.toggle("hidden"); // เปิดหรือปิดเมนู dropdown
       event.stopPropagation(); // ไม่ให้การคลิกที่ปุ่มแพร่กระจายไปยังโค้ดด้านบน
     });
+
+    flatpickr("#Check-in", {
+             dateFormat: "d-m-Y",
+             minDate: "today"
+         });
+ 
+         flatpickr("#Check-out", {
+             dateFormat: "d-m-Y",
+             minDate: "today"
+         });
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+ 
 
 </body>
 
