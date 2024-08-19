@@ -8,23 +8,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.css">
+    <link href="src/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="{{ asset('css/output.css') }}" rel="stylesheet">
-    <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <link rel="shortcut icon" href="/images/Logo_2.jpg" type="image/png">
     <link rel="stylesheet" href="/css/hero.css">
-    <link href="src/output.css" rel="stylesheet">
-    <title>Thunthree</title>
+
+    <title>Thunthree Gallery</title>
+
 </head>
 
 <body class="bg-gray-100">
+    <!-- Header Section -->
     <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
         {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
         <a href="" class="mx-5"><i class="fa-solid fa-phone"></i>0961826631</a> --}}
     </div>
-
     <header class="bg-white shadow-lg pt-3">
 
         <div class="container mx-auto flex items-center justify-between h-24 px-5">
@@ -32,14 +32,13 @@
                 <div class="container mx-auto flex justify-center space-x-10 py-3">
                     <a href="gallery" class="hover:text-blue-400">แกลเลอรี่</a>
                     <a href="travel" class="hover:text-blue-400">สถานที่ท่องเที่ยว</a>
-                    <a href="contactus" class="hover:text-blue-400">ติดต่อ</a>
+                    <a href="contact" class="hover:text-blue-400">ติดต่อ</a>
                 </div>
             </nav>
             <div class="logo" id="logo">
                 <a href="welcome">Thunthree
                 </a>
             </div>
-            <div class="flex items-center space-x-4 text-gray-800 text-base">
                 <button id="booking-btn"
                     class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors ">
                     จองตอนนี้
@@ -76,47 +75,114 @@
         </form>
     </div>
 
-
-    <main class="container mx-auto  bg-white  mt-10">
-        <div class="text-center mb-10 pt-10">
-            <h1 class="text-4xl font-bold">ติดต่อเรา</h1>
-            <p class="text-xl mt-4">หากคุณมีคำถามหรือต้องการติดต่อเรา กรุณาใช้ข้อมูลด้านล่าง</p>
+    <!-- Gallery Content -->
+    <main class="container mx-auto mt-10">
+        <div class="text-center mb-10 mr-12">
+            <h1 class="text-4xl font-bold">แกลเลอรี่</h1>
+            <p class="text-xl mt-4">ภาพบรรยากาศที่สวยงามของเรา</p>
         </div>
-        <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 p-5 pl-32 pt-12">
-                <div class="col-lg-4 col-md-5 offset-md-1 h-full">
-                    <div class="mt-5 ">
-                        <a href="" class="text-black hover:text-blue-400 text-xl"><i
-                                class="fa-solid fa-phone mr-4"></i>0940028212</a>
+        <div class="gallery-grid grid-cols-2">
+            <div class="gallery-item">
+                <a href="/images/tb1.png" data-fancybox="gallery">
+                    <img src="/images/tb1.png" alt="Gallery Image 1">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 1</h3>
+                        </div>
                     </div>
-                    <div class="mt-5">
-                        <a href="" class="text-black hover:text-blue-400 text-xl"><i
-                                class="fa-solid fa-envelope mr-4"></i>polathip.b@kkumail.com</a>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500422.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500422.jpg" alt="Gallery Image 2">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 2</h3>
+                        </div>
                     </div>
-                    <div class="mt-5">
-                        <a href="" class="text-black hover:text-blue-400 text-xl"><i
-                                class="fa-brands fa-facebook mr-4"></i>ธันย์ทรี
-                            รีสอร์ท</a>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500424.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500424.jpg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 3</h3>
+                        </div>
                     </div>
-                    <div class="mt-5 flex items-center">
-                        <a href="" class="text-black hover:text-blue-400 flex items-center text-xl">
-                            <i class="fa-solid fa-location-dot mr-4"></i>
-                            <div>
-                                86 หมู่15 ถนนสมเด็จ–มุกดาหาร ต.บัวขาว
-                                <div>อำเภอ กุฉินารายณ์ กาฬสินธุ์ 46110</div>
-                            </div>
-                        </a>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500425.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500425.jpg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 4</h3>
+                        </div>
                     </div>
-                </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500426.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500426.jpg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 5</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500433.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500433.jpg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 6</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/S__13500435.jpg" data-fancybox="gallery">
+                    <img src="/images/S__13500435.jpg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 7</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/i-3.png" data-fancybox="gallery">
+                    <img src="/images/i-3.png" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 8</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/i-6.jpeg" data-fancybox="gallery">
+                    <img src="/images/i-6.jpeg" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 9</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="/images/TT11.png" data-fancybox="gallery">
+                    <img src="/images/TT11.png" alt="Gallery Image 3">
+                    <div class="overlay">
+                        <div class="overlay-content">
+                            <h3>Gallery Image 10</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
-            </div>
-            <div class="w-full md:w-1/2 p-5">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3857.639215693772!2d104.0373736!3d16.5451064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4Lir4LiZ4Li04Lih4Li04Lil4Liy4LiZ4LiE4Lij4Liw4Lie4Lij4LmA!5e0!3m2!1sth!2sth!4v1690968309321!5m2!1sth!2sth"
-                    width="100%" height="450" style="border:0; " allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
         </div>
     </main>
 
@@ -169,11 +235,23 @@
             </div>
         </div>
     </footer>
-    </div>
-    <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
     <script src="/js/hero.js"></script>
+    <script>
+        document.addEventListener('scroll', function() {
+            var header = document.querySelector('header');
+            var mail = document.getElementById('mail');
+            var scrollPosition = window.scrollY;
 
+            if (scrollPosition > 100) { // เลื่อนลงเท่าไหร่ถึงจะปิด
+                header.style.top = mail.offsetHeight + 'px'; // ปรับ header เลื่อนขึ้นปิด mail
+            } else {
+                header.style.top = '20px'; // ปรับ header 
+            }
+        });
+    </script>
 </body>
 
 </html>
+

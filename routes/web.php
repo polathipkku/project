@@ -35,6 +35,15 @@ Route::get('/home', function () {
 Route::get('/contact', function () {
     return view('user.contact');
 })->name('contact');
+Route::get('/welcome_2', function () {
+    return view('user.welcome_2');
+})->name('welcome_2');
+Route::get('/travel', function () {
+    return view('user.travel');
+})->name('travel');
+Route::get('/gallery', function () {
+    return view('user.gallery');
+})->name('gallery');
 
 Route::get('/userbooking', function () {
     return view('user.userbooking');
@@ -69,21 +78,27 @@ Route::get('/employeehome', [RoomController::class, 'employeehome'])->name('empl
 
 Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('userbooking');
 Route::get('/t', [BookingController::class, 't'])->name('t');
-Route::get('/reserve/{id}', [BookingController::class, 'reserve'])->name('reserve');
+// Route::get('/reserve', [BookingController::class, 'reserve'])->name('reserve');
+// Route::post('/reserve/{id}', [BookingController::class, 'addBooking']);
+Route::get('/reserve', [BookingController::class, 'showReserveForm'])->name('reserve');
+Route::post('/reserve', [BookingController::class, 'reserve'])->name('bookings.reserve');
+Route::get('/check-availability', [BookingController::class, 'checkAvailability']);
+Route::post('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 Route::get('/employeehome', [BookingController::class, 'employeehome'])->name('employeehome');
-Route::post('/reserve/{id}', [BookingController::class, 'addBooking']);
 Route::get('/reservation', [BookingController::class, 'reservation'])->name('reservation');
-Route::delete('/cancelbooking/{id}', [BookingController::class, 'cancelBooking'])->name('cancelBooking');
+Route::post('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
+Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 //payment
 // สร้าง Payment Intent
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 // รับ booking_id
 Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
 
-Route::get('/checkin', [BookingController::class, 'checkin'])->name('checkin');
+Route::get('/checkin', [BookingController::class, 'showCheckInPage'])->name('checkin');
+Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('selectRoom');
 Route::get('/checkindetail/{id}', [BookingController::class, 'checkindetail'])->name('checkindetail');
 Route::get('/checkoutdetail/{id}', [BookingController::class, 'checkoutdetail'])->name('checkoutdetail');
-Route::post('/checkinuser', [BookingController::class, 'checkinuser'])->name('checkinuser');
+// Route::post('/checkinuser', [BookingController::class, 'checkinuser'])->name('checkinuser');
 Route::get('/checkout', [BookingController::class, 'checkout'])->name('checkout');
 Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
 Route::post('/addBooking/{id}', [BookingController::class, 'addBooking'])->name('addBooking');
@@ -102,7 +117,6 @@ Route::post('/toggleRoomStatus/{id}', [MaintenanceceController::class, 'toggleRo
 
 Route::get('/', [OwnerController::class, 'checkUserType']);
 
-Route::get('/getAvailableRooms', [BookingController::class, 'getAvailableRooms']);
 
 
 

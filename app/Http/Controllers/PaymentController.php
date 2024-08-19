@@ -33,7 +33,6 @@ class PaymentController extends Controller
             'payment_method_types' => ['promptpay'],
         ]);
 
-        // บันทึกข้อมูลการชำระเงินลงฐานข้อมูล
         $payment = new Payment();
         $payment->booking_id = $bookingId;
         $payment->amount = $amount;
