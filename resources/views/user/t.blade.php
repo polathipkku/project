@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6">
     <style>
+
         button {
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
@@ -66,6 +67,8 @@
             </div>
 
             <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0  z-40 bg-white" style="padding: 5%;">
+            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0 w-full z-40 bg-white"
+                style="padding: 5%;">
                 <a href="home.html" class="text-black text-4xl font-bold">Tunthree Resort</a>
                 <div class="relative">
                     <nav class="space-x-10 text-xl">
@@ -83,6 +86,27 @@
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                                class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i
+                                class="fa-solid fa-star ml-2"></i></a>
+                        <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i
+                                class="fa-solid fa-comments ml-2"></i></a>
+                        <!-- User Menu Dropdown -->
+                        <button id="profileButton" type="button"
+                            class="text-black hover:text-blue-400 focus:outline-none">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="sr-only">User Menu</span>
+                        </button>
+                        <div id="profileDropdown"
+                            class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
+                            <div class="py-1">
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                             </div>
                         </div>
                     </nav>
@@ -98,7 +122,6 @@
             <a href="#" class="text-blue-600 hover:text-black">เลือกดูห้อง</a>
         </p>
     </div>
-
 
     <section>
         <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
@@ -120,6 +143,22 @@
                 <input type="number" id="number-of-rooms" class="ml-2 border border-gray-400 rounded-md px-2 py-1 text-black" value="1" min="1" max="10">
             </div>
             <div class="mt-4 ml-3">
+    
+
+    <!-- ส่วนค้นหา -->
+    <section>
+        <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
+            <div class="flex items-center mt-4 relative mr-4">
+                <span class="font-semibold text-white">Check-in </span>
+                <input type="date" id="checkin_date" name="checkin_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10">
+                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            </div>
+            <div class="flex items-center mt-4 relative mr-4">
+                <span class="font-semibold text-white">Check-out </span>
+                <input type="date" id="checkout_date" name="checkout_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10">
+                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            </div>
+            <div class="mt-4">
                 <button id="search-button" type="button" class="flex items-center justify-center text-white px-4 py-2 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-600" style="background-color: #0A97B0;" onclick="getAvailableRooms()">
                     ค้นหา
                 </button>
@@ -179,6 +218,70 @@
     </section>
 
 
+        </div>
+    </section>
+    
+
+    
+    
+    <!-- กริดของรูปภาพและข้อมูลห้องพัก -->
+    <section class="container mx-auto mt-12 flex gap-8" style="padding-bottom: 10%;">
+        <div class="grid gap-4" style="height: 400px; width: 600px;">
+            <div>
+                <a data-fancybox="gallery" href="/images/tb1.png">
+                    <img class="max-w-full rounded-lg border border-gray-300" src="/images/tb1.png" alt="">
+                </a>
+            </div>
+            <div class="grid grid-cols-5 gap-2">
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500422.jpg">
+                        <img class="max-w-full rounded-lg border border-gray-300" src="/images/S__13500422.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500432.jpg">
+                        <img class="max-w-full rounded-lg border border-gray-300" src="/images/S__13500432.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500425.jpg">
+                        <img class="max-w-full rounded-lg border border-gray-300" src="/images/S__13500425.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500426.jpg">
+                        <img class="max-w-full rounded-lg border border-gray-300" src="/images/S__13500426.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500433.jpg">
+                        <img class="max-w-full rounded-lg border border-gray-300" src="/images/S__13500433.jpg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1">
+            <h2 class="text-2xl font-semibold">ห้องพัก</h2>
+            <h5 class="text-gray-600">ราคาเริ่มต้นที่ </h5>
+            <h4 class="text-gray-600">500 บาท/คืน </h4>
+            <p class="text-gray-600">ห้องพัก เตียงนุ่ม อยู่สบาย</p>
+            <p class="text-gray-600">ฟรี WIFI แอร์เย็นสบาย </p>
+            <p class="text-gray-600">ประเภทห้อง: เตียงคิงไซต์</p>
+            <select id="room_amount" name="room_amount" class="bg-white border border-gray-300 rounded-md mb-3 shadow-sm py-2 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block" required>
+                <option value="" selected disabled hidden>เลือกจำนวนห้องพัก</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 focus:outline-none focus:bg-yellow-600" onclick="redirectToReservePage()">
+                จองห้องพัก!
+            </button>
+        </div>
+    </section>
+
     <section class="container mx-auto mt-12 mb-12">
         <h2 class="text-2xl font-semibold mb-4">ที่ตั้งของเรา</h2>
         <div class="w-full h-64">
@@ -200,6 +303,12 @@
 
 
 
+    <section class="info_section layout_padding2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-3 info_col">
+                    <div class="info_contact">
+                        <h4>
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -367,6 +476,29 @@
         });
     </script>
 
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+     <script>
+         // เรียกใช้ Flatpickr
+         flatpickr("#checkin_date", {
+             dateFormat: "Y-m-d",
+             minDate: "today"
+         });
+ 
+         flatpickr("#checkout_date", {
+             dateFormat: "Y-m-d",
+             minDate: "today"
+         });
+ 
+         function getAvailableRooms() {
+             // Logic สำหรับการค้นหาห้องว่าง
+             alert('ค้นหาห้องพักที่ว่าง');
+         }
+ 
+         function redirectToReservePage() {
+             // Logic สำหรับการเปลี่ยนไปยังหน้าจองห้องพัก
+             alert('เปลี่ยนไปยังหน้าจองห้องพัก');
+         }
+     </script>
 
 </body>
 

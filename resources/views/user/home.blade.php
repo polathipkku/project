@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="{{ asset('css/output.css') }}" rel="stylesheet">
@@ -68,6 +68,42 @@
       </div>
     </div>
   </header>
+  <link href="css/responsive.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+  <!-- Owl Carousel JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <!-- <link href="css/font-awesome.min.css" rel="stylesheet" /> -->
+  <!-- <link rel="stylesheet" href="/css/hero.css"> -->
+  <link href="css/style.css" rel="stylesheet" />
+
+
+  <title> Tunthree </title>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!--  Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+{{-- flatpickr --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="css/style-head.css">
+  <!-- Magnific Popup CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Magnific Popup JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
   <div id="backdrop" class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
   </div>
@@ -272,6 +308,32 @@
         <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
           <a data-fancybox="gallery_1" href="/images/t-1.jpg">
             <img src="/images/t-1.jpg" alt="แหล่งท่องเที่ยว" class="w-full h-full object-cover rounded-lg shadow-md">
+      <h1 class="text-white text-5xl mb-8 ">เริ่มต้นการจอง</h1>
+      <form action="" class="grid grid-cols-5  justify-items-stretch items-center  bg-white border-1 rounded-2xl">
+        <div class="relative">
+        </div>
+        <div class="flex justify-center items-center my-3 mb-4 col-span-2 max-md:col-span-3 xl:mx-0">
+          <div class="relative">
+            <p class="pb-2">Check-in</p>
+            <div class="relative">
+              <input type="date" id="Check-in" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl"></i>
+            </div>
+          </div>
+          <div class="relative">
+            <p class="pb-2">Check-out</p>
+            <div class="relative">
+              <input type="date" id="Check-out" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl "></i>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <p class="pb-3 invisible"> </p>
+          <a href="{{route('userbooking') }}" style="color: azure;">
+            <div class="w-full bg-blue-500 hover:bg-blue-600 text-xl rounded-lg px-10  py-2.5 text-center" style="margin-left:20% ; margin-top:1em ; ">
+              จอง
+            </div>
           </a>
           <a data-fancybox="gallery_1" href="/images/t-2.jpg"></a>
         </div>
@@ -488,6 +550,7 @@
   <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
   <script src="/js/hero.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     const profileButton = document.getElementById("profileButton");
     const profileDropdown = document.getElementById("profileDropdown");
@@ -496,6 +559,12 @@
       profileDropdown.classList.toggle("hidden");
       event.stopPropagation();
     });
+    
+    document.addEventListener("click", function(event) {
+      var profileButton = document.getElementById("profileButton");
+      var profileDropdown = document.getElementById("profileDropdown");
+      // ตรวจสอบว่าคลิกที่ปุ่มโปรไฟล์หรือไม่
+      var isProfileButtonClicked = profileButton.contains(event.target);
 
     document.addEventListener("click", function(event) {
       const isProfileButtonClicked = profileButton.contains(event.target);
@@ -506,6 +575,26 @@
       }
     });
   </script>
+
+    // เมื่อคลิกที่ปุ่มโปรไฟล์
+    document.getElementById("profileButton").addEventListener("click", function(event) {
+      var profileDropdown = document.getElementById("profileDropdown");
+      profileDropdown.classList.toggle("hidden"); // เปิดหรือปิดเมนู dropdown
+      event.stopPropagation(); // ไม่ให้การคลิกที่ปุ่มแพร่กระจายไปยังโค้ดด้านบน
+    });
+
+    flatpickr("#Check-in", {
+             dateFormat: "d-m-Y",
+             minDate: "today"
+         });
+ 
+         flatpickr("#Check-out", {
+             dateFormat: "d-m-Y",
+             minDate: "today"
+         });
+  </script>
+ 
+
 </body>
 
 </html>
