@@ -25,29 +25,26 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-
             'tel' => ['required', 'string', 'max:255'],
             'start_date' => ['date', 'nullable'],
             'birthday' => ['date', 'nullable'],
             'address' => ['string', 'nullable'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-
         ])->validate();
-       
-
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-
             'tel' => $input['tel'],
-            'start_date' => $input['start_date'],
+            'start_date' => $input['start_date'] ?? null,
             'birthday' => $input['birthday'],
             'address' => $input['address'],
             'image' => $this->uploadImage($input['image']) ?? '',
         ]);
     }
+
+
     /**
      * Upload image and return the path.
      *

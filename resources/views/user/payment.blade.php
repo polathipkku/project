@@ -26,26 +26,31 @@
             <img src="/images/PromptPay-logo.png" alt="THAI QR PAYMENT" class="w-32 h-auto">
         </div>
         @foreach ($bookings as $booking)
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-gray-100 p-4 rounded">
-                    <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
-                    <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->booking_name }}</p>
-                    <p><strong>ห้อง:</strong> {{ $booking->room_id }}</p>
-                    <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->phone }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
+                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->booking_name }}</p>
+                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $booking->occupancy_person }}</p>
+                <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->phone }}</p>
 
-                    <p class="mr-4"><strong>เช็คอิน:</strong>
-                        {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}</p>
-                    <p><strong>เช็คเอาท์:</strong>
-                        {{ \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y') }}</p>
-
-                </div>
-                <div class="bg-gray-100 p-4 rounded">
-                    <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
-                    <p><strong>ยอด:</strong> {{ $booking->total_cost }} บาท</p>
-                    <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
-                    <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
-                </div>
+                <p class="mr-4"><strong>เช็คอิน:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}
+                </p>
+                <p><strong>เช็คเอาท์:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y') }}
+                </p>
+                <p><strong>จำนวนวันที่เข้าพัก:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkin_date)->diffInDays(\Carbon\Carbon::parse($booking->checkout_date)) }} วัน
+                </p>
             </div>
+
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
+                <p><strong>ยอด:</strong> {{ $booking->total_cost }} บาท</p>
+                <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
+                <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
+            </div>
+        </div>
         @endforeach
 
         <div class="mt-6">
@@ -64,27 +69,50 @@
             @csrf
             <input type="hidden" id="booking_id" name="booking_id" value="{{ $booking->id }}">
             <div class="flex space-x-4 float-right ">
-                <button id="pay-button" type="button"
-                    class="w-54 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 ">
+                <button id="pay-button" type="button" class="w-54 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 ">
                     ชำระเงินด้วยพร้อมเพย์
                 </button>
-                <button id="cancel-button" type="button"
-                    class="w-54 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 ">
-                    ยกเลิกการชำระเงิน
-                </button>
+                <form id="cancel-form" action="{{ route('cancel.booking', $booking->id) }}" method="POST">
+                    @csrf
+                    <button id="cancel-button" type="button" class="w-54 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700" onclick="cancelBooking('{{ $booking->id }}')">
+                        ยกเลิกการชำระเงิน
+                    </button>
+
+                    <script>
+                        function cancelBooking(bookingId) {
+                            fetch(`{{ route('cancel.booking', '') }}/${bookingId}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        _method: 'DELETE'
+                                    })
+                                })
+                                .then(response => {
+                                    (response.ok)
+                                    window.location.href = '/home';
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        }
+                    </script>
+
+
             </div>
         </form>
     </div>
 
     <script>
         const stripe = Stripe(
-            'pk_test_51PZ6omGGaN9QJBWFVeH5ibtGX7ExFeg5C78sqdm5bwqzZmmb7fDNEgds8psryzewvU4m4kKrYsDUPKjthPxKVisI00wDOgiRMv'
+            'pk_live_51PZ6omGGaN9QJBWFRRjYbd3EMwWHJeztF2p85kFV3jo3sws9imKNK0KH3SwsWtp57P71eGAY2dvJtyb61UfA3eLR00YwyN3BMj'
         );
         let timer;
         document.getElementById('pay-button').addEventListener('click', function() {
             const bookingId = document.getElementById('booking_id').value;
-            //start count
-            let countdown = 60; // 1 = 1 seconds 
+            let countdown = 60; 
             let timer = setInterval(updateTimer, 1000);
 
             function updateTimer() {
@@ -92,7 +120,7 @@
                 const minutes = Math.floor(countdown / 60);
                 const seconds = countdown % 60;
                 document.getElementById('countdown').textContent =
-                `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                    `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
                 if (countdown <= 0) {
                     clearInterval(timer);
@@ -120,29 +148,20 @@
                 .then(data => {
                     console.log(data);
 
-                    // สร้าง QR code สำหรับ PromptPay
                     new QRCode(document.getElementById('qrcode'), {
                         text: data.client_secret,
                         width: 128,
                         height: 128
                     });
 
-                    // ซ่อนปุ่มชำระเงินหลังจากแสดง QR code
                     document.getElementById('pay-button').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         });
-
-        document.getElementById('cancel-button').addEventListener('click', function() {
-            clearInterval(timer);
-            document.getElementById('countdown').textContent = '0:00';
-            document.getElementById('time-left').textContent = 'ยกเลิกการชำระเงิน';
-            document.getElementById('pay-button').style.display = 'none';
-        });
     </script>
-   
+
 </body>
 
 </html>

@@ -4,262 +4,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="dist\output.css">
-    <link rel="shortcut icon" href="images/TTbell.png" type="image/png">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet" />
-    <!-- <link href="css/font-awesome.min.css" rel="stylesheet" /> -->
-    <link href="/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="{{ asset('css/output.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
+    <link rel="shortcut icon" href="/images/Logo_2.jpg" type="image/png">
+    <link rel="stylesheet" href="/css/hero.css">
+    <link href="src/output.css" rel="stylesheet">
     <title>Thunthree</title>
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
-    <!--owl slider stylesheet -->
-    <!-- <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" /> -->
-    <!-- <link rel="stylesheet" href="css/style-head.css"> -->
-    <!-- Magnific Popup CSS -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css"> -->
-    <!-- jQuery -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
-    <!-- Magnific Popup JS -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script> -->
-    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 
-<body>
-    <div class="hero_area">
-        <!-- header section strats -->
-        <header class="header_section">
-            <div class="header_top fixed top-0 left-0 w-full z-50 ">
-                <div class="container-fluid ">
-                    <div class="contact_nav">
-                        <a href="">
-                            <i class="fa-solid fa-phone"></i>
-                            <span>
-                                Call : 0940028212
-                            </span>
-                        </a>
-                        <a href="">
-                            <i class="fa-solid fa-envelope"></i>
-                            <span>
-                                Email : polathip.b@kkumail.com
-                            </span>
-                        </a>
-                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span>
-                                Location
-                            </span>
-                        </a>
-                    </div>
+<body class="bg-gray-100">
+    <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
+        {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
+        <a href="" class="mx-5"><i class="fa-solid fa-phone"></i>0961826631</a> --}}
+    </div>
+
+    <header class="bg-white shadow-lg pt-3">
+        <div class="container mx-auto flex items-center justify-between h-24 px-5">
+            <nav class="text-base">
+                <div class="container mx-auto flex justify-center space-x-10 py-3">
+                    <a href="gallery" class="hover:text-blue-400">แกลเลอรี่</a>
+                    <a href="travel" class="hover:text-blue-400">สถานที่ท่องเที่ยว</a>
+                    <a href="contactus" class="hover:text-blue-400">ติดต่อ</a>
                 </div>
+            </nav>
+            <div class="logo" id="logo">
+                <a href="welcome_2" class="pl-24">Thunthree</a>
             </div>
-
-            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0 w-full z-40 bg-white" style="padding: 5%;">
-                <a href="{{route('home')}}" class="text-black text-4xl font-bold">Tunthree Resort</a>
-                <div class="relative">
-                    <nav class="space-x-10 text-xl">
-
-                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
-                        <a href="{{ route('contact') }}" class="text-black hover:text-blue-400">ติดต่อเรา<i class="fa-solid fa-comments ml-2"></i></a>
-                        <!-- User Menu Dropdown -->
-                        <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
-                            <i class="fa-solid fa-user"></i>
-                            <span class="sr-only">User Menu</span>
-                        </button>
-                        <div id="profileDropdown" class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
-                            <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        Logout
-                                    </span>
-                                </a>
-                                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
+            <div class="flex items-center space-x-4 text-gray-800 text-base">
+                <nav class="space-x-10">
+                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                    <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
+                    <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
+                        <i class="fa-solid fa-user"></i>
+                        <span class="sr-only">User Menu</span>
+                    </button>
+                    <div id="profileDropdown" class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
+                        <div class="py-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
+                                    Logout
+                                </span>
+                            </a>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                                @csrf
+                            </form>
                         </div>
-                        <!-- End  User Menu Dropdown -->
-                    </nav>
-
-                </div>
-        </header>
+                    </div>
+                    <!-- End  User Menu Dropdown -->
+                </nav>
+                <button id="booking-btn" class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors">
+                    จองตอนนี้
+                </button>
+            </div>
+        </div>
+    </header>
     </div>
     <!--------------------------End Topbar-------------------------------------->
-    <div class="mx-auto pt-4 pb-4 bg-gray-100">
+    <div class="mx-auto pt-4 pb-4 bg-gray-100  shadow-lg">
         <p class="text-gray-600 text-lg max-xl:px-4 pt-8" style="margin-left: 7%;">
-            <a href="{{route('home')}}" class="text-black hover:text-blue-400">Home</a>
+            <a href="{{ route('home') }}" class="text-black hover:text-blue-400">Home</a>
             <i class="fa-solid fa-chevron-right ml-2 mr-2"></i>
             <a href="#" class="text-blue-600 hover:text-black">จองห้อง</a>
         </p>
     </div>
-    <div class="max-w-screen-xl mx-auto pt-8 pb-16 ">
-        <h1 class="text-5xl mb-10 max-xl:px-4">จองห้อง</h1>
-        <form action="{{ url('/reserve/'.$rooms->id) }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <div class="grid grid-cols-1 gap-4">
-
-                <!-- ส่วนของชื่อ -->
-                <div class="flex flex-col">
-                    <label for="booking_name" class="text-sm font-medium">ชื่อผู้จอง</label>
-                    <input type="text" id="booking_name" name="booking_name" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                </div>
-
-                <!-- ส่วนของเบอร์โทรศัพท์ และ จำนวนผู้เข้าพัก -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label for="phone" class="text-sm font-medium">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phone" name="phone" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="number_of_guests" class="text-sm font-medium">จำนวนผู้เข้าพัก</label>
-                        <input type="number" id="number_of_guests" name="number_of_guests" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label for="checkin_date" class="text-sm font-medium">วันที่เข้าพัก</label>
-                        <input type="date" id="checkin_date" name="checkin_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="checkout_date" class="text-sm font-medium">วันที่ออก</label>
-                        <input type="date" id="checkout_date" name="checkout_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                    </div>
-                </div>
-
-                <!-- ส่วนของประเภทห้องพัก -->
-                <div class="flex flex-col">
-                    <label for="room_type" class="text-sm font-medium">ประเภทห้องพัก</label>
-                    <select id="room_type" name="room_type" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
-                        <option value="" selected disabled hidden >เลือกประเภทการเข้าพัก</option>
-                        <option value="ห้องพักค้างคืน" data-price="500">ห้องพักค้างคืน</option>
-                        <option value="ห้องพักชั่วคราว" data-price="300">ห้องพักชั่วคราว</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="room_price" class="text-sm font-medium">ราคาห้อง</label>
-                    <input type="text" id="room_price" name="room_price" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" readonly>
-                </div>
-                <input type="hidden" id="booking_status" name="booking_status" value="ทำการจอง">
-
-                <script>
-                    function calculatePrice() {
-                        var checkinDate = new Date(document.getElementById('checkin_date').value);
-                        var checkoutDate = new Date(document.getElementById('checkout_date').value);
-                        var roomType = document.getElementById('room_type');
-                        var roomPricePerDay = parseInt(roomType.options[roomType.selectedIndex].getAttribute('data-price'));
-
-                        // คำนวณจำนวนวันที่เข้าพัก
-                        var timeDifference = checkoutDate - checkinDate;
-                        var daysDifference = timeDifference / (1000 * 3600 * 24);
-
-                        // คำนวณราคาห้อง
-                        var totalPrice = daysDifference * roomPricePerDay;
-
-                        // แสดงราคาห้อง
-                        document.getElementById('room_price').value = totalPrice > 0 ? totalPrice : 0;
-                    }
-
-                    document.getElementById('checkin_date').addEventListener('change', calculatePrice);
-                    document.getElementById('checkout_date').addEventListener('change', calculatePrice);
-                    document.getElementById('room_type').addEventListener('change', calculatePrice);
-                </script>
-
-
-
-                <div class="flex flex-col">
-                    <button type="submit" class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">ยืนยันการจอง</button>
-                </div>
-
-            </div>
-        </form>
-
-
-    </div>
-
-    <section class="info_section layout_padding2">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-3 info_col">
-                    <div class="info_contact">
-                        <h4>
-
-                            Tunthree Resort
-
-                        </h4>
-                        <div class="contact_link_box">
-                            <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span>
-                                    Location
-                                </span>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-phone" aria-hidden="true"></i>
-                                <span>
-                                    Call 0940028212
-                                </span>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <span>
-                                    polathip.b@kkumail.com
-                                </span>
-                            </a>
-                            <a href="https://www.facebook.com/profile.php?id=100063483881013">
-                                <i class="fa fa-facebook" aria-hidden="true">
-                                    <span>
-                                        Thunthree
-                                    </span>
-                                </i>
-                            </a>
+    <main class="bg-gray-200 shadow-lg">
+        <div class="max-w-screen-xl mx-auto pt-8 pb-16 ">
+            <div class="max-w-screen-xl mx-auto pt-8 pb-16">
+                <div class="bg-white max-w-5xl mx-auto">
+                    <div class="mx-auto h-16 mb-8" style="background-color: #042a48">
+                        <div class="text-white text-2xl ml-2 pt-4">
+                            จองห้อง
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-6 col-lg-2 mx-auto info_col">
-                    <div class="info_link_box">
-                        <h4>
-
-                        </h4>
-                        <div class="info_links">
-                            <a class="active" href="{{route('home')}}">
-                                <img src="images/nav-bullet.png" alt="">
-                                Home
-                            </a>
-                            <a class="" href="service.html">
-                                <img src="images/nav-bullet.png" alt="">
-                                Services
-                            </a>
-                            <a class="" href="contact.html">
-
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 info_col ">
-                    <h4>
-                        Subscribe
-                    </h4>
-                    <form action="#">
-                        <input type="text" placeholder="Enter email" />
-                        <button type="submit">
-                            Subscribe
+                    <div class="flex justify-center text-center space-x-1 ">
+                        <button id="selfBookingBtn" class="inline-block px-8 py-4 bg-blue-500 text-white rounded border-2 font-semibold border-blue-500 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors w-80">
+                            จองให้ตัวเอง
                         </button>
+                        <button id="otherBookingBtn" class="inline-block px-8 py-4 bg-white text-blue-500 rounded font-semibold border-2 border-blue-500 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors w-80">
+                            จองให้ผู้อื่น
+                        </button>
+                    </div>
+                </div>
+                <form method="POST" id="selfBookingForm" action="{{ route('bookings.reserve') }}">
+                    @csrf
+                    <div class="max-w-5xl mx-auto ">
+                        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
+                            <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
+                                <div class="mb-4">
+                                    <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
+                                    <input type="text" name="booking_name" id="booking_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                    <input type="text" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                    <input type="number" name="number_of_guests" id="number_of_guests" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="checkin_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
+                                    <input type="date" name="checkin_date" id="checkin_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkin_date }}" readonly>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="checkout_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
+                                    <input type="date" name="checkout_date" id="checkout_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkout_date }}" readonly>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        บันทึกการจอง
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form id="otherBookingForm" action="" method="post" enctype="multipart/form-data" style="display:none;">
+                    @csrf
+                    <div class="max-w-5xl mx-auto ">
+                        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
+                            <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
+
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
+
+                                <label for="booker_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ:</label>
+                                <input type="text" name="booker_first_name" id="booker_first_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="booker_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอรืโทรศัพท์:</label>
+                                <input type="text" name="booker_last_name" id="booker_last_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                <input type="text" name="booker_amount" id="booker_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="booker_checkin" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
+                                <input type="date" name="booker_checkin" id="booker_checkin" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="booker_checkout" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
+                                <input type="date" name="booker_checkout" id="booker_checkout" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+
+                            </div>
+                            <hr class="border-t-2 border-gray-300 my-4">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
+
+                                <label for="guest_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ:</label>
+                                <input type="text" name="guest_name" id="guest_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="guest_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                <input type="text" name="guest_phone" id="guest_phone" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                <input type="text" name="guest_amount" id="guest_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="guest_checkin" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
+                                <input type="date" name="guest_checkin" id="guest_checkin" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                                <label for="guest_checkout" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
+                                <input type="date" name="guest_checkout" id="guest_checkout" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">บันทึกการจอง</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+    </main>
+    <footer class="bg-gray-800 mt-10 text-white">
+        <div class="container mx-auto p-5">
+            <div class="flex flex-wrap">
+                <!-- ข้อมูลการติดต่อ -->
+                <div class="w-full md:w-1/3 mb-6">
+                    <h4 class="text-xl font-bold">Tunthree Resort</h4>
+                    <div class="mt-4">
+                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
+                            <i class="fa fa-map-marker mr-2"></i>
+                            <span>Location</span>
+                        </a>
+                        <a href="tel:0940028212" class="flex items-center mb-2">
+                            <i class="fa fa-phone mr-2"></i>
+                            <span>Call 0940028212</span>
+                        </a>
+                        <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
+                            <i class="fa fa-envelope mr-2"></i>
+                            <span>polathip.b@kkumail.com</span>
+                        </a>
+                    </div>
+
+                </div>
+                <!-- ลิงก์หลัก -->
+                <div class="w-full md:w-1/3 mb-6">
+                    <h4 class="text-xl font-bold">Quick Links</h4>
+                    <div class="mt-4">
+                        <a href="index.html" class="block mb-2">Home</a>
+                        <a href="service.html" class="block mb-2">Services</a>
+                        <a href="contact.html" class="block mb-2">Contact Us</a>
+                    </div>
+                </div>
+                <!-- ฟอร์มสมัครสมาชิก -->
+                <div class="w-full md:w-1/3 mb-6">
+                    <h4 class="text-xl font-bold">Subscribe</h4>
+                    <form action="#" class="mt-4">
+                        <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
+                        <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
                     </form>
                 </div>
             </div>
+            <div class="text-center ">
+                <small>
+                    &copy; 2024 Tunthree Resort. All rights reserved.
+                    <a href="#" class="hover:underline">Privacy Policy</a> •
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                </small>
+            </div>
         </div>
-    </section>
+    </footer>
     <script>
         function submitForm() {
             const contactName = document.getElementById("contactName").value;
@@ -279,6 +252,7 @@
             });
         }
     </script>
+    <script src="/js/hero.js"></script>
 
 </body>
 

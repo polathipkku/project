@@ -16,7 +16,7 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('room_id')->nullable(); // Allow room_id to be nullable
             $table->string('booking_name');
             $table->string('phone')->nullable();
             $table->date('checkin_date');
@@ -31,11 +31,9 @@ class CreateBookingsTable extends Migration
            
             $table->softDeletes();
 
-
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null'); // Ensure foreign key constraint handles null values
         });
-        
     }
 
     /**

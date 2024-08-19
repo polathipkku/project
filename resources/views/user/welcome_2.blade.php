@@ -266,11 +266,7 @@
                     <a data-fancybox="gallery_1" href="/images/t-2.jpg"></a>
                 </div>
             </section>
-
-
         </div>
-
-
         <div class="bg-white mt-8 max-xl:px-8">
             <div class="max-w-screen-xl mx-auto py-10">
                 <h3 class="text-5xl">จองห้องกับเรา</h3>
@@ -411,85 +407,74 @@
     </div>
 
     <div id="registerForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm relative">
-            <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm relative">
+            <div class="absolute top-0 right-0 mt-2 mr-2 z-10">
                 <button onclick="hideRegisterForm()" class="focus:outline-none">
-                    <img src="images/reject.png" alt="Reject" class="w-6 h-6">
+                    <img src="images/reject.png" alt="Reject" class="w-5 h-5">
                 </button>
             </div>
-            <h2 class="text-3xl font-bold mb-2 text-center">Register</h2>
-            <form class="space-y-6" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+            <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+            <form class="space-y-4" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="mb-4">
-                    <input id="name" name="name" type="text" autocomplete="name" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Name">
+                <div class="mb-3">
+                    <input id="name" name="name" type="text" autocomplete="name" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Name">
                 </div>
 
-                <div class="mb-4">
-                    <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" :value="old('email')" placeholder="Email" autofocus>
+                <div class="mb-3">
+                    <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" :value="old('email')" placeholder="Email" autofocus>
                 </div>
 
-                <div class="mb-4">
-                    <input id="password" name="password" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Password">
+                <div class="mb-3">
+                    <input id="password" name="password" type="password" autocomplete="new-password" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Password">
                 </div>
 
-                <div class="mb-4">
-                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Confirm Password">
+                <div class="mb-3">
+                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Confirm Password">
                 </div>
 
-                <div class="mb-4">
-                    <input id="tel" name="tel" type="text" autocomplete="tel" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Telephone">
+                <div class="mb-3">
+                    <input id="tel" name="tel" type="text" autocomplete="tel" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Telephone">
                 </div>
 
-                <div class="mb-4">
-                    <input id="birthday" name="birthday" type="date" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                <div class="mb-3">
+                    <input id="start_date" name="start_date" type="date" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
 
-                <div class="mb-4">
-                    <input id="address" name="address" type="text" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Address">
+                <div class="mb-3">
+                    <input id="birthday" name="birthday" type="date" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
 
-                <div class="mb-4">
-                    <input id="image" name="image" type="file" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                <div class="mb-3">
+                    <input id="address" name="address" type="text" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Address">
+                </div>
+
+                <div class="mb-3">
+                    <input id="image" name="image" type="file" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
-                <div class="mb-4">
+                <!-- Terms and Privacy Policy checkbox -->
+                <div class="mb-3">
                     <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                     <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
                 </div>
                 @endif
+                <!-- Register Button -->
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4 w-full">Register</button>
 
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Register</button>
-
+                <!-- Link to show login form -->
                 <div class="text-center mt-2">
                     <p class="text-sm text-gray-600">Already have an account? <a href="#" class="text-blue-600 hover:text-blue-800" onclick="showLoginForm()">Login</a></p>
                 </div>
             </form>
-
         </div>
     </div>
+
     <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
     <script src="/js/hero.js"></script>
-    <script>
-        const profileButton = document.getElementById("profileButton");
-        const profileDropdown = document.getElementById("profileDropdown");
-
-        profileButton.addEventListener("click", function(event) {
-            profileDropdown.classList.toggle("hidden");
-            event.stopPropagation();
-        });
-
-        document.addEventListener("click", function(event) {
-            const isProfileButtonClicked = profileButton.contains(event.target);
-            const isDropdownOpen = !profileDropdown.classList.contains("hidden");
-
-            if (!isProfileButtonClicked && isDropdownOpen) {
-                profileDropdown.classList.add("hidden");
-            }
-        });
-    </script>
+    <script></script>
 
 </body>
 

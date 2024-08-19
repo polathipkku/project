@@ -7,6 +7,8 @@
     <link href="/src/output.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/hero.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
     <title>Tunthree</title>
@@ -80,38 +82,28 @@
         </section>
 
         <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); ">
-            <div class="max-w-screen-xl mx-auto py-10 ">
-                <div class="px-2 p-2  flex justify-between items-center">
+            <div class="max-w-screen-xl mx-auto py-10">
+                <div class="px-2 p-2 flex justify-between items-center">
                     <h1 class="text-4xl mb-10 max-xl:px-4">Check-In</h1>
+                    <input id="checkin-date" type="text" class="flatpickr input px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Select Check-In Date" data-default-date="today" />
                 </div>
-                <table class="w-full border-collapse ">
+                <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
-                            <th class="px-4 py-2">การจองที่</th>
-                            <th class="px-4 py-2">หมายเลขห้อง</th>
                             <th class="px-4 py-2">ชื่อผู้จอง</th>
                             <th class="px-4 py-2">วันที่เช็คอิน</th>
                             <th class="px-4 py-2">รายละเอียด</th>
                             <th class="px-4 py-2">สถานะ</th>
                             <th class="px-4 py-2" style="padding-right: 5%;">CheckIn</th>
-
                         </tr>
                     </thead>
-
-                    <tbody class="text-center">
+                    <tbody class="text-center" id="booking-rows">
                         @if(count($bookings) > 0)
-                        @php $index = 1; @endphp
                         @foreach($bookings as $booking)
-                        @if($booking->booking_status == 'ทำการจอง')
-                        <tr class="">
-                            <td class="px-4 py-2">{{ $index }}</td>
-                            <td class=" px-4 py-2">
-                                @if($booking->room)
-                                {{ $booking->room->room_name }}
-                                @endif
-                            </td>
-                            <td class=" px-4 py-2">{{ $booking->booking_name}}</td>
-                            <td class=" px-4 py-2">{{ $booking->checkin_date}}</td>
+                        @if($booking->booking_status == 'รอเลือกห้อง')
+                        <tr class="booking-row" data-checkin-date="{{ $booking->checkin_date }}">
+                            <td class="px-4 py-2">{{ $booking->booking_name }}</td>
+                            <td class="px-4 py-2">{{ $booking->checkin_date }}</td>
                             <td class="py-2 px-4">
                                 <a href="{{ route('checkindetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
                                     <button class="py-2 px-4 rounded-md hover:underline focus:outline-none focus:shadow-outline-blue active:text-blue-800" type="button">
@@ -119,20 +111,25 @@
                                     </button>
                                 </a>
                             </td>
-
-
-                            <td class=" px-4 py-2 text-center">
+                            <td class="px-4 py-2 text-center">
                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
                                     {{ $booking->booking_status }}
+                                </span>
                             </td>
                             <td class="px-4 py-4 flex justify-center items-center">
-                                @if($booking->booking_status === 'ทำการจอง')
-                                <form action="{{ route('checkinuser') }}" method="post">
+                                @if($booking->booking_status === 'รอเลือกห้อง')
+                                <form action="{{ route('selectRoom') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                    <button class="text-black hover:text-blue-500 " onclick="">
-                                        <i class="fa-solid fa-square-check "></i>
+                                    <select name="room_id" required class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
+                                        @foreach($rooms as $room)
+                                        <option value="{{ $room->id }}">{{ $room->room_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="text-black hover:text-blue-500 ml-2">
+                                        <i class="fa-solid fa-square-check"></i>
                                     </button>
                                 </form>
                                 @else
@@ -141,45 +138,48 @@
                             </td>
 
                         </tr>
-                        <!-- End of example rows -->
-                        </tr>
-                        @php $index++; @endphp
                         @endif
                         @endforeach
                         @endif
                     </tbody>
                 </table>
+                <p id="no-bookings-message" class="hidden text-center text-gray-600">ไม่มีรายการที่ต้องเช็คอินในวันนี้</p>
             </div>
         </section>
-
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-    <!-- <script>
-        // Attach event listener to check-in button
-        const checkInButtons = document.querySelectorAll('.fa-solid.fa-square-check');
-        checkInButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Show SweetAlert dialog with payment method selection
-                Swal.fire({
-                    title: 'Select Payment Method',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'เงินสด',
-                    cancelButtonText: 'โอนเงิน'
-                }).then((result) => {
-                    if (result.isConfirmed) {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#checkin-date", {
+                dateFormat: "Y-m-d",
+                defaultDate: new Date(),
+                onChange: function(selectedDates, dateStr, instance) {
+                    filterBookings(dateStr);
+                }
+            });
 
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        window.location.href = 'check-in_payment.html';
+            function filterBookings(selectedDate) {
+                const rows = document.querySelectorAll('.booking-row');
+                let hasBookings = false;
+                rows.forEach(row => {
+                    if (row.getAttribute('data-checkin-date') === selectedDate) {
+                        row.style.display = '';
+                        hasBookings = true;
+                    } else {
+                        row.style.display = 'none';
                     }
                 });
-            });
+
+                document.getElementById('no-bookings-message').classList.toggle('hidden', hasBookings);
+            }
+
+            // Initialize with today's bookings
+            filterBookings(flatpickr.formatDate(new Date(), "Y-m-d"));
         });
-    </script> -->
+    </script>
 </body>
 
 </html>

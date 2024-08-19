@@ -8,7 +8,7 @@ use App\Models\User;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Validation\Rules\Password; // เพิ่มบรรทัดนี้
 use Illuminate\Support\Facades\Storage;
-
+use Carbon\Carbon;
 
 class OwnerController extends Controller
 {
@@ -16,11 +16,11 @@ class OwnerController extends Controller
     {
         $search = $request->input('search');
         $employee = User::where('userType', '1')
-        ->where('name', 'like', "%$search%")
-        ->get();        
+            ->where('name', 'like', "%$search%")
+            ->get();
         return view('owner.employee', compact('employee'));
     }
-    
+
     public function employee()
     {
         $employee = User::where('userType', '1')->get();
@@ -70,7 +70,6 @@ class OwnerController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::defaults()],
             'tel' => 'required|string|max:20',
-            'start_date' => 'required|date',
             'birthday' => 'required|date',
             'address' => 'required|string|max:255',
             'image' => 'required|image|max:10240',
@@ -84,12 +83,13 @@ class OwnerController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'tel' => $request->tel,
-            'start_date' => $request->start_date,
             'birthday' => $request->birthday,
             'address' => $request->address,
-            'image' => $imageName, // ใช้ชื่อไฟล์รูปภาพที่สร้างขึ้นในฐานข้อมูล
+            'image' => $imageName,
             'userType' => $request->userType,
+            'start_date' => $request->start_date ?? null,
         ]);
+
         return redirect()->route('employee')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 

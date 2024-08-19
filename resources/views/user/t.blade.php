@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6">
     <style>
-        
+
         button {
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
@@ -66,12 +66,26 @@
                 </div>
             </div>
 
+            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0  z-40 bg-white" style="padding: 5%;">
             <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0 w-full z-40 bg-white"
                 style="padding: 5%;">
                 <a href="home.html" class="text-black text-4xl font-bold">Tunthree Resort</a>
                 <div class="relative">
                     <nav class="space-x-10 text-xl">
 
+                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
+                        <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i class="fa-solid fa-comments ml-2"></i></a>
+                        <!-- User Menu Dropdown -->
+                        <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="sr-only">User Menu</span>
+                        </button>
+                        <div id="profileDropdown" class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                         <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i
                                 class="fa-solid fa-clock-rotate-left ml-2"></i></a>
                         <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i
@@ -108,6 +122,27 @@
             <a href="#" class="text-blue-600 hover:text-black">เลือกดูห้อง</a>
         </p>
     </div>
+
+    <section>
+        <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
+            <div class="flex items-center mt-4 relative mr-4">
+                <span class="font-semibold text-white">Check-in</span>
+                <input type="text" id="checkin_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10">
+                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                <input type="hidden" id="startDate" name="startDate">
+            </div>
+            <div class="flex items-center mt-4 relative mr-4">
+                <span class="font-semibold text-white">Check-out</span>
+                <input type="text" id="checkout_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
+                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                <input type="hidden" id="endDate" name="endDate">
+                <input type="hidden" id="totalDay" name="totalDay">
+            </div>
+            <div class="flex items-center mt-4 relative mr-4 ml-2">
+                <span class="font-semibold text-white">จำนวนห้องที่ต้องการ</span>
+                <input type="number" id="number-of-rooms" class="ml-2 border border-gray-400 rounded-md px-2 py-1 text-black" value="1" min="1" max="10">
+            </div>
+            <div class="mt-4 ml-3">
     
 
     <!-- ส่วนค้นหา -->
@@ -128,6 +163,61 @@
                     ค้นหา
                 </button>
             </div>
+
+            <div class="flex items-center mt-4 relative mr-4 ml-5">
+                <span class="font-semibold text-white">จำนวนวันเข้าพัก</span>
+                <div id="stay-days" class="ml-2 border border-gray-400 rounded-md px-2 py-1 text-white">0 วัน</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="room-availability" class="container mx-auto mt-12 flex gap-8" style="padding-bottom: 10%; display: none;">
+        <div class="grid gap-4" style="height: 400px; width: 600px;">
+            <div>
+            </div>
+            <a data-fancybox="gallery" href="/images/tb1.png">
+                <img class="max-w-full rounded-lg border border-gray-300" src="/images/tb1.png" alt="">
+            </a>
+            <div class="grid grid-cols-5 gap-2">
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500429.jpg">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500429.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/i-8.png">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-8.png" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/i-11.png">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-11.png" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500428.jpg">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500428.jpg" alt="">
+                    </a>
+                </div>
+                <div>
+                    <a data-fancybox="gallery" href="/images/S__13500430.jpg">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500430.jpg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1">
+        </div>
+    </section>
+
+    <!-- No Availability Section -->
+    <section id="no-availability" class="container mx-auto mt-12 flex items-center justify-center" style="display: none;">
+        <div class="text-center">
+            <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
+        </div>
+    </section>
+
+
         </div>
     </section>
     
@@ -211,8 +301,14 @@
         </div>
     </section>
 
- 
 
+
+    <section class="info_section layout_padding2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-3 info_col">
+                    <div class="info_contact">
+                        <h4>
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -288,6 +384,97 @@
             </div>
         </div>
     </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var valuestartdate = document.getElementById('startDate');
+            var valueenddate = document.getElementById('endDate');
+            var totalDay = document.getElementById('totalDay');
+            var checkinInput = document.getElementById('checkin_date');
+            var checkoutDateInput = document.getElementById('checkout_date');
+            var reserveButton = document.getElementById('reserve-button');
+
+            flatpickr(checkinInput, {
+                dateFormat: 'Y-m-d',
+                locale: 'th',
+                minDate: 'today',
+                mode: 'range',
+                onChange: function(array, str, instance) {
+                    if (array.length === 2) {
+                        var startDate = array[0];
+                        var endDate = array[1];
+                        var strStartDate = instance.formatDate(startDate, 'Y-m-d');
+                        var strEndDate = instance.formatDate(endDate, 'Y-m-d');
+                        valuestartdate.value = strStartDate;
+                        valueenddate.value = strEndDate;
+                        checkoutDateInput.value = strEndDate;
+                        var timeDiff = endDate - startDate;
+                        var totalDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                        totalDay.value = totalDays;
+                        checkinInput.value = strStartDate;
+                        document.getElementById('stay-days').textContent = totalDays + " วัน";
+                    }
+                }
+            });
+            window.getAvailableRooms = function() {
+                var startDate = valuestartdate.value;
+                var endDate = valueenddate.value;
+                var numberOfRooms = document.getElementById('number-of-rooms').value;
+
+                if (startDate && endDate) {
+                    fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&numberOfRooms=${numberOfRooms}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            var roomAvailabilityDiv = document.querySelector('#room-availability .flex-1');
+                            roomAvailabilityDiv.innerHTML = '';
+
+                            if (data.availableRooms.length > 0) {
+                                if (data.availableRooms.length >= numberOfRooms) {
+                                    document.getElementById('room-availability').style.display = 'flex';
+                                    document.getElementById('no-availability').style.display = 'none';
+                                    var totalRooms = data.availableRooms.length;
+                                    var roomSummary = `
+                            <h3>ห้องพักที่ว่าง</h3>
+                            <p class="text-lg">จำนวนห้องที่ว่าง: ${totalRooms} ห้อง</p>
+                            <p>จำนวนห้องที่คุณเลือก: ${numberOfRooms} ห้อง</p>
+                            <p>ราคา: 500 บาท/คืน</p>
+                            <p>รายละเอียด: ห้องพัก เตียงนุ่ม อยู่สบาย</p>
+                            <p>ฟรี WIFI แอร์เย็นสบาย</p>
+                            <p>ประเภทห้อง: เตียงคิงไซต์</p>
+                            <a id="reserve-button" href="#" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 focus:outline-none focus:bg-yellow-600">
+                                จองห้องพัก!
+                            </a>
+                        `;
+                                    roomAvailabilityDiv.innerHTML = roomSummary;
+
+                                    var reserveUrl = "{{ route('reserve') }}" + "?checkin_date=" + encodeURIComponent(startDate) + "&checkout_date=" + encodeURIComponent(endDate) + "&number_of_rooms=" + encodeURIComponent(numberOfRooms);
+                                    document.getElementById('reserve-button').href = reserveUrl;
+                                } else {
+                                    document.getElementById('room-availability').style.display = 'none';
+                                    document.getElementById('no-availability').style.display = 'flex';
+                                    document.getElementById('no-availability').innerHTML = `
+                            <div class="text-center">
+                                <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
+                                <p class="text-lg">จำนวนห้องที่ว่าง: ${data.availableRoomCount} ห้อง</p>
+                            </div>
+                        `;
+                                }
+                            } else {
+                                document.getElementById('room-availability').style.display = 'none';
+                                document.getElementById('no-availability').style.display = 'flex';
+                                document.getElementById('no-availability').innerHTML = `
+                        <div class="text-center">
+                            <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
+                        </div>
+                    `;
+                            }
+                        })
+                        .catch(error => console.error('Error fetching available rooms:', error));
+                }
+            }
+        });
+    </script>
 
      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
      <script>
