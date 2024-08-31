@@ -22,13 +22,19 @@ class Room extends Model
         'room_bed',
         'room_bathroom'
     ];
+
     public function bookings()
     {
-        return $this->hasMany(Booking::class, 'room_id');
+        return $this->belongsToMany(Booking::class, 'booking_details');
     }
+
     public function maintenances()
     {
         return $this->hasMany(Maintenance::class, 'room_id');
     }
 
+    public function bookingDetails()
+    {
+        return $this->hasMany(Booking_detail::class, 'room_id');
+    }
 }

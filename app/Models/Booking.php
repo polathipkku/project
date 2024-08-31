@@ -15,16 +15,15 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'room_id',
-        'booking_name',
-        'phone',
         'checkin_date',
         'checkout_date',
         'checkin_by',
         'checkout_by',
         'total_cost',
-        'booking_status',
         'occupancy_person',
         'room_type',
+        'room_quantity',
+
     ];
 
     public function user()
@@ -32,13 +31,18 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function room()
+    public function rooms()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsToMany(Room::class, 'booking_details');
     }
-
+    
     public function payment()
     {
         return $this->hasOne(Payment::class, 'booking_id');
     }
+    public function bookingDetails()
+    {
+        return $this->hasMany(Booking_detail::class, 'booking_id');
+    }
+    
 }

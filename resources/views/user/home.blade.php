@@ -6,13 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="{{ asset('css/output.css') }}" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="{{ asset('css/output.css') }}" rel="stylesheet">
   <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
   <link rel="shortcut icon" href="/images/Logo_2.jpg" type="image/png">
   <link rel="stylesheet" href="/css/hero.css">
@@ -36,21 +39,27 @@
         </div>
       </nav>
       <div class="logo" id="logo">
-        <a href="home" class="pl-24">Thunthree</a>
+        <a href="welcome_2" class="pl-24">Thunthree</a>
       </div>
       <div class="flex items-center space-x-4 text-gray-800 text-base">
         <nav class="space-x-10">
-          <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-          <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
+          <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
+              class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+          <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i
+              class="fa-solid fa-star ml-2"></i></a>
           <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
             <i class="fa-solid fa-user"></i>
             <span class="sr-only">User Menu</span>
           </button>
-          <div id="profileDropdown" class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
+          <div id="profileDropdown"
+            class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
             <div class="py-1">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
-              <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              <a href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+              <a href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+              <a href="#"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
                   Logout
                 </span>
@@ -62,78 +71,96 @@
           </div>
           <!-- End  User Menu Dropdown -->
         </nav>
-        <a href="{{ route('userbooking') }}" id="" class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors">
+        <button id="booking-btn"
+          class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors">
           จองตอนนี้
-        </a>
+        </button>
       </div>
     </div>
   </header>
-  <link href="css/responsive.css" rel="stylesheet" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-  <!-- Owl Carousel JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-  <!-- <link href="css/font-awesome.min.css" rel="stylesheet" /> -->
-  <!-- <link rel="stylesheet" href="/css/hero.css"> -->
-  <link href="css/style.css" rel="stylesheet" />
-
-
-  <title> Tunthree </title>
-
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!--  Flatpickr JS -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-{{-- flatpickr --}}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="css/style-head.css">
-  <!-- Magnific Popup CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <!-- Magnific Popup JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
-
-  <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-  <div id="backdrop" class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
+  <div id="backdrop"
+    class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
   </div>
 
-  <div id="sidebar" class=" sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
+  <div id="sidebar" class="sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
     <h2 class="text-2xl font-bold mb-5">จองห้องพัก</h2>
     <form>
       <div class="mb-4">
-        <label for="checkin" class="block text-gray-700">เช็คอิน</label>
-        <input type="date" id="checkin" name="checkin" class="w-full border p-2 rounded">
+        <label for="checkin_date" class="block text-gray-700">เช็คอิน</label>
+        <input type="text" id="checkin_date" name="checkin" class="w-full border p-2 rounded">
       </div>
       <div class="mb-4">
-        <label for="checkout" class="block text-gray-700">เช็คเอาท์</label>
-        <input type="date" id="checkout" name="checkout" class="w-full border p-2 rounded">
+        <label for="checkout_date" class="block text-gray-700">เช็คเอาท์</label>
+        <input type="text" id="checkout_date" name="checkout" class="w-full border p-2 rounded">
       </div>
       <div class="mb-4">
         <label for="rooms" class="block text-gray-700">จำนวนห้อง</label>
         <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded" min="1">
       </div>
-      <div class="mb-4">
-        <label for="guests" class="block text-gray-700">จำนวนผู้เข้าพัก</label>
-        <input type="number" id="guests" name="guests" class="w-full border p-2 rounded" min="1">
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700">เช็คห้องว่าง</button>
+      <input type="hidden" id="startDate">
+      <input type="hidden" id="endDate">
+      <input type="hidden" id="totalDay">
+      <button id="reserve-button" type="button" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
+        เช็คห้องว่าง
+      </button>
+
+      <script>
+        document.getElementById('reserve-button').addEventListener('click', function() {
+          var checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
+          var checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
+          var numberOfRooms = encodeURIComponent(document.getElementById('rooms').value);
+
+          var url = `{{ route('userbooking') }}?checkin_date=${checkinDate}&checkout_date=${checkoutDate}&number_of_rooms=${numberOfRooms}`;
+          window.location.href = url;
+        });
+      </script>
+
+
     </form>
+    <div id="stay-days" class="mt-4 p-4 bg-blue-100 text-blue-800 font-semibold rounded-lg shadow-md text-center"></div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var valuestartdate = document.getElementById('startDate');
+      var valueenddate = document.getElementById('endDate');
+      var totalDay = document.getElementById('totalDay');
+      var checkinInput = document.getElementById('checkin_date');
+      var checkoutDateInput = document.getElementById('checkout_date');
+
+      flatpickr(checkinInput, {
+        dateFormat: 'Y-m-d',
+        locale: 'th',
+        minDate: 'today',
+        mode: 'range',
+        onChange: function(array, str, instance) {
+          if (array.length === 2) {
+            var startDate = array[0];
+            var endDate = array[1];
+            var strStartDate = instance.formatDate(startDate, 'Y-m-d');
+            var strEndDate = instance.formatDate(endDate, 'Y-m-d');
+            valuestartdate.value = strStartDate;
+            valueenddate.value = strEndDate;
+            checkinInput.value = strStartDate;
+            checkoutDateInput.value = strEndDate;
+            var timeDiff = endDate - startDate;
+            var totalDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            totalDay.value = totalDays;
+            document.getElementById('stay-days').textContent = totalDays + " วัน";
+          }
+        }
+      });
+      reserveButton.addEventListener('click', function() {
+        alert("Check-in: " + valuestartdate.value + "\nCheck-out: " + valueenddate.value + "\nจำนวนวันเข้าพัก: " + totalDay.value);
+      });
+    });
+  </script>
 
   <main class="container w-full  ">
     <div class="relative" id="card-1">
-      <img src="/images/i-6.jpeg" alt="Hotel" class="cropped-image w-full object-cover rounded-lg" id="card-1-img">
+      <img src="/images/i-6.jpeg" alt="Hotel" class="cropped-image w-full object-cover rounded-lg"
+        id="card-1-img">
       <div class="absolute bottom-0 left-0 bg-black bg-opacity-50 p-5 text-white rounded-br-lg">
         <h1 class="text-4xl font-bold">ยินดีต้อนรับสู่โรงแรมของเรา</h1>
         <p class="text-xl">สัมผัสธรรมชาติและความสะดวกสบาย</p>
@@ -153,28 +180,33 @@
           <div class="grid grid-cols-2 gap-2">
             <div class="col-span-1">
               <a data-fancybox="gallery" data-src="images/i-8.png">
-                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-8.png'); background-position: center; background-size: cover;" />
+                <img alt=""
+                  style="width: 100%; height: 150px; background-image: url('images/i-8.png'); background-position: center; background-size: cover;" />
               </a>
             </div>
             <div class="col-span-1">
               <a data-fancybox="gallery" data-src="images/i-9.png">
-                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-9.png'); background-position: center; background-size: cover;" />
+                <img alt=""
+                  style="width: 100%; height: 150px; background-image: url('images/i-9.png'); background-position: center; background-size: cover;" />
               </a>
             </div>
             <div class="col-span-2">
               <a data-fancybox="gallery" data-src="images/i-10.png">
-                <div style="width: 100%; height: 150px; background-image: url('images/i-10.png'); background-position: center; background-size: cover;">
+                <div
+                  style="width: 100%; height: 150px; background-image: url('images/i-10.png'); background-position: center; background-size: cover;">
                 </div>
               </a>
             </div>
             <div class="col-span-1">
               <a data-fancybox="gallery" data-src="images/i-11.png">
-                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-11.png'); background-position: center; background-size: cover;" />
+                <img alt=""
+                  style="width: 100%; height: 150px; background-image: url('images/i-11.png'); background-position: center; background-size: cover;" />
               </a>
             </div>
             <div class="col-span-1">
               <a data-fancybox="gallery" data-src="images/S__13500426.jpg">
-                <img alt="" style="width: 100%; height: 150px; background-image: url('images/S__13500426.jpg'); background-position: center; background-size: cover;" />
+                <img alt=""
+                  style="width: 100%; height: 150px; background-image: url('images/S__13500426.jpg'); background-position: center; background-size: cover;" />
               </a>
             </div>
           </div>
@@ -226,13 +258,20 @@
             <p><strong>เวลาเช็คเอาท์:</strong> 12:00 น.</p>
           </div>
           <div class="text-center mt-8 ">
-            <button id="booking-btn" class="inline-block px-8 py-4 bg-white text-blue-500 font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors w-64">
+            <button id="booking-btn"
+              class="inline-block px-8 py-4 bg-white text-blue-500 font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors w-64">
               จองตอนนี้
             </button>
           </div>
         </div>
       </div>
     </div>
+
+
+
+
+
+
     <div class="flex flex-col justify-center">
       <section class="my-10 text-center">
         <h2 class="text-3xl font-bold mb-5">โปรโมชั่นพิเศษ</h2>
@@ -277,7 +316,8 @@
         </div>
         <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
           <a data-fancybox="gallery_2" href="/images/tb1.png">
-            <img src="/images/tb1.png" alt="บรรยากาศ" class="w-full h-full object-cover rounded-lg shadow-md">
+            <img src="/images/tb1.png" alt="บรรยากาศ"
+              class="w-full h-full object-cover rounded-lg shadow-md">
           </a>
         </div>
       </section>
@@ -285,7 +325,8 @@
       <section class="flex flex-col lg:flex-row items-center gap-5 p-5 px-24">
         <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
           <a data-fancybox="gallery_3" href="/images/S__13500429.jpg">
-            <img src="/images/S__13500429.jpg" alt="สิ่งอำนวยความสะดวก" class="w-full h-full object-cover rounded-lg shadow-md">
+            <img src="/images/S__13500429.jpg" alt="สิ่งอำนวยความสะดวก"
+              class="w-full h-full object-cover rounded-lg shadow-md">
           </a>
         </div>
         <div class="flex-grow mb-5 lg:mb-0">
@@ -307,33 +348,8 @@
         </div>
         <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
           <a data-fancybox="gallery_1" href="/images/t-1.jpg">
-            <img src="/images/t-1.jpg" alt="แหล่งท่องเที่ยว" class="w-full h-full object-cover rounded-lg shadow-md">
-      <h1 class="text-white text-5xl mb-8 ">เริ่มต้นการจอง</h1>
-      <form action="" class="grid grid-cols-5  justify-items-stretch items-center  bg-white border-1 rounded-2xl">
-        <div class="relative">
-        </div>
-        <div class="flex justify-center items-center my-3 mb-4 col-span-2 max-md:col-span-3 xl:mx-0">
-          <div class="relative">
-            <p class="pb-2">Check-in</p>
-            <div class="relative">
-              <input type="date" id="Check-in" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl"></i>
-            </div>
-          </div>
-          <div class="relative">
-            <p class="pb-2">Check-out</p>
-            <div class="relative">
-              <input type="date" id="Check-out" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-64 ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <i class="fa-regular fa-calendar absolute right-3 top-3 text-xl "></i>
-            </div>
-          </div>
-        </div>
-        <div class="relative">
-          <p class="pb-3 invisible"> </p>
-          <a href="{{route('userbooking') }}" style="color: azure;">
-            <div class="w-full bg-blue-500 hover:bg-blue-600 text-xl rounded-lg px-10  py-2.5 text-center" style="margin-left:20% ; margin-top:1em ; ">
-              จอง
-            </div>
+            <img src="/images/t-1.jpg" alt="แหล่งท่องเที่ยว"
+              class="w-full h-full object-cover rounded-lg shadow-md">
           </a>
           <a data-fancybox="gallery_1" href="/images/t-2.jpg"></a>
         </div>
@@ -348,22 +364,26 @@
         <h3 class="text-5xl">จองห้องกับเรา</h3>
         <p class="text-ml my-5 text-black">CHECK-IN 14.00 น | CHECK-OUT 12.00 น </p>
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 justify-items-center my-10 max-md:flex-col">
-          <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+          <div
+            class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
             <i class="fa-solid fa-wifi text-4xl text-green-500"></i>
             <p class="text-2xl font-bold my-3">ฟรี WIFI</p>
             <p class="text-xl">มีให้ในห้อง</p>
           </div>
-          <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+          <div
+            class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
             <i class="fa-solid fa-bell-concierge text-4xl text-yellow-500"></i>
             <p class="text-2xl font-bold my-3">บริการดีเยี่ยม</p>
             <p class="text-xl">มีพนักงานคอยให้บริการ</p>
           </div>
-          <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+          <div
+            class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
             <i class="fa-solid fa-road text-4xl text-blue-400"></i>
             <p class="text-2xl font-bold my-3">สะดวกสบาย</p>
             <p class="text-xl">อยู่ติดถนนใกล้ห้างสรรพสินค้า</p>
           </div>
-          <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+          <div
+            class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
             <i class="fas fa-check-circle text-4xl text-green-500"></i>
             <p class="text-2xl font-bold my-3">จองได้ทุกที่</p>
             <p class="text-xl">จองได้ทุกที่ ทุกเวลา</p>
@@ -379,14 +399,19 @@
       </div>
       <div class="container flex flex-col md:flex-row justify-between items-start h-full">
         <div class="map-left w-full md:w-2/3 h-450 mb-5 md:mb-0">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.6264764287885!2d104.0397957767188!3d16.54494445360664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e0!3m2!1sth!2sth!4v1722168540885!5m2!1sth!2sth" width="100%" height="420" class="border border-gray-300 rounded-lg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.6264764287885!2d104.0397957767188!3d16.54494445360664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e0!3m2!1sth!2sth!4v1722168540885!5m2!1sth!2sth"
+            width="100%" height="420" class="border border-gray-300 rounded-lg" allowfullscreen=""
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-        <div class="map-right w-full md:w-1/3 flex flex-col items-start p-10 bg-white rounded-lg shadow-md h-450">
+        <div
+          class="map-right w-full md:w-1/3 flex flex-col items-start p-10 bg-white rounded-lg shadow-md h-450">
           <h2 class="text-xl font-bold mb-3">ธันย์ทรีรีสอร์ท</h2>
           <p class="mb-3">ธันย์ทรีรีสอร์ท 86 หมู่15 ถนนสมเด็จ – มุกดาหาร ต.บัวขาว อ, อำเภอ กุฉินารายณ์
             กาฬสินธุ์ 46110</p>
           <p class="mb-3">GPS: 16.54525038459086, 104.03995924942295</p>
-          <a href="https://maps.app.goo.gl/TGK3RtsQrBcicC3R6" target="_blank" class="text-blue-500 underline mb-5"> Google Map</a>
+          <a href="https://maps.app.goo.gl/TGK3RtsQrBcicC3R6" target="_blank"
+            class="text-blue-500 underline mb-5"> Google Map</a>
           <h3 class="text-lg font-bold mb-2">สถานที่ใกล้เคียง</h3>
           <ul class="list-disc pl-5">
             <li class="mb-2">โลตัส กุฉินารายณ์</li>
@@ -453,7 +478,7 @@
 
 
 
-  <div id="loginForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 ">
+  <div id="loginForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
       <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
         <button onclick="hideLoginForm()" class="focus:outline-none">
@@ -464,25 +489,36 @@
       <form method="POST" action="{{ route('login') }}">
         @csrf
         <div class="mb-4">
-          <input id="email" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" type="email" name="email" :value="old('email')" placeholder="Email" required autofocus />
+          <input id="email"
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            type="email" name="email" :value="old('email')" placeholder="Email" required
+            autofocus />
         </div>
         <div class="mb-4">
-          <input id="password" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" type="password" name="password" placeholder="Password" required autocomplete="current-password" />
+          <input id="password"
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            type="password" name="password" placeholder="Password" required
+            autocomplete="current-password" />
         </div>
         <div class="flex items-center mb-6">
-          <input id="remember_me" type="checkbox" name="remember" class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300" />
+          <input id="remember_me" type="checkbox" name="remember"
+            class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300" />
           <label for="remember_me" class="ml-2 text-sm text-gray-600">Remember me</label>
-          <a href="{{ route('password.request') }}" class="ml-auto text-sm text-blue-600 hover:text-blue-800">Forgot password</a>
+          <a href="{{ route('password.request') }}"
+            class="ml-auto text-sm text-blue-600 hover:text-blue-800">Forgot password</a>
         </div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
+        <button type="submit"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
         <div class="text-center mt-4">
-          <p class="text-sm text-gray-600">Don't have an account? <a href="#" class="text-blue-600 hover:text-blue-800" onclick="showRegisterForm()">Register</a></p>
+          <p class="text-sm text-gray-600">Don't have an account? <a href="#"
+              class="text-blue-600 hover:text-blue-800" onclick="showRegisterForm()">Register</a></p>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="registerForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 justify-center items-center z-50 hidden">
+  <div id="registerForm"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md relative">
       <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
         <button onclick="hideRegisterForm()" class="focus:outline-none">
@@ -494,55 +530,76 @@
         @csrf
 
         <div class="mb-4">
-          <input id="name" name="name" type="text" autocomplete="name" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Name">
+          <input id="name" name="name" type="text" autocomplete="name" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Name">
         </div>
 
         <div class="mb-4">
-          <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" :value="old('email')" placeholder="Email" autofocus>
+          <input id="email" name="email" type="email" autocomplete="email" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            :value="old('email')" placeholder="Email" autofocus>
         </div>
 
         <div class="mb-4">
-          <input id="password" name="password" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Password">
+          <input id="password" name="password" type="password" autocomplete="new-password" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Password">
         </div>
 
         <div class="mb-4">
-          <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Confirm Password">
+          <input id="password_confirmation" name="password_confirmation" type="password"
+            autocomplete="new-password" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Confirm Password">
         </div>
 
         <div class="mb-4">
-          <input id="tel" name="tel" type="text" autocomplete="tel" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Telephone">
+          <input id="tel" name="tel" type="text" autocomplete="tel" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Telephone">
         </div>
 
         <div class="mb-4">
-          <input id="start_date" name="start_date" type="date" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+          <input id="start_date" name="start_date" type="date" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
         </div>
 
         <div class="mb-4">
-          <input id="birthday" name="birthday" type="date" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+          <input id="birthday" name="birthday" type="date" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
         </div>
 
         <div class="mb-4">
-          <input id="address" name="address" type="text" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Address">
+          <input id="address" name="address" type="text" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Address">
         </div>
 
         <div class="mb-4">
-          <input id="image" name="image" type="file" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+          <input id="image" name="image" type="file" required
+            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
         </div>
 
         @if (config('jetstream.features.terms_and_privacy_policy'))
         <div class="mb-4">
-          <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-          <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
+          <input id="terms" name="terms" type="checkbox"
+            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+          <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a
+              href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a
+              href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
         </div>
         @endif
 
         <!-- Register Button -->
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Register</button>
+        <button type="submit"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Register</button>
 
 
         <!-- Link to show login form -->
         <div class="text-center mt-2">
-          <p class="text-sm text-gray-600">Already have an account? <a href="#" class="text-blue-600 hover:text-blue-800" onclick="showLoginForm()">Login</a></p>
+          <p class="text-sm text-gray-600">Already have an account? <a href="#"
+              class="text-blue-600 hover:text-blue-800" onclick="showLoginForm()">Login</a></p>
         </div>
       </form>
     </div>
@@ -550,7 +607,6 @@
   <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
   <script src="/js/hero.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     const profileButton = document.getElementById("profileButton");
     const profileDropdown = document.getElementById("profileDropdown");
@@ -559,12 +615,6 @@
       profileDropdown.classList.toggle("hidden");
       event.stopPropagation();
     });
-    
-    document.addEventListener("click", function(event) {
-      var profileButton = document.getElementById("profileButton");
-      var profileDropdown = document.getElementById("profileDropdown");
-      // ตรวจสอบว่าคลิกที่ปุ่มโปรไฟล์หรือไม่
-      var isProfileButtonClicked = profileButton.contains(event.target);
 
     document.addEventListener("click", function(event) {
       const isProfileButtonClicked = profileButton.contains(event.target);
@@ -575,26 +625,6 @@
       }
     });
   </script>
-
-    // เมื่อคลิกที่ปุ่มโปรไฟล์
-    document.getElementById("profileButton").addEventListener("click", function(event) {
-      var profileDropdown = document.getElementById("profileDropdown");
-      profileDropdown.classList.toggle("hidden"); // เปิดหรือปิดเมนู dropdown
-      event.stopPropagation(); // ไม่ให้การคลิกที่ปุ่มแพร่กระจายไปยังโค้ดด้านบน
-    });
-
-    flatpickr("#Check-in", {
-             dateFormat: "d-m-Y",
-             minDate: "today"
-         });
- 
-         flatpickr("#Check-out", {
-             dateFormat: "d-m-Y",
-             minDate: "today"
-         });
-  </script>
- 
-
 </body>
 
 </html>
