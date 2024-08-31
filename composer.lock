@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70f95c1fd1506f4ccdccb46eebdc567d",
+    "content-hash": "b0da1cafc3d4ae057aee458c9c1d02f9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3703,16 +3703,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v15.2.0",
+            "version": "v15.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "29a28251d35dba236ad6e860e1927b3f35cc1b2e"
+                "reference": "5ed133fa45987771f80ad300be2316c05832f6a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/29a28251d35dba236ad6e860e1927b3f35cc1b2e",
-                "reference": "29a28251d35dba236ad6e860e1927b3f35cc1b2e",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/5ed133fa45987771f80ad300be2316c05832f6a7",
+                "reference": "5ed133fa45987771f80ad300be2316c05832f6a7",
                 "shasum": ""
             },
             "require": {
@@ -3756,9 +3756,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v15.2.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v15.8.0"
             },
-            "time": "2024-07-11T18:46:58+00:00"
+            "time": "2024-08-29T21:58:14+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -8613,5 +8613,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

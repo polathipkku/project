@@ -83,7 +83,7 @@
 
                 </div>
                 @if(count($bookings) > 0)
-                <table class="w-full border-collapse ">
+                <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
                             <th class="px-4 py-2">หมายเลขห้อง</th>
@@ -95,15 +95,15 @@
                     </thead>
                     <tbody class="text-center">
                         @foreach($bookings as $booking)
-                        @if($booking->booking_status == 'เช็คอินแล้ว')
-                        @if($booking->booking_status !== 'เช็คเอาท์')
+                        @foreach($booking->bookingDetails as $detail)
+                        @if($detail->booking_status == 'เช็คอินแล้ว' && $detail->booking_status !== 'เช็คเอาท์')
                         <tr>
                             <td class="px-4 py-2">
-                                @if($booking->room)
-                                {{ $booking->room->room_name }}
-                                @endif  
+                                @if($detail->room)
+                                {{ $detail->room->room_name }}
+                                @endif
                             </td>
-                            <td class="px-4 py-2">{{ $booking->booking_status }}</td>
+                            <td class="px-4 py-2">{{ $detail->booking_status }}</td>
                             <td class="px-4 py-2">{{ $booking->checkout_date }}</td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
@@ -113,11 +113,11 @@
                                 </a>
                             </td>
                             <td class="px-4 py-4 flex justify-center items-center">
-                                @if($booking->booking_status === 'เช็คอินแล้ว')
+                                @if($detail->booking_status === 'เช็คอินแล้ว')
                                 <form action="{{ route('checkoutuser') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                    <button class="text-black hover:text-blue-500" onclick="">
+                                    <button class="text-black hover:text-blue-500">
                                         <i class="fa-solid fa-square-minus"></i>
                                     </button>
                                 </form>
@@ -125,17 +125,18 @@
                                 <p class="text-gray-600">ไม่สามารถเช็คเอาท์ได้</p>
                                 @endif
                             </td>
-
                         </tr>
                         @endif
-                        @endif
                         @endforeach
-                        <!-- End of example rows -->
+                        @endforeach
                     </tbody>
                 </table>
                 @else
                 <p class="text-gray-600">ไม่พบการจอง</p>
                 @endif
+
+
+
             </div>
         </section>
 

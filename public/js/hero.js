@@ -82,43 +82,29 @@ function hideRegisterForm() {
 
 
 
-// เมื่อคลิกปุ่ม selfBookingBtn ให้แสดงฟอร์ม selfBookingForm และซ่อนฟอร์ม otherBookingForm
-document.getElementById('selfBookingBtn').addEventListener('click', function (event) {
-  event.preventDefault();
-  document.getElementById('selfBookingForm').style.display = 'block';
-  document.getElementById('otherBookingForm').style.display = 'none';
+
+document.addEventListener("click", function (event) {
+  var profileButton = document.getElementById("profileButton");
+  var profileDropdown = document.getElementById("profileDropdown");
+
+  // ตรวจสอบว่าคลิกที่ปุ่มโปรไฟล์หรือไม่
+  var isProfileButtonClicked = profileButton.contains(event.target);
+
+  // ตรวจสอบว่าเมนู dropdown ถูกเปิดอยู่หรือไม่
+  var isDropdownOpen = !profileDropdown.classList.contains("hidden");
+
+  // ถ้าคลิกที่อื่นๆ และเมนู dropdown ไม่ถูกเปิดอยู่ให้ปิดเมนู dropdown
+  if (!isProfileButtonClicked && isDropdownOpen) {
+    profileDropdown.classList.add("hidden");
+  }
 });
 
-// เมื่อคลิกปุ่ม otherBookingBtn ให้แสดงฟอร์ม otherBookingForm และซ่อนฟอร์ม selfBookingForm
-document.getElementById('otherBookingBtn').addEventListener('click', function (event) {
-  event.preventDefault();
-  document.getElementById('selfBookingForm').style.display = 'none';
-  document.getElementById('otherBookingForm').style.display = 'block';
+// เมื่อคลิกที่ปุ่มโปรไฟล์
+document.getElementById("profileButton").addEventListener("click", function (event) {
+  var profileDropdown = document.getElementById("profileDropdown");
+  profileDropdown.classList.toggle("hidden"); // เปิดหรือปิดเมนู dropdown
+  event.stopPropagation(); // ไม่ให้การคลิกที่ปุ่มแพร่กระจายไปยังโค้ดด้านบน
 });
-
-// ตรวจสอบคลิกนอกเมนู dropdown และปิดเมนู dropdown
-// document.addEventListener("click", function (event) {
-//   var profileButton = document.getElementById("profileButton");
-//   var profileDropdown = document.getElementById("profileDropdown");
-
-//   // ตรวจสอบว่าคลิกที่ปุ่มโปรไฟล์หรือไม่
-//   var isProfileButtonClicked = profileButton.contains(event.target);
-
-//   // ตรวจสอบว่าเมนู dropdown ถูกเปิดอยู่หรือไม่
-//   var isDropdownOpen = !profileDropdown.classList.contains("hidden");
-
-//   // ถ้าคลิกที่อื่นๆ และเมนู dropdown ไม่ถูกเปิดอยู่ให้ปิดเมนู dropdown
-//   if (!isProfileButtonClicked && isDropdownOpen) {
-//     profileDropdown.classList.add("hidden");
-//   }
-// });
-
-// // เมื่อคลิกที่ปุ่มโปรไฟล์
-// document.getElementById("profileButton").addEventListener("click", function (event) {
-//   var profileDropdown = document.getElementById("profileDropdown");
-//   profileDropdown.classList.toggle("hidden"); // เปิดหรือปิดเมนู dropdown
-//   event.stopPropagation(); // ไม่ให้การคลิกที่ปุ่มแพร่กระจายไปยังโค้ดด้านบน
-// });
 
 // เมื่อเอกสารถูกโหลดเสร็จสิ้น
 document.addEventListener('DOMContentLoaded', () => {
@@ -127,13 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const selfBookingForm = document.getElementById('selfBookingForm');
   const otherBookingForm = document.getElementById('otherBookingForm');
 
-  // กำหนดสถานะเริ่มต้น
+  // Set initial state
   selfBookingBtn.classList.add('bg-blue-500', 'text-white');
   otherBookingBtn.classList.add('bg-white', 'text-blue-500');
   selfBookingForm.style.display = 'block';
   otherBookingForm.style.display = 'none';
 
-  // เมื่อคลิกปุ่ม selfBookingBtn ให้เปลี่ยนสีและแสดงฟอร์ม selfBookingForm
   selfBookingBtn.addEventListener('click', () => {
     selfBookingBtn.classList.add('bg-blue-500', 'text-white');
     selfBookingBtn.classList.remove('bg-white', 'text-blue-500');
@@ -143,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     otherBookingForm.style.display = 'none';
   });
 
-  // เมื่อคลิกปุ่ม otherBookingBtn ให้เปลี่ยนสีและแสดงฟอร์ม otherBookingForm
   otherBookingBtn.addEventListener('click', () => {
     otherBookingBtn.classList.add('bg-blue-500', 'text-white');
     otherBookingBtn.classList.remove('bg-white', 'text-blue-500');

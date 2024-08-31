@@ -17,7 +17,6 @@
     <title>Thunthree</title>
 </head>
 
-
 <body class="bg-gray-100">
     <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
         {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
@@ -113,6 +112,11 @@
                                     <input type="number" name="number_of_guests" id="number_of_guests" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 </div>
                                 <div class="mb-4">
+                                    <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">จำนวนห้องที่ต้องการ:</label>
+                                    <input type="text" name="number_of_rooms" id="number_of_rooms" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $number_of_rooms }}" readonly>
+                                </div>
+
+                                <div class="mb-4">
                                     <label for="checkin_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
                                     <input type="date" name="checkin_date" id="checkin_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkin_date }}" readonly>
                                 </div>
@@ -129,130 +133,111 @@
                         </div>
                     </div>
                 </form>
-                <form id="otherBookingForm" action="" method="post" enctype="multipart/form-data" style="display:none;">
+                <form id="otherBookingForm" action="{{ route('bookings.reserves') }}" method="post"
+                    enctype="multipart/form-data" style="display:none;">
                     @csrf
                     <div class="max-w-5xl mx-auto ">
                         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
                             <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
-
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
 
-                                <label for="booker_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ:</label>
-                                <input type="text" name="booker_first_name" id="booker_first_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <div class="mb-4">
+                                    <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
+                                    <input type="text" name="booking_name" id="booking_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                    <input type="text" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <hr class="border-t-2 border-gray-300 my-4">
 
-                                <label for="booker_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอรืโทรศัพท์:</label>
-                                <input type="text" name="booker_last_name" id="booker_last_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <div class="mb-4">
+                                    <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
 
-                                <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
-                                <input type="text" name="booker_amount" id="booker_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <label for="bookingto_username" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้เข้าพัก:</label>
+                                    <input type="text" name="bookingto_username" id="bookingto_username" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 
-                                <label for="booker_checkin" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
-                                <input type="date" name="booker_checkin" id="booker_checkin" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <label for="bookingto_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์ผู้เข้าพัก:</label>
+                                    <input type="text" name="bookingto_phone" id="bookingto_phone" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 
-                                <label for="booker_checkout" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
-                                <input type="date" name="booker_checkout" id="booker_checkout" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                    <input type="text" name="booker_amount" id="booker_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 
-
-                            </div>
-                            <hr class="border-t-2 border-gray-300 my-4">
-                            <div class="mb-4">
-                                <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
-
-                                <label for="guest_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ:</label>
-                                <input type="text" name="guest_name" id="guest_name" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                <label for="guest_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
-                                <input type="text" name="guest_phone" id="guest_phone" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
-                                <input type="text" name="guest_amount" id="guest_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                <label for="guest_checkin" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
-                                <input type="date" name="guest_checkin" id="guest_checkin" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                <label for="guest_checkout" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
-                                <input type="date" name="guest_checkout" id="guest_checkout" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <div class="mb-4">
+                                        <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">จำนวนห้องที่ต้องการ:</label>
+                                        <input type="text" name="number_of_rooms" id="number_of_rooms" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $number_of_rooms }}" readonly>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="checkin_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
+                                        <input type="date" name="checkin_date" id="checkin_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkin_date }}" readonly>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="checkout_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
+                                        <input type="date" name="checkout_date" id="checkout_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkout_date }}" readonly>
+                                    </div>
 
 
-                            </div>
+                                </div>
 
-                            <div class="flex items-center justify-between">
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">บันทึกการจอง</button>
+                                <div class="flex items-center justify-between">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        บันทึกการจอง
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </form>
-    </main>
-    <footer class="bg-gray-800 mt-10 text-white">
-        <div class="container mx-auto p-5">
-            <div class="flex flex-wrap">
-                <!-- ข้อมูลการติดต่อ -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Tunthree Resort</h4>
-                    <div class="mt-4">
-                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
-                            <i class="fa fa-map-marker mr-2"></i>
-                            <span>Location</span>
-                        </a>
-                        <a href="tel:0940028212" class="flex items-center mb-2">
-                            <i class="fa fa-phone mr-2"></i>
-                            <span>Call 0940028212</span>
-                        </a>
-                        <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
-                            <i class="fa fa-envelope mr-2"></i>
-                            <span>polathip.b@kkumail.com</span>
-                        </a>
-                    </div>
+                <footer class="bg-gray-800 mt-10 text-white">
+                    <div class="container mx-auto p-5">
+                        <div class="flex flex-wrap">
+                            <!-- ข้อมูลการติดต่อ -->
+                            <div class="w-full md:w-1/3 mb-6">
+                                <h4 class="text-xl font-bold">Tunthree Resort</h4>
+                                <div class="mt-4">
+                                    <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
+                                        <i class="fa fa-map-marker mr-2"></i>
+                                        <span>Location</span>
+                                    </a>
+                                    <a href="tel:0940028212" class="flex items-center mb-2">
+                                        <i class="fa fa-phone mr-2"></i>
+                                        <span>Call 0940028212</span>
+                                    </a>
+                                    <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
+                                        <i class="fa fa-envelope mr-2"></i>
+                                        <span>polathip.b@kkumail.com</span>
+                                    </a>
+                                </div>
 
-                </div>
-                <!-- ลิงก์หลัก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Quick Links</h4>
-                    <div class="mt-4">
-                        <a href="index.html" class="block mb-2">Home</a>
-                        <a href="service.html" class="block mb-2">Services</a>
-                        <a href="contact.html" class="block mb-2">Contact Us</a>
+                            </div>
+                            <!-- ลิงก์หลัก -->
+                            <div class="w-full md:w-1/3 mb-6">
+                                <h4 class="text-xl font-bold">Quick Links</h4>
+                                <div class="mt-4">
+                                    <a href="index.html" class="block mb-2">Home</a>
+                                    <a href="service.html" class="block mb-2">Services</a>
+                                    <a href="contact.html" class="block mb-2">Contact Us</a>
+                                </div>
+                            </div>
+                            <!-- ฟอร์มสมัครสมาชิก -->
+                            <div class="w-full md:w-1/3 mb-6">
+                                <h4 class="text-xl font-bold">Subscribe</h4>
+                                <form action="#" class="mt-4">
+                                    <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
+                                    <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="text-center ">
+                            <small>
+                                &copy; 2024 Tunthree Resort. All rights reserved.
+                                <a href="#" class="hover:underline">Privacy Policy</a> •
+                                <a href="#" class="hover:underline">Terms of Service</a>
+                            </small>
+                        </div>
                     </div>
-                </div>
-                <!-- ฟอร์มสมัครสมาชิก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Subscribe</h4>
-                    <form action="#" class="mt-4">
-                        <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
-                        <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="text-center ">
-                <small>
-                    &copy; 2024 Tunthree Resort. All rights reserved.
-                    <a href="#" class="hover:underline">Privacy Policy</a> •
-                    <a href="#" class="hover:underline">Terms of Service</a>
-                </small>
-            </div>
-        </div>
-    </footer>
-    <script>
-        function submitForm() {
-            const contactName = document.getElementById("contactName").value;
-            const phoneNumber = document.getElementById("phoneNumber").value;
-            const numberOfGuests = document.getElementById("numberOfGuests").value;
-            const checkInDate = document.getElementById("checkInDate").value;
-            const checkOutDate = document.getElementById("checkOutDate").value;
-            const accommodationType = document.getElementById("accommodationType").value;
-
-            console.log("Form submitted with:", {
-                contactName,
-                phoneNumber,
-                numberOfGuests,
-                checkInDate,
-                checkOutDate,
-                accommodationType,
-            });
-        }
-    </script>
-    <script src="/js/hero.js"></script>
+                </footer>
+                <script src="/js/hero.js"></script>
 
 </body>
 

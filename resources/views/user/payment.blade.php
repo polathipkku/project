@@ -106,14 +106,20 @@
     </div>
 
     <script>
+        // ประกาศ Stripe key เพียงครั้งเดียว
         const stripe = Stripe(
             'pk_live_51PZ6omGGaN9QJBWFRRjYbd3EMwWHJeztF2p85kFV3jo3sws9imKNK0KH3SwsWtp57P71eGAY2dvJtyb61UfA3eLR00YwyN3BMj'
         );
+
+        // ประกาศตัวแปร timer ด้านนอกเพื่อใช้งานได้ทั่วสคริปต์
         let timer;
-        document.getElementById('pay-button').addEventListener('click', function() {
+
+        document.getElementById('pay-button').addEventListener('click', async function() {
             const bookingId = document.getElementById('booking_id').value;
-            let countdown = 60; 
-            let timer = setInterval(updateTimer, 1000);
+
+            // เริ่มต้นการนับถอยหลัง 60 วินาที
+            let countdown = 60;
+            timer = setInterval(updateTimer, 1000);
 
             function updateTimer() {
                 countdown--;
@@ -129,7 +135,9 @@
                 }
             }
 
-            fetch('/create-payment-intent', {
+            // ส่งคำขอสร้าง Payment Intent
+            try {
+                const response = await fetch('/create-payment-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -138,27 +146,38 @@
                     body: JSON.stringify({
                         booking_id: bookingId
                     })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
-
-                    new QRCode(document.getElementById('qrcode'), {
-                        text: data.client_secret,
-                        width: 128,
-                        height: 128
-                    });
-
-                    document.getElementById('pay-button').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+                // สร้าง QR Code สำหรับ PromptPay
+                new QRCode(document.getElementById('qrcode'), {
+                    text: data.client_secret,
+                    width: 128,
+                    height: 128
+                });
+
+                // ซ่อนปุ่มชำระเงินหลังจากสร้าง QR Code เสร็จ
+                document.getElementById('pay-button').style.display = 'none';
+
+                // Confirm Payment ผ่าน Stripe
+                stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
+                    if (result.error) {
+                        console.log(result.error.message);
+                    } else {
+                        document.getElementById("qrcode").innerHTML =
+                            `<img src="${result.paymentIntent.next_action.promptpay_display_qr_image_url}" />`;
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
     </script>
 

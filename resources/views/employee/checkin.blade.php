@@ -98,11 +98,13 @@
                         </tr>
                     </thead>
                     <tbody class="text-center" id="booking-rows">
-                        @if(count($bookings) > 0)
+                        @if(isset($bookings) && $bookings->isNotEmpty())
                         @foreach($bookings as $booking)
-                        @if($booking->booking_status == 'รอเลือกห้อง')
+                        @foreach($booking->bookingDetails->where('room_id', NULL) as $detail)
                         <tr class="booking-row" data-checkin-date="{{ $booking->checkin_date }}">
-                            <td class="px-4 py-2">{{ $booking->booking_name }}</td>
+                            <td class="px-4 py-2">
+                                {{ $detail->booking_name }}<br>
+                            </td>
                             <td class="px-4 py-2">{{ $booking->checkin_date }}</td>
                             <td class="py-2 px-4">
                                 <a href="{{ route('checkindetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
@@ -114,19 +116,23 @@
                             <td class="px-4 py-2 text-center">
                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
-                                    {{ $booking->booking_status }}
+                                    {{ $detail->booking_status }}
                                 </span>
                             </td>
                             <td class="px-4 py-4 flex justify-center items-center">
-                                @if($booking->booking_status === 'รอเลือกห้อง')
-                                <form action="{{ route('selectRoom') }}" method="post">
+                                @if($detail->booking_status === 'รอเลือกห้อง')
+                                <form action="{{ route('updateBookingDetail') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                                     <select name="room_id" required class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                         <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
+                                        @if(isset($rooms) && $rooms->isNotEmpty())
                                         @foreach($rooms as $room)
                                         <option value="{{ $room->id }}">{{ $room->room_name }}</option>
                                         @endforeach
+                                        @else
+                                        <option value="">ไม่มีห้องที่ว่าง</option>
+                                        @endif
                                     </select>
                                     <button class="text-black hover:text-blue-500 ml-2">
                                         <i class="fa-solid fa-square-check"></i>
@@ -138,14 +144,19 @@
                             </td>
 
                         </tr>
-                        @endif
                         @endforeach
+                        @endforeach
+                        @else
+                        <p>ไม่พบการจอง</p>
                         @endif
                     </tbody>
+
                 </table>
                 <p id="no-bookings-message" class="hidden text-center text-gray-600">ไม่มีรายการที่ต้องเช็คอินในวันนี้</p>
             </div>
         </section>
+
+
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
