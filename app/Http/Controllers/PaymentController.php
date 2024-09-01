@@ -5,18 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\Booking_detail;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
 class PaymentController extends Controller
 {
     public function showPaymentPage($id)
-{
-    $booking = Booking::find($id);
-    $bookings = Booking::where('id', $id)->get();
-
-    return view('user.payment', compact('bookings'));
-}
+    {
+        // Fetch booking details for the given booking ID
+        $booking = Booking_detail::where('booking_id', $id)->first();
+    
+        if (!$booking) {
+            return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
+        }
+    
+        return view('user.payment', compact('booking'));
+    }
+    
 
 
     public function createPaymentIntent(Request $request)
