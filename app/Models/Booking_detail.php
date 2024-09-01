@@ -18,6 +18,14 @@ class Booking_detail extends Model
         'bookingto_username',
         'bookingto_phone',
         'booking_status',
+        'occupancy_person',
+        'occupancy_child',
+        'total_cost',
+        'room_type',
+        'room_quantity',
+        'checkin_date',
+        'checkout_date',
+
     ];
 
     public function booking()

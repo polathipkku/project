@@ -22,6 +22,14 @@ class CreateBookingDetailsTable extends Migration
             $table->string('phone');
             $table->string('bookingto_username')->nullable();  
             $table->string('bookingto_phone')->nullable();
+            $table->integer('occupancy_person')->nullable();
+            $table->integer('occupancy_child')->nullable();
+            $table->date('checkin_date');
+            $table->date('checkout_date'); 
+            $table->decimal('total_cost', 10, 2)->nullable();
+            $table->string('room_type')->nullable();
+            $table->integer('room_quantity');
+            
             $table->timestamps();
             $table->softDeletes();
 

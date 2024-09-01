@@ -101,11 +101,9 @@
                         @if(isset($bookings) && $bookings->isNotEmpty())
                         @foreach($bookings as $booking)
                         @foreach($booking->bookingDetails->where('room_id', NULL) as $detail)
-                        <tr class="booking-row" data-checkin-date="{{ $booking->checkin_date }}">
-                            <td class="px-4 py-2">
-                                {{ $detail->booking_name }}<br>
-                            </td>
-                            <td class="px-4 py-2">{{ $booking->checkin_date }}</td>
+                        <tr class="booking-row" data-checkin-date="{{ $detail->checkin_date }}">
+                            <td class="px-4 py-2">{{ $detail->booking_name }}<br></td>
+                            <td class="px-4 py-2">{{ $detail->checkin_date }}</td>
                             <td class="py-2 px-4">
                                 <a href="{{ route('checkindetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
                                     <button class="py-2 px-4 rounded-md hover:underline focus:outline-none focus:shadow-outline-blue active:text-blue-800" type="button">
@@ -142,13 +140,13 @@
                                 <p class="text-gray-600">ไม่สามารถเช็คอินได้</p>
                                 @endif
                             </td>
-
                         </tr>
                         @endforeach
                         @endforeach
                         @else
                         <p>ไม่พบการจอง</p>
                         @endif
+
                     </tbody>
 
                 </table>

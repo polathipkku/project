@@ -115,10 +115,7 @@
           window.location.href = url;
         });
       </script>
-
-
     </form>
-    <div id="stay-days" class="mt-4 p-4 bg-blue-100 text-blue-800 font-semibold rounded-lg shadow-md text-center"></div>
   </div>
 
   <script>
@@ -147,7 +144,7 @@
             var timeDiff = endDate - startDate;
             var totalDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
             totalDay.value = totalDays;
-            document.getElementById('stay-days').textContent = totalDays + " วัน";
+            document.getElementById('totalDay').textContent = totalDays + " วัน";
           }
         }
       });
