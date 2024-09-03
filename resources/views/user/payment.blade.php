@@ -27,32 +27,31 @@
             <img src="/images/PromptPay-logo.png" alt="THAI QR PAYMENT" class="w-32 h-auto">
         </div>
         @foreach ($bookings as $booking)
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-gray-100 p-4 rounded">
-                    <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
-                    <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->booking_name }}</p>
-                    <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $booking->occupancy_person }}</p>
-                    <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->phone }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
+                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->bookingto_username }}</p>
+                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $booking->occupancy_person }}</p>
+                <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->bookingto_phone }}</p>
 
-                    <p class="mr-4"><strong>เช็คอิน:</strong>
-                        {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}
-                    </p>
-                    <p><strong>เช็คเอาท์:</strong>
-                        {{ \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y') }}
-                    </p>
-                    <p><strong>จำนวนวันที่เข้าพัก:</strong>
-                        {{ \Carbon\Carbon::parse($booking->checkin_date)->diffInDays(\Carbon\Carbon::parse($booking->checkout_date)) }}
-                        วัน
-                    </p>
-                </div>
-
-                <div class="bg-gray-100 p-4 rounded">
-                    <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
-                    <p><strong>ยอด:</strong> {{ $booking->total_cost }} บาท</p>
-                    <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
-                    <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
-                </div>
+                <p class="mr-4"><strong>เช็คอิน:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}
+                </p>
+                <p><strong>เช็คเอาท์:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y') }}
+                </p>
+                <p><strong>จำนวนวันที่เข้าพัก:</strong>
+                    {{ \Carbon\Carbon::parse($booking->checkin_date)->diffInDays(\Carbon\Carbon::parse($booking->checkout_date)) }} วัน
+                </p>
             </div>
+
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
+                <p><strong>ค่าใช้จ่ายทั้งหมด:</strong> {{ $booking->total_cost }} บาท</p>
+                <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
+                <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
+            </div>
+        </div>
         @endforeach
 
         <div class="mt-6">
@@ -111,8 +110,12 @@
     </div>
 
     <script>
-        const stripe = Stripe('pk_test_51PZ6omGGaN9QJBWFVeH5ibtGX7ExFeg5C78sqdm5bwqzZmmb7fDNEgds8psryzewvU4m4kKrYsDUPKjthPxKVisI00wDOgiRMv');
-    
+        // ประกาศ Stripe key เพียงครั้งเดียว
+        const stripe = Stripe(
+            'pk_test_51PZ6omGGaN9QJBWFVeH5ibtGX7ExFeg5C78sqdm5bwqzZmmb7fDNEgds8psryzewvU4m4kKrYsDUPKjthPxKVisI00wDOgiRMv'
+        );
+
+        // ประกาศตัวแปร timer ด้านนอกเพื่อใช้งานได้ทั่วสคริปต์
         let timer;
     
         document.getElementById('pay-button').addEventListener('click', async function() {

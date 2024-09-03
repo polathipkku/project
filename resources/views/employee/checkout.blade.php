@@ -104,7 +104,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">{{ $detail->booking_status }}</td>
-                            <td class="px-4 py-2">{{ $booking->checkout_date }}</td>
+                            <td class="px-4 py-2">{{ $detail->checkout_date }}</td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
                                     <button class="py-2 px-4 rounded-md hover:underline focus:outline-none focus:shadow-outline-blue active:text-blue-800" type="button">

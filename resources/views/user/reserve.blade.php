@@ -96,7 +96,6 @@
                     @csrf
                     <div class="max-w-5xl mx-auto ">
                         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
-                            <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
                                 <div class="mb-4">
@@ -108,8 +107,12 @@
                                     <input type="text" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 </div>
                                 <div class="mb-4">
-                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก(ผู้ใหญ่): <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
                                     <input type="number" name="number_of_guests" id="number_of_guests" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="occupancy_child" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก(เด็ก): <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 1 คน อายุไม่ 12 ปี)</span></label>
+                                    <input type="number" name="occupancy_child" id="occupancy_child" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 </div>
                                 <div class="mb-4">
                                     <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">จำนวนห้องที่ต้องการ:</label>
@@ -133,37 +136,36 @@
                         </div>
                     </div>
                 </form>
-                <form id="otherBookingForm" action="{{ route('bookings.reserves') }}" method="post"
-                    enctype="multipart/form-data" style="display:none;">
+                <form id="otherBookingForm" action="{{ route('bookings.reserves') }}" method="post" enctype="multipart/form-data" style="display:none;">
                     @csrf
-                    <div class="max-w-5xl mx-auto ">
-                        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 ">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                             <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
-
                                 <div class="mb-4">
                                     <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
-                                    <input type="text" name="booking_name" id="booking_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <input type="text" name="booking_name" id="booking_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 </div>
                                 <div class="mb-4">
                                     <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
-                                    <input type="text" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <input type="text" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 </div>
                                 <hr class="border-t-2 border-gray-300 my-4">
-
                                 <div class="mb-4">
                                     <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
-
                                     <label for="bookingto_username" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้เข้าพัก:</label>
                                     <input type="text" name="bookingto_username" id="bookingto_username" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
                                     <label for="bookingto_phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์ผู้เข้าพัก:</label>
                                     <input type="text" name="bookingto_phone" id="bookingto_phone" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
-                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก: <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
-                                    <input type="text" name="booker_amount" id="booker_amount" class="shadow mb-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-
+                                    <div class="mb-4">
+                                        <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก (ผู้ใหญ่): <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 2 คน)</span></label>
+                                        <input type="number" name="number_of_guests" id="number_of_guests" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="occupancy_child" class="block text-gray-700 text-sm font-bold mb-2">จำนวนผู้เข้าพัก (เด็ก): <span class="text-gray-500 text-xs">(เข้าพักได้สูงสุด 1 คน อายุไม่เกิน 12 ปี)</span></label>
+                                        <input type="number" name="occupancy_child" id="occupancy_child" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    </div>
                                     <div class="mb-4">
                                         <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">จำนวนห้องที่ต้องการ:</label>
                                         <input type="text" name="number_of_rooms" id="number_of_rooms" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $number_of_rooms }}" readonly>
@@ -176,17 +178,13 @@
                                         <label for="checkout_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
                                         <input type="date" name="checkout_date" id="checkout_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ $checkout_date }}" readonly>
                                     </div>
-
-
                                 </div>
-
                                 <div class="flex items-center justify-between">
-                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                        บันทึกการจอง
-                                    </button>
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">บันทึกการจอง</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </form>
                 <footer class="bg-gray-800 mt-10 text-white">
                     <div class="container mx-auto p-5">

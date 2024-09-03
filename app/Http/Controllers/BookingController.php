@@ -54,6 +54,7 @@ class BookingController extends Controller
     {
         $bookings = Booking::where('booking_status', 'รอเลือกห้อง')->get();
         $rooms = Room::all(); // ดึงห้องทั้งหมดที่มี
+
         return view('employee.checkin', compact('bookings', 'rooms'));
     }
 
@@ -84,12 +85,13 @@ class BookingController extends Controller
     public function reserve(Request $request)
     {
         $request->validate([
-            'booking_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
             'number_of_guests' => 'required|integer|min:1',
             'checkin_date' => 'required|date',
             'checkout_date' => 'required|date|after:checkin_date',
             'number_of_rooms' => 'required|integer|min:1',
+            'booking_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'occupancy_child' => 'nullable|integer|min:0',
         ]);
 
         // ตรวจสอบห้องที่ว่าง
@@ -121,51 +123,58 @@ class BookingController extends Controller
 
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
-        $booking->checkin_date = $request->checkin_date;
-        $booking->checkout_date = $request->checkout_date;
         $booking->checkin_by = auth()->user()->id;
-        $booking->total_cost = $totalCost;
-        $booking->room_type = 'ห้องพักค้างคืน';
-        $booking->occupancy_person = $request->number_of_guests;
-        $booking->room_quantity = $request->number_of_rooms;
+        $booking->checkout_by = auth()->user()->id;
         $booking->save();
 
         foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $room) {
             DB::table('booking_details')->insert([
                 'booking_id' => $booking->id,
-                'room_id' => null, // ตั้งค่าเป็น NULL ทันที
+                'room_id' => null,
                 'booking_name' => $request->booking_name,
                 'phone' => $request->phone,
                 'bookingto_username' => null,
                 'bookingto_phone' => null,
-                'booking_status' => 'รอเลือกห้อง', // ย้าย booking_status มาที่ booking_details
+                'booking_status' => 'รอเลือกห้อง',
+                'room_type' => 'ห้องพักค้างคืน',
+                'occupancy_person' => $request->number_of_guests,
+                'occupancy_child' => $request->occupancy_child,
+                'checkin_date' => $request->checkin_date,
+                'checkout_date' => $request->checkout_date,
+                'room_quantity' => $request->number_of_rooms,
+                'total_cost' => $totalCost,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
+
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
     public function reserves(Request $request)
     {
+        // Validate the request data
         $request->validate([
             'booking_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'booker_amount' => 'required|integer|min:1|max:2',
+            'number_of_guests' => 'required|integer|min:1|max:2', // เปลี่ยนเป็น number_of_guests
             'checkin_date' => 'required|date',
             'checkout_date' => 'required|date|after:checkin_date',
             'number_of_rooms' => 'required|integer|min:1',
+            'bookingto_username' => 'nullable|string|max:255',
+            'bookingto_phone' => 'nullable|string|max:20',
+            'occupancy_child' => 'nullable|integer|min:0',
         ]);
 
         // ตรวจสอบห้องที่ว่าง
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
-
         $availableRooms = [];
 
         foreach ($rooms as $room) {
             if (
                 $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date) &&
-                $request->booker_amount <= $room->room_occupancy
+                $request->number_of_guests <= $room->room_occupancy
             ) {
                 $availableRooms[] = $room;
             }
@@ -184,17 +193,14 @@ class BookingController extends Controller
         $roomPricePerDay = 500; // ตั้งราคาสำหรับห้องพักค้างคืน
         $totalCost = $days * $roomPricePerDay * $request->number_of_rooms;
 
+        // สร้างการจองใหม่
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
-        $booking->checkin_date = $request->checkin_date;
-        $booking->checkout_date = $request->checkout_date;
         $booking->checkin_by = auth()->user()->id;
-        $booking->total_cost = $totalCost;
-        $booking->room_type = 'ห้องพักค้างคืน';
-        $booking->occupancy_person = $request->booker_amount;
-        $booking->room_quantity = $request->number_of_rooms;
+        $booking->checkout_by = auth()->user()->id;
         $booking->save();
 
+        // บันทึกข้อมูลการจอง
         foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $room) {
             DB::table('booking_details')->insert([
                 'booking_id' => $booking->id,
@@ -203,7 +209,14 @@ class BookingController extends Controller
                 'phone' => $request->phone,
                 'bookingto_username' => $request->bookingto_username,
                 'bookingto_phone' => $request->bookingto_phone,
-                'booking_status' => 'รอเลือกห้อง', // ย้าย booking_status มาที่ booking_details
+                'booking_status' => 'รอเลือกห้อง',
+                'checkin_date' => $request->checkin_date,
+                'checkout_date' => $request->checkout_date,
+                'occupancy_person' => $request->number_of_guests, // ปรับเป็น number_of_guests
+                'occupancy_child' => $request->occupancy_child,
+                'total_cost' => $totalCost,
+                'room_type' => 'ห้องพักค้างคืน',
+                'room_quantity' => $request->number_of_rooms,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -211,7 +224,6 @@ class BookingController extends Controller
 
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
-
 
 
     public function checkAvailability(Request $request)
