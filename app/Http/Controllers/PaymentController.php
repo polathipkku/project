@@ -11,13 +11,12 @@ use Stripe\Stripe;
 class PaymentController extends Controller
 {
     public function showPaymentPage($id)
-{
-    $booking = Booking::find($id);
-    $bookings = Booking::where('id', $id)->get();
+    {
+        $booking = Booking::find($id);
+        $bookings = Booking::where('id', $id)->get();
 
-    return view('user.payment', compact('bookings'));
-}
-
+        return view('user.payment', compact('bookings'));
+    }
 
     public function createPaymentIntent(Request $request)
     {
@@ -28,7 +27,7 @@ class PaymentController extends Controller
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $paymentIntent = PaymentIntent::create([
-            'amount' => $amount * 100, // จำนวนเงินในสตางค์
+            'amount' => $amount * 100,
             'currency' => 'thb',
             'payment_method_types' => ['promptpay'],
         ]);
@@ -43,6 +42,4 @@ class PaymentController extends Controller
 
         return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
-    
 }
-

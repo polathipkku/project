@@ -607,24 +607,7 @@
   <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
   <script src="/js/hero.js"></script>
-  <script>
-    const profileButton = document.getElementById("profileButton");
-    const profileDropdown = document.getElementById("profileDropdown");
 
-    profileButton.addEventListener("click", function(event) {
-      profileDropdown.classList.toggle("hidden");
-      event.stopPropagation();
-    });
-
-    document.addEventListener("click", function(event) {
-      const isProfileButtonClicked = profileButton.contains(event.target);
-      const isDropdownOpen = !profileDropdown.classList.contains("hidden");
-
-      if (!isProfileButtonClicked && isDropdownOpen) {
-        profileDropdown.classList.add("hidden");
-      }
-    });
-  </script>
 </body>
 
 </html>

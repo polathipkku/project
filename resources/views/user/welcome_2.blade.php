@@ -42,7 +42,7 @@
                     <i class="fa-solid fa-right-to-bracket"></i>
                     <span>เข้าสู่ระบบ</span>
                 </a>
-                <a href="#" class="flex items-center space-x-1 hover:text-blue-400">
+                <a href="#"onclick="showRegisterForm()" class="flex items-center space-x-1 hover:text-blue-400">
                     <i class="fa-solid fa-user"></i>
                     <span>สมัครสมาชิก</span>
                 </a>
@@ -407,7 +407,7 @@
     </div>
 
     <div id="registerForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm relative">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm max-h-sm relative">
             <div class="absolute top-0 right-0 mt-2 mr-2 z-10">
                 <button onclick="hideRegisterForm()" class="focus:outline-none">
                     <img src="images/reject.png" alt="Reject" class="w-5 h-5">

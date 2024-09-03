@@ -42,7 +42,7 @@
                     <i class="fa-solid fa-right-to-bracket"></i>
                     <span>เข้าสู่ระบบ</span>
                 </a>
-                <a href="#" class="flex items-center space-x-1 hover:text-blue-400">
+                <a href="#" onclick="showRegisterForm()" class="flex items-center space-x-1 hover:text-blue-400">
                     <i class="fa-solid fa-user"></i>
                     <span>สมัครสมาชิก</span>
                 </a>
@@ -410,7 +410,7 @@
         </div>
     </div>
 
-    <div id="registerForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
+    <div id="registerForm" class="fixed inset-0 bg-gray-900  bg-opacity-50 flex justify-center items-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm relative">
             <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
                 <button onclick="hideRegisterForm()" class="focus:outline-none">
@@ -450,7 +450,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <input id="image" name="image" type="file" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                    <input id="image" name="image" type="file" class="block w-full  px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
