@@ -65,24 +65,33 @@
                 </div>
             </div>
 
-            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0  z-40 bg-white" style="padding: 5%;">
-                <a href="{{ route('home')}}" class="text-black text-4xl font-bold">Tunthree Resort</a>
+            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0  z-40 bg-white"
+                style="padding: 5%;">
+                <a href="{{ route('home') }}" class="text-black text-4xl font-bold">Tunthree Resort</a>
                 <div class="relative">
                     <nav class="space-x-10 text-xl">
 
-                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i class="fa-solid fa-star ml-2"></i></a>
-                        <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i class="fa-solid fa-comments ml-2"></i></a>
+                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                                class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i
+                                class="fa-solid fa-star ml-2"></i></a>
+                        <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i
+                                class="fa-solid fa-comments ml-2"></i></a>
                         <!-- User Menu Dropdown -->
-                        <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
+                        <button id="profileButton" type="button"
+                            class="text-black hover:text-blue-400 focus:outline-none">
                             <i class="fa-solid fa-user"></i>
                             <span class="sr-only">User Menu</span>
                         </button>
-                        <div id="profileDropdown" class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
+                        <div id="profileDropdown"
+                            class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
                             <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                             </div>
                         </div>
                     </nav>
@@ -91,98 +100,214 @@
     </div>
     <div class="mx-auto pt-2 pb-2 ">
         <p class="text-gray-600 text-l max-xl:px-4 pt-8" style="margin-left: 7%;">
-            <a href="{{ route('home')}}" class="text-black hover:text-blue-400">Home</a>
+            <a href="{{ route('home') }}" class="text-black hover:text-blue-400">Home</a>
             <i class="fa-solid fa-chevron-right ml-2 mr-2"></i>
             <a href="reserve.html" class="text-black hover:text-blue-400">จองห้อง</a>
             <i class="fa-solid fa-chevron-right ml-2 mr-2"></i>
             <a href="#" class="text-blue-600 hover:text-black">เลือกดูห้อง</a>
         </p>
     </div>
-
-
     <section>
         <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
-            <div class="flex items-center mt-4 relative mr-4">
-                <span class="font-semibold text-white">Check-in</span>
-                <input type="text" id="checkin_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10">
-                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            <div class="flex flex-col items-start mr-4">
+                <span class="font-semibold text-white mb-1">Check-in</span>
+                <div class="relative">
+                    <input type="text" id="checkin_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10">
+                    <i
+                        class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                </div>
                 <input type="hidden" id="startDate" name="startDate">
             </div>
-            <div class="flex items-center mt-4 relative mr-4">
-                <span class="font-semibold text-white">Check-out</span>
-                <input type="text" id="checkout_date" class="ml-2 border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
-                <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            <div class="flex flex-col items-start mr-4">
+                <span class="font-semibold text-white mb-1">Check-out</span>
+                <div class="relative">
+                    <input type="text" id="checkout_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10"
+                        readonly>
+                    <i
+                        class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                </div>
                 <input type="hidden" id="endDate" name="endDate">
                 <input type="hidden" id="totalDay" name="totalDay">
             </div>
-            <div class="flex items-center mt-4 relative mr-4 ml-2">
-                <span class="font-semibold text-white">จำนวนห้องที่ต้องการ</span>
-                <input type="number" id="number-of-rooms" class="ml-2 border border-gray-400 rounded-md px-2 py-1 text-black" value="1" min="1" max="10">
-            </div>
-            <div class="mt-4 ml-3">
-                <button id="search-button" type="button" class="flex items-center justify-center text-white px-4 py-2 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-600" style="background-color: #0A97B0;" onclick="getAvailableRooms()">
-                    ค้นหา
-                </button>
+
+            <!-- Dropdown for Room, Adults, and Children -->
+            <div class="relative">
+                <div class="flex flex-col items-start">
+                    <span class="font-semibold text-white mb-1">จำนวนห้องและผู้เข้าพัก</span>
+                    <button id="guest-room-button"
+                        class="flex items-center bg-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-800">
+                        <i class="fa fa-user mr-2"></i> <span id="guest-summary">ผู้ใหญ่ 2 คน, 1 ห้อง</span>
+                        <i class="fa fa-caret-down ml-2"></i>
+                    </button>
+                </div>
+                <div id="guest-room-popup"
+                    class="hidden absolute top-full left-0 mt-2 w-64 bg-white rounded-md shadow-lg p-4 z-10">
+                    <!-- Room Selection -->
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">ห้อง</span>
+                        <div class="flex items-center space-x-2">
+                            <button
+                                class="decrement-room bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <span id="number-of-rooms" class="font-semibold text-gray-700 text-center w-6">1</span>
+                            <button
+                                class="increment-room bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                        </div>
+                    </div>
+                    <!-- Adult Selection -->
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">ผู้ใหญ่</span>
+                        <div class="flex items-center space-x-2">
+                            <button
+                                class="decrement-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <span id="adult-count" class="font-semibold text-gray-700 text-center w-6">2</span>
+                            <button
+                                class="increment-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                        </div>
+                    </div>
+                    <!-- Child Selection -->
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-700">เด็ก</span>
+                        <div class="flex items-center space-x-2">
+                            <button
+                                class="decrement-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <span id="child-count" class="font-semibold text-gray-700 text-center w-6">0</span>
+                            <button
+                                class="increment-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex items-center mt-4 relative mr-4 ml-5">
-                <span class="font-semibold text-white">จำนวนวันเข้าพัก</span>
-                <div id="stay-days" class="ml-2 border border-gray-400 rounded-md px-2 py-1 text-white">0 วัน</div>
+            <div class="flex flex-col items-start ml-3">
+                <span class="font-semibold text-white mb-1">จำนวนวันเข้าพัก</span>
+                <div id="stay-days" class="border border-gray-400 rounded-md px-2 py-1 ml-4 text-white">0 วัน</div>
+            </div>
+
+            <div class="mt-4 ml-4">
+                <button id="search-button" type="button"
+                    class="flex items-center justify-center text-white px-4 py-2 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-blue-600"
+                    style="background-color: #0A97B0;" onclick="getAvailableRooms()">
+                    ค้นหา
+                </button>
             </div>
         </div>
     </section>
 
-    <section id="room-availability" class="container mx-auto mt-12 flex gap-8" style="padding-bottom: 10%; display: none;">
+    <script>
+        // Toggle guest-room popup
+        document.getElementById('guest-room-button').addEventListener('click', function() {
+            document.getElementById('guest-room-popup').classList.toggle('hidden');
+        });
+
+        // Handle increment and decrement for room, adult, and child counts
+        document.querySelectorAll('.increment-room, .decrement-room').forEach(button => {
+            button.addEventListener('click', function() {
+                let roomCount = document.getElementById('number-of-rooms');
+                let increment = button.classList.contains('increment-room');
+                let currentValue = parseInt(roomCount.innerText);
+                roomCount.innerText = increment ? currentValue + 1 : Math.max(1, currentValue - 1);
+                updateGuestSummary();
+            });
+        });
+
+        document.querySelectorAll('.increment-adult, .decrement-adult').forEach(button => {
+            button.addEventListener('click', function() {
+                let adultCount = document.getElementById('adult-count');
+                let increment = button.classList.contains('increment-adult');
+                let currentValue = parseInt(adultCount.innerText);
+                adultCount.innerText = increment ? currentValue + 1 : Math.max(1, currentValue - 1);
+                updateGuestSummary();
+            });
+        });
+
+        document.querySelectorAll('.increment-child, .decrement-child').forEach(button => {
+            button.addEventListener('click', function() {
+                let childCount = document.getElementById('child-count');
+                let increment = button.classList.contains('increment-child');
+                let currentValue = parseInt(childCount.innerText);
+                childCount.innerText = increment ? currentValue + 1 : Math.max(0, currentValue - 1);
+                updateGuestSummary();
+            });
+        });
+
+        // Update guest summary text
+        function updateGuestSummary() {
+            let roomCount = document.getElementById('number-of-rooms').innerText;
+            let adultCount = document.getElementById('adult-count').innerText;
+            let childCount = document.getElementById('child-count').innerText;
+            let guestSummary = `${adultCount} ผู้ใหญ่, ${childCount} เด็ก, ${roomCount} ห้อง`;
+            document.getElementById('guest-summary').innerText = guestSummary;
+        }
+    </script>
+
+
+
+    <section id="room-availability" class="container mx-auto mt-12 flex flex-col gap-8 bg-red-500"
+        style="padding-bottom: 10%; display: none;">
+
+        <!-- Colored Bar with Thunthree Room Text -->
+        <div class="w-full bg-blue-600 text-white text-center py-2">
+            <h2 class="text-xl font-semibold">Thunthree Room</h2>
+        </div>
         <div class="grid gap-4" style="height: 400px; width: 600px;">
-            <div>
-            </div>
+
             <a data-fancybox="gallery" href="/images/tb1.png">
                 <img class="max-w-full rounded-lg border border-gray-300" src="/images/tb1.png" alt="">
             </a>
             <div class="grid grid-cols-5 gap-2">
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500429.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500429.jpg" alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500429.jpg"
+                            alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/i-8.png">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-8.png" alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-8.png"
+                            alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/i-11.png">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-11.png" alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-11.png"
+                            alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500428.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500428.jpg" alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500428.jpg"
+                            alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500430.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500430.jpg" alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500430.jpg"
+                            alt="">
                     </a>
                 </div>
             </div>
         </div>
-        <div class="flex-1">
+        <div class="flex-1 ">
         </div>
+
     </section>
 
     <!-- No Availability Section -->
-    <section id="no-availability" class="container mx-auto mt-12 flex items-center justify-center" style="display: none;">
-        <div class="text-center">
-            <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
-        </div>
-    </section>
+    <section id="no-availability" class="container mx-auto mt-12 p-6 rounded-lg shadow-lg bg-white flex items-center justify-center"
+    style="display: none;">
+    <div class="text-center">
+        <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
+    </div>
+</section>
 
 
     <section class="container mx-auto mt-12 mb-12">
         <h2 class="text-2xl font-semibold mb-4">ที่ตั้งของเรา</h2>
         <div class="w-full h-64">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d933.7442758063276!2d104.03987679285655!3d16.5454448381507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e1!3m2!1sth!2sth!4v1721844367798!5m2!1sth!2sth" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d933.7442758063276!2d104.03987679285655!3d16.5454448381507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e1!3m2!1sth!2sth!4v1721844367798!5m2!1sth!2sth"
+                width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""
+                aria-hidden="false" tabindex="0"></iframe>
         </div>
     </section>
     <!-- ส่วนรีวิวจากลูกค้า -->
@@ -246,7 +371,7 @@
 
                         </h4>
                         <div class="info_links">
-                            <a class="active" href="{{ route('home')}}">
+                            <a class="active" href="{{ route('home') }}">
                                 <img src="images/nav-bullet.png" alt="">
                                 Home
                             </a>
@@ -308,13 +433,16 @@
                     }
                 }
             });
+
             window.getAvailableRooms = function() {
                 var startDate = valuestartdate.value;
                 var endDate = valueenddate.value;
-                var numberOfRooms = document.getElementById('number-of-rooms').value;
+                var numberOfRooms = document.getElementById('number-of-rooms').innerText;
 
                 if (startDate && endDate) {
-                    fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&numberOfRooms=${numberOfRooms}`)
+                    fetch(
+                            `/check-availability?startDate=${startDate}&endDate=${endDate}&numberOfRooms=${numberOfRooms}`
+                        )
                         .then(response => response.json())
                         .then(data => {
                             var roomAvailabilityDiv = document.querySelector('#room-availability .flex-1');
@@ -339,7 +467,10 @@
                         `;
                                     roomAvailabilityDiv.innerHTML = roomSummary;
 
-                                    var reserveUrl = "{{ route('reserve') }}" + "?checkin_date=" + encodeURIComponent(startDate) + "&checkout_date=" + encodeURIComponent(endDate) + "&number_of_rooms=" + encodeURIComponent(numberOfRooms);
+                                    var reserveUrl = "{{ route('reserve') }}" + "?checkin_date=" +
+                                        encodeURIComponent(startDate) + "&checkout_date=" +
+                                        encodeURIComponent(endDate) + "&number_of_rooms=" +
+                                        encodeURIComponent(numberOfRooms);
                                     document.getElementById('reserve-button').href = reserveUrl;
                                 } else {
                                     document.getElementById('room-availability').style.display = 'none';

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Models\Booking;
-use Illuminate\Http\Request;
 use App\Models\Booking_detail;
+use Illuminate\Http\Request;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -13,47 +12,53 @@ class PaymentController extends Controller
 {
     public function showPaymentPage($id)
     {
-<<<<<<< HEAD
-        $booking = Booking::find($id);
-        $bookings = Booking::where('id', $id)->get();
-=======
         // Fetch booking details for the given booking ID
         $booking = Booking_detail::where('booking_id', $id)->first();
-    
+
         if (!$booking) {
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
         }
-    
-        return view('user.payment', compact('booking'));
-    }
-    
->>>>>>> f9f312540acd7dd93dd86536cc20a3656b4a9afb
 
-        return view('user.payment', compact('bookings'));
+        return view('user.payment', compact('booking'));
     }
 
     public function createPaymentIntent(Request $request)
     {
         $bookingId = $request->input('booking_id');
-        $booking = Booking::findOrFail($bookingId);
-        $amount = $booking->total_cost;
+        $booking = Booking_detail::where('booking_id', $bookingId)->first();
+
+        // Check if booking was found
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        // Ensure total_cost is accessible
+        if (!isset($booking->total_cost)) {
+            return response()->json(['error' => 'Total cost not found'], 500);
+        }
+
+        $amount = $booking->total_cost * 100; // Amount in cents
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $paymentIntent = PaymentIntent::create([
-            'amount' => $amount * 100,
-            'currency' => 'thb',
-            'payment_method_types' => ['promptpay'],
-        ]);
+        try {
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $amount,
+                'currency' => 'thb',
+                'payment_method_types' => ['promptpay'],
+            ]);
 
-        $payment = new Payment();
-        $payment->booking_id = $bookingId;
-        $payment->amount = $amount;
-        $payment->payment_intent_id = $paymentIntent->id;
-        $payment->payment_status = 'pending'; // กำหนดค่าเริ่มต้นเป็น 'pending' หรือค่าอื่นๆ ตามที่ต้องการ
-        $payment->payment_slip = null; // กำหนดให้เป็น null เพราะยังไม่มีข้อมูลใบเสร็จชำระเงิน
-        $payment->save();
+            $payment = new Payment();
+            $payment->booking_id = $bookingId;
+            $payment->amount = $amount / 100; // Convert back to currency
+            $payment->payment_intent_id = $paymentIntent->id;
+            $payment->payment_status = 'pending'; // Default value
+            $payment->payment_slip = null; // No slip yet
+            $payment->save();
 
-        return response()->json(['client_secret' => $paymentIntent->client_secret]);
+            return response()->json(['client_secret' => $paymentIntent->client_secret]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
