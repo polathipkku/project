@@ -30,7 +30,7 @@ class Booking extends Model
     {
         return $this->belongsToMany(Room::class, 'booking_details');
     }
-    
+
     public function payment()
     {
         return $this->hasOne(Payment::class, 'booking_id');
@@ -39,5 +39,9 @@ class Booking extends Model
     {
         return $this->hasMany(Booking_detail::class, 'booking_id');
     }
-    
+
+    public function roomservices()
+    {
+        return $this->belongsToMany(Roomservice::class, 'roomservice_details');
+    }
 }

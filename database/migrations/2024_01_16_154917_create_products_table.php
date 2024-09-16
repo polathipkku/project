@@ -18,19 +18,19 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('stocks_id');
             $table->unsignedBigInteger('product_types_id');
             $table->string('product_name');
-            $table->integer('product_price');
+            $table->decimal('product_price', 10, 2);
             $table->string('product_detail');
             $table->string('product_status');
-            $table->string('product_img');
+            $table->string('product_img')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('stocks_id')->references('id')->on('stocks');
-            $table->foreign('product_types_id')->references('id')->on('product_types');
-            
+            // Foreign key constraints
+            $table->foreign('stocks_id')->references('id')->on('stocks')->onDelete('cascade');
+            $table->foreign('product_types_id')->references('id')->on('product_types')->onDelete('cascade');
         });
-
     }
+
 
     /**
      * Reverse the migrations.

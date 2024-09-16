@@ -76,7 +76,6 @@ Route::get('/text', [RoomController::class, 'text'])->name('text');
 Route::get('/employeehome', [RoomController::class, 'employeehome'])->name('employeehome');
 Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('userbooking');
 Route::get('/t', [BookingController::class, 't'])->name('t');
-
 Route::get('/reserve', [BookingController::class, 'showReserveForm'])->name('reserve');
 Route::post('/reserve', [BookingController::class, 'reserve'])->name('bookings.reserve');
 Route::post('/reserves', [BookingController::class, 'reserves'])->name('bookings.reserves');

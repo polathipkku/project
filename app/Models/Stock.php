@@ -16,9 +16,26 @@ class Stock extends Model
         "update_by",
         "update_qty"
     ];
-    
+
     public function products()
     {
         return $this->hasMany(Product::class, 'stocks_id');
+    }
+
+    public function getAvailableExtraBeds()
+    {
+        // ค้นหาสินค้าเตียงเสริมในสต็อก
+        $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
+
+        if (!$extraBedProduct) {
+            return 0;
+        }
+
+        // ค้นหาสต็อกที่เชื่อมโยงกับสินค้าเตียงเสริม
+        $stock = $this->whereHas('products', function ($query) use ($extraBedProduct) {
+            $query->where('id', $extraBedProduct->stocks_id);
+        })->first();
+
+        return $stock ? $stock->stock_qty : 0;
     }
 }

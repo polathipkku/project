@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Room;
+use App\Models\Roomservice_detail;
 use App\Models\Booking_detail;
+use App\Models\Product;
+use App\Models\Roomservice;
+use App\Models\Stock;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -28,11 +33,16 @@ class BookingController extends Controller
     }
     public function showReserveForm(Request $request)
     {
-        $checkin_date = $request->query('checkin_date');
-        $checkout_date = $request->query('checkout_date');
-        $number_of_rooms = $request->query('number_of_rooms');
-        return view('user.reserve', compact('checkin_date', 'checkout_date', 'number_of_rooms'));
+        $extra_bed_count = $request->input('extra_bed_count', 0); // ค่าเริ่มต้นเป็น 0 ถ้าไม่ส่งมา
+        $checkin_date = $request->input('checkin_date');
+        $checkout_date = $request->input('checkout_date');
+        $number_of_rooms = $request->input('number_of_rooms');
+        $number_of_guests = $request->input('number_of_guests', 0);
+        $occupancy_child = $request->input('occupancy_child', 0);
+
+        return view('user.reserve', compact('checkin_date', 'checkout_date', 'number_of_rooms', 'extra_bed_count', 'number_of_guests', 'occupancy_child'));
     }
+
 
     public function em_reserve($id)
     {
@@ -84,6 +94,7 @@ class BookingController extends Controller
 
     public function reserve(Request $request)
     {
+        // Validate the request inputs
         $request->validate([
             'number_of_guests' => 'required|integer|min:1',
             'checkin_date' => 'required|date',
@@ -94,39 +105,41 @@ class BookingController extends Controller
             'occupancy_child' => 'nullable|integer|min:0',
         ]);
 
-        // ตรวจสอบห้องที่ว่าง
+        // Get available rooms (initialize $availableRooms)
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
+        $availableRooms = []; // Initialize $availableRooms to avoid the undefined variable error
 
-        $availableRooms = [];
-
+        // Loop through rooms to check availability
         foreach ($rooms as $room) {
             if (
                 $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date) &&
                 $request->number_of_guests <= $room->room_occupancy
             ) {
-                $availableRooms[] = $room;
+                $availableRooms[] = $room; // Add available room to the array
             }
         }
 
+        // Check if there are enough available rooms
         if (count($availableRooms) < $request->number_of_rooms) {
             return redirect()->route('home')->with('error', 'ขออภัย, ไม่มีห้องว่างเพียงพอต่อความต้องการของลูกค้า');
         }
 
-        // คำนวณราคาห้อง
+        // Calculate total cost
         $checkinDate = new \DateTime($request->checkin_date);
         $checkoutDate = new \DateTime($request->checkout_date);
         $interval = $checkinDate->diff($checkoutDate);
         $days = $interval->days;
-
-        $roomPricePerDay = 500; // ตั้งราคาสำหรับห้องพักค้างคืน
+        $roomPricePerDay = 500; // Room price per day
         $totalCost = $days * $roomPricePerDay * $request->number_of_rooms;
 
+        // Create a new booking
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
         $booking->checkin_by = auth()->user()->id;
         $booking->checkout_by = auth()->user()->id;
         $booking->save();
 
+        // Insert into booking_details table
         foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $room) {
             DB::table('booking_details')->insert([
                 'booking_id' => $booking->id,
@@ -148,13 +161,41 @@ class BookingController extends Controller
             ]);
         }
 
+        // Handle extra bed
+        if ($request->extra_bed_count > 0) {
+            // Find the extra bed product
+            $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
 
+            if ($extraBedProduct) {
+                // Create a new Roomservice entry
+                $roomservice = new Roomservice();
+                $roomservice->product_id = $extraBedProduct->id;
+                $roomservice->save();
+
+                // Create a new Roomservice_detail entry
+                $roomserviceDetail = new Roomservice_detail();
+                $roomserviceDetail->roomservice_id = $roomservice->id;
+                $roomserviceDetail->booking_id = $booking->id;
+                $roomserviceDetail->quantity = $request->extra_bed_count;
+                $roomserviceDetail->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                $roomserviceDetail->save();
+
+                // Update the total cost of the booking
+                $totalCost += $roomserviceDetail->total_price;
+            }
+        }
+
+        // Update the total cost in the booking_details table
+        DB::table('booking_details')
+            ->where('booking_id', $booking->id)
+            ->update(['total_cost' => $totalCost]);
+
+        // Redirect to the payment page with success message
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 
     public function reserves(Request $request)
     {
-        // Validate the request data
         $request->validate([
             'booking_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -201,27 +242,35 @@ class BookingController extends Controller
         $booking->save();
 
         // บันทึกข้อมูลการจอง
-        foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $room) {
-            DB::table('booking_details')->insert([
-                'booking_id' => $booking->id,
-                'room_id' => null, // ตั้งค่าเป็น NULL ทันที
-                'booking_name' => $request->booking_name,
-                'phone' => $request->phone,
-                'bookingto_username' => $request->bookingto_username,
-                'bookingto_phone' => $request->bookingto_phone,
-                'booking_status' => 'รอเลือกห้อง',
-                'checkin_date' => $request->checkin_date,
-                'checkout_date' => $request->checkout_date,
-                'occupancy_person' => $request->number_of_guests, // ปรับเป็น number_of_guests
-                'occupancy_child' => $request->occupancy_child,
-                'total_cost' => $totalCost,
-                'room_type' => 'ห้องพักค้างคืน',
-                'room_quantity' => $request->number_of_rooms,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        if ($request->extra_bed_count > 0) {
+            // Find the extra bed product
+            $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
+
+            if ($extraBedProduct) {
+                // Create a new Roomservice entry
+                $roomservice = new Roomservice();
+                $roomservice->product_id = $extraBedProduct->id;
+                $roomservice->save();
+
+                // Create a new Roomservice_detail entry
+                $roomserviceDetail = new Roomservice_detail();
+                $roomserviceDetail->roomservice_id = $roomservice->id;
+                $roomserviceDetail->booking_id = $booking->id;
+                $roomserviceDetail->quantity = $request->extra_bed_count;
+                $roomserviceDetail->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                $roomserviceDetail->save();
+
+                // Update the total cost of the booking
+                $totalCost += $roomserviceDetail->total_price;
+            }
         }
 
+        // Update the total cost in the booking_details table
+        DB::table('booking_details')
+            ->where('booking_id', $booking->id)
+            ->update(['total_cost' => $totalCost]);
+
+        // Redirect to the payment page with success message
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 
@@ -230,15 +279,17 @@ class BookingController extends Controller
     {
         $startDate = $request->query('startDate');
         $endDate = $request->query('endDate');
-        $numberOfRooms = (int) $request->query('numberOfRooms', 1); // ค่าเริ่มต้นคือ 1 ห้องถ้าไม่ได้ระบุมา
+        $numberOfRooms = (int) $request->query('numberOfRooms', 1);
+        $adultCount = (int) $request->query('adultCount', 2);
+        $childCount = (int) $request->query('childCount', 0);
 
-        // ดึงข้อมูลห้องทั้งหมดโดยไม่สนใจ room_status
+        // ดึงข้อมูลห้องทั้งหมด
         $rooms = Room::all();
         $totalRooms = $rooms->count();
         $availableRooms = [];
         $bookingStatuses = ['รอชำระเงิน', 'รอเข้าพัก', 'เช็คอินแล้ว', 'รอทำความสะอาด', 'รอเลือกห้อง'];
 
-        // นับจำนวนการจองที่ยังไม่มีการเลือกห้อง
+        // คำนวณห้องที่ถูกจองแต่ยังไม่ได้เลือกห้อง
         $pendingBookings = Booking_detail::whereNull('room_id')
             ->whereIn('booking_status', $bookingStatuses)
             ->whereHas('booking', function ($query) use ($startDate, $endDate) {
@@ -247,33 +298,44 @@ class BookingController extends Controller
             })
             ->count();
 
-        // ปรับจำนวนห้องทั้งหมดโดยหักลบการจองที่ค้างอยู่
         $totalRooms -= $pendingBookings;
 
         foreach ($rooms as $room) {
             if ($this->isRoomAvailable($room, $startDate, $endDate)) {
                 $availableRooms[] = [
                     'id' => $room->id,
+                    'room_type' => $room->room_type,
                 ];
             }
         }
 
-        // ถ้าจำนวนห้องว่างมากกว่าจำนวนห้องทั้งหมดที่ปรับแล้ว ให้ตัดลิสต์เหลือเท่าจำนวนห้องทั้งหมด
-        if (count($availableRooms) > $totalRooms) {
-            $availableRooms = array_slice($availableRooms, 0, $totalRooms);
+        // ดึงข้อมูลจำนวนเตียงเสริมที่เหลืออยู่
+        $stock = new Stock();
+        $availableExtraBeds = $stock->getAvailableExtraBeds();
+
+        // ดึงข้อมูลราคาเตียงเสริม
+        $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
+        $extraBedPrice = $extraBedProduct ? $extraBedProduct->product_price : 0;
+
+        // เตรียมข้อมูลเตียงเสริม
+        $extraBedOptions = [];
+        if ($adultCount % 2 !== 0) {
+            $extraBeds = Product::where('product_name', 'เตียงเสริม')->get();
+            $extraBedOptions = $extraBeds->map(function ($bed) {
+                return [
+                    'product_id' => $bed->id,
+                    'product_name' => $bed->product_name,
+                    'product_price' => $bed->product_price,
+                ];
+            });
         }
 
-        $availableRoomCount = count($availableRooms);
-
-        if ($availableRoomCount < $numberOfRooms) {
-            return response()->json([
-                'availableRooms' => [],
-                'message' => 'ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า',
-                'availableRoomCount' => $availableRoomCount
-            ]);
-        }
-
-        return response()->json(['availableRooms' => $availableRooms]);
+        return response()->json([
+            'availableRooms' => $availableRooms,
+            'extraBedOptions' => $extraBedOptions,
+            'extraBedPrice' => $extraBedPrice,
+            'availableExtraBeds' => $availableExtraBeds,
+        ]);
     }
 
     private function isRoomAvailable($room, $checkinDate, $checkoutDate)
@@ -288,10 +350,8 @@ class BookingController extends Controller
             })
             ->count();
 
-        // ถ้ามีการจองที่มีสถานะที่ระบุห้องนั้นจะไม่ว่าง
         return $existingBookings === 0;
     }
-
 
     public function emaddBooking(Request $request, $id)
     {

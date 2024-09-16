@@ -157,16 +157,23 @@
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-semibold text-gray-700">ผู้ใหญ่</span>
                         <div class="flex items-center space-x-2">
-                            <button
-                                class="decrement-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <button class="decrement-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
                             <span id="adult-count" class="font-semibold text-gray-700 text-center w-6">2</span>
-                            <button
-                                class="increment-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                            <button class="increment-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
                         </div>
                     </div>
                     <!-- Child Selection -->
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">เด็ก<br><span class="text-gray-500 text-xs">(อายุ 6-15 ปี)</span></span>
+                        <div class="flex items-center space-x-2">
+                            <button class="decrement-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <span id="child-count" class="font-semibold text-gray-700 text-center w-6">0</span>
+                            <button class="increment-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                        </div>
+                    </div>
+
                     <div class="flex justify-between items-center">
-                        <span class="font-semibold text-gray-700">เด็ก</span>
+                        <span class="font-semibold text-gray-700">เด็กเล็ก<br><span class="text-gray-500 text-xs">(อายุ 0- 5 ปี)</span></span>
                         <div class="flex items-center space-x-2">
                             <button
                                 class="decrement-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
@@ -242,72 +249,56 @@
 
 
 
-    <section id="room-availability" class="container mx-auto mt-12 flex flex-col gap-8 bg-red-500"
-        style="padding-bottom: 10%; display: none;">
-
-        <!-- Colored Bar with Thunthree Room Text -->
-        <div class="w-full bg-blue-600 text-white text-center py-2">
-            <h2 class="text-xl font-semibold">Thunthree Room</h2>
-        </div>
+    <section id="room-availability" class="container mx-auto mt-12 flex gap-8" style="padding-bottom: 10%; display: none;">
         <div class="grid gap-4" style="height: 400px; width: 600px;">
-
+            <div>
+            </div>
             <a data-fancybox="gallery" href="/images/tb1.png">
                 <img class="max-w-full rounded-lg border border-gray-300" src="/images/tb1.png" alt="">
             </a>
             <div class="grid grid-cols-5 gap-2">
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500429.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500429.jpg"
-                            alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500429.jpg" alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/i-8.png">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-8.png"
-                            alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-8.png" alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/i-11.png">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-11.png"
-                            alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/i-11.png" alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500428.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500428.jpg"
-                            alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500428.jpg" alt="">
                     </a>
                 </div>
                 <div>
                     <a data-fancybox="gallery" href="/images/S__13500430.jpg">
-                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500430.jpg"
-                            alt="">
+                        <img class="h-40 object-cover rounded-lg border border-gray-300" src="/images/S__13500430.jpg" alt="">
                     </a>
                 </div>
             </div>
         </div>
-        <div class="flex-1 ">
+        <div class="flex-1">
         </div>
-
     </section>
 
     <!-- No Availability Section -->
-    <section id="no-availability" class="container mx-auto mt-12 p-6 rounded-lg shadow-lg bg-white flex items-center justify-center"
-    style="display: none;">
-    <div class="text-center">
-        <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
-    </div>
-</section>
-
+    <section id="no-availability" class="container mx-auto mt-12 flex items-center justify-center" style="display: none;">
+        <div class="text-center">
+            <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
+        </div>
+    </section>
 
     <section class="container mx-auto mt-12 mb-12">
         <h2 class="text-2xl font-semibold mb-4">ที่ตั้งของเรา</h2>
         <div class="w-full h-64">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d933.7442758063276!2d104.03987679285655!3d16.5454448381507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e1!3m2!1sth!2sth!4v1721844367798!5m2!1sth!2sth"
-                width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""
-                aria-hidden="false" tabindex="0"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d933.7442758063276!2d104.03987679285655!3d16.5454448381507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e1!3m2!1sth!2sth!4v1721844367798!5m2!1sth!2sth" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
         </div>
     </section>
     <!-- ส่วนรีวิวจากลูกค้า -->
@@ -371,7 +362,7 @@
 
                         </h4>
                         <div class="info_links">
-                            <a class="active" href="{{ route('home') }}">
+                            <a class="active" href="{{ route('home')}}">
                                 <img src="images/nav-bullet.png" alt="">
                                 Home
                             </a>
@@ -400,6 +391,7 @@
             </div>
         </div>
     </section>
+
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
@@ -435,68 +427,94 @@
             });
 
             window.getAvailableRooms = function() {
-                var startDate = valuestartdate.value;
-                var endDate = valueenddate.value;
-                var numberOfRooms = document.getElementById('number-of-rooms').innerText;
+                var startDate = document.getElementById('startDate').value;
+                var endDate = document.getElementById('endDate').value;
+                var adultCount = parseInt(document.getElementById('adult-count').innerText, 10);
+                var childCount = parseInt(document.getElementById('child-count').innerText, 10);
+
+                var numberOfRooms = Math.ceil(adultCount / 2);
+                var extraBedCount = (adultCount % 2 === 0) ? 0 : 1;
+
+                document.getElementById('number-of-rooms').innerText = numberOfRooms;
 
                 if (startDate && endDate) {
-                    fetch(
-                            `/check-availability?startDate=${startDate}&endDate=${endDate}&numberOfRooms=${numberOfRooms}`
-                        )
+                    fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&numberOfRooms=${numberOfRooms}&adultCount=${adultCount}&childCount=${childCount}`)
                         .then(response => response.json())
                         .then(data => {
                             var roomAvailabilityDiv = document.querySelector('#room-availability .flex-1');
                             roomAvailabilityDiv.innerHTML = '';
 
-                            if (data.availableRooms.length > 0) {
-                                if (data.availableRooms.length >= numberOfRooms) {
-                                    document.getElementById('room-availability').style.display = 'flex';
-                                    document.getElementById('no-availability').style.display = 'none';
-                                    var totalRooms = data.availableRooms.length;
-                                    var roomSummary = `
-                            <h3>ห้องพักที่ว่าง</h3>
+                            var totalRooms = data.availableRooms.length;
+                            var extraBedPrice = parseFloat(data.extraBedPrice);
+                            var roomPrice = numberOfRooms * 500;
+                            var numberOfRoombed = numberOfRooms - 1;
+                            var roomPricebed = (numberOfRoombed * 500) + (extraBedCount * extraBedPrice);
+
+                            var roomSummary = `
+                    <h3>ห้องพักที่ว่าง</h3>
+                    <p class="text-lg">จำนวนห้องที่ว่าง: ${totalRooms} ห้อง</p>
+                    <p>จำนวนห้องที่คุณเลือก: ${numberOfRooms} ห้อง</p>
+                    <p>ราคา: ${roomPrice} บาท/คืน</p>
+                    <p>รายละเอียด: ห้องพัก เตียงนุ่ม อยู่สบาย</p>
+                    <p>ฟรี WIFI แอร์เย็นสบาย</p>
+                    <p>ประเภทห้อง: เตียงคิงไซต์</p>
+                    <a id="reserve-button-normal" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 focus:outline-none focus:bg-yellow-600">
+                        จองห้องพัก!
+                    </a>
+                `;
+
+                            // ตรวจสอบเตียงเสริม
+                            if (data.extraBedOptions.length > 0) {
+                                roomSummary += `
+                        <div class="mt-4 border-t border-gray-300 pt-4">
+                            <h3>ห้องพักพร้อมเตียงเสริม</h3>
                             <p class="text-lg">จำนวนห้องที่ว่าง: ${totalRooms} ห้อง</p>
-                            <p>จำนวนห้องที่คุณเลือก: ${numberOfRooms} ห้อง</p>
-                            <p>ราคา: 500 บาท/คืน</p>
-                            <p>รายละเอียด: ห้องพัก เตียงนุ่ม อยู่สบาย</p>
+                            <p>จำนวนห้องที่คุณเลือก: ${numberOfRoombed} ห้อง</p>
+                            <p>ราคา: ${roomPricebed} บาท/คืน</p>
+                            <p>เตียงเสริม: ${extraBedCount}</p>
+                            <p>รายละเอียด: ห้องพัก เตียงนุ่ม พร้อมเตียงเสริมเพิ่มความสะดวกสบาย</p>
                             <p>ฟรี WIFI แอร์เย็นสบาย</p>
                             <p>ประเภทห้อง: เตียงคิงไซต์</p>
-                            <a id="reserve-button" href="#" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 focus:outline-none focus:bg-yellow-600">
-                                จองห้องพัก!
+                            <a id="reserve-button-extra" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-600">
+                                จองห้องพัก + เตียงเสริม
                             </a>
-                        `;
-                                    roomAvailabilityDiv.innerHTML = roomSummary;
+                        </div>
+                    `;
+                            }
 
-                                    var reserveUrl = "{{ route('reserve') }}" + "?checkin_date=" +
-                                        encodeURIComponent(startDate) + "&checkout_date=" +
-                                        encodeURIComponent(endDate) + "&number_of_rooms=" +
-                                        encodeURIComponent(numberOfRooms);
-                                    document.getElementById('reserve-button').href = reserveUrl;
-                                } else {
-                                    document.getElementById('room-availability').style.display = 'none';
-                                    document.getElementById('no-availability').style.display = 'flex';
-                                    document.getElementById('no-availability').innerHTML = `
-                            <div class="text-center">
-                                <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
-                                <p class="text-lg">จำนวนห้องที่ว่าง: ${data.availableRoomCount} ห้อง</p>
-                            </div>
-                        `;
-                                }
-                            } else {
+                            roomAvailabilityDiv.innerHTML = roomSummary;
+
+                            // Set the URLs for the reserve buttons
+                            var reserveUrl = `/reserve?checkin_date=${encodeURIComponent(startDate)}&checkout_date=${encodeURIComponent(endDate)}&number_of_rooms=${encodeURIComponent(numberOfRooms)}&extra_bed_count=0&number_of_guests=${encodeURIComponent(adultCount)}&occupancy_child=${encodeURIComponent(childCount)}`;
+                            document.getElementById('reserve-button-normal').href = reserveUrl;
+
+                            if (document.getElementById('reserve-button-extra')) {
+                                var reserveUrlExtra = `/reserve?checkin_date=${encodeURIComponent(startDate)}&checkout_date=${encodeURIComponent(endDate)}&number_of_rooms=${encodeURIComponent(numberOfRoombed)}&extra_bed_count=${extraBedCount}&number_of_guests=${encodeURIComponent(adultCount)}&occupancy_child=${encodeURIComponent(childCount)}`;
+                                document.getElementById('reserve-button-extra').href = reserveUrlExtra;
+                            }
+
+                            if (totalRooms < numberOfRooms) {
                                 document.getElementById('room-availability').style.display = 'none';
                                 document.getElementById('no-availability').style.display = 'flex';
                                 document.getElementById('no-availability').innerHTML = `
                         <div class="text-center">
-                            <h2 class="text-2xl font-semibold text-red-600">ไม่มีห้องว่างในช่วงเวลาที่เลือก</h2>
+                            <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
+                            <p class="text-lg">จำนวนห้องที่ว่าง: ${totalRooms} ห้อง</p>
                         </div>
                     `;
+                            } else {
+                                document.getElementById('room-availability').style.display = 'flex';
+                                document.getElementById('no-availability').style.display = 'none';
                             }
                         })
                         .catch(error => console.error('Error fetching available rooms:', error));
                 }
             }
+
+
         });
     </script>
+
 
 
 </body>

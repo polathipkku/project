@@ -19,16 +19,21 @@ class Product extends Model
         "product_detail",
         "product_status",
         "product_img",
-        "product_type_name",    
+        "product_type_name",
     ];
 
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'stocks_id');
     }
-    
+
     public function productType()
     {
         return $this->belongsTo(Product_type::class, 'product_types_id');
+    }
+
+    public function roomservices()
+    {
+        return $this->hasMany(Roomservice::class, 'product_id');
     }
 }
