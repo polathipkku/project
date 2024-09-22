@@ -26,7 +26,6 @@
     </div>
 
     <header class="bg-white shadow-lg pt-3">
-
         <div class="container mx-auto flex items-center justify-between h-24 px-5">
             <nav class="text-base">
                 <div class="container mx-auto flex justify-center space-x-10 py-3">
@@ -36,20 +35,56 @@
                 </div>
             </nav>
             <div class="logo" id="logo">
-                <a href="welcome">Thunthree
-                </a>
+                <a href="home" class="pl-24">Thunthree</a>
             </div>
             <div class="flex items-center space-x-4 text-gray-800 text-base">
-                <a href="#" onclick="showLoginForm()" class="flex items-center space-x-1 hover:text-blue-400">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    <span>เข้าสู่ระบบ</span>
-                </a>
-                <a href="#" class="flex items-center space-x-1 hover:text-blue-400">
-                    <i class="fa-solid fa-user"></i>
-                    <span>สมัครสมาชิก</span>
-                </a>
+                <nav class="flex space-x-10">
+                    @guest
+                    <!-- ปุ่ม Login -->
+                    <a href="#" onclick="showLoginForm()" class="flex items-center space-x-1 hover:text-blue-400">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>เข้าสู่ระบบ</span>
+                    </a>
+
+                    <!-- ปุ่ม Register -->
+                    <a href="#" onclick="showRegisterForm()"
+                        class="flex items-center space-x-1 hover:text-blue-400">
+                        <i class="fa-solid fa-user"></i>
+                        <span>สมัครสมาชิก</span>
+                    </a>
+                    @endguest
+                    @auth
+                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                            class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                    <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+                            class="fa-solid fa-star ml-2"></i></a>
+                    <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
+                        <i class="fa-solid fa-user"></i>
+                        <span class="sr-only">User Menu</span>
+                    </button>
+                    <div id="profileDropdown"
+                        class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
+                        <div class="py-1">
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+                            <a href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
+                                    Logout
+                                </span>
+                            </a>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                    @endauth
+                    <!-- End  User Menu Dropdown -->
+                </nav>
                 <button id="booking-btn"
-                    class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors ">
+                    class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors">
                     จองตอนนี้
                 </button>
             </div>
@@ -148,9 +183,9 @@
                     <img src="/images/tv-4.jpg" alt="Wat Thung Setthi"
                         class="w-full md:w-1/3 rounded-lg mb-4 md:mb-0 md:mr-6">
                     <div>
-                        <p class="text-gray-600 mb-4">นักท่องเที่ยวและผู้คนทั่วไทยต่างให้ความสนใจที่จะมาสักการะหลวงปู่ศิลา 
+                        <p class="text-gray-600 mb-4">นักท่องเที่ยวและผู้คนทั่วไทยต่างให้ความสนใจที่จะมาสักการะหลวงปู่ศิลา
                             จากความดังและความเชื่อในพระพุทธศาสนาและความศักดิ์สิทธิ์ของท่าน
-                             นี่เป็นสถานที่ที่ทุกคนที่มาเที่ยวกาฬสินธุ์ห้ามพลาด</p>
+                            นี่เป็นสถานที่ที่ทุกคนที่มาเที่ยวกาฬสินธุ์ห้ามพลาด</p>
                         <p class="text-gray-600">ระยะทาง: 53.3 กิโลเมตร</p>
                         <p class="text-gray-600">เวลาที่ใช้ในการเดินทาง: 39 นาที</p>
                         <a href=" https://maps.app.goo.gl/6HAAfPSkKZ68Q7CJ6" target="_blank"
@@ -316,14 +351,14 @@
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
-                    <!-- Terms and Privacy Policy checkbox -->
-                    <div class="mb-4">
-                        <input id="terms" name="terms" type="checkbox"
-                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                        <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a
-                                href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a
-                                href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
-                    </div>
+                <!-- Terms and Privacy Policy checkbox -->
+                <div class="mb-4">
+                    <input id="terms" name="terms" type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a
+                            href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a
+                            href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
+                </div>
                 @endif
 
                 <!-- Register Button -->

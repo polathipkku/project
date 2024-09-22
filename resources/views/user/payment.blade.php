@@ -29,9 +29,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
-                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->bookingto_username }}</p>
+                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->booking_name }}</p>
                 <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $booking->occupancy_person }}</p>
-                <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->bookingto_phone }}</p>
+                <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->phone }}</p>
 
                 <p class="mr-4"><strong>เช็คอิน:</strong>
                     {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}
@@ -128,14 +128,12 @@
                 const clientSecret = data.client_secret;
 
                 // สร้าง Payment Method พร้อมข้อมูลที่จำเป็น
-                const {
-                    paymentMethod,
-                    error: paymentMethodError
-                } = await stripe.createPaymentMethod({
+                const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
                     type: 'promptpay',
                     billing_details: {
-                        email: 'customer@example.com', // เพิ่มที่อยู่อีเมลที่จำเป็น
-                        name: 'Customer Name', // เพิ่มชื่อของลูกค้า (ถ้ามี)
+                        email: '{{ $userEmail }}', // Email from user table
+                        name: '{{ $booking->booking_name }}',
+                        phone: '{{ $booking->phone }}',
                     }
                 });
 

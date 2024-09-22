@@ -58,7 +58,7 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="" id="Stock">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
                     </div>
@@ -133,8 +133,9 @@
                                         @endif
                                     </select>
                                     <button class="text-black hover:text-blue-500 ml-2">
-                                        <i class="fa-solid fa-square-check"></i>
+                                        <i class="fa-duotone fa-solid fa-calendar-check"></i>
                                     </button>
+
                                 </form>
                                 @else
                                 <p class="text-gray-600">ไม่สามารถเช็คอินได้</p>

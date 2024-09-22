@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaintenanceceController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -73,6 +74,9 @@ Route::middleware([
 });
 
 Route::get('/text', [RoomController::class, 'text'])->name('text');
+Route::get('/review/{bookingId}', [ReviewController::class, 'createReview'])->name('review.create');
+Route::post('/review', [ReviewController::class, 'submitReview'])->name('review.submit');
+Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/employeehome', [RoomController::class, 'employeehome'])->name('employeehome');
 Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('userbooking');
 Route::get('/t', [BookingController::class, 't'])->name('t');

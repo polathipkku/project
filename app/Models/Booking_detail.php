@@ -20,6 +20,7 @@ class Booking_detail extends Model
         'booking_status',
         'occupancy_person',
         'occupancy_child',
+        'occupancy_baby',
         'total_cost',
         'room_type',
         'room_quantity',
@@ -31,7 +32,8 @@ class Booking_detail extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
-    }
+    }    
+    
 
     public function room()
     {

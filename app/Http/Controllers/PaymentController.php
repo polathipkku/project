@@ -13,13 +13,16 @@ class PaymentController extends Controller
     public function showPaymentPage($id)
     {
         // Fetch booking details for the given booking ID
-        $booking = Booking_detail::where('booking_id', $id)->first();
+        $booking = Booking_detail::with(['booking.user'])->where('booking_id', $id)->first();
 
         if (!$booking) {
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
         }
 
-        return view('user.payment', compact('booking'));
+        // Get the user's email
+        $userEmail = $booking->booking->user->email ?? null;
+
+        return view('user.payment', compact('booking', 'userEmail'));
     }
 
     public function createPaymentIntent(Request $request)
