@@ -15,6 +15,16 @@ class ProductController extends Controller
         $product_types = $this->product_types();
         return view('owner.product', compact('product', 'product_types'));
     }
+    public function store()
+    {
+        $drinks = Product::with('stock', 'productType')->whereHas('productType', function ($query) {
+            $query->where('product_type_name', 'เครื่องดื่ม');
+        })->get();
+
+
+        return view('employee.store', compact('drinks'));
+    }
+
     public function product_types()
     {
         $product_types = Product_type::pluck('product_type_name')->toArray();
@@ -113,30 +123,56 @@ class ProductController extends Controller
     public function deleteProduct($id)
     {
         $product = Product::find($id);
-    
+
         // ตรวจสอบว่ามีสินค้านี้หรือไม่
         if (!$product) {
             return redirect()->route('product')->with('error', "ไม่พบสินค้าที่ต้องการลบ");
         }
-    
+
         // ลบไฟล์รูปภาพ (ถ้ามี)
         if ($product->product_img) {
             unlink(public_path('images') . '/' . $product->product_img);
         }
-    
+
         // ลบ Stock ที่เกี่ยวข้อง
         if ($product->stock) {
             $product->stock->delete();
         }
-    
+
         // ลบ Product Type ที่ไม่ได้เชื่อมโยงกับสินค้าอื่น
         if ($product->productType && $product->productType->products->count() == 1) {
             $product->productType->delete();
         }
-    
+
         // ลบสินค้า
         $product->delete();
-    
+
         return redirect()->route('product')->with('success', "ลบข้อมูลสำเร็จ");
     }
+
+    public function buyProduct(Request $request)
+    {
+        $product = Product::find($request->input('product_id'));
+        $quantityToBuy = $request->input('quantity');
+        $paymentMethod = $request->input('payment_method');
+    
+        // ตรวจสอบจำนวนคงเหลือก่อน
+        if ($product->stock->stock_qty >= $quantityToBuy) {
+            // ลดจำนวนในสต็อก
+            $product->stock->stock_qty -= $quantityToBuy;
+            $product->stock->save();
+    
+            // เพิ่มบันทึกการชำระเงิน (สามารถปรับให้บันทึกในฐานข้อมูลได้)
+            if ($paymentMethod === 'cash') {
+                $paymentMessage = 'คุณได้เลือกจ่ายด้วยเงินสด';
+            } else {
+                $paymentMessage = 'คุณได้เลือกโอนเงิน';
+            }
+    
+            return redirect()->back()->with('success', 'ซื้อสินค้าสำเร็จ! ' . $paymentMessage);
+        } else {
+            return redirect()->back()->with('error', 'จำนวนสินค้าคงเหลือไม่เพียงพอ!');
+        }
+    }
+    
 }

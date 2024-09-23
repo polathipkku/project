@@ -586,7 +586,6 @@
                                 document.getElementById('no-availability').innerHTML = `
                         <div class="text-center">
                             <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
-                            <p class="text-lg">จำนวนห้องที่ว่าง: ${totalRooms} ห้อง</p>
                         </div>
                     `;
                             } else {

@@ -46,21 +46,21 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="={{ route('checkin') }}" id="Stock">
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="={{ route('checkin') }}">
                     <div class="mr-2 text-base flex items-center ">
                         <i class="fa-solid fa-person-walking-luggage mr-1"></i>Check In
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('checkout') }}" id="checkout">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('checkout') }}">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Out
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="" id="Stock">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('store') }}" id="store">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
+                        <i class="fa-solid fa-house-circle-check mr-1"></i>Store
                     </div>
                 </a>
 
@@ -126,7 +126,7 @@
                                         <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
                                         @if(isset($rooms) && $rooms->isNotEmpty())
                                         @foreach($rooms as $room)
-                                        <option value="{{ $room->id }}">{{ $room->room_name }}</option>
+                                        <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
                                         @endforeach
                                         @else
                                         <option value="">ไม่มีห้องที่ว่าง</option>

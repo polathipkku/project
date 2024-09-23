@@ -87,6 +87,9 @@ Route::get('/check-availability', [BookingController::class, 'checkAvailability'
 Route::post('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 Route::get('/employeehome', [BookingController::class, 'employeehome'])->name('employeehome');
 Route::get('/reservation', [BookingController::class, 'reservation'])->name('reservation');
+Route::get('/store', [ProductController::class, 'store'])->name('store');
+Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
+
 Route::post('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 // Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 //payment
