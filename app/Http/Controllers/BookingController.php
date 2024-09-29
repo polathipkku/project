@@ -10,6 +10,9 @@ use App\Models\Booking_detail;
 use App\Models\Product;
 use App\Models\Roomservice;
 use App\Models\Stock;
+use App\Models\Information;
+use App\Models\Product_room;
+use App\Models\CheckoutDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -65,13 +68,20 @@ class BookingController extends Controller
         $bookings = Booking::where('user_id', auth()->user()->id)->get();
         return view('employee.employeehome', compact('bookings'));
     }
-    public function checkin()
+    public function checkinuser()
     {
-        $bookings = Booking::where('booking_status', 'รอเลือกห้อง')->get();
-        $rooms = Room::all(); // ดึงห้องทั้งหมดที่มี
+        $bookings = Booking::whereHas('bookingDetails', function ($query) {
+            $query->where('booking_status', 'รอเลือกห้อง')
+                ->whereNull('room_id');
+        })->with(['bookingDetails' => function ($query) {
+            $query->whereNull('room_id');
+        }])->get();
+
+        $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
 
         return view('employee.checkin', compact('bookings', 'rooms'));
     }
+
 
     public function checkindetail($id)
     {
@@ -92,8 +102,9 @@ class BookingController extends Controller
 
         $bookings = Booking::whereIn('id', $bookingIds)->get();
         $rooms = Room::all();
+        $productRooms = Product_room::all();
 
-        return view('employee.checkout', compact('bookings', 'rooms'));
+        return view('employee.checkout', compact('bookings', 'rooms', 'productRooms'));
     }
 
 
@@ -141,9 +152,9 @@ class BookingController extends Controller
 
         // Create a new booking
         $booking = new Booking();
-        $booking->user_id = auth()->user()->id;
-        $booking->checkin_by = auth()->user()->id;
-        $booking->checkout_by = auth()->user()->id;
+        $booking->user_id = auth()->check() ? auth()->user()->id : null;
+        $booking->checkin_by = auth()->check() ? auth()->user()->id : null;
+        $booking->checkout_by = auth()->check() ? auth()->user()->id : null;
         $booking->save();
 
         // Insert into booking_details table
@@ -201,6 +212,7 @@ class BookingController extends Controller
         // Redirect to the payment page with success message
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
     // public function reserves(Request $request)
     // {
@@ -289,13 +301,22 @@ class BookingController extends Controller
         $adultCount = (int) $request->query('adultCount', 2);
         $childCount = (int) $request->query('childCount', 0);
         $babyCount = (int) $request->query('babyCount', 0);
+        $requestedRooms = (int) $request->query('numberOfRooms', 0);
 
         // Calculate equivalent adult count
         $equivalentAdultCount = $adultCount + floor($childCount / 2) + floor($babyCount / 3);
 
-        $numberOfRooms = ceil($equivalentAdultCount / 2);
-        $extraBedCount = ($equivalentAdultCount % 2 === 0) ? 0 : 1;
-
+        // Determine the number of rooms
+        if ($requestedRooms > 0 && $requestedRooms > ceil($equivalentAdultCount / 2)) {
+            $numberOfRooms = $requestedRooms;
+        } else {
+            $numberOfRooms = ceil($equivalentAdultCount / 2);
+        }
+        if ($equivalentAdultCount == 1) {
+            $extraBedCount = 0;
+        } else {
+            $extraBedCount = ($equivalentAdultCount % 2 === 0) ? 0 : 1;
+        }
         // Fetch all rooms
         $rooms = Room::all();
         $totalRooms = $rooms->count();
@@ -329,6 +350,7 @@ class BookingController extends Controller
         $extraBedPrice = $extraBedProduct ? $extraBedProduct->product_price : 0;
 
         // Prepare room options
+        // Prepare room options
         $roomOptions = [];
 
         // Option 1: Rooms without extra beds
@@ -339,7 +361,8 @@ class BookingController extends Controller
             'price' => $numberOfRooms * 500, // Assuming 500 is the base price per room
         ];
 
-        if ($extraBedCount > 0 && $numberOfRooms > 1) {
+        // Option 2: Rooms with extra beds only if available
+        if ($extraBedCount > 0 && $numberOfRooms > 1 && $availableExtraBeds > 0) {
             $roomOptions[] = [
                 'type' => 'with_extra_bed',
                 'rooms' => $numberOfRooms - 1,
@@ -347,6 +370,7 @@ class BookingController extends Controller
                 'price' => (($numberOfRooms - 1) * 500) + $extraBedPrice,
             ];
         }
+
 
         return response()->json([
             'availableRooms' => $availableRooms,
@@ -475,39 +499,21 @@ class BookingController extends Controller
 
     //     return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการเลือกห้อง');
     // }
-    public function checkinuser()
-    {
-        $bookings = Booking::whereHas('bookingDetails', function ($query) {
-            $query->where('booking_status', 'รอเลือกห้อง')
-                ->whereNull('room_id');
-        })->with(['bookingDetails' => function ($query) {
-            $query->whereNull('room_id');
-        }])->get();
-
-        $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
-
-        return view('employee.checkin', compact('bookings', 'rooms'));
-    }
-
-
 
 
     public function checkoutuser(Request $request)
     {
         $bookingId = $request->input('booking_id');
 
-        // ค้นหาข้อมูล booking_details ที่มี booking_id ตรงกับที่ส่งมา
         $bookingDetails = Booking_detail::where('booking_id', $bookingId)
             ->where('booking_status', 'เช็คอินแล้ว')
             ->first();
 
         if ($bookingDetails) {
-            // อัปเดตสถานะของ booking_detail เป็น 'เช็คเอาท์'
             $bookingDetails->booking_status = 'เช็คเอาท์';
             $bookingDetails->save();
 
-            // อัปเดตสถานะห้องให้เป็น 'รอทำความสะอาด'
-            $room = $bookingDetails->room; // ตรวจสอบว่า room เชื่อมโยงถูกต้อง
+            $room = $bookingDetails->room;
             if ($room) {
                 $room->room_status = 'รอทำความสะอาด';
                 $room->save();
@@ -519,39 +525,102 @@ class BookingController extends Controller
         return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
 
+    public function submitDamagedItems(Request $request)
+    {
+        $bookingId = $request->input('booking_id');
+        $damagedItems = $request->input('damaged_items', []);
+
+        $totalPrice = 0;
+
+        foreach ($damagedItems as $itemId) {
+            $productRoom = Product_room::find($itemId);
+            if ($productRoom) {
+                $checkoutDetail = new CheckoutDetail([
+                    'booking_id' => $bookingId,
+                    'product_room_id' => $itemId,
+                    'totalpriceroom' => $productRoom->productroom_price,
+                ]);
+                $checkoutDetail->save();
+
+                $totalPrice += $productRoom->productroom_price;
+            }
+        }
+
+        $bookingDetails = Booking_detail::where('booking_id', $bookingId)
+            ->where('booking_status', 'เช็คอินแล้ว')
+            ->first();
+
+        if ($bookingDetails) {
+            $bookingDetails->booking_status = 'เช็คเอาท์';
+            $bookingDetails->save();
+
+            $room = $bookingDetails->room;
+            if ($room) {
+                $room->room_status = 'ชำรุด';
+                $room->save();
+            }
+        }
+
+        return redirect()->back()->with('success', "เช็คเอาท์สำเร็จ. ค่าเสียหายรวม: ฿" . number_format($totalPrice, 2));
+    }
 
     public function updateBookingDetail(Request $request)
     {
+        // Validation ของข้อมูลที่ส่งเข้ามา
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',
             'room_id' => 'required|exists:rooms,id',
+            'name' => 'required|string|max:255',
+            'id_card' => 'required|string|max:20',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'sub_district' => 'required|string|max:255',
+            'province' => 'required|string|max:100',
+            'district' => 'required|string|max:100',
+            'postcode' => 'required|string|max:10',
         ]);
 
-        $booking = Booking::find($request->booking_id);
-        $room = Room::find($request->room_id);
+        DB::beginTransaction(); // เริ่มการ transaction เพื่อความปลอดภัยของข้อมูล
 
-        if ($booking && $room) {
+        try {
+            // ค้นหาข้อมูลการจองและห้องที่เลือก
+            $booking = Booking::findOrFail($request->booking_id);
+            $room = Room::findOrFail($request->room_id);
+
+            // ค้นหา bookingDetails ที่ยังไม่ได้เลือกห้อง (room_id เป็น NULL)
             $bookingDetail = $booking->bookingDetails()
                 ->whereNull('room_id')
-                ->first();
+                ->firstOrFail(); // ถ้าไม่พบจะ throw exception อัตโนมัติ
 
-            if ($bookingDetail) {
-                $bookingDetail->room_id = $room->id;
-                $bookingDetail->booking_status = 'เช็คอินแล้ว';
+            // อัปเดตสถานะการเช็คอินและกำหนด room_id
+            $bookingDetail->room_id = $room->id;
+            $bookingDetail->booking_status = 'เช็คอินแล้ว';
+            $bookingDetail->save(); // บันทึกการเปลี่ยนแปลง
 
-                if ($bookingDetail->save()) {
-                    $room->room_status = 'ไม่พร้อมให้บริการ';
-                    $room->save();
+            // อัปเดตสถานะห้อง
+            $room->room_status = 'ไม่พร้อมให้บริการ';
+            $room->save(); // บันทึกสถานะห้อง
 
-                    return redirect()->back()->with('success', 'เลือกห้องเรียบร้อยแล้ว');
-                } else {
-                    return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-                }
-            }
+            // บันทึกข้อมูลในตาราง Information
+            Information::create([
+                'booking_id' => $booking->id,
+                'name' => $request->name,
+                'id_card' => $request->id_card,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'sub_district' => $request->sub_district,
+                'province' => $request->province,
+                'district' => $request->district,
+                'postcode' => $request->postcode,
+            ]);
 
-            return redirect()->back()->with('error', 'ไม่พบรายละเอียดการจองที่ตรงกัน');
+            DB::commit(); // ทำการ commit เมื่อทุกอย่างสำเร็จ
+
+            // ส่งผู้ใช้กลับไปหน้า checkin พร้อมข้อความสำเร็จ
+            return redirect()->route('checkin')->with('success', 'เช็คอินเรียบร้อยแล้ว ห้องหมายเลข ' . $room->room_name);
+        } catch (\Exception $e) {
+            DB::rollBack(); // หากมีข้อผิดพลาด ย้อนกลับการเปลี่ยนแปลงทั้งหมด
+            return redirect()->route('checkin')->with('error', 'เกิดข้อผิดพลาดในการเช็คอิน: ' . $e->getMessage());
         }
-
-        return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการเลือกห้อง');
     }
 }

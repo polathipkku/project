@@ -38,58 +38,64 @@
           <a href="contact" class="hover:text-blue-400">ติดต่อ</a>
         </div>
       </nav>
-      <div class="logo" id="logo">
-        <a href="home" class="pl-24">Thunthree</a>
-      </div>
-      <div class="flex items-center space-x-4 text-gray-800 text-base">
-        <nav class="flex space-x-10">
-          @guest
-          <!-- ปุ่ม Login -->
-          <a href="#" onclick="showLoginForm()" class="flex items-center space-x-1 hover:text-blue-400">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            <span>เข้าสู่ระบบ</span>
-          </a>
 
-          <!-- ปุ่ม Register -->
-          <a href="#" onclick="showRegisterForm()"
-            class="flex items-center space-x-1 hover:text-blue-400">
-            <i class="fa-solid fa-user"></i>
-            <span>สมัครสมาชิก</span>
-          </a>
-          @endguest
-          @auth
+      <div class="mx-auto" id="logo">
+        <a href="home" class="">Thunthree</a>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        @auth
+        <nav class="flex items-center space-x-10 text-base">
           <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
               class="fa-solid fa-clock-rotate-left ml-2"></i></a>
           <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
               class="fa-solid fa-star ml-2"></i></a>
-          <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
-            <i class="fa-solid fa-user"></i>
-            <span class="sr-only">User Menu</span>
-          </button>
-          <div id="profileDropdown"
-            class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
-            <div class="py-1">
-              <a href="#"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
-              <a href="#"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
-              <a href="#"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
-                  Logout
-                </span>
-              </a>
-              <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                @csrf
-              </form>
+          <div class="relative">
+            <button id="profileButton" type="button"
+              class="text-black hover:text-blue-400 focus:outline-none">
+              <i class="fa-solid fa-user"></i>
+              <span class="sr-only">User Menu</span>
+            </button>
+            <div id="profileDropdown"
+              class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
+              <div class="py-1">
+                <a href="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+                <a href="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+                <a href="#"
+                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
+              </div>
             </div>
+            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+              @csrf
+            </form>
           </div>
-          @endauth
-          <!-- End  User Menu Dropdown -->
         </nav>
-        <button id="reserve-button" type="button" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
-          เช็คห้องว่าง
-        </button>
+        @endauth
+
+        <div class="flex flex-col items-end space-y-2 mb-4">
+          <nav class="flex items-center space-x-2">
+            @guest
+            <a href="#" onclick="showLoginForm()"
+              class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span>เข้าสู่ระบบ</span>
+            </a>
+            <a href="#" onclick="showRegisterForm()"
+              class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+              <i class="fa-solid fa-user"></i>
+              <span>สมัครสมาชิก</span>
+            </a>
+            @endguest
+          </nav>
+          <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
+            href="{{ route('userbooking') }}" id="userbooking">
+            เช็คห้องว่าง
+          </a>
+
+        </div>
       </div>
     </div>
   </header>

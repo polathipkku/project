@@ -112,14 +112,17 @@
                                     </button>
                                 </a>
                             </td>
-                            <td class="px-4 py-4 flex justify-center items-center">
+                            <td class="px-4 py-4 flex justify-center items-center border-b">
                                 @if($detail->booking_status === 'เช็คอินแล้ว')
-                                <form action="{{ route('checkoutuser') }}" method="post">
+                                <button
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300"
+                                    onclick="showCheckoutPopup('{{ $booking->id }}')">
+                                    เช็คเอาท์
+                                </button>
+
+                                <form id="checkoutForm-{{ $booking->id }}" action="{{ route('checkoutuser') }}" method="post" class="hidden">
                                     @csrf
                                     <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                    <button class="text-black hover:text-blue-500">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                    </button>
                                 </form>
                                 @else
                                 <p class="text-gray-600">ไม่สามารถเช็คเอาท์ได้</p>
@@ -130,6 +133,80 @@
                         @endforeach
                         @endforeach
                     </tbody>
+
+                    <!-- Popup for checkout confirmation -->
+                    <div id="checkoutPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
+                            <h2 class="text-lg font-bold mb-4 text-center">ห้องชำรุดหรือไม่?</h2>
+                            <p class="mb-4 text-center">กรุณาเลือกสถานะของห้อง:</p>
+                            <div class="flex justify-around mb-4">
+                                <button id="damagedButton" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-300">ชำรุด</button>
+                                <button id="notDamagedButton" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition duration-300">ไม่ชำรุด</button>
+                            </div>
+                            <div class="flex justify-center">
+                                <button class="mt-4 text-gray-500 underline" onclick="closePopup()">ปิด</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="damagedItemsPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
+                            <h2 class="text-lg font-bold mb-4 text-center">เลือกรายการที่ชำรุด</h2>
+                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="booking_id" id="damagedBookingId">
+                                <div class="max-h-60 overflow-y-auto">
+                                    @foreach($productRooms as $item)
+                                    <div class="flex items-center mb-2">
+                                        <input type="checkbox" id="item-{{ $item->id }}" name="damaged_items[]" value="{{ $item->id }}" class="mr-2">
+                                        <label for="item-{{ $item->id }}">{{ $item->productroom_name }} - ฿{{ number_format($item->productroom_price, 2) }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div class="flex justify-center mt-4">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">ยืนยัน</button>
+                                    <button type="button" class="ml-4 text-gray-500 underline" onclick="closeDamagedItemsPopup()">ยกเลิก</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <script>
+                        let currentBookingId;
+
+                        function showCheckoutPopup(bookingId) {
+                            currentBookingId = bookingId;
+                            document.getElementById('checkoutPopup').classList.remove('hidden');
+                        }
+
+                        document.getElementById('damagedButton').onclick = function() {
+                            closePopup();
+                            showDamagedItemsPopup();
+                        };
+
+                        document.getElementById('notDamagedButton').onclick = function() {
+                            document.getElementById(`checkoutForm-${currentBookingId}`).submit();
+                            closePopup();
+                        };
+
+                        function closePopup() {
+                            document.getElementById('checkoutPopup').classList.add('hidden');
+                        }
+
+                        function showDamagedItemsPopup() {
+                            document.getElementById('damagedBookingId').value = currentBookingId;
+                            document.getElementById('damagedItemsPopup').classList.remove('hidden');
+                        }
+
+                        function closeDamagedItemsPopup() {
+                            document.getElementById('damagedItemsPopup').classList.add('hidden');
+                        }
+                    </script>
+
+                    <style>
+                        #checkoutPopup,
+                        #damagedItemsPopup {
+                            z-index: 1000;
+                        }
+                    </style>
                 </table>
                 @else
                 <p class="text-gray-600">ไม่พบการจอง</p>

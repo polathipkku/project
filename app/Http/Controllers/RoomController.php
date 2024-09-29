@@ -23,14 +23,14 @@ class RoomController extends Controller
         }
         return view('owner.room', compact('rooms', 'search'));
     }
-public function cleanroom(Request $request, $id)
-{
-    $room = Room::findOrFail($id);
-    $room->room_status = 'พร้อมให้บริการ';
-    $room->save();
+    public function cleanroom(Request $request, $id)
+    {
+        $room = Room::findOrFail($id);
+        $room->room_status = 'พร้อมให้บริการ';
+        $room->save();
 
-    return redirect()->back()->with('success', 'ยกเลิกการจองเรียบร้อยแล้ว');
-}
+        return redirect()->back()->with('success', 'ยกเลิกการจองเรียบร้อยแล้ว');
+    }
 
 
     public function add_room()
