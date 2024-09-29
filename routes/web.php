@@ -9,6 +9,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaintenanceceController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ProductRoomController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -72,7 +73,7 @@ Route::middleware([
         return view('dashboard', compact('users'));
     })->name('dashboard');
 });
-
+Route::post('/store-information', [BookingController::class, 'storeInformation'])->name('storeInformation');
 Route::get('/text', [RoomController::class, 'text'])->name('text');
 Route::get('/review/{bookingId}', [ReviewController::class, 'createReview'])->name('review.create');
 Route::post('/review', [ReviewController::class, 'submitReview'])->name('review.submit');
@@ -82,7 +83,7 @@ Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('use
 Route::get('/t', [BookingController::class, 't'])->name('t');
 Route::get('/reserve', [BookingController::class, 'showReserveForm'])->name('reserve');
 Route::post('/reserve', [BookingController::class, 'reserve'])->name('bookings.reserve');
-Route::post('/reserves', [BookingController::class, 'reserves'])->name('bookings.reserves');
+// Route::post('/reserves', [BookingController::class, 'reserves'])->name('bookings.reserves');
 Route::get('/check-availability', [BookingController::class, 'checkAvailability']);
 Route::post('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 Route::get('/employeehome', [BookingController::class, 'employeehome'])->name('employeehome');
@@ -98,12 +99,15 @@ Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentI
 // รับ booking_id
 Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
 
+
 Route::get('/checkin', [BookingController::class, 'checkinuser'])->name('checkin');
 Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('selectRoom');
 Route::get('/checkindetail/{id}', [BookingController::class, 'checkindetail'])->name('checkindetail');
 Route::get('/checkoutdetail/{id}', [BookingController::class, 'checkoutdetail'])->name('checkoutdetail');
 Route::get('/checkout', [BookingController::class, 'checkout'])->name('checkout');
 Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
+Route::post('/submit-damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
+
 Route::post('/addBooking/{id}', [BookingController::class, 'addBooking'])->name('addBooking');
 Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');
 Route::post('/emaddBooking/{id}', [BookingController::class, 'emaddBooking'])->name('emaddBooking');
@@ -146,6 +150,10 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/add_employee', [OwnerController::class, 'add_employee'])->name('add_employee');
     Route::get('/employeedetail', [OwnerController::class, 'employeedetail'])->name('employeedetail');
     Route::get('/product', [ProductController::class, 'product'])->name('product');
+
+    Route::get('/productroom', [ProductRoomController::class, 'productroom'])->name('productroom');
+    Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');     
+
     Route::post('/product/add', [ProductController::class, 'addproduct'])->name('addProduct');
     Route::get('/product_types', [ProductController::class, 'product_types'])->name('product_types');
     Route::get('/product/edit/{id}', [ProductController::class, 'editProduct']);

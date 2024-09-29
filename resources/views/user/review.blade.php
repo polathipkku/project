@@ -112,7 +112,8 @@
             </div>
             <div class="mb-4">
                 <label for="rooms" class="block text-gray-700">จำนวนห้อง</label>
-                <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded" min="1">
+                <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded"
+                    min="1">
             </div>
             <input type="hidden" id="startDate">
             <input type="hidden" id="endDate">
@@ -172,47 +173,58 @@
             });
         });
     </script>
-    <div class="container my-8">
-        <h1 class="mb-8 text-center text-3xl font-bold text-gray-800 z-20">รีวิวทั้งหมด</h1>
 
-        @if ($reviews->isEmpty())
-        <p class="text-center text-gray-500 text-xl">ยังไม่มีรีวิวในตอนนี้</p>
-        @else
-        <div class="flex flex-wrap justify-center">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">รีวิวทั้งหมด</h1>
+
+        <div class="flex items-center mb-6">
+            <span class="text-3xl font-bold text-black mr-2">{{ round($averageRating, 1) }}</span>
+            <div class="flex items-center mr-2">
+                @for ($i = 1; $i <= 5; $i++)
+                    @if ($i <=round($averageRating))
+                    <svg class="w-6 h-6 text-yellow-500 fill-current" viewBox="0 0 24 24">
+                    <path
+                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    @break
+                    @endif
+                    @endfor
+            </div>
+            <span class="text-2xl font-semibold text-black mr-2">คะแนนรีวิวเฉลี่ย</span>
+            <span class="text-gray-600">({{ $reviewCount }} รีวิว)</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($reviews as $review)
-            <div class="w-full sm:w-1/2 lg:w-1/3 p-4">
-                <div
-                    class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col justify-between">
-                    <div class="p-6">
-                        <h5 class="text-xl font-semibold text-gray-700 mb-4">ให้คะแนน:</h5>
-                        <p class="text-lg text-gray-700">
-                            @for ($i = 0; $i < 5; $i++)
-                                @if ($i < $review->rating)
-                                <span class="text-yellow-400">&#9733;</span> <!-- filled star -->
-                                @else
-                                <span class="text-gray-300">&#9734;</span> <!-- empty star -->
-                                @endif
-                                @endfor
-                                ({{ $review->rating }}/5)
-                        </p>
-                        <p class="mt-4 text-gray-600"><strong>ความคิดเห็น:</strong> {{ $review->comment }}</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-b-lg text-sm text-gray-500">
-                        <small>โดย: {{ $review->booking->user->name }}</small><br>
-                        <small>วันที่: {{ $review->created_at->format('d/m/Y') }}</small>
-                    </div>
+            <div class="bg-white shadow-md rounded-lg p-4 flex flex-col">
+                <div class="flex items-center mb-2">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <=$review->rating)
+                        <svg class="w-5 h-5 text-yellow-500 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        @else
+                        <svg class="w-5 h-5 text-gray-400 fill-current" viewBox="0 0 24 24">
+                            <path
+                                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                        @endif
+                        @endfor
+                        <span class="ml-2 text-gray-600">({{ $review->rating }})</span>
                 </div>
+                <p class="text-gray-700">{{ $review->comment }}</p>
             </div>
             @endforeach
         </div>
-        @endif
     </div>
 
 
-    <footer class="bg-gray-800 mt-10 text-white">
+
+
+    <footer class="bg-gray-800 text-white w-full fixed bottom-0">
         <div class="container mx-auto p-5">
             <div class="flex flex-wrap">
-                <!-- ข้อมูลการติดต่อ -->
                 <div class="w-full md:w-1/3 mb-6">
                     <h4 class="text-xl font-bold">Tunthree Resort</h4>
                     <div class="mt-4">
@@ -229,9 +241,7 @@
                             <span>polathip.b@kkumail.com</span>
                         </a>
                     </div>
-
                 </div>
-                <!-- ลิงก์หลัก -->
                 <div class="w-full md:w-1/3 mb-6">
                     <h4 class="text-xl font-bold">Quick Links</h4>
                     <div class="mt-4">
@@ -240,7 +250,6 @@
                         <a href="contact.html" class="block mb-2">Contact Us</a>
                     </div>
                 </div>
-                <!-- ฟอร์มสมัครสมาชิก -->
                 <div class="w-full md:w-1/3 mb-6">
                     <h4 class="text-xl font-bold">Subscribe</h4>
                     <form action="#" class="mt-4">
@@ -249,7 +258,7 @@
                     </form>
                 </div>
             </div>
-            <div class="text-center ">
+            <div class="text-center">
                 <small>
                     &copy; 2024 Tunthree Resort. All rights reserved.
                     <a href="#" class="hover:underline">Privacy Policy</a> •
@@ -258,6 +267,7 @@
             </div>
         </div>
     </footer>
+
 
     <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>

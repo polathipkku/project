@@ -85,28 +85,28 @@
     <script>
         const stripe = Stripe('{{ env('STRIPE_KEY') }}');
         let timer;
-
+    
         document.getElementById('pay-button').addEventListener('click', async function() {
             const bookingId = document.getElementById('booking_id').value;
-
+    
             // Start countdown timer
             let countdown = 60;
             timer = setInterval(updateTimer, 1000);
-
+    
             function updateTimer() {
                 countdown--;
                 const minutes = Math.floor(countdown / 60);
                 const seconds = countdown % 60;
                 document.getElementById('countdown').textContent =
                     `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
+    
                 if (countdown <= 0) {
                     clearInterval(timer);
                     document.getElementById('countdown').textContent = 'หมดเวลา';
                     document.getElementById('pay-button').style.display = 'none';
                 }
             }
-
+    
             try {
                 const response = await fetch('/create-payment-intent', {
                     method: 'POST',
@@ -119,43 +119,43 @@
                         booking_id: bookingId
                     })
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
+    
                 const data = await response.json();
                 const clientSecret = data.client_secret;
-
-                // สร้าง Payment Method พร้อมข้อมูลที่จำเป็น
+    
+                // Create Payment Method
                 const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
                     type: 'promptpay',
                     billing_details: {
-                        email: '{{ $userEmail }}', // Email from user table
+                        email: '{{ $userEmail }}',
                         name: '{{ $booking->booking_name }}',
                         phone: '{{ $booking->phone }}',
                     }
                 });
-
+    
                 if (paymentMethodError) {
                     console.error(paymentMethodError.message);
                     return;
                 }
-
-                // ยืนยันการชำระเงินผ่าน PromptPay
+    
+                // Confirm Payment through PromptPay
                 const result = await stripe.confirmPromptPayPayment(clientSecret, {
                     payment_method: paymentMethod.id
                 });
-
+    
                 // Create QR code for PromptPay
                 new QRCode(document.getElementById('qrcode'), {
                     text: data.client_secret,
                     width: 128,
                     height: 128
                 });
-
+    
                 document.getElementById('pay-button').style.display = 'none';
-
+    
                 // Confirm Payment through Stripe
                 stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
                     if (result.error) {
@@ -163,14 +163,19 @@
                     } else {
                         document.getElementById("qrcode").innerHTML =
                             '<p>ชำระเงินสำเร็จแล้ว</p>';
+                        
+                        // Redirect to home after 3 seconds
+                        setTimeout(() => {
+                            window.location.href = '/'; // Change this to your home URL
+                        }, 3000); // 3000 milliseconds = 3 seconds
                     }
                 });
-
+    
             } catch (error) {
                 console.error('Error:', error);
             }
         });
-
+    
         function cancelBooking(bookingId) {
             fetch('/cancel-booking', {
                     method: 'POST',

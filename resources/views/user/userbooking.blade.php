@@ -111,6 +111,7 @@
             <a href="#" class="text-blue-600 hover:text-black">เลือกดูห้อง</a>
         </p>
     </div>
+
     <section>
         <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
             <div class="flex flex-col items-start mr-4">
@@ -191,7 +192,7 @@
 
             <div class="flex flex-col items-start ml-3">
                 <span class="font-semibold text-white mb-1">จำนวนวันเข้าพัก</span>
-                <div id="stay-days" class="border border-gray-400 rounded-md px-2 py-1 ml-4 text-white">0 วัน</div>
+                <div id="stay-days" class="border border-gray-400 rounded-md px-2 py-1 ml-4 text-white">1 วัน</div>
             </div>
 
             <div class="mt-4 ml-4">
@@ -430,8 +431,6 @@
         </div>
     </section>
 
-
-
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -556,23 +555,29 @@
                 var adultCount = parseInt(document.getElementById('adult-count').innerText, 10);
                 var childCount = parseInt(document.getElementById('child-count').innerText, 10);
                 var babyCount = parseInt(document.getElementById('baby-count').innerText, 10);
+                var numberOfRooms = parseInt(document.getElementById('number-of-rooms').innerText, 10);
 
                 if (startDate && endDate) {
-                    fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&adultCount=${adultCount}&childCount=${childCount}&babyCount=${babyCount}`)
+                    fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&adultCount=${adultCount}&childCount=${childCount}&babyCount=${babyCount}&numberOfRooms=${numberOfRooms}`)
                         .then(response => response.json())
+                        // Inside your fetch promise
                         .then(data => {
                             var roomAvailabilityDiv = document.querySelector('#room-availability .flex-1');
                             roomAvailabilityDiv.innerHTML = '';
 
                             var totalRooms = data.availableRooms.length;
                             var extraBedPrice = parseFloat(data.extraBedPrice);
+                            var availableExtraBeds = data.availableExtraBeds; // Check available extra beds
 
                             // Create a container for the room options
                             var roomOptionsContainer = document.createElement('div');
-                            roomOptionsContainer.className = 'flex justify-center gap-4';
+                            roomOptionsContainer.className = 'flex flex-col items-center gap-4';
 
                             // Create room options
                             data.roomOptions.forEach((option, index) => {
+                                if (option.type === 'with_extra_bed' && availableExtraBeds <= 0) {
+                                    return; // Skip this option if no extra beds are available
+                                }
                                 var roomCard = createRoomCard(option, data, startDate, endDate, childCount, babyCount);
                                 roomOptionsContainer.appendChild(roomCard);
                             });
@@ -580,19 +585,21 @@
                             // Append the container to the room availability div
                             roomAvailabilityDiv.appendChild(roomOptionsContainer);
 
+                            // Display no availability message if needed
                             if (totalRooms < data.roomOptions[0].rooms) {
                                 document.getElementById('room-availability').style.display = 'none';
                                 document.getElementById('no-availability').style.display = 'flex';
                                 document.getElementById('no-availability').innerHTML = `
-                        <div class="text-center">
-                            <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
-                        </div>
-                    `;
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
+            </div>
+        `;
                             } else {
                                 document.getElementById('room-availability').style.display = '';
                                 document.getElementById('no-availability').style.display = 'none';
                             }
                         })
+
                         .catch(error => {
                             console.error('Error fetching available rooms:', error);
                         });
@@ -601,32 +608,33 @@
 
             function createRoomCard(option, data, startDate, endDate, childCount, babyCount) {
                 var card = document.createElement('div');
-                card.className = ' w-44 text-center shadow-lg hover:shadow-xl flex flex-col justify-between transition duration-300';
-                card.style.height = '200px';
-                card.style.width = '200px';
+                card.className = 'w-44 text-center shadow-lg hover:shadow-xl flex flex-col justify-between transition duration-300';
+
+                // ปรับความสูงและความกว้างของกล่อง
+                card.style.height = '150px'; // ลดความสูง
+                card.style.width = '300px'; // เพิ่มความกว้าง
                 card.style.backgroundColor = '#f3f4f6';
                 card.style.marginTop = '10px';
 
                 var content = `
-        <div class="flex-grow">
-            <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B;">
-                ${option.type === 'normal' ? 'ห้องพัก' : 'ห้องพักพร้อมเตียงเสริม'}
-            </div>
-            <div class="mt-4">
-                <h3 class="text-sm font-bold">จำนวนห้องที่ต้องการพัก: <span class="font-semibold">${option.rooms}</span></h3>
-                <h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span></h3>
-                <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
-            </div>
+    <div class="flex-grow">
+        <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B; font-size: 16px;">
+            ${option.type === 'normal' ? 'ตัวเลือกที่1' : 'ตัวเลือกที่2'}
         </div>
-        <div class="flex justify-center mt-4">
-            <a id="reserve-button-${option.type}" 
-               href="#" 
-                class="inline-block  bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors w-24 mb-5">           
-                 เลือก
-            </a>
+        <div class="mt-3"> <!-- ลด margin-top -->
+            <h3 class="text-m font-bold">จำนวนห้องที่ต้องการพัก: <span class="font-semibold">${option.rooms}</span></h3>
+            ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span></h3>` : ''}
+            <p class="text-xs">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
         </div>
+    </div>
+    <div class="flex justify-center mt-2"> <!-- ลด margin-top ของปุ่ม -->
+        <a id="reserve-button-${option.type}" 
+           href="#" 
+           class="inline-block bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors text-xs w-24 py-1 mb-2">           
+           เลือก
+        </a>
+    </div>
     `;
-
 
                 card.innerHTML = content;
 
@@ -638,7 +646,23 @@
 
         });
     </script>
+    <script>
+        function getAvailableRooms() {
+            // Get the values from the form fields
+            const checkinDate = document.getElementById('checkin_date').value;
+            const checkoutDate = document.getElementById('checkout_date').value;
+            const numberOfRooms = document.getElementById('number-of-rooms').innerText;
+            const adultCount = document.getElementById('adult-count').innerText;
+            const childCount = document.getElementById('child-count').innerText;
+            const babyCount = document.getElementById('baby-count').innerText;
 
+            // Update the summary display
+            document.getElementById('summary-dates').innerText = `Check-in: ${checkinDate}, Check-out: ${checkoutDate}`;
+            document.getElementById('summary-guest-room').innerText = `จำนวนห้อง: ${numberOfRooms}, ผู้ใหญ่: ${adultCount} คน, เด็ก: ${childCount} คน, เด็กเล็ก: ${babyCount} คน`;
+
+            // Perform room availability search logic (not implemented here)
+        }
+    </script>
 </body>
 
 </html>
