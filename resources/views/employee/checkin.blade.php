@@ -106,7 +106,7 @@
                     <tbody class="text-center" id="booking-rows">
                         @if(isset($bookings) && $bookings->isNotEmpty())
                         @php
-                        // จัดกลุ่มการจองตามชื่อผู้จอง
+                        // Group bookings by the booking name
                         $groupedBookings = [];
                         foreach ($bookings as $booking) {
                         foreach ($booking->bookingDetails->where('room_id', NULL) as $detail) {
@@ -124,7 +124,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">
-                                {{ $details[0]->checkin_date }} <!-- แสดงวันที่เช็คอินสำหรับรายละเอียดแรก -->
+                                {{ $details[0]->checkin_date }}
                             </td>
                             <td class="py-2 px-4">
                                 <a href="{{ route('checkindetail', ['id' => $details[0]->booking->id]) }}" class="text-blue-500 hover:text-blue-700 transition duration-300">
@@ -140,15 +140,19 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2 text-center">
-                                @if($details[0]->booking_status === 'รอเลือกห้อง')
+                                @if(count($details) == 1 && $details[0]->booking_status === 'รอเลือกห้อง')
                                 <button onclick="showModal('{{ $details[0]->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">
                                     เช็คอิน
                                 </button>
                                 @else
-                                <span class="text-gray-500">ไม่สามารถเช็คอินได้</span>
+                                <button class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed" disabled>
+                                    เช็คอิน
+                                </button>
                                 @endif
                             </td>
                         </tr>
+
+                        @if(count($details) > 1)
                         <tr id="dropdown-{{ $bookingName }}" class="hidden">
                             <td colspan="5" class="bg-gray-100 p-4 border border-gray-300">
                                 <table class="w-full border-collapse">
@@ -163,7 +167,7 @@
                                     <tbody>
                                         @foreach($details as $index => $detail)
                                         <tr class="text-center border-b border-gray-300">
-                                            <td class="px-4 py-2">{{ $index + 1 }}</td> <!-- ลำดับที่ -->
+                                            <td class="px-4 py-2">{{ $index + 1 }}</td>
                                             <td class="px-4 py-2">{{ $detail->checkin_date }}</td>
                                             <td class="px-4 py-2">
                                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -173,7 +177,7 @@
                                             </td>
                                             <td class="px-4 py-2">
                                                 @if($detail->booking_status === 'รอเลือกห้อง')
-                                                <button onclick="showModal('{{ $detail->booking->id }}', '{{ $detail->checkin_date }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300">
+                                                <button onclick="showModal('{{ $detail->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300">
                                                     เช็คอิน
                                                 </button>
                                                 @else
@@ -186,6 +190,7 @@
                                 </table>
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                         @endif
                     </tbody>
@@ -195,7 +200,7 @@
 
         <script>
             function toggleDropdown(bookingName) {
-                const dropdown = document.getElementById(`dropdown-${bookingName}`);
+                const dropdown = document.getElementById('dropdown-' + bookingName);
                 dropdown.classList.toggle('hidden');
             }
 

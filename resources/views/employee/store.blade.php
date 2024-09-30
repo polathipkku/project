@@ -139,9 +139,13 @@
                                     <input type="number" name="quantity" class="border border-gray-300 rounded-md text-center w-16" min="1" max="{{ $drink->stock->stock_qty }}" value="1" required>
                             </td>
                             <td class="px-4 py-2">
-                                <button type="button" onclick="openPaymentModal({{ $drink->id }}, {{ $drink->stock->stock_qty }})" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                <button type="button"
+                                    onclick="openPaymentModal(1, 10)"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                     ซื้อ
                                 </button>
+
+
                             </td>
 
                         </tr>

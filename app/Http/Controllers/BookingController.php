@@ -556,7 +556,7 @@ class BookingController extends Controller
 
             $room = $bookingDetails->room;
             if ($room) {
-                $room->room_status = 'ชำรุด';
+                $room->room_status = 'แจ้งซ่อมห้อง';
                 $room->save();
             }
         }
