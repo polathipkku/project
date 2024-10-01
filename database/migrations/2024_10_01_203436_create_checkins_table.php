@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInformationTable extends Migration
+class CreateCheckinsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateInformationTable extends Migration
      */
     public function up()
     {
-        Schema::create('information', function (Blueprint $table) {
+        Schema::create('checkins', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained()->onDelete('cascade'); // Foreign key
+            $table->unsignedBigInteger('booking_id');
+            $table->unsignedBigInteger('checked_in_by')->nullable();
+            $table->dateTime('checkin');
             $table->string('name'); // ชื่อ
             $table->string('id_card'); // บัตรประชาชน
             $table->string('phone'); // เบอร์โทร
@@ -23,10 +25,15 @@ class CreateInformationTable extends Migration
             $table->string('sub_district'); // ตำบล
             $table->string('province'); // จังหวัด
             $table->string('district'); // อำเภอ
-            $table->string('postcode'); // เลขรหัสไปรษณีย์
+            $table->string('postcode'); // รหัสไปรษณีย์
             $table->timestamps();
+            $table->softDeletes();
+    
+            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
+            $table->foreign('checked_in_by')->references('id')->on('users');
         });
     }
+    
     
 
     /**
@@ -36,6 +43,6 @@ class CreateInformationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('information');
+        Schema::dropIfExists('checkins');
     }
 }

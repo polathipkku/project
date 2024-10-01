@@ -10,9 +10,10 @@ use App\Models\Booking_detail;
 use App\Models\Product;
 use App\Models\Roomservice;
 use App\Models\Stock;
-use App\Models\Information;
 use App\Models\Product_room;
 use App\Models\CheckoutDetail;
+use App\Models\Checkin;
+use App\Models\Checkout;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -153,8 +154,6 @@ class BookingController extends Controller
         // Create a new booking
         $booking = new Booking();
         $booking->user_id = auth()->check() ? auth()->user()->id : null;
-        $booking->checkin_by = auth()->check() ? auth()->user()->id : null;
-        $booking->checkout_by = auth()->check() ? auth()->user()->id : null;
         $booking->save();
 
         // Insert into booking_details table
@@ -505,19 +504,30 @@ class BookingController extends Controller
     {
         $bookingId = $request->input('booking_id');
 
+        // ค้นหาข้อมูล booking_details ที่เช็คอินแล้ว
         $bookingDetails = Booking_detail::where('booking_id', $bookingId)
             ->where('booking_status', 'เช็คอินแล้ว')
             ->first();
 
         if ($bookingDetails) {
+            // เปลี่ยนสถานะ booking_details เป็น เช็คเอาท์
             $bookingDetails->booking_status = 'เช็คเอาท์';
             $bookingDetails->save();
 
+            // ค้นหาห้องที่เกี่ยวข้อง
             $room = $bookingDetails->room;
             if ($room) {
+                // เปลี่ยนสถานะห้องเป็น รอทำความสะอาด
                 $room->room_status = 'รอทำความสะอาด';
                 $room->save();
             }
+
+            // บันทึกข้อมูลการเช็คเอาท์ในตาราง checkouts
+            Checkout::create([
+                'booking_id' => $bookingId,
+                'checked_out_by' => auth()->id(), // หรือตามวิธีที่คุณใช้ในการจัดการผู้ใช้ที่เช็คเอาท์
+                'checkout' => now(), // วันที่เช็คเอาท์
+            ]);
 
             return redirect()->back()->with('success', 'เช็คเอาท์สำเร็จ');
         }
@@ -601,9 +611,11 @@ class BookingController extends Controller
             $room->room_status = 'ไม่พร้อมให้บริการ';
             $room->save(); // บันทึกสถานะห้อง
 
-            // บันทึกข้อมูลในตาราง Information
-            Information::create([
+            // บันทึกข้อมูลในตาราง Checkin
+            Checkin::create([
                 'booking_id' => $booking->id,
+                'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
+                'checkin' => now(), // วันที่เช็คอิน
                 'name' => $request->name,
                 'id_card' => $request->id_card,
                 'phone' => $request->phone,
