@@ -14,11 +14,16 @@ class Product_room extends Model
     protected $fillable = [
         'productroom_name',
         'productroom_price',
+        'product_qty',
     ];
 
     public function checkoutDetails()
     {
         return $this->hasMany(CheckoutDetail::class);
     }
+    public function checkouts()
+    {
+        return $this->belongsToMany(Checkout::class, 'checkout_details')
+            ->withPivot('totalpriceroom');
+    }
 }
-

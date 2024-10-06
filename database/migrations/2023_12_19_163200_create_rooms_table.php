@@ -35,8 +35,13 @@ class CreateRoomsTable extends Migration
      * @return void
      */
     public function down()
-    {   
-        Schema::dropIfExists('rooms');
+    {
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropForeign(['room_id']); // ลบ foreign key constraint
+            $table->dropForeign(['promotion_id']); // ลบ foreign key constraint
+            $table->dropForeign(['user_id']); // ลบ foreign key constraint
+        });
 
+        Schema::dropIfExists('bookings');
     }
 }

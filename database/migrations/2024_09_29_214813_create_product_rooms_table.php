@@ -17,6 +17,7 @@ class CreateProductRoomsTable extends Migration
             $table->id();
             $table->string('productroom_name');
             $table->decimal('productroom_price', 8, 2); 
+            $table->integer('product_qty');
             $table->timestamps();
             $table->softDeletes();
         });

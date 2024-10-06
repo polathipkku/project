@@ -18,14 +18,17 @@ class CreateCheckoutsTable extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('checked_out_by')->nullable();
             $table->dateTime('checkout')->nullable();
+            $table->decimal('total_damages', 10, 2)->nullable(); // Add total damages column
+        
             $table->timestamps();
             $table->softDeletes();
     
-            // Foreign key สำหรับ booking
+            // Foreign key for booking
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->foreign('checked_out_by')->references('id')->on('users');
         });
     }
+    
     
 
     /**

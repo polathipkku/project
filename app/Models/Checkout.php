@@ -16,7 +16,12 @@ class checkout extends Model
         'booking_id',
         'checked_out_by',
         'checkout',
+        'total_damages',
+        'extended_days',
+        'extra_charge',
+        
     ];
+
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
@@ -24,6 +29,12 @@ class checkout extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'checked_in_by');
+        return $this->belongsTo(User::class, 'checked_out_by');
+    }
+
+    public function productRooms()
+    {
+        return $this->belongsToMany(Product_room::class, 'checkout_details')
+            ->withPivot('totalpriceroom');
     }
 }

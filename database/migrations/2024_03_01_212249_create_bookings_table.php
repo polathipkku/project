@@ -17,12 +17,17 @@ class CreateBookingsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('room_id')->nullable();
+            $table->unsignedBigInteger('promotion_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null'); // Ensure foreign key constraint handles null values
+    
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
+            $table->foreign('promotion_id')->references('id')->on('promotions')->onDelete('cascade');
         });
     }
+    
+    
 
     /**
      * Reverse the migrations.

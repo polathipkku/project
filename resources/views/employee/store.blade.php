@@ -102,6 +102,7 @@
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
+                            <th class="px-4 py-2">รูปสินค้า</th>
                             <th class="px-4 py-2">ชื่อสินค้า</th>
                             <th class="px-4 py-2">ราคา</th>
                             <th class="px-4 py-2">สถานะ</th>
@@ -115,6 +116,10 @@
                         @if($drinks->isNotEmpty())
                         @foreach($drinks as $drink)
                         <tr>
+                            <!-- Display product image -->
+                            <td class="px-4 py-2">
+                                <img src="{{ asset('images/' . $drink->product_img) }}" alt="{{ $drink->product_name }}" class="w-16 h-16 object-cover rounded-md">
+                            </td>
                             <td class="px-4 py-2">{{ $drink->product_name }}</td>
                             <td class="px-4 py-2">{{ $drink->product_price }} บาท</td>
                             <td class="px-4 py-2">
@@ -136,27 +141,24 @@
                                 <form action="{{ route('buyProduct') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $drink->id }}">
-                                    <input type="number" name="quantity" class="border border-gray-300 rounded-md text-center w-16" min="1" max="{{ $drink->stock->stock_qty }}" value="1" required>
+                                    <input type="number" name="quantity" id="quantityInput_{{ $drink->id }}" class="border border-gray-300 rounded-md text-center w-16" min="1" max="{{ $drink->stock->stock_qty }}" value="1" required>
+                                </form>
                             </td>
                             <td class="px-4 py-2">
-                                <button type="button"
-                                    onclick="openPaymentModal(1, 10)"
-                                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                <button type="button" onclick="openPaymentModal({{ $drink->id }}, {{ $drink->stock->stock_qty }})" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                     ซื้อ
                                 </button>
-
-
                             </td>
-
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="7" class="px-4 py-2 text-gray-600">ไม่มีสินค้าในหมวดเครื่องดื่ม</td>
+                            <td colspan="8" class="px-4 py-2 text-gray-600">ไม่มีสินค้าในหมวดเครื่องดื่ม</td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
+
             </div>
         </section>
 
@@ -170,16 +172,10 @@
 
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">วิธีการชำระเงิน</label>
-                        <select name="payment_method" class="border border-gray-300 rounded-md text-center w-full" onchange="toggleQRCode()" required>
+                        <select name="payment_method" class="border border-gray-300 rounded-md text-center w-full" required>
                             <option value="cash">เงินสด</option>
                             <option value="transfer">โอนเงิน</option>
                         </select>
-                    </div>
-
-                    <div id="qrCodeContainer" class="hidden mb-4">
-                        <!-- <img id="qrcode" src="qrcode" alt="qrcode" class="w-full" /> -->
-                        <img src="images/qrcode.jpg" alt="qrcode" class="w-full">
-
                     </div>
 
                     <div class="flex justify-center">
@@ -228,12 +224,15 @@
     <script>
         // ฟังก์ชันเปิด Modal และตั้งค่า product_id และ quantity
         function openPaymentModal(productId, maxQty) {
-            document.getElementById('product_id').value = productId;
-            document.getElementById('quantity').value = 1; // กำหนดจำนวนเริ่มต้นเป็น 1
+            const quantityInput = document.querySelector(`#quantityInput_${productId}`).value;
 
-            // แสดง Modal
+            document.getElementById('product_id').value = productId;
+            document.getElementById('quantity').value = quantityInput;
+
             document.getElementById('paymentModal').classList.remove('hidden');
         }
+
+
 
         // ฟังก์ชันปิด Modal
         function closePaymentModal() {

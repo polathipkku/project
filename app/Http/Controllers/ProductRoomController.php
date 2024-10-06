@@ -13,18 +13,19 @@ class ProductRoomController extends Controller
         return view('owner.productroom', compact('productroom')); // Pass data to view
     }
 
-    public function addProductroom(Request $request)
+    public function addProductRoom(Request $request)
     {
         $request->validate([
-            'productroom_name' => 'required|string|max:255',  
-            'productroom_price' => 'required|numeric|min:0',
+            'productroom_name' => 'required',
+            'productroom_price' => 'required|numeric',
+            'product_qty' => 'required|integer|min:1', // ตรวจสอบจำนวนสินค้าหมายเลขที่มีอย่างน้อย 1
         ]);
 
-        $addProductroom = new Product_room;
-        $addProductroom->productroom_name = $request->input('productroom_name'); 
-        $addProductroom->productroom_price = $request->input('productroom_price');
-
-        $addProductroom->save();
+        $productRoom = new Product_room(); // Assuming you have a model named ProductRoom
+        $productRoom->productroom_name = $request->productroom_name;
+        $productRoom->productroom_price = $request->productroom_price;
+        $productRoom->product_qty = $request->product_qty; // เพิ่มบรรทัดนี้เพื่อบันทึก product_qty
+        $productRoom->save();
 
         return redirect()->route('productroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }

@@ -65,13 +65,13 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('product') }}" id="Stock">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Promotion">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('product') }}" id="Promotion">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
                     </div>

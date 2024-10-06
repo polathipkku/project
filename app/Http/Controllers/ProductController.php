@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Sale;
 use App\Models\Product_type;
 
 class ProductController extends Controller
@@ -15,6 +16,13 @@ class ProductController extends Controller
         $product_types = $this->product_types();
         return view('owner.product', compact('product', 'product_types'));
     }
+    public function add_product()
+    {
+        $product = Product::all();
+        $product_types = $this->product_types();
+        return view('owner.add_product', compact('product', 'product_types'));
+    }
+
     public function store()
     {
         $drinks = Product::with('stock', 'productType')->whereHas('productType', function ($query) {
@@ -70,7 +78,7 @@ class ProductController extends Controller
         $product->productType()->associate($productType);
 
         $product->save();
-        return redirect()->back()->with('success', "บันทึกข้อมูลสำเร็จ");
+        return redirect()->route('product')->with('success', "เพิ่มข้อมูลสำเร็จ");
     }
 
     public function editProduct($id)
@@ -155,24 +163,41 @@ class ProductController extends Controller
         $product = Product::find($request->input('product_id'));
         $quantityToBuy = $request->input('quantity');
         $paymentMethod = $request->input('payment_method');
-    
+
         // ตรวจสอบจำนวนคงเหลือก่อน
         if ($product->stock->stock_qty >= $quantityToBuy) {
             // ลดจำนวนในสต็อก
             $product->stock->stock_qty -= $quantityToBuy;
             $product->stock->save();
-    
-            // เพิ่มบันทึกการชำระเงิน (สามารถปรับให้บันทึกในฐานข้อมูลได้)
+
+            // คำนวณราคาทั้งหมด
+            $totalPrice = $product->product_price * $quantityToBuy;
+
+            // เพิ่มข้อมูลการขายลงในตาราง sales
+            $sale = new Sale();
+            $sale->product_id = $product->id;
+            $sale->user_id = auth()->id();  // บันทึกผู้ใช้ที่ทำการขาย (คนที่ล็อกอิน)
+            $sale->quantity = $quantityToBuy;
+            $sale->total_price = $totalPrice;
+            $sale->payment_method = $paymentMethod;
+
+            // ถ้าการชำระเป็นเงินสด ให้คำนวณเงินทอน
             if ($paymentMethod === 'cash') {
                 $paymentMessage = 'คุณได้เลือกจ่ายด้วยเงินสด';
+                // คุณสามารถปรับให้รับจำนวนเงินที่จ่ายมาเพื่อตรวจสอบและคำนวณเงินทอน
+                // ตัวอย่างเช่น:
+                // $receivedAmount = $request->input('received_amount');
+                // $sale->change_amount = $receivedAmount - $totalPrice;
             } else {
                 $paymentMessage = 'คุณได้เลือกโอนเงิน';
             }
-    
+
+            // บันทึกข้อมูลการขายลงในตาราง sales
+            $sale->save();
+
             return redirect()->back()->with('success', 'ซื้อสินค้าสำเร็จ! ' . $paymentMessage);
         } else {
             return redirect()->back()->with('error', 'จำนวนสินค้าคงเหลือไม่เพียงพอ!');
         }
     }
-    
 }

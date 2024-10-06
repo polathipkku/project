@@ -32,11 +32,20 @@ class Booking_detail extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
-    }    
-    
+    }
+
 
     public function room()
     {
         return $this->belongsTo(Room::class, 'room_id');
     }
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class, 'promotion_id');
+    }
+    public function checkoutExtends()
+{
+    return $this->hasMany(Checkoutextend::class);
+}
+
 }

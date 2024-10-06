@@ -13,7 +13,7 @@ class PaymentController extends Controller
     public function showPaymentPage($id)
     {
         // Fetch booking details for the given booking ID
-        $booking = Booking_detail::with(['booking.user'])->where('booking_id', $id)->first();
+        $booking = Booking_detail::with(['booking.user', 'booking.promotion'])->where('booking_id', $id)->first();
 
         if (!$booking) {
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
@@ -37,10 +37,10 @@ class PaymentController extends Controller
 
         // Ensure total_cost is accessible
         if (!isset($booking->total_cost)) {
-            return response()->json(['error' => 'Total cost not found'], 500);
+            return response()->json(['error' => 'total cost not found'], 500);
         }
 
-        $amount = $booking->total_cost * 100; // Amount in cents
+        $amount = $booking->total_cost * 100;
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -53,10 +53,10 @@ class PaymentController extends Controller
 
             $payment = new Payment();
             $payment->booking_id = $bookingId;
-            $payment->amount = $amount / 100; // Convert back to currency
+            $payment->amount = $amount / 100;
             $payment->payment_intent_id = $paymentIntent->id;
-            $payment->payment_status = 'pending'; // Default value
-            $payment->payment_slip = null; // No slip yet
+            $payment->payment_status = 'pending';
+            $payment->payment_slip = null;
             $payment->save();
 
             return response()->json(['client_secret' => $paymentIntent->client_secret]);

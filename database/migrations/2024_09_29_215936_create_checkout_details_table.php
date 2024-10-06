@@ -21,6 +21,8 @@ class CreateCheckoutDetailsTable extends Migration
             $table->timestamps();
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->foreign('product_room_id')->references('id')->on('product_rooms')->onDelete('cascade');
+            $table->softDeletes();
+
         });
     }
 

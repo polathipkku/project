@@ -54,8 +54,17 @@
                                     @enderror
                                 </div>
                                 <br>
+                                <div class="room-group">
+                                    <label for="product_qty">จำนวนสินค้า</label>
+                                    <input type="number" class="form-control" name="product_qty" required min="1">
+                                    @error('product_qty')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <br>
                                 <input type="submit" value="บันทึก" class="btn btn-primary">
                             </form>
+
                         </div>
                     </div>
                 </div>

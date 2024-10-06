@@ -622,9 +622,9 @@
             ${option.type === 'normal' ? 'ตัวเลือกที่1' : 'ตัวเลือกที่2'}
         </div>
         <div class="mt-3"> <!-- ลด margin-top -->
-            <h3 class="text-m font-bold">จำนวนห้องที่ต้องการพัก: <span class="font-semibold">${option.rooms}</span></h3>
-            ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span></h3>` : ''}
-            <p class="text-xs">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
+            <h3 class="text-m font-bold">จำนวนห้องพัก <span class="font-semibold">${option.rooms}</span> ห้องพัก</h3>
+            ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span> เตียงเสริม</h3>` : ''}
+            <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
         </div>
     </div>
     <div class="flex justify-center mt-2"> <!-- ลด margin-top ของปุ่ม -->

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class checkin extends Model
+class Checkin extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -16,14 +16,14 @@ class checkin extends Model
         'booking_id',
         'checked_in_by',
         'checkin',
-        'name',     
-        'id_card',    
-        'phone',      
-        'address',   
-        'sub_district', 
-        'province',   
-        'district',   
-        'postcode',      
+        'name',
+        'id_card',
+        'phone',
+        'address',
+        'sub_district',
+        'province',
+        'district',
+        'postcode',
     ];
 
     public function booking()

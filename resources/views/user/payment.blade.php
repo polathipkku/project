@@ -83,7 +83,7 @@
     </div>
 
     <script>
-        const stripe = Stripe('{{ env('STRIPE_KEY') }}');
+        const stripe = Stripe("{{ env('STRIPE_KEY') }}");
         let timer;
     
         document.getElementById('pay-button').addEventListener('click', async function() {

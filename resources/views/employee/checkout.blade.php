@@ -90,6 +90,7 @@
                             <th class="px-4 py-2">สถานะ</th>
                             <th class="px-4 py-2">เหลือเวลาเข้าพัก</th>
                             <th class="px-4 py-2">รายละเอียด</th>
+                            <th class="px-4 py-2">เพิ่มเวลาเช็คเอาท์</th>
                             <th class="px-4 py-2" style="padding-right: 5%;">CheckOut</th>
                         </tr>
                     </thead>
@@ -111,6 +112,13 @@
                                         detail
                                     </button>
                                 </a>
+                            </td>
+                            <td class="px-4 py-2">
+                                <button
+                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition duration-300"
+                                    onclick="showExtendCheckoutModal('{{ $booking->id }}', '{{ $detail->id }}')">
+                                    เลื่อนเวลาเช็คเอาท์
+                                </button>
                             </td>
                             <td class="px-4 py-4 flex justify-center items-center border-b">
                                 @if($detail->booking_status === 'เช็คอินแล้ว')
@@ -158,7 +166,12 @@
                                     @foreach($productRooms as $item)
                                     <div class="flex items-center mb-2">
                                         <input type="checkbox" id="item-{{ $item->id }}" name="damaged_items[]" value="{{ $item->id }}" class="mr-2">
-                                        <label for="item-{{ $item->id }}">{{ $item->productroom_name }} - ฿{{ number_format($item->productroom_price, 2) }}</label>
+                                        <label for="item-{{ $item->id }}" class="flex items-center">
+                                            <div>
+                                                <span class="text-gray-800">{{ $item->productroom_name }}</span>
+                                                <span class="text-gray-500 text-sm">฿{{ number_format($item->productroom_price, 2) }}</span>
+                                            </div>
+                                        </label>
                                     </div>
                                     @endforeach
                                 </div>
@@ -169,6 +182,62 @@
                             </form>
                         </div>
                     </div>
+
+                    <div id="extendCheckoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="mt-3 text-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">เลื่อนเวลาเช็คเอาท์</h3>
+                                <div class="mt-2 px-7 py-3">
+                                    <p class="text-sm text-gray-500">
+                                        กรุณาเลือกจำนวนวันที่ต้องการเพิ่ม
+                                    </p>
+                                    <input type="number" id="extendDays" min="1" max="30" value="1" class="mt-2 px-3 py-2 border rounded-md w-full">
+                                    <input type="hidden" id="bookingId">
+                                    <input type="hidden" id="bookingDetailId">
+                                </div>
+                                <div class="items-center px-4 py-3">
+                                    <button id="confirmExtendCheckout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                                        ยืนยัน
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function showExtendCheckoutModal(bookingId, bookingDetailId) {
+                            document.getElementById('bookingId').value = bookingId;
+                            document.getElementById('bookingDetailId').value = bookingDetailId;
+                            document.getElementById('extendCheckoutModal').classList.remove('hidden');
+                        }
+                        document.getElementById('confirmExtendCheckout').addEventListener('click', function() {
+                            let bookingId = document.getElementById('bookingId').value;
+                            let bookingDetailId = document.getElementById('bookingDetailId').value;
+                            let extendDays = document.getElementById('extendDays').value;
+
+                            fetch('/extend-checkout', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        booking_id: bookingId,
+                                        booking_detail_id: bookingDetailId,
+                                        extend_days: extendDays
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    alert(data.message);
+                                    // ซ่อน modal หรือทำการอัปเดต UI ตามที่ต้องการ
+                                    document.getElementById('extendCheckoutModal').classList.add('hidden');
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        });
+                    </script>
+
                     <script>
                         let currentBookingId;
 

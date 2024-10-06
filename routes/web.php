@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaintenanceceController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductRoomController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -105,6 +106,9 @@ Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('sel
 Route::get('/checkindetail/{id}', [BookingController::class, 'checkindetail'])->name('checkindetail');
 Route::get('/checkoutdetail/{id}', [BookingController::class, 'checkoutdetail'])->name('checkoutdetail');
 Route::get('/checkout', [BookingController::class, 'checkout'])->name('checkout');
+
+Route::post('/extend-checkout', [BookingController::class, 'extendCheckout'])->name('extendCheckout');
+
 Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
 Route::post('/submit-damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
 
@@ -152,16 +156,28 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/product', [ProductController::class, 'product'])->name('product');
 
     Route::get('/productroom', [ProductRoomController::class, 'productroom'])->name('productroom');
-    Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');     
+    Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');
 
     Route::post('/product/add', [ProductController::class, 'addproduct'])->name('addProduct');
     Route::get('/product_types', [ProductController::class, 'product_types'])->name('product_types');
     Route::get('/product/edit/{id}', [ProductController::class, 'editProduct']);
     Route::post('/product/update/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
     Route::get('/product/delete/{id}', [ProductController::class, 'deleteProduct']);
+    Route::get('/add_product', [ProductController::class, 'add_product'])->name('add_product');
+
     Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
 
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
     Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
+    Route::get('/record', [BookingController::class, 'record'])->name('record');
+    Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
+    Route::get('/promotions/create', [PromotionController::class, 'create'])->name('add_promotion');
+    Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
+    Route::get('/promotions/edit/{promotion}', [PromotionController::class, 'edit'])->name('editpromotion');
+    Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
+    Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+    Route::get('/record_detail/{id}', [BookingController::class, 'record_detail'])->name('record_detail');
+
+
 });

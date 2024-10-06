@@ -106,7 +106,6 @@
                     <tbody class="text-center" id="booking-rows">
                         @if(isset($bookings) && $bookings->isNotEmpty())
                         @php
-                        // Group bookings by the booking name
                         $groupedBookings = [];
                         foreach ($bookings as $booking) {
                         foreach ($booking->bookingDetails->where('room_id', NULL) as $detail) {
@@ -165,7 +164,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($details as $index => $detail)
+                                    @foreach($details as $index => $detail)
                                         <tr class="text-center border-b border-gray-300">
                                             <td class="px-4 py-2">{{ $index + 1 }}</td>
                                             <td class="px-4 py-2">{{ $detail->checkin_date }}</td>

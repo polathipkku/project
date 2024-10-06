@@ -21,12 +21,11 @@ class Sale extends Model
     // ความสัมพันธ์กับโมเดล Product
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class);
     }
 
-    // ความสัมพันธ์กับโมเดล User (ผู้ขายสินค้า)
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }
