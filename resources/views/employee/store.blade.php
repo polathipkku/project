@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/src/hero.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <title>Tunthree</title>
@@ -165,23 +166,40 @@
         <div id="paymentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <h1 class="text-center text-2xl font-bold mb-4">เลือกวิธีการชำระเงิน</h1>
-                <form id="paymentForm" action="{{ route('buyProduct') }}" method="POST">
+                <form id="paymentForm">
                     @csrf
                     <input type="hidden" name="product_id" id="product_id">
                     <input type="hidden" name="quantity" id="quantity">
 
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-700">วิธีการชำระเงิน</label>
-                        <select name="payment_method" class="border border-gray-300 rounded-md text-center w-full" required>
+                        <select name="payment_method" id="payment_method" class="border border-gray-300 rounded-md text-center w-full" required>
+                            <option value="">-- กรุณาเลือกวิธีการชำระเงิน --</option>
+
                             <option value="cash">เงินสด</option>
                             <option value="transfer">โอนเงิน</option>
                         </select>
                     </div>
 
+                    <div id="cashPaymentDetails" class="mb-4 hidden">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">จำนวนเงินที่รับ</label>
+                        <input type="number" name="received_amount" id="received_amount" class="border border-gray-300 rounded-md text-center w-full" step="0.01" min="0">
+                    </div>
+
                     <div class="flex justify-center">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ยืนยันการชำระเงิน</button>
+                        <button type="submit" id="submitPayment" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ยืนยันการชำระเงิน</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div id="paymentResultModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <h1 class="text-center text-2xl font-bold mb-4">ผลการชำระเงิน</h1>
+                <div id="paymentResultContent"></div>
+                <div class="flex justify-center mt-4">
+                    <button onclick="closePaymentResultModal()" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ปิด</button>
+                </div>
             </div>
         </div>
 
@@ -222,42 +240,71 @@
     </script>
 
     <script>
-        // ฟังก์ชันเปิด Modal และตั้งค่า product_id และ quantity
         function openPaymentModal(productId, maxQty) {
             const quantityInput = document.querySelector(`#quantityInput_${productId}`).value;
-
             document.getElementById('product_id').value = productId;
             document.getElementById('quantity').value = quantityInput;
-
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
-
-
-        // ฟังก์ชันปิด Modal
         function closePaymentModal() {
             document.getElementById('paymentModal').classList.add('hidden');
         }
 
-        // ตรวจจับการคลิกนอก Modal เพื่อปิด
+        document.getElementById('payment_method').addEventListener('change', function() {
+            const cashDetails = document.getElementById('cashPaymentDetails');
+            if (this.value === 'cash') {
+                cashDetails.classList.remove('hidden');
+            } else {
+                cashDetails.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const paymentMethod = document.getElementById('payment_method').value;
+            const receivedAmount = document.getElementById('received_amount').value;
+
+            if (paymentMethod === 'cash' && (!receivedAmount || receivedAmount <= 0)) {
+                alert('กรุณากรอกจำนวนเงินที่รับให้ถูกต้อง');
+                return;
+            }
+
+            fetch('{{ route("buyProduct") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('เกิดข้อผิดพลาดในการทำรายการ');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    closePaymentModal();
+
+                    // ไม่ต้องแสดงผลการชำระเงินที่ modal อีกต่อไป
+                    alert(data.message || 'การทำรายการเสร็จสมบูรณ์');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message || 'เกิดข้อผิดพลาดในการทำรายการ');
+                });
+        });
+
         window.onclick = function(event) {
             var modal = document.getElementById('paymentModal');
             if (event.target === modal) {
                 closePaymentModal();
             }
         }
-
-        // ฟังก์ชันซ่อนหรือแสดง QR Code
-        function toggleQRCode() {
-            var paymentMethod = document.querySelector('select[name="payment_method"]').value;
-            var qrCodeContainer = document.getElementById('qrCodeContainer');
-            if (paymentMethod === 'transfer') {
-                qrCodeContainer.classList.remove('hidden');
-            } else {
-                qrCodeContainer.classList.add('hidden');
-            }
-        }
     </script>
+
 </body>
 
 </html>

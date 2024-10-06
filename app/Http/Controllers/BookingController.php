@@ -67,12 +67,8 @@ class BookingController extends Controller
         return view('user.reservation', compact('bookings'));
     }
 
-    public function record()
-    {
-        $bookings = Booking_detail::paginate(10);
 
-        return view('owner.record', compact('bookings',));
-    }
+
     public function employeehome()
     {
         $bookings = Booking::where('user_id', auth()->user()->id)->get();
@@ -120,17 +116,34 @@ class BookingController extends Controller
         $booking = Booking::with(['bookingDetails', 'payment', 'promotion'])->findOrFail($id);
         return view('owner.record_detail', compact('booking'));
     }
+
+    public function record()
+    {
+        $bookings = Booking_detail::paginate(10);
+        return view('owner.record', compact('bookings'));
+    }
+    
+
     public function record_detail($id)
     {
+        // หาข้อมูล Booking โดยใช้ ID
         $booking = Booking::with([
-            'bookingDetails','checkin','checkout','checkoutDetails','promotion','bookingDetails.checkoutExtends' 
+            'bookingDetails',
+            'checkin.user',
+            'checkout.user',
+            'checkoutDetails',
+            'promotion',
+            'bookingDetails.checkoutExtends'
         ])->find($id);
 
+        // ตรวจสอบว่ามี Booking หรือไม่
+        if (!$booking) {
+            return redirect()->route('record')->with('error', 'ไม่พบข้อมูลการจอง');
+        }
+
+        // ส่งข้อมูลไปยัง view
         return view('owner.record_detail', compact('booking'));
     }
-
-
-
 
 
     public function reserve(Request $request)

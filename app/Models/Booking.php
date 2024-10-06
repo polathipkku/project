@@ -48,6 +48,7 @@ class Booking extends Model
     {
         return $this->hasMany(CheckoutDetail::class);
     }
+
     public function promotion()
     {
         return $this->belongsTo(Promotion::class);

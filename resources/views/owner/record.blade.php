@@ -79,12 +79,11 @@
                 </form>
         </section>
 
-        <section class="mx-10 bg-white w-4/5 ">
-            <div class=" mx-4 py-10 p-5 mb-10">
+        <section class="mx-10 bg-white w-4/5">
+            <div class="mx-4 py-10 p-5 mb-10">
                 <h1 class="text-5xl mb-10 max-xl:px-4">ประวัติการจอง</h1>
-                <div class="grid justify-items-stretch  max-lg:grid-cols-1 max-xl:px-4">
+                <div class="grid justify-items-stretch max-lg:grid-cols-1 max-xl:px-4">
                     <div class="grid max-lg:grid-cols-1">
-
                         @if (count($bookings) > 0)
                         <div class="content">
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -101,7 +100,7 @@
                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คเอาท์</th>
                                             <th scope="col" class="px-3 py-3 text-center">ประเภทห้องพัก</th>
                                             <th scope="col" class="px-3 py-3 text-center">สถานะการจอง</th>
-                                            <th scope="col" class="px-3 py-3 text-center">รายละเอียดเพิ่มเพิ่มเติม</th>
+                                            <th scope="col" class="px-3 py-3 text-center">รายละเอียดเพิ่มเติม</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -112,41 +111,33 @@
                                         @endphp
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-center"
                                             data-booking-id="{{ $bookingId }}"
-                                            onclick="if (this.dataset.bookingId) { toggleDropdown(this.dataset.bookingId); }">
-
+                                            onclick="toggleDropdown(this.dataset.bookingId);">
                                             <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                                                 {{ $bookingId }}
                                             </th>
-                                            <td class="px-3 py-4 text-center">
-                                                {{ $firstBooking->booking_name }}
-                                                @if ($hasDuplicates)
-                                                <span class="text-red-500">({{ $bookings->count() }})</span>
-                                                @endif
-                                            </td>
+                                            <td class="px-3 py-4 text-center">{{ $firstBooking->booking_name }} @if ($hasDuplicates) <span class="text-red-500">({{ $bookings->count() }})</span> @endif </td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->occupancy_person }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->checkin_date }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->checkout_date }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->room_type }}</td>
                                             <td class="px-3 py-4 text-center">
                                                 @if ($firstBooking->booking_status === 'ทำการจอง')
-                                                <span class="mr-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">ทำการจอง</span>
+                                                <span class="mr-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ทำการจอง</span>
                                                 @elseif($firstBooking->booking_status === 'รอเลือกห้อง')
-                                                <span class="mr-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">รอเช็คอิน</span>
+                                                <span class="mr-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">รอเช็คอิน</span>
                                                 @elseif($firstBooking->booking_status === 'เช็คเอาท์')
-                                                <span class="mr-2 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">เช็คเอาท์</span>
+                                                <span class="mr-2 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">เช็คเอาท์</span>
                                                 @elseif($firstBooking->booking_status === 'เช็คอินแล้ว')
-                                                <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">เช็คอินแล้ว</span>
+                                                <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">เช็คอินแล้ว</span>
                                                 @elseif($firstBooking->booking_status === 'รอชำระเงิน')
-                                                <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">รอชำระเงิน</span>
+                                                <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">รอชำระเงิน</span>
                                                 @elseif($firstBooking->booking_status === 'ยกเลิกการจอง')
-                                                <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">{{ $firstBooking->booking_status }}</span>
+                                                <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ $firstBooking->booking_status }}</span>
                                                 @endif
                                             </td>
                                             <td class="px-4 py-2">
                                                 <a href="{{ route('record_detail', ['id' => $firstBooking->id]) }}" class="text-blue-500 hover:text-blue-700">
-                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none focus:shadow-outline">
-                                                        Detail
-                                                    </button>
+                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">Detail</button>
                                                 </a>
                                             </td>
                                         </tr>
@@ -162,57 +153,23 @@
                                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คเอาท์</th>
                                                             <th scope="col" class="px-3 py-3 text-center">ประเภทห้องพัก</th>
                                                             <th scope="col" class="px-3 py-3 text-center">สถานะการจอง</th>
+                                                            <th scope="col" class="px-3 py-3 text-center">รายละเอียดเพิ่มเติม</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <!-- แถวแรกของ dropdown -->
                                                         <tr class="bg-white text-center">
                                                             <td class="px-3 py-4">{{ $firstBooking->booking_name }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->occupancy_person }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->checkin_date }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->checkout_date }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->room_type }}</td>
-                                                            <td class="px-3 py-4">
-                                                                <span class="
-                          @if ($booking->booking_status === 'ทำการจอง')
-                                        <span
-                                            class=" mr-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full"></span>
-                                                                    ทำการจอง </span>
-                                                                @elseif($booking->booking_status === 'รอเลือกห้อง')
-                                                                <span
-                                                                    class="mr-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-green-300 rounded-full"></span>
-                                                                    รอเช็คอิน
-                                                                </span>
-                                                                @elseif($booking->booking_status === 'เช็คเอาท์')
-                                                                <span
-                                                                    class="mr-2 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-blue-300 rounded-full"></span>
-                                                                    เช็คเอาท์ </span>
-                                                                @elseif($booking->booking_status === 'เช็คอินแล้ว')
-                                                                <span
-                                                                    class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-gray-300 rounded-full"></span>
-                                                                    เช็คอินแล้ว </span>
-                                                                @elseif($booking->booking_status === 'รอชำระเงิน')
-                                                                <span
-                                                                    class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-gray-300 rounded-full"></span>
-                                                                    รอชำระเงิน </span>
-                                                                @elseif($booking->booking_status === 'ยกเลิกการจอง')
-                                                                <span
-                                                                    class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                    <span class="w-2 h-2 me-1 bg-red-300 rounded-full"></span>
-                                                                    {{ $booking->booking_status }}
-                                                                </span>
-                                                                @endif
-                                                                inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 text-center">
-                                                                {{ $firstBooking->booking_status }}
-                                                                </span>
+                                                            <td class="px-3 py-4">{{ $firstBooking->booking_status }}</td>
+                                                            <td class="px-4 py-2">
+                                                                <a href="{{ route('record_detail', ['id' => $firstBooking->id]) }}" class="text-blue-500 hover:text-blue-700">
+                                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">Detail</button>
+                                                                </a>
                                                             </td>
                                                         </tr>
-                                                        <!-- แถวที่เหลือใน dropdown -->
                                                         @foreach ($bookings->slice(1) as $booking)
                                                         <tr class="bg-white text-center">
                                                             <td class="px-3 py-4">{{ $booking->booking_name }}</td>
@@ -221,6 +178,11 @@
                                                             <td class="px-3 py-4">{{ $booking->checkout_date }}</td>
                                                             <td class="px-3 py-4">{{ $booking->room_type }}</td>
                                                             <td class="px-3 py-4">{{ $booking->booking_status }}</td>
+                                                            <td class="px-4 py-2">
+                                                                <a href="{{ route('record_detail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
+                                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">Detail</button>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
@@ -232,24 +194,32 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-
-                                @else
-                                <p class="text-gray-600">ไม่พบการจอง</p>
-                                @endif
                             </div>
                         </div>
+                        @else
+                        <p class="text-center text-gray-600">ไม่มีข้อมูลการจอง</p>
+                        @endif
                     </div>
-                    <script>
-                        function toggleDropdown(bookingId) {
-                            const dropdown = document.getElementById('dropdown-' + bookingId);
-                            dropdown.classList.toggle('hidden');
-                        }
-                    </script>
-
-
                 </div>
             </div>
         </section>
+
+        <script>
+            function toggleDropdown(bookingId) {
+                var dropdown = document.getElementById('dropdown-' + bookingId);
+                var detailButton = document.querySelector(`tr[data-booking-id="${bookingId}"] button`);
+
+                // Toggle dropdown visibility
+                if (dropdown.classList.contains('hidden')) {
+                    dropdown.classList.remove('hidden');
+                    detailButton.disabled = true; // Disable Detail button when dropdown is open
+                } else {
+                    dropdown.classList.add('hidden');
+                    detailButton.disabled = false; // Enable Detail button when dropdown is closed
+                }
+            }
+        </script>
+
 
         <section id="toast" class="hidden">
             <div id="toast-success" class=" flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">

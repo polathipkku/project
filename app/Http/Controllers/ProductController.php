@@ -163,41 +163,42 @@ class ProductController extends Controller
         $product = Product::find($request->input('product_id'));
         $quantityToBuy = $request->input('quantity');
         $paymentMethod = $request->input('payment_method');
+        $paymentDetails = [];
 
-        // ตรวจสอบจำนวนคงเหลือก่อน
+        // Check stock quantity
         if ($product->stock->stock_qty >= $quantityToBuy) {
-            // ลดจำนวนในสต็อก
+            // Deduct stock quantity
             $product->stock->stock_qty -= $quantityToBuy;
             $product->stock->save();
 
-            // คำนวณราคาทั้งหมด
+            // Calculate total price
             $totalPrice = $product->product_price * $quantityToBuy;
 
-            // เพิ่มข้อมูลการขายลงในตาราง sales
+            // Add sale record
             $sale = new Sale();
             $sale->product_id = $product->id;
-            $sale->user_id = auth()->id();  // บันทึกผู้ใช้ที่ทำการขาย (คนที่ล็อกอิน)
+            $sale->user_id = auth()->id();
             $sale->quantity = $quantityToBuy;
             $sale->total_price = $totalPrice;
             $sale->payment_method = $paymentMethod;
 
-            // ถ้าการชำระเป็นเงินสด ให้คำนวณเงินทอน
+            // If cash payment, calculate change
             if ($paymentMethod === 'cash') {
-                $paymentMessage = 'คุณได้เลือกจ่ายด้วยเงินสด';
-                // คุณสามารถปรับให้รับจำนวนเงินที่จ่ายมาเพื่อตรวจสอบและคำนวณเงินทอน
-                // ตัวอย่างเช่น:
-                // $receivedAmount = $request->input('received_amount');
-                // $sale->change_amount = $receivedAmount - $totalPrice;
-            } else {
-                $paymentMessage = 'คุณได้เลือกโอนเงิน';
+                $receivedAmount = $request->input('received_amount');
+                $sale->change_amount = $receivedAmount - $totalPrice; // Store change amount
+                $paymentDetails = [
+                    'totalPrice' => $totalPrice,
+                    'receivedAmount' => $receivedAmount,
+                    'changeAmount' => $sale->change_amount,
+                ];
             }
 
-            // บันทึกข้อมูลการขายลงในตาราง sales
+            // Save sale record
             $sale->save();
 
-            return redirect()->back()->with('success', 'ซื้อสินค้าสำเร็จ! ' . $paymentMessage);
+            return response()->json(['message' => 'การชำระเงินสำเร็จ!', 'paymentDetails' => $paymentDetails]);
         } else {
-            return redirect()->back()->with('error', 'จำนวนสินค้าคงเหลือไม่เพียงพอ!');
+            return response()->json(['message' => 'Insufficient stock!'], 400);
         }
     }
 }
