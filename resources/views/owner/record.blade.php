@@ -136,6 +136,7 @@
                                                 @endif
                                             </td>
                                             <td class="px-4 py-2">
+                                                <!-- Update the link to use bookingdetail_id -->
                                                 <a href="{{ route('record_detail', ['id' => $firstBooking->id]) }}" class="text-blue-500 hover:text-blue-700">
                                                     <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">Detail</button>
                                                 </a>

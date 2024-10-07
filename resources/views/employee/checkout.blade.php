@@ -203,6 +203,46 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="paymentMethodPopup" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                            <div class="mt-3 text-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">เลือกวิธีการชำระเงิน</h3>
+                                <div class="mt-2 px-7 py-3">
+                                    <p class="text-sm text-gray-500" id="paymentExtraCharge"></p>
+                                    <input type="hidden" id="paymentCheckoutextendId">
+                                    <div>
+                                        <label>
+                                            <input type="radio" name="payment_method" value="cash" onclick="showCashRefundField()"> เงินสด
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="payment_method" value="transfer" onclick="hideCashRefundField()"> โอนเงิน
+                                        </label>
+                                    </div>
+                                    <div id="cashRefundField" class="hidden">
+                                        <label for="cashRefund">เงินทอน:</label>
+                                        <input type="number" id="cashRefund" class="mt-2 px-3 py-2 border rounded-md w-full" min="0" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="items-center px-4 py-3">
+                                    <button onclick="confirmPayment(document.querySelector('input[name=payment_method]:checked').value)" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                                        ยืนยัน
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function showCashRefundField() {
+                            document.getElementById('cashRefundField').classList.remove('hidden');
+                        }
+
+                        function hideCashRefundField() {
+                            document.getElementById('cashRefundField').classList.add('hidden');
+                        }
+                    </script>
+
                     <script>
                         function showExtendCheckoutModal(bookingId, bookingDetailId) {
                             document.getElementById('bookingId').value = bookingId;
@@ -228,14 +268,60 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    alert(data.message);
+                                    // แสดง popup ให้เลือกวิธีการชำระเงิน
+                                    showPaymentMethodPopup(data.checkoutextend_id, data.extra_charge);
+
                                     // ซ่อน modal หรือทำการอัปเดต UI ตามที่ต้องการ
                                     document.getElementById('extendCheckoutModal').classList.add('hidden');
                                 })
+
                                 .catch(error => {
                                     console.error('Error:', error);
                                 });
                         });
+
+                        function showPaymentMethodPopup(checkoutextendId, extraCharge) {
+                            // แสดง modal หรือ popup ให้ผู้ใช้เลือกวิธีการชำระเงิน
+                            // ตัวอย่างการแสดง popup
+                            const paymentPopup = document.getElementById('paymentMethodPopup');
+                            paymentPopup.classList.remove('hidden');
+
+                            // ตั้งค่า ID ของ checkoutextend และค่าใช้จ่ายเพิ่มเติม
+                            document.getElementById('paymentCheckoutextendId').value = checkoutextendId;
+                            document.getElementById('paymentExtraCharge').textContent = `ค่าใช้จ่ายเพิ่มเติม: ${extraCharge} บาท`;
+                        }
+
+                        // ฟังก์ชันจัดการการชำระเงิน
+                        function confirmPayment(method) {
+                            const checkoutextendId = document.getElementById('paymentCheckoutextendId').value;
+                            const cashRefund = method === 'cash' ? document.getElementById('cashRefund').value : null;
+
+                            fetch('/save-payment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        checkoutextend_id: checkoutextendId,
+                                        payment_method: method,
+                                        cash_refund: cashRefund
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    alert(data.message);
+                                    // ปิด popup และอัปเดต UI ตามต้องการ
+                                    closePaymentMethodPopup();
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        }
+
+                        function closePaymentMethodPopup() {
+                            document.getElementById('paymentMethodPopup').classList.add('hidden');
+                        }
                     </script>
 
                     <script>

@@ -18,6 +18,8 @@ class CreateCheckoutextendsTable extends Migration
             $table->foreignId('booking_detail_id')->constrained()->onDelete('cascade'); // เชื่อมต่อกับ booking_detail
             $table->integer('extended_days')->default(0); // จำนวนวันที่เลื่อนเวลาเช็คเอาท์
             $table->decimal('extra_charge', 8, 2)->default(0); // ค่าใช้จ่ายเพิ่มเติม
+            $table->decimal('cash_refund', 8, 2)->nullable(); // ตัวอย่าง: คอลัมน์เงินทอน
+            $table->string('payment_method')->nullable(); // ตัวอย่าง: คอลัมน์วิธีการชำระเงิน
             $table->timestamps();
         });
     }

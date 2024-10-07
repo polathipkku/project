@@ -50,11 +50,11 @@
                 <div class="dropdown-content">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="border-r border-gray-200 pr-4">
-                            @if ($booking->bookingDetails->isNotEmpty())
-                            @foreach ($booking->bookingDetails as $detail)
+                            @if ($bookingDetail->booking ? $bookingDetail->booking->bookingDetails->isNotEmpty() : false)
+                            @foreach ($bookingDetail->booking->bookingDetails as $detail)
                             <div class="mb-4 p-3 bg-gray-50 rounded-lg">
                                 <p class="mb-2"><span class="font-semibold">Booking ID:</span>
-                                    {{ $booking->id }}
+                                    {{ $bookingDetail->booking->id }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">ชื่อผู้จอง:</span>
                                     {{ $detail->booking_name }}
@@ -78,8 +78,8 @@
                             @endif
                         </div>
                         <div class="pl-4">
-                            @if ($booking->bookingDetails->isNotEmpty())
-                            @foreach ($booking->bookingDetails as $detail)
+                            @if ($bookingDetail->booking ? $bookingDetail->booking->bookingDetails->isNotEmpty() : false)
+                            @foreach ($bookingDetail->booking->bookingDetails as $detail)
                             <div class="mb-4 p-3 bg-gray-50 rounded-lg">
                                 <div class="flex gap-5">
                                     <p class="mb-1"><span class="font-semibold">วันที่เลือกเช็คอิน:</span>
@@ -123,16 +123,16 @@
                     </h2>
                 </div>
                 <div class="dropdown-content">
-                    @if ($booking->promotion)
+                    @if ($bookingDetail->booking->promotion)
                     <div class="p-3 bg-purple-50 rounded-lg">
                         <p class="mb-1"><span class="font-semibold">ชื่อแคมเปญ:</span>
-                            {{ $booking->promotion->campaign_name }}
+                            {{ $bookingDetail->booking->promotion->campaign_name }}
                         </p>
                         <p class="mb-1"><span class="font-semibold">รหัสโปรโมชั่น:</span>
-                            {{ $booking->promotion->promo_code }}
+                            {{ $bookingDetail->booking->promotion->promo_code }}
                         </p>
                         <p class="mb-1"><span class="font-semibold">ส่วนลด:</span>
-                            {{ $booking->promotion->discount_percentage }}%
+                            {{ $bookingDetail->booking->promotion->discount_percentage }}%
                         </p>
                     </div>
                     @else
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Check-in Information Dropdown -->
-            @if ($booking->checkin)
+
             <div class="bg-white rounded-lg shadow-md p-6 w-full">
                 <div class="dropdown-header">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
@@ -154,35 +154,33 @@
                         <div class="border-r border-gray-200 pr-4">
                             <div class="p-3 bg-indigo-50 rounded-lg">
                                 <p class="mb-1"><span class="font-semibold">เช็คอินโดย:</span>
-                                    {{ $booking->checkin->user->name ?? 'ไม่ระบุ' }}
+                                    {{ $bookingDetail->booking->checkin->user->name ?? 'ไม่ระบุ' }}
                                 </p>
 
                                 <p class="mb-1"><span class="font-semibold">ชื่อผู้เข้าพัก:</span>
-                                    {{ $booking->checkin->name }}
+                                    {{ $bookingDetail->booking->checkin->name }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">เวลาที่เช็คอิน:</span>
-                                    {{ $booking->checkin->checkin }}
+                                    {{ $bookingDetail->booking->checkin->checkin }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">บัตรประชาชน:</span>
-                                    {{ $booking->checkin->id_card }}
+                                    {{ $bookingDetail->booking->checkin->id_card }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">ที่อยู่:</span>
-                                    {{ $booking->checkin->address }},
-                                    {{ $booking->checkin->province }},
-                                    {{ $booking->checkin->district }},
-                                    {{ $booking->checkin->sub_district }},
-                                    {{ $booking->checkin->postcode }}
+                                    {{ $bookingDetail->booking->checkin->address }},
+                                    {{ $bookingDetail->booking->checkin->province }},
+                                    {{ $bookingDetail->booking->checkin->district }},
+                                    {{ $bookingDetail->booking->checkin->sub_district }},
+                                    {{ $bookingDetail->booking->checkin->postcode }}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
 
 
             <!-- Check-out Information Dropdown -->
-            @if ($booking->checkout)
             <div class="bg-white rounded-lg shadow-md p-6 w-full">
                 <div class="dropdown-header">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
@@ -193,21 +191,21 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3 bg-red-50 rounded-lg">
                             <p class="mb-1"><span class="font-semibold">เช็คเอาท์โดย:</span>
-                                {{ $booking->checkout->user->name ?? 'ไม่ระบุ' }}
+                                {{ $bookingDetail->booking->checkout->user->name ?? 'ไม่ระบุ' }}
                             </p>
                             <p class="mb-1"><span class="font-semibold">เวลาที่เช็คเอาท์:</span>
-                                {{ $booking->checkout->checkout }}
+                                {{ $bookingDetail->booking->checkout->checkout ?? 'ไม่ระบุ' }}
                             </p>
                             <p><strong>Damages Charge:</strong>
-                                {{ number_format($booking->checkout->total_damages, 2) }} บาท
+                                {{ number_format($bookingDetail->booking->checkout->total_damages ?? 0, 2) }} บาท
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
-            <!-- Charge Details Dropdown -->
-            @if ($booking->checkoutDetails->isNotEmpty())
+
+
+            @if ($bookingDetail->booking->checkoutDetails->isNotEmpty())
             <div class="bg-white rounded-lg shadow-md p-6 w-full">
                 <div class="dropdown-header">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
@@ -224,7 +222,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($booking->checkoutDetails as $checkoutDetail)
+                                @foreach ($bookingDetail->booking->checkoutDetails as $checkoutDetail)
                                 <tr class="hover:bg-gray-100">
                                     <td class="px-4 py-2 border">
                                         {{ $checkoutDetail->productRoom->productroom_name }}
@@ -240,7 +238,7 @@
                 </div>
             </div>
             @else
-            <p class="text-center">ไม่มีข้อมูลเช็คบิล</p>
+            <p class="text-center">ไม่มีข้อมูลค่าเสียหาย</p>
             @endif
 
 

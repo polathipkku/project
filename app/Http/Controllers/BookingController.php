@@ -122,28 +122,31 @@ class BookingController extends Controller
         $bookings = Booking_detail::paginate(10);
         return view('owner.record', compact('bookings'));
     }
-    
 
-    public function record_detail($id)
+
+
+    public function record_detail($bookingdetail_id)
     {
-        // หาข้อมูล Booking โดยใช้ ID
-        $booking = Booking::with([
-            'bookingDetails',
-            'checkin.user',
-            'checkout.user',
-            'checkoutDetails',
-            'promotion',
-            'bookingDetails.checkoutExtends'
-        ])->find($id);
+        // Find BookingDetail using bookingdetail_id
+        $bookingDetail = Booking_detail::with([
+            'booking',
+            'booking.checkin.user',
+            'booking.checkout.user',
+            'booking.checkoutDetails',
+            'booking.promotion',
+            'checkoutExtends'
+        ])->find($bookingdetail_id);
 
-        // ตรวจสอบว่ามี Booking หรือไม่
-        if (!$booking) {
+        // Check if BookingDetail exists
+        if (!$bookingDetail) {
             return redirect()->route('record')->with('error', 'ไม่พบข้อมูลการจอง');
         }
 
-        // ส่งข้อมูลไปยัง view
-        return view('owner.record_detail', compact('booking'));
+        // Send data to the view
+        return view('owner.record_detail', compact('bookingDetail'));
     }
+
+
 
 
     public function reserve(Request $request)
@@ -514,30 +517,52 @@ class BookingController extends Controller
     {
         $bookingDetailId = $request->input('booking_detail_id');
         $extendDays = $request->input('extend_days');
-
+    
         // หา booking_detail ที่เกี่ยวข้อง
         $bookingDetail = Booking_detail::findOrFail($bookingDetailId);
-
+    
         // อัปเดต checkout_date โดยเพิ่มจำนวนวัน
         $currentCheckoutDate = Carbon::parse($bookingDetail->checkout_date);
         $newCheckoutDate = $currentCheckoutDate->addDays($extendDays);
-
+    
         // คำนวณค่าใช้จ่ายเพิ่มเติม
         $extraCharge = $extendDays * 500; // 500 บาทต่อวัน
-
+    
         // อัปเดต checkout_date ใน booking_detail
         $bookingDetail->checkout_date = $newCheckoutDate;
         $bookingDetail->save();
-
+    
         // บันทึกข้อมูลการเลื่อนเวลาเช็คเอาท์ลงในตาราง checkoutextend
-        Checkoutextend::create([
+        $checkoutextend = Checkoutextend::create([
             'booking_detail_id' => $bookingDetailId,
             'extended_days' => $extendDays,
             'extra_charge' => $extraCharge,
         ]);
-
-        return response()->json(['message' => 'ได้ทำการเลื่อนเวลาเช็คเอาท์สำเร็จ', 'extra_charge' => $extraCharge]);
+    
+        // คืนค่าข้อมูลเพื่อใช้ใน popup การชำระเงิน
+        return response()->json([
+            'extra_charge' => $extraCharge,
+            'checkoutextend_id' => $checkoutextend->id // ส่ง ID ของ checkoutextend เพื่อใช้ในการบันทึกการชำระเงิน
+        ]);
     }
+    
+    public function savePayment(Request $request)
+    {
+        $checkoutextendId = $request->input('checkoutextend_id');
+        $paymentMethod = $request->input('payment_method');
+        $cashRefund = $request->input('cash_refund');
+
+        // หา checkoutextend ที่เกี่ยวข้อง
+        $checkoutextend = Checkoutextend::findOrFail($checkoutextendId);
+
+        // อัปเดตข้อมูลการชำระเงิน
+        $checkoutextend->payment_method = $paymentMethod;
+        $checkoutextend->cash_refund = $cashRefund;
+        $checkoutextend->save();
+
+        return response()->json(['message' => 'ข้อมูลการชำระเงินถูกบันทึกเรียบร้อยแล้ว']);
+    }
+
 
 
 
