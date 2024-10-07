@@ -172,6 +172,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
     Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
+    
     Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
     Route::get('/promotions/create', [PromotionController::class, 'create'])->name('add_promotion');
     Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');

@@ -27,7 +27,6 @@ class CreateBookingDetailsTable extends Migration
             $table->integer('occupancy_baby')->nullable();
             $table->date('checkin_date');
             $table->date('checkout_date'); 
-            $table->decimal('total_cost', 10, 2)->nullable();
             $table->string('room_type')->nullable();
             $table->integer('room_quantity');
             
