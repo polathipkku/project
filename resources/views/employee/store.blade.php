@@ -103,7 +103,6 @@
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
-                            <th class="px-4 py-2">รูปสินค้า</th>
                             <th class="px-4 py-2">ชื่อสินค้า</th>
                             <th class="px-4 py-2">ราคา</th>
                             <th class="px-4 py-2">สถานะ</th>
@@ -118,9 +117,6 @@
                         @foreach($drinks as $drink)
                         <tr>
                             <!-- Display product image -->
-                            <td class="px-4 py-2">
-                                <img src="{{ asset('images/' . $drink->product_img) }}" alt="{{ $drink->product_name }}" class="w-16 h-16 object-cover rounded-md">
-                            </td>
                             <td class="px-4 py-2">{{ $drink->product_name }}</td>
                             <td class="px-4 py-2">{{ $drink->product_price }} บาท</td>
                             <td class="px-4 py-2">

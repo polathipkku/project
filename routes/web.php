@@ -112,6 +112,7 @@ Route::post('/save-payment', [BookingController::class, 'savePayment'])->name('s
 
 Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
 Route::post('/submit-damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
+Route::post('/damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
 
 Route::post('/addBooking/{id}', [BookingController::class, 'addBooking'])->name('addBooking');
 Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');

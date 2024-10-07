@@ -39,7 +39,7 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
+                <a class="inline-block py-2 px-3 gray-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-users mr-1"></i>Employee
                     </div>
@@ -63,9 +63,9 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
+                <a class="inline-block py-2 px-3 text-blue-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-regular fa-envelope mr-1"></i>Review
+                        <i class="fa-regular fa-envelope mr-1"></i>Record
                     </div>
                 </a>
 
@@ -197,6 +197,7 @@
                                 </table>
                             </div>
                         </div>
+                        
                         @else
                         <p class="text-center text-gray-600">ไม่มีข้อมูลการจอง</p>
                         @endif

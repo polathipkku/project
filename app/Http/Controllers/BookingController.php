@@ -119,35 +119,27 @@ class BookingController extends Controller
 
     public function record()
     {
-        $bookings = Booking_detail::paginate(10);
+        $bookings = Booking_detail::all();
+
         return view('owner.record', compact('bookings'));
     }
 
-
-
     public function record_detail($bookingdetail_id)
     {
-        // Find BookingDetail using bookingdetail_id
         $bookingDetail = Booking_detail::with([
             'booking',
             'booking.checkin.user',
             'booking.checkout.user',
             'booking.checkoutDetails',
             'booking.promotion',
-            'checkoutExtends'
+            'checkoutExtends' 
         ])->find($bookingdetail_id);
-
-        // Check if BookingDetail exists
+    
         if (!$bookingDetail) {
             return redirect()->route('record')->with('error', 'ไม่พบข้อมูลการจอง');
         }
-
-        // Send data to the view
         return view('owner.record_detail', compact('bookingDetail'));
     }
-
-
-
 
     public function reserve(Request $request)
     {
@@ -517,53 +509,53 @@ class BookingController extends Controller
     {
         $bookingDetailId = $request->input('booking_detail_id');
         $extendDays = $request->input('extend_days');
-    
+
         // หา booking_detail ที่เกี่ยวข้อง
         $bookingDetail = Booking_detail::findOrFail($bookingDetailId);
-    
+
         // อัปเดต checkout_date โดยเพิ่มจำนวนวัน
         $currentCheckoutDate = Carbon::parse($bookingDetail->checkout_date);
         $newCheckoutDate = $currentCheckoutDate->addDays($extendDays);
-    
+
         // คำนวณค่าใช้จ่ายเพิ่มเติม
         $extraCharge = $extendDays * 500; // 500 บาทต่อวัน
-    
+
         // อัปเดต checkout_date ใน booking_detail
         $bookingDetail->checkout_date = $newCheckoutDate;
         $bookingDetail->save();
-    
+
         // บันทึกข้อมูลการเลื่อนเวลาเช็คเอาท์ลงในตาราง checkoutextend
         $checkoutextend = Checkoutextend::create([
             'booking_detail_id' => $bookingDetailId,
             'extended_days' => $extendDays,
             'extra_charge' => $extraCharge,
         ]);
-    
+
         // คืนค่าข้อมูลเพื่อใช้ใน popup การชำระเงิน
         return response()->json([
             'extra_charge' => $extraCharge,
             'checkoutextend_id' => $checkoutextend->id // ส่ง ID ของ checkoutextend เพื่อใช้ในการบันทึกการชำระเงิน
         ]);
     }
-    
+
     public function savePayment(Request $request)
     {
         $checkoutextendId = $request->input('checkoutextend_id');
         $paymentMethod = $request->input('payment_method');
         $cashRefund = $request->input('cash_refund');
+        $amountPaid = $request->input('amount_paid'); // Get the amount paid from the request
 
-        // หา checkoutextend ที่เกี่ยวข้อง
+        // Find the checkoutextend record
         $checkoutextend = Checkoutextend::findOrFail($checkoutextendId);
 
-        // อัปเดตข้อมูลการชำระเงิน
+        // Update payment details
         $checkoutextend->payment_method = $paymentMethod;
         $checkoutextend->cash_refund = $cashRefund;
+        $checkoutextend->amount_paid = $amountPaid; // Save the amount paid
         $checkoutextend->save();
 
         return response()->json(['message' => 'ข้อมูลการชำระเงินถูกบันทึกเรียบร้อยแล้ว']);
     }
-
-
 
 
     public function submitDamagedItems(Request $request)

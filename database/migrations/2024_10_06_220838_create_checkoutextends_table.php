@@ -20,6 +20,10 @@ class CreateCheckoutextendsTable extends Migration
             $table->decimal('extra_charge', 8, 2)->default(0); // ค่าใช้จ่ายเพิ่มเติม
             $table->decimal('cash_refund', 8, 2)->nullable(); // ตัวอย่าง: คอลัมน์เงินทอน
             $table->string('payment_method')->nullable(); // ตัวอย่าง: คอลัมน์วิธีการชำระเงิน
+            $table->decimal('amount_paid', 8, 2)->after('payment_method')->nullable();
+            $table->decimal('change', 10, 2)->nullable(); // จำนวนเงินทอน
+
+
             $table->timestamps();
         });
     }

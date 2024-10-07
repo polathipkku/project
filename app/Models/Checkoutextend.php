@@ -9,7 +9,7 @@ class Checkoutextend extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['booking_detail_id', 'extended_days', 'extra_charge'];
+    protected $fillable = ['booking_detail_id', 'extended_days', 'extra_charge', 'amount_paid', 'payment_method'];
 
     public function bookingDetail()
     {

@@ -71,23 +71,23 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="#" id="Review">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-regular fa-envelope mr-1"></i>Review
-                    </div>
-                </a>
 
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                    class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm"
-                    style="position: absolute; bottom: 10px;" id="Logout">
+                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('record') }}" id="Review">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                        <i class="fa-solid fa-database mr-1"></i>Record
                     </div>
-                </a>
-                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                    @csrf
-                </form>
+                    
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm"
+                        style="position: absolute; bottom: 10px;" id="Logout">
+                        <div class="mr-2 text-base flex items-center">
+                            <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                        </div>
+                    </a>
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                        @csrf
+                    </form>
         </section>
         <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
             <div class="max-w-screen-xl mx-auto py-10 ">

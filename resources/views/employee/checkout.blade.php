@@ -183,6 +183,7 @@
                         </div>
                     </div>
 
+
                     <div id="extendCheckoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
                         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                             <div class="mt-3 text-center">
@@ -211,6 +212,7 @@
                                 <div class="mt-2 px-7 py-3">
                                     <p class="text-sm text-gray-500" id="paymentExtraCharge"></p>
                                     <input type="hidden" id="paymentCheckoutextendId">
+
                                     <div>
                                         <label>
                                             <input type="radio" name="payment_method" value="cash" onclick="showCashRefundField()"> เงินสด
@@ -219,19 +221,29 @@
                                             <input type="radio" name="payment_method" value="transfer" onclick="hideCashRefundField()"> โอนเงิน
                                         </label>
                                     </div>
+
+                                    <!-- Amount Paid Field -->
+                                    <div>
+                                        <label for="amountPaid">จำนวนเงินที่จ่าย:</label>
+                                        <input type="number" id="amountPaid" class="mt-2 px-3 py-2 border rounded-md w-full" min="0" step="0.01" placeholder="ระบุจำนวนเงินที่ลูกค้าจ่าย">
+                                    </div>
+                                    <!-- Cash Refund Field -->
                                     <div id="cashRefundField" class="hidden">
                                         <label for="cashRefund">เงินทอน:</label>
-                                        <input type="number" id="cashRefund" class="mt-2 px-3 py-2 border rounded-md w-full" min="0" step="0.01">
+                                        <input type="number" id="cashRefund" class="mt-2 px-3 py-2 border rounded-md w-full" min="0" step="0.01" placeholder="ระบุจำนวนเงินทอน">
                                     </div>
                                 </div>
+
                                 <div class="items-center px-4 py-3">
-                                    <button onclick="confirmPayment(document.querySelector('input[name=payment_method]:checked').value)" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                                    <button onclick="confirmPayment(document.querySelector('input[name=payment_method]:checked').value)"
+                                        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
                                         ยืนยัน
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <script>
                         function showCashRefundField() {
@@ -295,6 +307,7 @@
                         function confirmPayment(method) {
                             const checkoutextendId = document.getElementById('paymentCheckoutextendId').value;
                             const cashRefund = method === 'cash' ? document.getElementById('cashRefund').value : null;
+                            const amountPaid = document.getElementById('amountPaid').value; // Get amount paid
 
                             fetch('/save-payment', {
                                     method: 'POST',
@@ -305,19 +318,21 @@
                                     body: JSON.stringify({
                                         checkoutextend_id: checkoutextendId,
                                         payment_method: method,
-                                        cash_refund: cashRefund
+                                        cash_refund: cashRefund,
+                                        amount_paid: amountPaid // Send amount paid in the request
                                     })
                                 })
                                 .then(response => response.json())
                                 .then(data => {
                                     alert(data.message);
-                                    // ปิด popup และอัปเดต UI ตามต้องการ
+                                    // Close the popup and update UI as necessary
                                     closePaymentMethodPopup();
                                 })
                                 .catch(error => {
                                     console.error('Error:', error);
                                 });
                         }
+
 
                         function closePaymentMethodPopup() {
                             document.getElementById('paymentMethodPopup').classList.add('hidden');
@@ -355,6 +370,7 @@
                             document.getElementById('damagedItemsPopup').classList.add('hidden');
                         }
                     </script>
+
 
                     <style>
                         #checkoutPopup,

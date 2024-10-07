@@ -36,7 +36,7 @@
                 <i class="fas fa-arrow-left text-4xl mr-2"></i>
                 <span>Back</span>
             </a>
-            <h1 class="text-3xl font-bold mb-8 text-center text-gray-800 ">Booking Details</h1>
+            <h1 class="text-3xl font-bold mb-8 text-center text-gray-800 ">รายละเอียดการจอง</h1>
         </div>
 
         <div class="space-y-6">
@@ -146,7 +146,7 @@
             <div class="bg-white rounded-lg shadow-md p-6 w-full">
                 <div class="dropdown-header">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
-                        <i class="fas fa-door-open mr-2 text-indigo-500"></i>Check-in Information
+                        <i class="fas fa-door-open mr-2 text-indigo-500"></i>รายละเอียดการเช็คอิน
                     </h2>
                 </div>
                 <div class="dropdown-content">
@@ -184,7 +184,7 @@
             <div class="bg-white rounded-lg shadow-md p-6 w-full">
                 <div class="dropdown-header">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
-                        <i class="fas fa-door-closed mr-2 text-red-500"></i>Check-out Information
+                        <i class="fas fa-door-closed mr-2 text-red-500"></i>รายละเอียดการเช็คเอาท์
                     </h2>
                 </div>
                 <div class="dropdown-content">
@@ -196,71 +196,99 @@
                             <p class="mb-1"><span class="font-semibold">เวลาที่เช็คเอาท์:</span>
                                 {{ $bookingDetail->booking->checkout->checkout ?? 'ไม่ระบุ' }}
                             </p>
-                            <p><strong>Damages Charge:</strong>
+                            <p><strong>ค่าเสียหาย:</strong>
                                 {{ number_format($bookingDetail->booking->checkout->total_damages ?? 0, 2) }} บาท
                             </p>
                         </div>
+
+                        <!-- New section for Checkoutextend data -->
+                        @if($bookingDetail->checkoutExtends->isNotEmpty())
+                        <div class="p-3 bg-green-50 rounded-lg">
+                            <p class="mb-1 font-semibold">การเลื่อนเวลาเช็คเอาท์:</p>
+                            @foreach($bookingDetail->checkoutExtends as $checkoutExtend)
+                            <p><strong>วันที่เลื่อน:</strong> {{ $checkoutExtend->extended_days }} วัน</p>
+                            <p><strong>ค่าใช้จ่ายเพิ่มเติม:</strong> {{ number_format($checkoutExtend->extra_charge, 2) }} บาท</p>
+                            <p><strong>จำนวนเงินที่จ่าย:</strong> {{ number_format($checkoutExtend->amount_paid ?? 0, 2) }} บาท</p>
+                            <p><strong>เงินทอน:</strong> {{ number_format($checkoutExtend->cash_refund ?? 0, 2) }} บาท</p>
+                            <p><strong>วิธีการชำระเงิน:</strong>
+                                @if($checkoutExtend->payment_method === 'cash')
+                                เงินสด
+                                @elseif($checkoutExtend->payment_method === 'transfer')
+                                โอนเงิน
+                                @else
+                                ไม่ระบุ
+                                @endif
+                            </p>
+                            <hr class="my-2">
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="p-3 bg-green-50 rounded-lg">
+                            <p>ไม่มีข้อมูลการเลื่อนเวลาเช็คเอาท์</p>
+                        </div>
+                        @endif
+
                     </div>
                 </div>
-            </div>
 
 
-            @if ($bookingDetail->booking->checkoutDetails->isNotEmpty())
-            <div class="bg-white rounded-lg shadow-md p-6 w-full">
-                <div class="dropdown-header">
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
-                        <i class="fas fa-money-bill-wave mr-2 text-green-500"></i>Charge Details
-                    </h2>
-                </div>
-                <div class="dropdown-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <table class="min-w-full table-auto border-collapse">
-                            <thead>
-                                <tr class="bg-gray-200">
-                                    <th class="px-4 py-2 border">ชื่อสินค้า</th>
-                                    <th class="px-4 py-2 border">ราคาสินค้า</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($bookingDetail->booking->checkoutDetails as $checkoutDetail)
-                                <tr class="hover:bg-gray-100">
-                                    <td class="px-4 py-2 border">
-                                        {{ $checkoutDetail->productRoom->productroom_name }}
-                                    </td>
-                                    <td class="px-4 py-2 border">
-                                        {{ number_format($checkoutDetail->totalpriceroom, 2) }} บาท
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+
+                @if ($bookingDetail->booking->checkoutDetails->isNotEmpty())
+                <div class="bg-white rounded-lg shadow-md p-6 w-full">
+                    <div class="dropdown-header">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2 cursor-pointer">
+                            <i class="fas fa-money-bill-wave mr-2 text-green-500"></i>Charge Details
+                        </h2>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <table class="min-w-full table-auto border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="px-4 py-2 border">ชื่อสินค้า</th>
+                                        <th class="px-4 py-2 border">ราคาสินค้า</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($bookingDetail->booking->checkoutDetails as $checkoutDetail)
+                                    <tr class="hover:bg-gray-100">
+                                        <td class="px-4 py-2 border">
+                                            {{ $checkoutDetail->productRoom->productroom_name }}
+                                        </td>
+                                        <td class="px-4 py-2 border">
+                                            {{ number_format($checkoutDetail->totalpriceroom, 2) }} บาท
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                @else
+                <p class="text-center">ไม่มีข้อมูลค่าเสียหาย</p>
+                @endif
+
+
+
+
             </div>
-            @else
-            <p class="text-center">ไม่มีข้อมูลค่าเสียหาย</p>
-            @endif
-
-
-
-
         </div>
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropdownHeaders = document.querySelectorAll('.dropdown-header');
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const dropdownHeaders = document.querySelectorAll('.dropdown-header');
 
-            dropdownHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    const content = header.nextElementSibling;
+                dropdownHeaders.forEach(header => {
+                    header.addEventListener('click', function() {
+                        const content = header.nextElementSibling;
 
-                    // สลับการแสดงผลเนื้อหา
-                    content.classList.toggle('show'); // สลับ class 'show'
+                        // สลับการแสดงผลเนื้อหา
+                        content.classList.toggle('show'); // สลับ class 'show'
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
 </body>
 

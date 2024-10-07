@@ -69,27 +69,27 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('promotions') }}" id="Promotion">
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('promotions') }}" id="Promotion">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
                     </div>
                 </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
+                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('record') }}" id="Review">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-regular fa-envelope mr-1"></i>Review
+                        <i class="fa-solid fa-database mr-1"></i>Record
                     </div>
-                </a>
 
-                <!-- Logout -->
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
-                    </div>
-                </a>
-                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                    @csrf
-                </form>
+                    <!-- Logout -->
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
+                        <div class="mr-2 text-base flex items-center">
+                            <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                        </div>
+                    </a>
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                        @csrf
+                    </form>
             </div>
         </section>
 
@@ -111,7 +111,7 @@
                         <span class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มโปรโมชั่น</span>
                         <i class="fa-solid fa-circle-plus text-4xl text-gray-500 group-hover:text-gray-900"></i>
                     </button>
-                    
+
                 </div>
 
                 <!-- Table -->
@@ -148,34 +148,33 @@
                                         @method('DELETE')
                                         <button class="text-black hover:text-red-500 ml-4" type="submit"><i class="fa-solid fa-trash"></i></button>
                                     </form>
-                                </td>                                
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                
-                           
-            </section>
-        </div>
-    
-        <!-- Toast Notification -->
-        <div id="toast" class="toast bg-green-500 text-white fixed bottom-5 right-5 px-4 py-2 rounded hidden">
-            Promotion action was successful!
-        </div>
-    
-        <style>
-            .toast {
-                opacity: 0;
-                transition: opacity 0.5s ease;
-            }
-    
-            .toast.show {
-                opacity: 1;
-            }
-        </style>
-    
-    </body>
-    
-    </html>
-    
+
+
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast bg-green-500 text-white fixed bottom-5 right-5 px-4 py-2 rounded hidden">
+        Promotion action was successful!
+    </div>
+
+    <style>
+        .toast {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+
+</body>
+
+</html>
