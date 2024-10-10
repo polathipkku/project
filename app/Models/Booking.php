@@ -14,7 +14,9 @@ class Booking extends Model
 
     protected $fillable = [
         'user_id',
-        'room_id',
+        'room_quantity',
+        'promotion_id',
+        'total_cost',
     ];
 
     public function user()
@@ -38,8 +40,9 @@ class Booking extends Model
 
     public function roomservices()
     {
-        return $this->belongsToMany(Roomservice::class, 'roomservice_details');
+        return $this->hasMany(Roomservice::class);
     }
+
     public function review()
     {
         return $this->hasOne(Review::class);

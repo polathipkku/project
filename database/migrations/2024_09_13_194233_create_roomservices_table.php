@@ -15,11 +15,12 @@ class CreateRoomservicesTable extends Migration
     {
         Schema::create('roomservices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity');
+            $table->decimal('total_price', 10, 2);
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
@@ -33,4 +34,3 @@ class CreateRoomservicesTable extends Migration
         Schema::dropIfExists('roomservices');
     }
 }
-

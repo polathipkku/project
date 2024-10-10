@@ -21,11 +21,10 @@ class Booking_detail extends Model
         'occupancy_person',
         'occupancy_child',
         'occupancy_baby',
-        'total_cost',
         'room_type',
-        'room_quantity',
         'checkin_date',
         'checkout_date',
+        'extra_bed_count',
 
     ];
 

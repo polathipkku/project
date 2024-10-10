@@ -114,7 +114,7 @@
                         <input type="file" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="product_img" required>
                     </div>
                     <br>
-                    <div>
+                    <!-- <div>
                         <label for="product_type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ประเภทสินค้า</label>
                         <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="product_type_name" id="product_type" required>
                             <option value="" selected disabled>เลือกประเภทสินค้า</option>
@@ -125,9 +125,9 @@
                             <option value="{{ $product_type }}">{{ $product_type }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> -->
 
-                    <!-- <div class="room-group">
+                     <!-- <div class="room-group">
                         <label for="product_type">ประเภทสินค้า</label>
                         <div>
                             <select class="form-select" name="product_type_name" id="product_type" required>
@@ -140,7 +140,7 @@
                                 <option value="{{ $product_type }}">{{ $product_type }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> -->
                         <div>
                             <select class="form-select" name="product_type_name" id="product_type" required>
                                 <option value="" selected disabled>เลือกประเภทสินค้า</option>
@@ -148,7 +148,7 @@
                                 <option value="เครื่องนอน">เครื่องนอน</option>
                             </select>
                         </div>
-                    </div> -->
+                    </div> 
 
                     <br>
                     <div>

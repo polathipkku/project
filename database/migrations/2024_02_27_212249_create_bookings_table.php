@@ -18,8 +18,9 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('room_id')->nullable();
             $table->unsignedBigInteger('promotion_id')->nullable();
-            $table->decimal('total_cost', 10, 2)->nullable();
-
+            $table->integer('room_quantity');
+            $table->decimal('total_cost', 10, 2);
+            
             $table->timestamps();
             $table->softDeletes();
 

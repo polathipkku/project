@@ -560,7 +560,6 @@
                 if (startDate && endDate) {
                     fetch(`/check-availability?startDate=${startDate}&endDate=${endDate}&adultCount=${adultCount}&childCount=${childCount}&babyCount=${babyCount}&numberOfRooms=${numberOfRooms}`)
                         .then(response => response.json())
-                        // Inside your fetch promise
                         .then(data => {
                             var roomAvailabilityDiv = document.querySelector('#room-availability .flex-1');
                             roomAvailabilityDiv.innerHTML = '';
@@ -574,7 +573,7 @@
                             roomOptionsContainer.className = 'flex flex-col items-center gap-4';
 
                             // Create room options
-                            data.roomOptions.forEach((option, index) => {
+                            data.roomOptions.forEach((option) => {
                                 if (option.type === 'with_extra_bed' && availableExtraBeds <= 0) {
                                     return; // Skip this option if no extra beds are available
                                 }
@@ -586,20 +585,19 @@
                             roomAvailabilityDiv.appendChild(roomOptionsContainer);
 
                             // Display no availability message if needed
-                            if (totalRooms < data.roomOptions[0].rooms) {
+                            if (totalRooms === 0 || (data.roomOptions.length > 0 && totalRooms < data.roomOptions[0].rooms)) {
                                 document.getElementById('room-availability').style.display = 'none';
                                 document.getElementById('no-availability').style.display = 'flex';
                                 document.getElementById('no-availability').innerHTML = `
-            <div class="text-center">
-                <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
-            </div>
-        `;
+                        <div class="text-center">
+                            <h2 class="text-2xl font-semibold text-red-600">ห้องว่างไม่เพียงพอต่อความต้องการของลูกค้า</h2>
+                        </div>
+                    `;
                             } else {
                                 document.getElementById('room-availability').style.display = '';
                                 document.getElementById('no-availability').style.display = 'none';
                             }
                         })
-
                         .catch(error => {
                             console.error('Error fetching available rooms:', error);
                         });
@@ -617,23 +615,23 @@
                 card.style.marginTop = '10px';
 
                 var content = `
-    <div class="flex-grow">
-        <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B; font-size: 16px;">
-            ${option.type === 'normal' ? 'ตัวเลือกที่1' : 'ตัวเลือกที่2'}
+        <div class="flex-grow">
+            <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B; font-size: 16px;">
+                ${option.type === 'normal' ? 'ตัวเลือกที่1' : 'ตัวเลือกที่2'}
+            </div>
+            <div class="mt-3"> <!-- ลด margin-top -->
+                <h3 class="text-m font-bold">จำนวนห้องพัก <span class="font-semibold">${option.rooms}</span> ห้องพัก</h3>
+                ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span> เตียงเสริม</h3>` : ''}
+                <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
+            </div>
         </div>
-        <div class="mt-3"> <!-- ลด margin-top -->
-            <h3 class="text-m font-bold">จำนวนห้องพัก <span class="font-semibold">${option.rooms}</span> ห้องพัก</h3>
-            ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span> เตียงเสริม</h3>` : ''}
-            <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
+        <div class="flex justify-center mt-2"> <!-- ลด margin-top ของปุ่ม -->
+            <a id="reserve-button-${option.type}" 
+               href="#" 
+               class="inline-block bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors text-xs w-24 py-1 mb-2">           
+               เลือก
+            </a>
         </div>
-    </div>
-    <div class="flex justify-center mt-2"> <!-- ลด margin-top ของปุ่ม -->
-        <a id="reserve-button-${option.type}" 
-           href="#" 
-           class="inline-block bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors text-xs w-24 py-1 mb-2">           
-           เลือก
-        </a>
-    </div>
     `;
 
                 card.innerHTML = content;
