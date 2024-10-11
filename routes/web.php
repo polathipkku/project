@@ -116,6 +116,8 @@ Route::post('/damaged-items', [BookingController::class, 'submitDamagedItems'])-
 
 Route::post('/addBooking/{id}', [BookingController::class, 'addBooking'])->name('addBooking');
 Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');
+Route::get('/pending-room-selection', [BookingController::class, 'showPendingRoomSelection'])->name('bookings.showPendingRoomSelection');
+
 Route::post('/emaddBooking/{id}', [BookingController::class, 'emaddBooking'])->name('emaddBooking');
 Route::post('/em_reserve/{id}', [BookingController::class, 'emaddBooking']);
 Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('em_reserve');

@@ -109,19 +109,25 @@
                         $groupedBookings = [];
                         foreach ($bookings as $booking) {
                         foreach ($booking->bookingDetails->where('room_id', NULL) as $detail) {
-                        $groupedBookings[$detail->booking_name][] = $detail; // เปลี่ยนจาก booking_id เป็น booking_name
+                        $groupedBookings[$detail->booking_id][] = $detail;
                         }
                         }
                         @endphp
 
-                        @foreach($groupedBookings as $bookingName => $details)
-                        <tr class="border-b border-gray-200 cursor-pointer" onclick="toggleDropdown('{{ $bookingName }}')">
+                        @foreach($groupedBookings as $bookingId => $details)
+                        <tr class="border-b border-gray-200 cursor-pointer" onclick="toggleDropdown('{{ $bookingId }}')">
                             <td class="px-4 py-2">
-                                <span class="font-semibold">{{ $bookingName }}</span>
+                                <span class="font-semibold">{{ $details[0]->booking_name }}</span>
+
+                                @if(count($details) == 1 && $details[0]->extra_bed_count > 0)
+                                <span class="text-red-500 text-sm ">มีเตียงเสริม</span>
+                                @endif
+
                                 @if(count($details) > 1)
-                                <span class="text-blue-500"> ({{ count($details) }} ห้อง)</span>
+                                <span class="text-blue-500 text-sm "> ({{ count($details) }} ห้อง)</span>
                                 @endif
                             </td>
+
                             <td class="px-4 py-2">
                                 {{ $details[0]->checkin_date }}
                             </td>
@@ -151,8 +157,9 @@
                             </td>
                         </tr>
 
+                        <!-- หากมีมากกว่า 1 รายการจอง จะแสดง dropdown -->
                         @if(count($details) > 1)
-                        <tr id="dropdown-{{ $bookingName }}" class="hidden">
+                        <tr id="dropdown-{{ $bookingId }}" class="hidden">
                             <td colspan="5" class="bg-gray-100 p-4 border border-gray-300">
                                 <table class="w-full border-collapse">
                                     <thead>
@@ -166,7 +173,12 @@
                                     <tbody>
                                         @foreach($details as $index => $detail)
                                         <tr class="text-center border-b border-gray-300">
-                                            <td class="px-4 py-2">{{ $index + 1 }}</td>
+                                            <td class="px-4 py-2 relative">
+                                                <span class="inline-block">{{ $index + 1 }}</span>
+                                                @if($detail->extra_bed_count > 0)
+                                                <span class="absolute right-6 text-red-500 text-sm mt-0.5">มีเตียงเสริม</span>
+                                                @endif
+                                            </td>
                                             <td class="px-4 py-2">{{ $detail->checkin_date }}</td>
                                             <td class="px-4 py-2">
                                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -193,6 +205,7 @@
                         @endforeach
                         @endif
                     </tbody>
+
                 </table>
             </div>
         </section>

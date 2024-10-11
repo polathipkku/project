@@ -89,16 +89,11 @@
 
         <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); ">
             <div class="max-w-screen-xl mx-auto py-10 ">
-                <div class="px-2 p-2  flex justify-between items-center">
+                <div class="px-2 p-2 flex justify-between items-center mb-4">
                     <h1 class="text-4xl mb-10 max-xl:px-4">ห้อง</h1>
-                    <!-- <button class="relative pr-12 mb-4 group" onclick="window.location.href ='Room_add.html'">
-                        <span
-                            class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มห้อง</span>
-                        <i class="fa-solid fa-circle-plus text-4xl text-gray-500 group-hover:text-gray-900"></i>
-                    </button> -->
-
-
-
+                    <button id="openCalendarModal" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <i class="fa-solid fa-calendar-days mr-2"></i>ตรวจสอบการจอง
+                    </button>
                 </div>
                 <table class="w-full border-collapse">
                     <thead>
@@ -161,11 +156,6 @@
                                 </form>
                                 @endif
                             </td>
-
-
-
-
-
                             <td class="px-4 py-2">
                                 <a href="/maintenance/{{ $room->id }}" class="text-black hover:text-blue-500">
                                     <i class="fa-solid fa-tools"></i>
@@ -175,7 +165,61 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
 
+            <!-- Calendar Modal -->
+            <div id="calendarModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                เลือกวันที่ต้องการตรวจสอบ
+                            </h3>
+                            <div class="mt-2">
+                                <div class="mb-4">
+                                    <label for="checkin-date" class="block text-sm font-medium text-gray-700">วันเช็คอิน</label>
+                                    <input type="date" id="checkin-date" name="checkin_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="checkout-date" class="block text-sm font-medium text-gray-700">วันเช็คเอาท์</label>
+                                    <input type="date" id="checkout-date" name="checkout_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button type="button" id="checkAvailability" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                ตรวจสอบการจองทั้งหมด
+                            </button>
+                            <button type="button" id="closeCalendarModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                ยกเลิก
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="result-modal-title">
+                                ผลการตรวจสอบห้องว่าง
+                            </h3>
+                            <div id="bookingResults" class="mt-6">
+                                <!-- Results will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button type="button" id="closeResultModal" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                ปิด
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -227,8 +271,96 @@
             </div>
     </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const openCalendarModal = document.getElementById('openCalendarModal');
+            const calendarModal = document.getElementById('calendarModal');
+            const closeCalendarModal = document.getElementById('closeCalendarModal');
+            const checkAvailability = document.getElementById('checkAvailability');
+            const resultModal = document.getElementById('resultModal');
+            const closeResultModal = document.getElementById('closeResultModal');
+            const checkinDateInput = document.getElementById('checkin-date');
+            const checkoutDateInput = document.getElementById('checkout-date');
 
+            openCalendarModal.addEventListener('click', () => {
+                calendarModal.classList.remove('hidden');
+            });
 
+            closeCalendarModal.addEventListener('click', () => {
+                calendarModal.classList.add('hidden');
+            });
+
+            closeResultModal.addEventListener('click', () => {
+                resultModal.classList.add('hidden');
+            });
+
+            checkAvailability.addEventListener('click', () => {
+                const checkinDate = checkinDateInput.value;
+                const checkoutDate = checkoutDateInput.value;
+
+                if (!checkinDate || !checkoutDate) {
+                    alert('Please select both check-in and check-out dates.');
+                    return;
+                }
+
+                // Make an AJAX request to the server
+                fetch(`/pending-room-selection?checkin_date=${checkinDate}&checkout_date=${checkoutDate}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const bookingResults = document.getElementById('bookingResults');
+                        bookingResults.innerHTML = ''; // Clear previous results
+
+                        // Display the number of bookings
+                        const bookingCount = data.pendingBookings.length;
+                        const bookingCountMessage = document.createElement('p');
+                        bookingCountMessage.className = 'text-center text-sm font-light mb-2';
+                        bookingCountMessage.innerText = `จำนวนการจอง: ${bookingCount} การจองในช่วงเวลา ${checkinDate} ถึง ${checkoutDate}`;
+                        bookingResults.appendChild(bookingCountMessage);
+
+                        if (bookingCount > 0) {
+                            const table = document.createElement('table');
+                            table.className = 'min-w-full bg-white border border-gray-200 shadow-md rounded-lg';
+                            table.innerHTML = `
+                    <table class="table-auto border-collapse w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th class="px-2 py-1 border-b text-sm">No.</th>
+                                <th class="px-2 py-1 border-b text-sm">ชื่อ</th>
+                                <th class="px-2 py-1 border-b text-sm">Check-in Date</th>
+                                <th class="px-2 py-1 border-b text-sm">Check-out Date</th>
+                                <th class="px-2 py-1 border-b text-sm">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.pendingBookings.map((booking, index) => `
+                            <tr class="bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                                 <td class="px-1 py-1 border-b text-center text-xs font-medium">${index + 1}</td>
+                                 <td class="px-2 py-1 border-b text-sm">${booking.booking_name}</td>
+                                 <td class="px-2 py-1 border-b text-sm">${booking.checkin_date}</td>
+                                 <td class="px-2 py-1 border-b text-sm">${booking.checkout_date}</td>
+                                 <td class="px-2 py-1 border-b text-sm">${booking.booking_status}</td>
+                            </tr>
+
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                            bookingResults.appendChild(table);
+                        } else {
+                            bookingResults.innerHTML = '<p class="text-center text-lg font-semibold text-red-500">ไม่มีการจองให้ช่วงเวลาดังกล่าว.</p>';
+                        }
+
+                        calendarModal.classList.add('hidden');
+                        resultModal.classList.remove('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while fetching the booking data.');
+                    });
+            });
+
+        });
+    </script>
     </div>
 </body>
 

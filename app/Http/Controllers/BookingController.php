@@ -30,8 +30,9 @@ class BookingController extends Controller
     public function emroom()
     {
         $rooms = Room::all();
-        return view('employee.emroom', compact('rooms',));
+        return view('employee.emroom', compact('rooms'));
     }
+
     public function t()
     {
         $rooms = Room::all();
@@ -159,7 +160,6 @@ class BookingController extends Controller
             'extra_bed_count' => 'nullable|integer|min:0',
         ]);
 
-
         // Room availability check remains the same
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
         $availableRooms = [];
@@ -174,17 +174,18 @@ class BookingController extends Controller
             return redirect()->route('home')->with('error', 'ขออภัย, ไม่มีห้องว่างเพียงพอต่อความต้องการของลูกค้า');
         }
 
-
         $checkinDate = new \DateTime($request->checkin_date);
         $checkoutDate = new \DateTime($request->checkout_date);
         $interval = $checkinDate->diff($checkoutDate);
         $days = $interval->days;
         $roomPricePerDay = 500; // Room price per day
         $totalCost = $days * $roomPricePerDay * $request->number_of_rooms;
+
         $booking = new Booking();
         $booking->user_id = auth()->check() ? auth()->user()->id : null;
         $booking->room_quantity = $request->number_of_rooms;
 
+        // Promo code handling remains the same
         if (!empty($request->promo_code)) {
             $promotion = Promotion::where('promo_code', $request->promo_code)
                 ->where('start_date', '<=', now())
@@ -215,7 +216,18 @@ class BookingController extends Controller
         $booking->save();
 
         // Insert into booking_details table
-        foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $room) {
+        $extraBedCount = $request->extra_bed_count ?? 0;
+        $extraBedAssigned = false;
+
+        foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $index => $room) {
+            $insertExtraBed = 0;
+
+            // Assign extra bed only to the first room
+            if (!$extraBedAssigned && $extraBedCount > 0 && $index == 0) {
+                $insertExtraBed = $extraBedCount;
+                $extraBedAssigned = true;
+            }
+
             DB::table('booking_details')->insert([
                 'booking_id' => $booking->id,
                 'room_id' => null,
@@ -230,19 +242,21 @@ class BookingController extends Controller
                 'occupancy_baby' => $request->occupancy_baby,
                 'checkin_date' => $request->checkin_date,
                 'checkout_date' => $request->checkout_date,
-                'extra_bed_count' => $request->extra_bed_count ?? 0,
+                'extra_bed_count' => $insertExtraBed,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
-        if ($request->extra_bed_count == 1) {
+
+        // Handle extra bed as a room service (only for the first room)
+        if ($extraBedAssigned) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
                 $roomservice = new Roomservice();
                 $roomservice->product_id = $extraBedProduct->id;
                 $roomservice->booking_id = $booking->id;
-                $roomservice->quantity = $request->extra_bed_count;
-                $roomservice->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                $roomservice->quantity = $extraBedCount;
+                $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
                 $roomservice->save();
 
                 // Update the total cost of the booking
@@ -256,6 +270,7 @@ class BookingController extends Controller
 
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
     public function checkAvailability(Request $request)
     {
@@ -334,10 +349,9 @@ class BookingController extends Controller
             'type' => 'normal',
             'rooms' => $numberOfRooms,
             'extraBeds' => 0,
-            'price' => $numberOfRooms * 500,  // สมมติว่าราคา 500 ต่อห้อง
+            'price' => $numberOfRooms * 500,
         ];
 
-        // ตัวเลือกห้องพักที่มีเตียงเสริม
         $extraBedCount = ($equivalentAdultCount % 2 === 0) ? 0 : 1;
         if ($extraBedCount > 0 && $numberOfRooms > 1 && $availableExtraBeds > 0) {
             $roomOptions[] = [
@@ -374,6 +388,39 @@ class BookingController extends Controller
             ->count();
 
         return $existingBookings === 0;
+    }
+
+    public function showPendingRoomSelection(Request $request)
+    {
+        $request->validate([
+            'checkin_date' => 'required|date',
+            'checkout_date' => 'required|date|after_or_equal:checkin_date',
+        ]);
+
+        $checkinDate = $request->input('checkin_date');
+        $checkoutDate = $request->input('checkout_date');
+
+        $pendingBookings = Booking_detail::where('booking_status', 'รอเลือกห้อง')
+            ->where(function ($query) use ($checkinDate, $checkoutDate) {
+                $query->where(function ($q) use ($checkinDate, $checkoutDate) {
+                    $q->where('checkin_date', '>=', $checkinDate)
+                        ->where('checkin_date', '<', $checkoutDate);
+                })
+                    ->orWhere(function ($q) use ($checkinDate, $checkoutDate) {
+                        $q->where('checkout_date', '>', $checkinDate)
+                            ->where('checkout_date', '<=', $checkoutDate);
+                    })
+                    ->orWhere(function ($q) use ($checkinDate, $checkoutDate) {
+                        $q->where('checkin_date', '<=', $checkinDate)
+                            ->where('checkout_date', '>=', $checkoutDate);
+                    });
+            })
+            ->get();
+
+        return response()->json([
+            'pendingBookings' => $pendingBookings,
+            'bookingCount' => $pendingBookings->count(), // ส่งจำนวนการจอง
+        ]);
     }
 
 
