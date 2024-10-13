@@ -134,7 +134,6 @@ class BookingController extends Controller
             'booking.checkout.user',
             'booking.checkoutDetails',
             'booking.promotion',
-            'checkoutExtends'
         ])->find($bookingdetail_id);
 
         if (!$bookingDetail) {
