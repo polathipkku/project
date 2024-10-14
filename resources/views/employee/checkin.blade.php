@@ -269,6 +269,11 @@
                         <label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>
                         <input id="postcode" name="postcode" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
                     </div>
+                    
+                    <div class="mb-4">
+                        <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
+                        <input type="number" id="extra_bed_count" name="extra_bed_count" min="0" value="0" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จำนวนเตียงเสริม">
+                    </div>
 
                     <div class="flex justify-end">
                         <button type="button" onclick="closeModal()" class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">ยกเลิก</button>

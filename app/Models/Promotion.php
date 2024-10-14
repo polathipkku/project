@@ -13,14 +13,18 @@ class Promotion extends Model
     use SoftDeletes;
     protected $fillable = [
         'campaign_name',
-        'discount_percentage',
+        'discount_value',
         'max_usage_per_code',
         'promo_code',
+        'type',
+        'minimum_nights',
+        'minimum_booking_amount',
         'usage_count',
+        'promotion_status',
         'start_date',
         'end_date',
     ];
-    protected $dates = ['start_date', 'end_date']; 
+    protected $dates = ['start_date', 'end_date'];
 
 
     public function bookings()
@@ -31,5 +35,4 @@ class Promotion extends Model
     {
         return strtoupper(Str::random($length));
     }
-    
 }

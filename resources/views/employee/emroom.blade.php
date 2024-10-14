@@ -116,11 +116,12 @@
                             <input type="hidden" id="totalDay" name="totalDay">
                         </div>
 
-                        <!-- Check availability button -->
-                        <button id="checkAvailability" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <!-- Check availability button with self-center to align vertically -->
+                        <button id="checkAvailability" class="self-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             <i class="fa-solid fa-calendar-days mr-2"></i>ตรวจสอบการจอง
                         </button>
                     </div>
+
                 </div>
                 <table class="w-full border-collapse">
                     <thead>
@@ -197,21 +198,26 @@
                 <div id="bookingResults" class="mt-10 hidden">
                     <h2 class="text-2xl font-bold mb-4">ข้อมูลการจอง</h2>
                     <p id="bookingCount" class="mb-4"></p>
-                    <table class="w-full border-collapse">
-                        <thead>
-                            <tr class="bg-gray-200">
-                                <th class="px-4 py-2 text-left">No.</th>
-                                <th class="px-4 py-2 text-left">ชื่อ</th>
-                                <th class="px-4 py-2 text-left">Check-in Date</th>
-                                <th class="px-4 py-2 text-left">Check-out Date</th>
-                                <th class="px-4 py-2 text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookingTableBody">
-                            <!-- Booking rows will be inserted here -->
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border border-gray-300 rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-gray-200 text-gray-700">
+                                    <th class="px-4 py-2 text-center font-semibold">No.</th>
+                                    <th class="px-4 py-2 text-left font-semibold">ชื่อ</th>
+                                    <th class="px-4 py-2 text-left font-semibold">วันที่ลูกค้าเลือกเช็คอิน</th>
+                                    <th class="px-4 py-2 text-left font-semibold">วันที่ลูกค้าเลือกเช็คเอาท์</th>
+                                    <th class="px-4 py-2 text-left font-semibold">สถานะ</th>
+                                </tr>
+                            </thead>
+
+                            <!-- Table Body -->
+                            <tbody id="bookingTableBody">
+                                <!-- Rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
 
             <section id="toast" class="hidden">
@@ -341,16 +347,22 @@
                         // Add new booking rows
                         data.pendingBookings.forEach((booking, index) => {
                             const row = document.createElement('tr');
-                            row.className = 'bg-gray-100 hover:bg-gray-200 transition-colors duration-200';
+                            row.className = 'bg-white border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200';
                             row.innerHTML = `
-                            <td class="px-4 py-2 text-center">${index + 1}</td>
-                            <td class="px-4 py-2">${booking.booking_name}</td>
-                            <td class="px-4 py-2">${booking.checkin_date}</td>
-                            <td class="px-4 py-2">${booking.checkout_date}</td>
-                            <td class="px-4 py-2">${booking.booking_status}</td>
-                        `;
+        <td class="px-4 py-2 text-center">${index + 1}</td>
+        <td class="px-4 py-2 text-left">${booking.booking_name}</td>
+        <td class="px-4 py-2 text-left">${booking.checkin_date}</td>
+        <td class="px-4 py-2 text-left">${booking.checkout_date}</td>
+        <td class="px-4 py-2 text-left">
+            <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                <span class="w-2 h-2 bg-yellow-300 rounded-full mr-1"></span>
+                ${booking.booking_status}
+            </span>
+        </td>`;
                             bookingTableBody.appendChild(row);
                         });
+
+
 
                         // Show the booking results section
                         bookingResults.classList.remove('hidden');
@@ -362,6 +374,7 @@
             });
         });
     </script>
+    
     </div>
 </body>
 

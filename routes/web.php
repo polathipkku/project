@@ -99,7 +99,7 @@ Route::post('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 // รับ booking_id
 Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
-
+Route::post('/update-payment-status', [PaymentController::class, 'updatePaymentStatus']);
 
 Route::get('/checkin', [BookingController::class, 'checkinuser'])->name('checkin');
 Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('selectRoom');
@@ -181,6 +181,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/promotions/edit/{promotion}', [PromotionController::class, 'edit'])->name('editpromotion');
     Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
     Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+    Route::post('/promotions/{id}/toggle-status', [PromotionController::class, 'toggleStatus'])->name('promotions.toggleStatus');
     Route::get('/record_detail/{id}', [BookingController::class, 'record_detail'])->name('record_detail');
     Route::get('/record', [BookingController::class, 'record'])->name('record');
 

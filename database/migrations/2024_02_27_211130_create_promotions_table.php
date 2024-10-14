@@ -17,8 +17,12 @@ class CreatePromotionsTable extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('campaign_name', 255);
             $table->string('promo_code', 255)->index();
-            $table->integer('discount_percentage')->default(0);
+            $table->integer('discount_value')->default(0);
             $table->integer('max_usage_per_code')->nullable();
+            $table->enum('type', ['fix', 'percentage'])->default('percentage'); 
+            $table->integer('minimum_nights')->nullable();
+            $table->decimal('minimum_booking_amount', 10, 2)->nullable();
+            $table->boolean('promotion_status')->default(1);            
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
@@ -26,6 +30,7 @@ class CreatePromotionsTable extends Migration
 
             $table->integer('usage_count')->default(0);
         });
+
     }
 
 

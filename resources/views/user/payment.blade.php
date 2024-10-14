@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thunthree Payment</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -29,25 +31,25 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
-                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $booking->booking_name }}</p>
-                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $booking->occupancy_person }}</p>
-                <p><strong>เบอร์โทรศัพท์:</strong> {{ $booking->phone }}</p>
+                <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $bookingDetail->booking_name }}</p>
+                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $bookingDetail->occupancy_person }}</p>
+                <p><strong>เบอร์โทรศัพท์:</strong> {{ $bookingDetail->phone }}</p>
 
                 <p class="mr-4"><strong>เช็คอิน:</strong>
-                    {{ \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y') }}
+                    {{ \Carbon\Carbon::parse($bookingDetail->checkin_date)->format('d-m-Y') }}
                 </p>
                 <p><strong>เช็คเอาท์:</strong>
-                    {{ \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y') }}
+                    {{ \Carbon\Carbon::parse($bookingDetail->checkout_date)->format('d-m-Y') }}
                 </p>
                 <p><strong>จำนวนวันที่เข้าพัก:</strong>
-                    {{ \Carbon\Carbon::parse($booking->checkin_date)->diffInDays(\Carbon\Carbon::parse($booking->checkout_date)) }}
+                    {{ \Carbon\Carbon::parse($bookingDetail->checkin_date)->diffInDays(\Carbon\Carbon::parse($bookingDetail->checkout_date)) }}
                     วัน
                 </p>
             </div>
 
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
-                <p><strong>ค่าใช้จ่ายทั้งหมด:</strong> {{ $booking->total_cost }} บาท</p>
+                <p><strong>ค่าใช้จ่ายทั้งหมด:</strong> {{ $bookingDetail->booking->total_cost }} บาท</p>
                 <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
                 <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
             </div>
@@ -56,7 +58,7 @@
         <div class="mt-6">
             <h2 class="text-lg font-semibold mb-4">วิธีชำระเงินด้วยรหัส QR Code</h2>
             <div class="flex justify-center">
-                <div id="qrcode" class=""></div>
+                <div id="qrcode"></div>
             </div>
             <ol class="mt-4 list-decimal list-inside">
                 <li>เปิดแอพพลิเคชั่นของธนาคารบนอุปกรณ์มือถือที่ต้องการใช้งาน</li>
@@ -65,9 +67,10 @@
                 <li>ยืนยันการชำระเงินและรอใบยืนยันการจองไปยังอีเมลที่ท่านใช้ในการจอง</li>
             </ol>
         </div>
+
         <form id="payment-form" action="/create-payment-intent" method="POST" class="mt-4">
             @csrf
-            <input type="hidden" id="booking_id" name="booking_id" value="{{ $booking->booking_id }}">
+            <input type="hidden" id="booking_id" name="booking_id" value="{{ $bookingDetail->booking_id }}">
             <div class="flex space-x-4 float-right">
                 <button id="pay-button" type="button"
                     class="w-54 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
@@ -75,7 +78,7 @@
                 </button>
                 <button id="cancel-button" type="button"
                     class="w-54 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-                    onclick="cancelBooking('{{ $booking->booking_id }}')">
+                    onclick="cancelBooking('{{ $bookingDetail->booking_id }}')">
                     ยกเลิกการชำระเงิน
                 </button>
             </div>
@@ -85,28 +88,30 @@
     <script>
         const stripe = Stripe("{{ env('STRIPE_KEY') }}");
         let timer;
-    
+
         document.getElementById('pay-button').addEventListener('click', async function() {
             const bookingId = document.getElementById('booking_id').value;
-    
+
             // Start countdown timer
             let countdown = 60;
-            timer = setInterval(updateTimer, 1000);
-    
+            timer = setInterval(updateTimer, 100);
+
             function updateTimer() {
                 countdown--;
                 const minutes = Math.floor(countdown / 60);
                 const seconds = countdown % 60;
                 document.getElementById('countdown').textContent =
                     `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    
+
                 if (countdown <= 0) {
                     clearInterval(timer);
                     document.getElementById('countdown').textContent = 'หมดเวลา';
                     document.getElementById('pay-button').style.display = 'none';
+
+                    cancelBooking(bookingId);
                 }
             }
-    
+
             try {
                 const response = await fetch('/create-payment-intent', {
                     method: 'POST',
@@ -119,63 +124,80 @@
                         booking_id: bookingId
                     })
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-    
+
                 const data = await response.json();
                 const clientSecret = data.client_secret;
-    
+
                 // Create Payment Method
-                const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
+                const {
+                    paymentMethod,
+                    error: paymentMethodError
+                } = await stripe.createPaymentMethod({
                     type: 'promptpay',
                     billing_details: {
                         email: '{{ $userEmail }}',
-                        name: '{{ $booking->booking_name }}',
-                        phone: '{{ $booking->phone }}',
+                        name: '{{ $bookingDetail->booking_name }}',
+                        phone: '{{ $bookingDetail->phone }}',
                     }
                 });
-    
+
                 if (paymentMethodError) {
                     console.error(paymentMethodError.message);
                     return;
                 }
-    
+
                 // Confirm Payment through PromptPay
                 const result = await stripe.confirmPromptPayPayment(clientSecret, {
                     payment_method: paymentMethod.id
                 });
-    
+
                 // Create QR code for PromptPay
                 new QRCode(document.getElementById('qrcode'), {
                     text: data.client_secret,
                     width: 128,
                     height: 128
                 });
-    
+
                 document.getElementById('pay-button').style.display = 'none';
-    
+
                 // Confirm Payment through Stripe
                 stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
                     if (result.error) {
                         console.log(result.error.message);
                     } else {
-                        document.getElementById("qrcode").innerHTML =
-                            '<p>ชำระเงินสำเร็จแล้ว</p>';
-                        
-                        // Redirect to home after 3 seconds
-                        setTimeout(() => {
-                            window.location.href = '/'; // Change this to your home URL
-                        }, 3000); // 3000 milliseconds = 3 seconds
+                        fetch('/update-payment-status', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    booking_id: bookingId,
+                                    status: 'succeeded'
+                                })
+                            }).then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById("qrcode").innerHTML =
+                                        '<p>ชำระเงินสำเร็จแล้ว</p>';
+                                    setTimeout(() => {
+                                        window.location.href = '/';
+                                    }, 3000);
+                                }
+                            });
                     }
                 });
-    
+
             } catch (error) {
                 console.error('Error:', error);
             }
         });
-    
+
         function cancelBooking(bookingId) {
             fetch('/cancel-booking', {
                     method: 'POST',
@@ -184,7 +206,8 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
-                        booking_id: bookingId
+                        booking_id: bookingId,
+                        status: 'cancelled'
                     })
                 })
                 .then(response => response.json())
