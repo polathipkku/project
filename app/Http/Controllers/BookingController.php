@@ -40,23 +40,36 @@ class BookingController extends Controller
     }
     public function showReserveForm(Request $request)
     {
-        $extra_bed_count = $request->input('extra_bed_count', 0); // ค่าเริ่มต้นเป็น 0 ถ้าไม่ส่งมา
+        $extra_bed_count = $request->input('extra_bed_count', 0);
         $checkin_date = $request->input('checkin_date');
         $checkout_date = $request->input('checkout_date');
         $number_of_rooms = $request->input('number_of_rooms');
-        $number_of_guests = $request->input('number_of_guests', 0);
+        $occupancy_person = $request->input('number_of_guests', 0);
         $occupancy_child = $request->input('occupancy_child', 0);
         $occupancy_baby = $request->input('occupancy_baby', 0);
 
-        return view('user.reserve', compact('checkin_date', 'checkout_date', 'number_of_rooms', 'extra_bed_count', 'number_of_guests', 'occupancy_child', 'occupancy_baby'));
+        return view('user.reserve', compact('checkin_date', 'checkout_date', 'number_of_rooms', 'extra_bed_count', 'occupancy_person', 'occupancy_child', 'occupancy_baby'));
     }
 
 
-    public function em_reserve($id)
+
+    public function em_reserve(Request $request, $id)
     {
         $rooms = Room::find($id);
-        return view('employee.em_reserve', compact('rooms'));
+
+        // รับค่าพารามิเตอร์จาก URL
+        $checkinDate = $request->query('checkin_date');
+        $checkoutDate = $request->query('checkout_date');
+
+        // ตรวจสอบว่าค่าพารามิเตอร์ถูกต้องหรือไม่
+        if (is_null($checkinDate) || is_null($checkoutDate)) {
+            return redirect()->back()->withErrors('Invalid check-in or check-out date.');
+        }
+
+        return view('employee.em_reserve', compact('rooms', 'checkinDate', 'checkoutDate'));
     }
+
+
 
     public function reservation()
     {
@@ -255,7 +268,7 @@ class BookingController extends Controller
                 'bookingto_phone' => $request->bookingto_phone,
                 'booking_status' => 'รอเลือกห้อง',
                 'room_type' => 'ห้องพักค้างคืน',
-                'occupancy_person' => $request->occupancy_person,
+                'occupancy_person' => $request->number_of_guests,
                 'occupancy_child' => $request->occupancy_child,
                 'occupancy_baby' => $request->occupancy_baby,
                 'checkin_date' => $request->checkin_date,
@@ -266,7 +279,6 @@ class BookingController extends Controller
             ]);
         }
 
-        // Handle extra bed as a room service (only for the first room)
         if ($extraBedAssigned) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
@@ -277,10 +289,8 @@ class BookingController extends Controller
                 $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
                 $roomservice->save();
 
-                // Update the total cost of the booking
                 $totalCost += $roomservice->total_price;
 
-                // Update the total cost in the bookings table
                 $booking->total_cost = $totalCost;
                 $booking->save();
             }
@@ -302,12 +312,23 @@ class BookingController extends Controller
         // คำนวณจำนวนคนเทียบเท่า
         $equivalentAdultCount = $adultCount + floor($childCount / 2) + floor($babyCount / 3);
 
-        // จำนวนห้องที่ต้องการ
+        // เพิ่มเงื่อนไขใหม่: ถ้าเด็กและเด็กเล็กรวมกันถึง 4 คน ให้นับเป็นผู้ใหญ่ 2 คน
+        if ($childCount + $babyCount >= 4) {
+            $equivalentAdultCount += 2; // เพิ่มผู้ใหญ่ 2 คน
+        }
+
+        // จำนวนผู้เข้าพักทั้งหมด
+        $totalOccupants = $adultCount + $childCount + $babyCount;
+
+        // จำนวนห้องที่ต้องการ (ต้องไม่เกิน 4 คนต่อห้อง)
         if ($requestedRooms > 0) {
             $numberOfRooms = max($requestedRooms, ceil($equivalentAdultCount / 2));
         } else {
             $numberOfRooms = ceil($equivalentAdultCount / 2);
         }
+
+        // คำนวณจำนวนห้องที่จำเป็นตามจำนวนผู้เข้าพัก (ห้องละไม่เกิน 4 คน)
+        $numberOfRooms = max($numberOfRooms, ceil($totalOccupants / 4));
 
         // ห้องที่ถูกจองในช่วงวันที่เลือก
         $bookedRooms = Booking_detail::whereIn('booking_status', ['รอชำระเงิน', 'รอเข้าพัก', 'เช็คอินแล้ว', 'รอทำความสะอาด'])
@@ -389,6 +410,8 @@ class BookingController extends Controller
         ]);
     }
 
+
+
     private function isRoomAvailable($room, $checkinDate, $checkoutDate)
     {
         if ($room->room_status !== 'พร้อมให้บริการ') {
@@ -441,8 +464,6 @@ class BookingController extends Controller
         ]);
     }
 
-
-
     public function emaddBooking(Request $request, $id)
     {
         $request->validate([
@@ -452,6 +473,13 @@ class BookingController extends Controller
             'checkin_date' => 'required|date',
             'checkout_date' => 'required|date|after:checkin_date',
             'room_type' => 'required|string',
+            'id_card' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'sub_district' => 'required|string|max:100',
+            'province' => 'required|string|max:100',
+            'district' => 'required|string|max:100',
+            'postcode' => 'required|string|max:10',
+            'extra_bed_count' => 'nullable|integer|min:0', // Add validation for extra beds
         ]);
 
         $room = Room::find($id);
@@ -495,11 +523,47 @@ class BookingController extends Controller
         $bookingDetail->checkin_date = $request->checkin_date;
         $bookingDetail->checkout_date = $request->checkout_date;
         $bookingDetail->room_type = $request->room_type;
-        $bookingDetail->booking_status = $request->booking_status;
+        $bookingDetail->booking_status = 'เช็คอินแล้ว';
         $bookingDetail->save();
+
+        // Check for extra beds
+        if ($request->extra_bed_count > 0) {
+            $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
+            if ($extraBedProduct) {
+                $roomservice = new Roomservice();
+                $roomservice->product_id = $extraBedProduct->id;
+                $roomservice->booking_id = $booking->id;
+                $roomservice->quantity = $request->extra_bed_count;
+                $roomservice->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                $roomservice->save();
+
+                // Add extra bed cost to total cost
+                $totalCost += $roomservice->total_price;
+
+                // Update total cost in booking
+                $booking->total_cost = $totalCost;
+                $booking->save();
+            }
+        }
+
+        // Save check-in information
+        $checkin = new Checkin();
+        $checkin->booking_id = $booking->id;
+        $checkin->checked_in_by = auth()->user()->id;
+        $checkin->checkin = now();
+        $checkin->name = $request->booking_name;
+        $checkin->phone = $request->phone;
+        $checkin->id_card = $request->id_card;
+        $checkin->address = $request->address;
+        $checkin->sub_district = $request->sub_district;
+        $checkin->province = $request->province;
+        $checkin->district = $request->district;
+        $checkin->postcode = $request->postcode;
+        $checkin->save();
 
         return redirect()->route('checkin')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
     public function cancelBooking($id)
     {

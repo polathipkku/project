@@ -27,6 +27,14 @@
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+
+    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+
 </head>
 
 
@@ -105,37 +113,71 @@
         <form action="{{ url('/em_reserve/'.$rooms->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="grid grid-cols-1 gap-4">
-
                 <!-- ชื่อผู้จอง -->
                 <div class="flex flex-col">
                     <label for="booking_name" class="text-sm font-medium">ชื่อผู้จอง</label>
                     <input type="text" id="booking_name" name="booking_name" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
                 </div>
 
-                <!-- เบอร์โทรศัพท์ และ จำนวนผู้เข้าพัก -->
+                <!-- เบอร์โทรศัพท์ และ หมายเลขบัตรประชาชน -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col">
                         <label for="phone" class="text-sm font-medium">เบอร์โทรศัพท์</label>
                         <input type="tel" id="phone" name="phone" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
                     </div>
                     <div class="flex flex-col">
-                        <label for="number_of_guests" class="text-sm font-medium">จำนวนผู้เข้าพัก</label>
-                        <input type="number" id="number_of_guests" name="occupancy_person" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
+                        <label for="id_card" class="text-sm font-medium">หมายเลขบัตรประชาชน</label>
+                        <input type="text" id="id_card" name="id_card" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required>
                     </div>
                 </div>
 
-                <!-- วันที่เข้าพัก และ วันที่ออกพัก -->
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="flex flex-col">
+                        <label for="occupancy_person" class="text-sm font-medium">จำนวนผู้ใหญ่</label>
+                        <input type="number" id="occupancy_person" name="occupancy_person"value="1" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required min="1">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="occupancy_child" class="text-sm font-medium">จำนวนเด็ก</label>
+                        <input type="number" id="occupancy_child" name="occupancy_child"value="0" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required min="0">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="occupancy_baby" class="text-sm font-medium">จำนวนทารก</label>
+                        <input type="number" id="occupancy_baby" name="occupancy_baby"value="0" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" required min="0">
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <label for="extra_bed_count" class="text-sm font-medium">จำนวนเตียงเสริม (ถ้ามี)</label>
+                    <input type="number" id="extra_bed_count" name="extra_bed_count" value="0" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" min="0">
+                    <p class="text-xs text-gray-500 mt-1">สามารถเลือกเตียงเสริมได้หากจำเป็น (มีค่าใช้จ่ายเพิ่มเติม)</p>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
+                    <!-- วันที่เข้าพัก (Check-in) -->
                     <div class="flex flex-col">
-                        <label for="checkin_date" class="text-sm font-medium">วันที่เข้าพัก</label>
-                        <input type="date" id="checkin_date" name="checkin_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" value="{{ old('checkin_date', $checkinDate ?? '') }}" required>
+                        <label for="checkin-date" class="text-sm font-medium">วันที่เข้าพัก</label>
+                        <input type="text" id="checkin-date" name="checkin_date" value="{{ $checkinDate }}" readonly class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full">
                     </div>
+
+                    <!-- วันที่ออก (Check-out) -->
                     <div class="flex flex-col">
-                        <label for="checkout_date" class="text-sm font-medium">วันที่ออก</label>
-                        <input type="date" id="checkout_date" name="checkout_date" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" value="{{ old('checkout_date', $checkoutDate ?? '') }}" required>
+                        <label for="checkout-date" class="text-sm font-medium">วันที่ออก</label>
+                        <input type="text" id="checkout-date" name="checkout_date" value="{{ $checkoutDate }}" readonly class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full">
                     </div>
                 </div>
 
+
+
+                <!-- Address Fields -->
+                <div class="flex flex-col mb-4">
+                    <label for="address" class="text-sm font-medium">ที่อยู่</label>
+                    <div class="flex space-x-4">
+                        <input type="text" id="address" name="address" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex-grow" placeholder="บ้านเลขที่/หมู่" required>
+                        <input type="text" id="sub_district" name="sub_district" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex-grow" placeholder="ตำบล" required>
+                        <input type="text" id="province" name="province" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex-grow" placeholder="จังหวัด" required>
+                        <input type="text" id="district" name="district" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex-grow" placeholder="อำเภอ" required>
+                        <input type="text" id="postcode" name="postcode" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex-grow" placeholder="รหัสไปรษณีย์" required>
+                    </div>
+                </div>
                 <!-- ประเภทห้องพัก -->
                 <div class="flex flex-col">
                     <label for="room_type" class="text-sm font-medium">ประเภทห้องพัก</label>
@@ -145,26 +187,13 @@
                     </select>
                 </div>
 
-                <!-- ราคาห้อง -->
-                <div class="flex flex-col">
-                    <label for="room_price" class="text-sm font-medium">ราคาห้อง</label>
-                    <input type="text" id="room_price" name="room_price" class="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full" readonly>
-                </div>
-
-                <input type="hidden" id="booking_status" name="booking_status" value="เช็คอินแล้ว">
-
-                <script>
-                    document.getElementById('room_type').addEventListener('change', function() {
-                        var roomPrice = this.options[this.selectedIndex].getAttribute('data-price');
-                        document.getElementById('room_price').value = roomPrice;
-                    });
-                </script>
-
                 <div class="flex flex-col">
                     <button type="submit" class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">ยืนยันการจอง</button>
                 </div>
+
             </div>
         </form>
+
     </div>
 
     <section class="info_section layout_padding2">
@@ -260,6 +289,14 @@
                 accommodationType,
             });
         }
+
+        $.Thailand({
+            database: 'https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/database/db.json', // เพิ่มลิงก์ไปยัง database
+            $district: $("#sub_district"), // input ของตำบล
+            $amphoe: $("#district"), // input ของอำเภอ
+            $province: $("#province"), // input ของจังหวัด
+            $zipcode: $("#postcode") // input ของรหัสไปรษณีย์
+        });
     </script>
 
 </body>

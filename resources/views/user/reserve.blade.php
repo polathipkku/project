@@ -349,9 +349,11 @@
                                         จำนวนผู้เข้าพัก (ผู้ใหญ่):
                                     </label>
                                     <input type="number" name="number_of_guests" id="number_of_guests"
-                                        value="{{ old('number_of_guests', $number_of_guests) }}"
+                                        value="{{ old('number_of_guests', $occupancy_person) }}"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
                                         readonly>
+
+
                                 </div>
 
                                 @if ($occupancy_child > 0)
@@ -498,16 +500,14 @@
                                 <div class="mb-8 flex space-x-4 items-stretch ">
                                     <div
                                         class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
-                                        <label for="number_of_guests"
-                                            class="block text-gray-700 text-sm font-bold mb-2">
+                                        <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">
                                             จำนวนผู้เข้าพัก (ผู้ใหญ่):
                                         </label>
                                         <input type="number" name="number_of_guests" id="number_of_guests"
-                                            value="{{ old('number_of_guests', $number_of_guests) }}"
+                                            value="{{ old('number_of_guests', $occupancy_person) }}"
                                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
                                             readonly>
                                     </div>
-
                                     @if ($occupancy_child > 0)
                                     <div class="{{ $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
                                         <label for="occupancy_child"

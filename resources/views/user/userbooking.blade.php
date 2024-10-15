@@ -635,13 +635,14 @@
     `;
 
                 card.innerHTML = content;
-
+                var adultCount = parseInt(document.getElementById('adult-count').textContent, 10);
+                var childCount = parseInt(document.getElementById('child-count').textContent, 10);
+                var babyCount = parseInt(document.getElementById('baby-count').textContent, 10);
                 var reserveUrl = `/reserve?checkin_date=${encodeURIComponent(startDate)}&checkout_date=${encodeURIComponent(endDate)}&number_of_rooms=${encodeURIComponent(option.rooms)}&extra_bed_count=${option.extraBeds}&number_of_guests=${encodeURIComponent(data.equivalentAdultCount)}&occupancy_child=${encodeURIComponent(childCount)}&occupancy_baby=${encodeURIComponent(babyCount)}`;
                 card.querySelector(`#reserve-button-${option.type}`).href = reserveUrl;
 
                 return card;
             }
-
         });
     </script>
     <script>

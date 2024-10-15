@@ -92,7 +92,7 @@ Route::get('/reservation', [BookingController::class, 'reservation'])->name('res
 Route::get('/store', [ProductController::class, 'store'])->name('store');
 Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
 
-Route::post('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
+Route::post('/cancel-booking', [BookingController::class, 'cancelBooking'])->name('cancelBooking');
 // Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 //payment
 // สร้าง Payment Intent
