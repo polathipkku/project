@@ -50,6 +50,16 @@
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">รายละเอียดการชำระเงิน</h2>
                 <p><strong>ค่าใช้จ่ายทั้งหมด:</strong> {{ $bookingDetail->booking->total_cost }} บาท</p>
+
+                @if (isset($promotionData))
+                <p><strong>รหัสโปรโมชั่น:</strong> {{ $promotionData['promo_code'] }}</p>
+                <p><strong>จำนวนส่วนลด:</strong> {{ $promotionData['discount_value'] }}
+                    {{ $promotionData['type'] === 'percentage' ? '%' : '฿' }}
+                </p>
+                @else
+                <p><strong>รหัสโปรโมชั่น:</strong> ไม่มีโปรโมชั่น</p>
+                @endif
+
                 <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
                 <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
             </div>
@@ -93,8 +103,9 @@
             const bookingId = document.getElementById('booking_id').value;
 
             // Start countdown timer
-            let countdown = 60;
-            timer = setInterval(updateTimer, 100);
+            let countdown = 60; // 1 = 1 วินาที 
+
+            timer = setInterval(updateTimer, 1000);
 
             function updateTimer() {
                 countdown--;
@@ -108,9 +119,19 @@
                     document.getElementById('countdown').textContent = 'หมดเวลา';
                     document.getElementById('pay-button').style.display = 'none';
 
-                    cancelBooking(bookingId);
+                    // ใช้ SweetAlert เพื่อแจ้งเตือน
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'หมดเวลาชำระเงิน',
+                        text: 'การจองของคุณถูกยกเลิกแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        // เรียกใช้ฟังก์ชันยกเลิกการจองหลังจากกดปุ่มตกลง
+                        cancelBooking(bookingId);
+                    });
                 }
             }
+
 
             try {
                 const response = await fetch('/create-payment-intent', {
@@ -156,18 +177,24 @@
                 });
 
                 // Create QR code for PromptPay
-                new QRCode(document.getElementById('qrcode'), {
-                    text: data.client_secret,
-                    width: 128,
-                    height: 128
-                });
+                // new QRCode(document.getElementById('qrcode'), {
+                //     text: data.client_secret,
+                //     width: 128,
+                //     height: 128
+                // });
 
                 document.getElementById('pay-button').style.display = 'none';
 
                 // Confirm Payment through Stripe
                 stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
                     if (result.error) {
-                        console.log(result.error.message);
+                        // ใช้ SweetAlert เพื่อแจ้งเตือนข้อผิดพลาด
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: result.error.message,
+                            confirmButtonText: 'ตกลง'
+                        });
                     } else {
                         fetch('/update-payment-status', {
                                 method: 'POST',
@@ -178,20 +205,41 @@
                                 },
                                 body: JSON.stringify({
                                     booking_id: bookingId,
-                                    status: 'succeeded'
+                                    payment_status: 'succeeded',
+                                    booking_status: 'รอเลือกห้อง'
                                 })
                             }).then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    document.getElementById("qrcode").innerHTML =
-                                        '<p>ชำระเงินสำเร็จแล้ว</p>';
+                                    // ใช้ SweetAlert เพื่อแจ้งเตือนเมื่อชำระเงินสำเร็จ
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'ชำระเงินสำเร็จ',
+                                        text: 'การชำระเงินสำเร็จแล้ว! จะกลับไปยังหน้าหลักใน 3 วินาที',
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        showConfirmButton: false
+                                    });
+
+                                    // ตั้งเวลานับถอยหลังเพื่อเปลี่ยนเส้นทางไปหน้าอื่น
                                     setTimeout(() => {
                                         window.location.href = '/';
                                     }, 3000);
                                 }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                // ใช้ SweetAlert เพื่อแจ้งเตือนเมื่อเกิดข้อผิดพลาดในการอัปเดตสถานะ
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'เกิดข้อผิดพลาด',
+                                    text: 'ไม่สามารถอัปเดตสถานะการชำระเงินได้',
+                                    confirmButtonText: 'ตกลง'
+                                });
                             });
                     }
                 });
+
 
             } catch (error) {
                 console.error('Error:', error);
@@ -199,30 +247,62 @@
         });
 
         function cancelBooking(bookingId) {
-            fetch('/cancel-booking', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        booking_id: bookingId,
-                        status: 'cancelled'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = '/';
-                    } else {
-                        alert('Failed to cancel booking.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            // ใช้ SweetAlert แทน confirm
+            Swal.fire({
+                title: 'ยืนยันการยกเลิก',
+                text: 'คุณต้องการยกเลิกการจองและการชำระเงินหรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, ยกเลิกการจอง!',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ทำการยกเลิกการจอง
+                    fetch('/cancel-booking/' + bookingId, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // ใช้ SweetAlert แทน alert
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'ยกเลิกสำเร็จ',
+                                    text: 'การยกเลิกการจองและการชำระเงินสำเร็จแล้ว',
+                                    confirmButtonText: 'ตกลง'
+                                }).then(() => {
+                                    window.location.href = '/';
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'ยกเลิกไม่สำเร็จ',
+                                    text: 'การยกเลิกไม่สำเร็จ',
+                                    confirmButtonText: 'ตกลง'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: 'เกิดข้อผิดพลาดในการยกเลิก',
+                                confirmButtonText: 'ตกลง'
+                            });
+                        });
+                }
+            });
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

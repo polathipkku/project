@@ -17,16 +17,24 @@ class PaymentController extends Controller
         $bookingDetail = Booking_detail::with(['booking.user', 'booking.promotion'])
             ->where('booking_id', $id)
             ->first();
-
+    
         if (!$bookingDetail) {
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
         }
-
+    
         // Get the user's email
         $userEmail = $bookingDetail->booking->user->email ?? null;
-
-        return view('user.payment', compact('bookingDetail', 'userEmail'));
+    
+        // Get promotion data if exists
+        $promotionData = $bookingDetail->booking->promotion ? [
+            'promo_code' => $bookingDetail->booking->promotion->promo_code,
+            'discount_value' => $bookingDetail->booking->promotion->discount_value,
+            'type' => $bookingDetail->booking->promotion->type,
+        ] : null;
+    
+        return view('user.payment', compact('bookingDetail', 'userEmail', 'promotionData'));
     }
+    
 
     public function createPaymentIntent(Request $request)
     {
@@ -61,10 +69,10 @@ class PaymentController extends Controller
             // Create and save the payment record
             $payment = new Payment();
             $payment->booking_id = $bookingId;
-            $payment->amount = $amount / 100; // Store amount in original currency
+            $payment->amount = $amount / 100; 
             $payment->payment_intent_id = $paymentIntent->id;
             $payment->payment_status = 'pending';
-            $payment->payment_slip = null; // Handle payment slip if applicable
+            $payment->payment_slip = null; 
             $payment->save();
 
             return response()->json(['client_secret' => $paymentIntent->client_secret]);
@@ -89,4 +97,37 @@ class PaymentController extends Controller
         }
     }
 
+    public function cancelBooking($id)
+    {
+        $bookingDetail = Booking_detail::where('booking_id', $id)->first();
+        
+        if (!$bookingDetail) {
+            return response()->json(['success' => false, 'message' => 'ไม่พบการจองนี้']);
+        }
+    
+        if ($bookingDetail->booking_status !== 'รอชำระเงิน') {
+            return response()->json(['success' => false, 'message' => 'สถานะการจองไม่ถูกต้อง']);
+        }
+    
+        // Update booking status
+        $bookingDetail->booking_status = 'ยกเลิกการจอง';
+        $bookingDetail->save();
+    
+        // Update room status
+        $room = $bookingDetail->room;
+        if ($room) {
+            $room->room_status = 'พร้อมให้บริการ';
+            $room->save();
+        }
+    
+        // Check and update payment status
+        $payment = Payment::where('booking_id', $id)->first();
+        if ($payment && $payment->payment_status === 'pending') {
+            $payment->payment_status = 'cancel';
+            $payment->save();
+        }
+    
+        return response()->json(['success' => true, 'message' => 'ยกเลิกการจองและการชำระเงินสำเร็จ']);
+    }
+    
 }

@@ -92,9 +92,7 @@ Route::get('/reservation', [BookingController::class, 'reservation'])->name('res
 Route::get('/store', [ProductController::class, 'store'])->name('store');
 Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
 
-Route::post('/cancel-booking', [BookingController::class, 'cancelBooking'])->name('cancelBooking');
-// Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
-//payment
+Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking'); // Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 // สร้าง Payment Intent
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 // รับ booking_id
@@ -174,7 +172,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
     Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
-    
+
     Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
     Route::get('/promotions/create', [PromotionController::class, 'create'])->name('add_promotion');
     Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
@@ -184,6 +182,4 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::post('/promotions/{id}/toggle-status', [PromotionController::class, 'toggleStatus'])->name('promotions.toggleStatus');
     Route::get('/record_detail/{id}', [BookingController::class, 'record_detail'])->name('record_detail');
     Route::get('/record', [BookingController::class, 'record'])->name('record');
-
-
 });

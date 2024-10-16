@@ -566,22 +566,20 @@
 
                             var totalRooms = data.availableRooms.length;
                             var extraBedPrice = parseFloat(data.extraBedPrice);
-                            var availableExtraBeds = data.availableExtraBeds; // Check available extra beds
+                            var availableExtraBeds = data.availableExtraBeds;
 
-                            // Create a container for the room options
                             var roomOptionsContainer = document.createElement('div');
                             roomOptionsContainer.className = 'flex flex-col items-center gap-4';
 
                             // Create room options
-                            data.roomOptions.forEach((option) => {
+                            data.roomOptions.forEach((option, index) => {
                                 if (option.type === 'with_extra_bed' && availableExtraBeds <= 0) {
                                     return; // Skip this option if no extra beds are available
                                 }
-                                var roomCard = createRoomCard(option, data, startDate, endDate, childCount, babyCount);
+                                var roomCard = createRoomCard(option, data, startDate, endDate, childCount, babyCount, index + 1);
                                 roomOptionsContainer.appendChild(roomCard);
                             });
 
-                            // Append the container to the room availability div
                             roomAvailabilityDiv.appendChild(roomOptionsContainer);
 
                             // Display no availability message if needed
@@ -604,34 +602,33 @@
                 }
             };
 
-            function createRoomCard(option, data, startDate, endDate, childCount, babyCount) {
+            function createRoomCard(option, data, startDate, endDate, childCount, babyCount, optionNumber) {
                 var card = document.createElement('div');
                 card.className = 'w-44 text-center shadow-lg hover:shadow-xl flex flex-col justify-between transition duration-300';
 
-                // ปรับความสูงและความกว้างของกล่อง
-                card.style.height = '150px'; // ลดความสูง
-                card.style.width = '300px'; // เพิ่มความกว้าง
+                card.style.height = '150px';
+                card.style.width = '300px';
                 card.style.backgroundColor = '#f3f4f6';
                 card.style.marginTop = '10px';
 
                 var content = `
-        <div class="flex-grow">
-            <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B; font-size: 16px;">
-                ${option.type === 'normal' ? 'ตัวเลือกที่1' : 'ตัวเลือกที่2'}
-            </div>
-            <div class="mt-3"> <!-- ลด margin-top -->
-                <h3 class="text-m font-bold">จำนวนห้องพัก <span class="font-semibold">${option.rooms}</span> ห้องพัก</h3>
-                ${option.type !== 'normal' ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span> เตียงเสริม</h3>` : ''}
-                <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
-            </div>
+    <div class="flex-grow">
+        <div class="w-full font-semibold py-1 text-white" style="background-color: #04233B; font-size: 16px;">
+            ตัวเลือกที่${optionNumber}
         </div>
-        <div class="flex justify-center mt-2"> <!-- ลด margin-top ของปุ่ม -->
-            <a id="reserve-button-${option.type}" 
-               href="#" 
-               class="inline-block bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors text-xs w-24 py-1 mb-2">           
-               เลือก
-            </a>
+        <div class="mt-3">
+            <h3 class="text-m font-bold">จำนวนห้องพัก <span class="font-semibold">${option.rooms}</span> ห้องพัก</h3>
+            ${option.extraBeds > 0 ? `<h3 class="text-sm font-bold">จำนวนเตียงเสริม: <span class="font-semibold">${option.extraBeds}</span> เตียงเสริม</h3>` : ''}
+            <p class="text-sm">ราคารวม: <span class="font-semibold">${option.price} บาท</span></p>
         </div>
+    </div>
+    <div class="flex justify-center mt-2">
+        <a id="reserve-button-${option.type}" 
+           href="#" 
+           class="inline-block bg-blue-500 text-white font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-black hover:border-blue-500 transition-colors text-xs w-24 py-1 mb-2">           
+           เลือก
+        </a>
+    </div>
     `;
 
                 card.innerHTML = content;

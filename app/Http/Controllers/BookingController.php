@@ -249,14 +249,16 @@ class BookingController extends Controller
         // Insert into booking_details table
         $extraBedCount = $request->extra_bed_count ?? 0;
         $extraBedAssigned = false;
+        $extraBedRemaining = $extraBedCount; // เตียงเสริมที่ยังไม่ได้บันทึก
 
         foreach (array_slice($availableRooms, 0, $request->number_of_rooms) as $index => $room) {
             $insertExtraBed = 0;
 
-            // Assign extra bed only to the first room
-            if (!$extraBedAssigned && $extraBedCount > 0 && $index == 0) {
-                $insertExtraBed = $extraBedCount;
-                $extraBedAssigned = true;
+            // Check if there are extra beds remaining to assign
+            if ($extraBedRemaining > 0) {
+                // Assign 1 extra bed to each booking_details row until the extra beds run out
+                $insertExtraBed = min(1, $extraBedRemaining); // บันทึกสูงสุด 1 เตียงเสริมต่อแถว
+                $extraBedRemaining -= $insertExtraBed; // ลดจำนวนเตียงเสริมที่เหลือ
             }
 
             DB::table('booking_details')->insert([
@@ -273,10 +275,34 @@ class BookingController extends Controller
                 'occupancy_baby' => $request->occupancy_baby,
                 'checkin_date' => $request->checkin_date,
                 'checkout_date' => $request->checkout_date,
-                'extra_bed_count' => $insertExtraBed,
+                'extra_bed_count' => $insertExtraBed, // Assign extra bed for each row
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+        }
+
+        // If there are still extra beds remaining, create additional booking_details rows for them
+        while ($extraBedRemaining > 0) {
+            DB::table('booking_details')->insert([
+                'booking_id' => $booking->id,
+                'room_id' => null,
+                'booking_name' => $request->booking_name,
+                'phone' => $request->phone,
+                'bookingto_username' => $request->bookingto_username,
+                'bookingto_phone' => $request->bookingto_phone,
+                'booking_status' => 'รอชำระเงิน',
+                'room_type' => 'ห้องพักค้างคืน',
+                'occupancy_person' => $request->number_of_guests,
+                'occupancy_child' => $request->occupancy_child,
+                'occupancy_baby' => $request->occupancy_baby,
+                'checkin_date' => $request->checkin_date,
+                'checkout_date' => $request->checkout_date,
+                'extra_bed_count' => min(1, $extraBedRemaining), // Assign 1 extra bed per row
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $extraBedRemaining--; // Reduce remaining extra beds
         }
 
         if ($extraBedAssigned) {
@@ -356,13 +382,28 @@ class BookingController extends Controller
         // จำนวนห้องว่างจริง
         $actualAvailableRoomsCount = count($availableRooms) - $pendingRoomSelectionsCount;
 
-        // ตรวจสอบว่ามีห้องว่างเพียงพอหรือไม่
-        if ($actualAvailableRoomsCount < $numberOfRooms) {
-            return response()->json([
-                'message' => 'ไม่มีห้องว่างสำหรับจำนวนที่ต้องการ',
-                'availableRooms' => [],
-                'roomOptions' => [],
-            ], 400);
+        // ดึงข้อมูลเตียงเสริม
+        $stock = new Stock();
+        $availableExtraBeds = $stock->getAvailableExtraBeds();
+        $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
+        $extraBedPrice = $extraBedProduct ? $extraBedProduct->product_price : 0;
+
+        // เพิ่มเงื่อนไขใหม่: ถ้าจำนวนผู้เข้าพัก ผู้ใหญ่เกินมา 1 คนแล้วห้องไม่พอ
+        $showOnlyExtraBedOption = false;
+        if ($actualAvailableRoomsCount < $numberOfRooms && $adultCount % 2 == 1 && $availableExtraBeds > 0) {
+            $numberOfRooms = $actualAvailableRoomsCount;
+            $extraBedCount = 1;
+            $showOnlyExtraBedOption = true;
+        } else {
+            // ตรวจสอบว่ามีห้องว่างเพียงพอหรือไม่
+            if ($actualAvailableRoomsCount < $numberOfRooms) {
+                return response()->json([
+                    'message' => 'ไม่มีห้องว่างสำหรับจำนวนที่ต้องการ',
+                    'availableRooms' => [],
+                    'roomOptions' => [],
+                ], 400);
+            }
+            $extraBedCount = ($equivalentAdultCount % 2 === 0) ? 0 : 1;
         }
 
         // กรองห้องที่ว่าง
@@ -376,28 +417,23 @@ class BookingController extends Controller
             }
         }
 
-        // ดึงข้อมูลเตียงเสริม
-        $stock = new Stock();
-        $availableExtraBeds = $stock->getAvailableExtraBeds();
-        $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
-        $extraBedPrice = $extraBedProduct ? $extraBedProduct->product_price : 0;
-
         // ตัวเลือกห้องพัก
         $roomOptions = [];
-        $roomOptions[] = [
-            'type' => 'normal',
-            'rooms' => $numberOfRooms,
-            'extraBeds' => 0,
-            'price' => $numberOfRooms * 500,
-        ];
+        if (!$showOnlyExtraBedOption) {
+            $roomOptions[] = [
+                'type' => 'normal',
+                'rooms' => $numberOfRooms,
+                'extraBeds' => 0,
+                'price' => $numberOfRooms * 500,
+            ];
+        }
 
-        $extraBedCount = ($equivalentAdultCount % 2 === 0) ? 0 : 1;
-        if ($extraBedCount > 0 && $numberOfRooms > 1 && $availableExtraBeds > 0) {
+        if ($extraBedCount > 0 && $availableExtraBeds > 0) {
             $roomOptions[] = [
                 'type' => 'with_extra_bed',
-                'rooms' => $numberOfRooms - 1,
-                'extraBeds' => 1,
-                'price' => (($numberOfRooms - 1) * 500) + $extraBedPrice,
+                'rooms' => $numberOfRooms,
+                'extraBeds' => $extraBedCount,
+                'price' => ($numberOfRooms * 500) + ($extraBedCount * $extraBedPrice),
             ];
         }
 
@@ -409,8 +445,6 @@ class BookingController extends Controller
             'equivalentAdultCount' => $equivalentAdultCount,
         ]);
     }
-
-
 
     private function isRoomAvailable($room, $checkinDate, $checkoutDate)
     {
@@ -562,31 +596,6 @@ class BookingController extends Controller
         $checkin->save();
 
         return redirect()->route('checkin')->with('success', 'บันทึกข้อมูลสำเร็จ');
-    }
-
-
-    public function cancelBooking($id)
-    {
-        $booking = Booking::find($id);
-
-        if ($booking) {
-            if ($booking->booking_status === 'รอชำระเงิน') {
-                // เปลี่ยนค่า booking_status เป็น 'ยกเลิกการจอง'
-                $booking->booking_status = 'ยกเลิกการจอง';
-                $booking->save();
-
-                // ดึงข้อมูลห้อง
-                $room = $booking->room;
-
-                // เปลี่ยนค่า room_status เป็น 'พร้อมให้บริการ'
-                $room->room_status = 'พร้อมให้บริการ';
-                $room->save();
-
-                return redirect()->route('home')->with('success', 'ยกเลิกการจองเรียบร้อยแล้ว');
-            }
-        }
-
-        return redirect()->route('home')->with('error', 'ขออภัย, ยกเลิกไม่สำเร็จ');
     }
 
     public function checkoutuser(Request $request)

@@ -90,7 +90,6 @@
                             <th class="px-4 py-2">สถานะ</th>
                             <th class="px-4 py-2">เหลือเวลาเข้าพัก</th>
                             <th class="px-4 py-2">รายละเอียด</th>
-                            <th class="px-4 py-2">เพิ่มเวลาเช็คเอาท์</th>
                             <th class="px-4 py-2" style="padding-right: 5%;">CheckOut</th>
                         </tr>
                     </thead>
@@ -113,13 +112,7 @@
                                     </button>
                                 </a>
                             </td>
-                            <td class="px-4 py-2">
-                                <button
-                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition duration-300"
-                                    onclick="showExtendCheckoutModal('{{ $booking->id }}', '{{ $detail->id }}')">
-                                    เลื่อนเวลาเช็คเอาท์
-                                </button>
-                            </td>
+
                             <td class="px-4 py-4 flex justify-center items-center border-b">
                                 @if($detail->booking_status === 'เช็คอินแล้ว')
                                 <button
@@ -181,29 +174,7 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-
-
-                    <div id="extendCheckoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                            <div class="mt-3 text-center">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">เลื่อนเวลาเช็คเอาท์</h3>
-                                <div class="mt-2 px-7 py-3">
-                                    <p class="text-sm text-gray-500">
-                                        กรุณาเลือกจำนวนวันที่ต้องการเพิ่ม
-                                    </p>
-                                    <input type="number" id="extendDays" min="1" max="30" value="1" class="mt-2 px-3 py-2 border rounded-md w-full">
-                                    <input type="hidden" id="bookingId">
-                                    <input type="hidden" id="bookingDetailId">
-                                </div>
-                                <div class="items-center px-4 py-3">
-                                    <button id="confirmExtendCheckout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                                        ยืนยัน
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </div>        
 
                     <div id="paymentMethodPopup" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
                         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
