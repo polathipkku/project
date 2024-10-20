@@ -17,7 +17,7 @@ class CreateBookingDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('room_id')->nullable();
-            $table->string('booking_status');
+            $table->string('booking_detail_status');
             $table->string('booking_name');
             $table->string('phone');
             $table->string('bookingto_username')->nullable();  

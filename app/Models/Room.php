@@ -37,5 +37,10 @@ class Room extends Model
     {
         return $this->hasMany(Booking_detail::class, 'room_id');
     }
+    public function pendingBookings()
+    {
+        // สมมติว่าคุณมีสถานะ "รอเลือกห้อง" สำหรับการจองที่ยังรอห้อง
+        return $this->bookings()->where('booking_status', 'รอเลือกห้อง');
+    }
 
 }

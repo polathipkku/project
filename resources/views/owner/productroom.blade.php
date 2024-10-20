@@ -1,74 +1,189 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            รายชื่อสินค้า
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="py-12">
-        <div class="container">
-            <div class="row">
-                <!-- <div class="col-md-8">
-                    @if(session("success"))
-                    <div class="alert alert-success">{{session("success")}}</div>
-                    @endif
-                    <div class="card">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ลำดับ</th>
-                                    <th scope="col">ชื่อสินค้า</th>
-                                    <th scope="col">แก้ไขห้อง</th>
-                                    <th scope="col">ลบห้อง</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td><a href="" class="btn btn-primary">แก้ไขสินค้า</a></td>
-                                    <td><a href="" class="btn btn-danger">ลบสินค้า</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/hero.css">
+
+    <title>Tunthree - Promotion Management</title>
+
+    <script>
+        function showToast(toastId) {
+            var toast = document.getElementById(toastId);
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000); // แสดง toast นาน 3 วินาที (3000 มิลลิวินาที)
+        }
+    </script>
+</head>
+
+<body>
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+
+    <div style="display: flex; background-color: #F5F3FF;">
+
+        <!-- Sidebar -->
+        <section class="sticky bg-white rounded-2xl p-2" id="nav-content"
+            style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
+            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
+
+                <!-- Logo -->
+                <div style="display: grid; place-items: center; margin-bottom: 30px;">
+                    <img src="/images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
+                    <div class="text-black text-lg ">Tunthree</div>
+                </div>
+
+                <!-- Menu Items -->
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm"
+                    href="#" id="Dashboard">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        Dashboard
                     </div>
-                </div> -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">แบบฟอร์หหหม</div>
-                        <div class="card-body">
-                            <form action="{{ route('addProductroom') }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <div class="room-group">
-                                    <label for="productroom_name">ชื่อสินค้า</label>
-                                    <input type="text" class="form-control" name="productroom_name" required>
-                                    @error('productroom_name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <br>
-                                <div class="room-group">
-                                    <label for="productroom_price">ราคาค่าปรับ</label>
-                                    <input type="text" class="form-control" name="productroom_price" required>
-                                    @error('productroom_price')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <br>
-                                <div class="room-group">
-                                    <label for="product_qty">จำนวนสินค้า</label>
-                                    <input type="number" class="form-control" name="product_qty" required min="1">
-                                    @error('product_qty')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <br>
-                                <input type="submit" value="บันทึก" class="btn btn-primary">
-                            </form>
+                </a>
 
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm"
+                    href="#" id="Users">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-user mr-2"></i>Users
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('employee') }}" id="Employee">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-users mr-1"></i>Employee
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('room') }}" id="Room">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-door-open mr-1"></i>Room
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('product') }}" id="Stock">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
+                    </div>
+                </a>
+
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('promotions') }}" id="Promotion">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
+                    </div>
+                </a>
+                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('record') }}" id="Review">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-database mr-1"></i>Record
+                    </div>
+
+                    <!-- Logout -->
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm"
+                        style="position: absolute; bottom: 10px;" id="Logout">
+                        <div class="mr-2 text-base flex items-center">
+                            <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
+                        </div>
+                    </a>
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                        @csrf
+                    </form>
+            </div>
+        </section>
+
+        <!-- Promotion Management Table -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    {{-- <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button> --}}
+                    <h3 class="text-3xl font-medium text-gray-700">จัดการค่าเสียหายสินค้า</h3>
+                </div>
+
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                            <form action="#" method="GET" class="w-full md:w-auto mb-4 md:mb-0">
+                                @csrf
+                                <div class="relative">
+                                    <input type="text" name="search" placeholder="ค้นหาสินค้า" class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
+                                    <div class="absolute top-0 left-0 inline-flex items-center p-2">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </form>
+                            <button onclick="window.location.href='{{ route('add_productroom') }}'" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+                                <i class="fas fa-plus mr-2"></i>เพิ่มค่าเสียหายของสินค้า
+                            </button>
+                        </div>
+
+                        <!-- Promotion Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-auto">
+                                <thead>
+                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6 text-left">ลำดับ</th>
+                                        <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
+                                        <th class="py-3 px-6 text-left">ราคา (บาท)</th>
+                                        <th class="py-3 px-6 text-center">จำนวนสินค้า</th>
+                                        <th class="py-3 px-6 text-center">ดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600 text-sm">
+                                    @foreach($productroom as $product)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                                        <td class="py-3 px-6 text-left whitespace-nowrap">
+                                            <span class="font-medium">{{ $loop->iteration }}</span>
+                                        </td>
+                                        <td class="py-3 px-6 text-left">
+                                            <span>{{ $product->productroom_name }}</span>
+                                        </td>
+                                        <td class="py-3 px-6 text-left">
+                                            <span class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm">{{ number_format($product->productroom_price, 2) }} ฿</span>
+                                        </td>
+                                        <td class="py-3 px-6 text-center">
+                                            <span>{{ $product->product_qty }}</span>
+                                        </td>
+
+                                     
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-</x-app-layout>
+
+  
+
+    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+        @csrf
+    </form>
+
+    <script>
+        function showDetails(id) {
+            document.getElementById('details-modal-' + id).classList.remove('hidden');
+        }
+
+        function closeDetails(id) {
+            document.getElementById('details-modal-' + id).classList.add('hidden');
+        }
+    </script>
+
+</body>
+
+</html>

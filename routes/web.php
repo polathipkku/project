@@ -32,9 +32,7 @@ Route::get('/text', function () {
     return view('owner.text');
 })->name('text');
 
-Route::get('/home', function () {
-    return view('user.home');
-})->name('home');
+Route::get('/home', [PromotionController::class, 'showPromotionsForHome'])->name('home');
 Route::get('/contact', function () {
     return view('user.contact');
 })->name('contact');
@@ -91,7 +89,7 @@ Route::get('/employeehome', [BookingController::class, 'employeehome'])->name('e
 Route::get('/reservation', [BookingController::class, 'reservation'])->name('reservation');
 Route::get('/store', [ProductController::class, 'store'])->name('store');
 Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
-
+Route::get('/promotions-home', [PromotionController::class, 'showPromotionsForHome'])->name('promotions.home');
 Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking'); // Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
 // สร้าง Payment Intent
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
@@ -157,6 +155,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/employeedetail', [OwnerController::class, 'employeedetail'])->name('employeedetail');
     Route::get('/product', [ProductController::class, 'product'])->name('product');
 
+    Route::get('/add_productroom', [ProductRoomController::class, 'add_productroom'])->name('add_productroom');
     Route::get('/productroom', [ProductRoomController::class, 'productroom'])->name('productroom');
     Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');
 

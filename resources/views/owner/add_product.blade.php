@@ -127,7 +127,7 @@
                         </select>
                     </div> -->
 
-                     <!-- <div class="room-group">
+                    <!-- <div class="room-group">
                         <label for="product_type">ประเภทสินค้า</label>
                         <div>
                             <select class="form-select" name="product_type_name" id="product_type" required>
@@ -141,31 +141,39 @@
                                 @endforeach
                             </select>
                         </div> -->
-                        <div>
-                            <select class="form-select" name="product_type_name" id="product_type" required>
-                                <option value="" selected disabled>เลือกประเภทสินค้า</option>
-                                <option value="เครื่องดื่ม">เครื่องดื่ม</option>
-                                <option value="เครื่องนอน">เครื่องนอน</option>
-                            </select>
-                        </div>
-                    </div> 
-
-                    <br>
                     <div>
-                        <label for="product_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">สถานะสินค้า</label>
-                        <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="product_status" id="product_status" required>
-                            <option value="พร้อมให้บริการ">พร้อมให้บริการ</option>
-                            <option value="ไม่พร้อมให้บริการ">ไม่พร้อมให้บริการ</option>
+                        <select class="form-select" name="product_type_name" id="product_type" required>
+                            <option value="" selected disabled>เลือกประเภทสินค้า</option>
+                            <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                            <option value="เครื่องนอน">เครื่องนอน</option>
                         </select>
                     </div>
-                    <br>
-                    <input type="submit" value="บันทึก" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                </form>
-
-
-
             </div>
-        </section>
+
+            <br>
+            <div>
+                <label for="product_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">สถานะสินค้า</label>
+                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="product_status" id="product_status" required>
+                    <option value="พร้อมให้บริการ">พร้อมให้บริการ</option>
+                    <option value="ไม่พร้อมให้บริการ">ไม่พร้อมให้บริการ</option>
+                </select>
+            </div>
+            <br>
+            <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">สร้างสินค้า</button>
+
+            <!-- ปุ่มยกเลิก -->
+            <a href="{{ route('product') }}"
+                class="inline-block mt-4 text-center text-blue-600 hover:text-blue-800">
+                <button type="button"
+                    class="text-white bg-gray-400 hover:bg-gray-500 rounded-lg text-sm px-5 py-2.5">ยกเลิก</button>
+            </a>
+            </form>
+
+
+
+    </div>
+    </section>
 
     </div>
 

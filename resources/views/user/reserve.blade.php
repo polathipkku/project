@@ -60,8 +60,7 @@
                     @auth
                     <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
                             class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                    <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
-                            class="fa-solid fa-star ml-2"></i></a>
+
                     <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
                         <i class="fa-solid fa-user"></i>
                         <span class="sr-only">User Menu</span>
@@ -342,7 +341,7 @@
                                     required>
                             </div>
                             @endif
-                            <div class="mb-8 flex space-x-4 items-stretch ">
+                            <div class="mb-8 flex space-x-4 items-stretch">
                                 <div
                                     class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
                                     <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">
@@ -352,35 +351,29 @@
                                         value="{{ old('number_of_guests', $occupancy_person) }}"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
                                         readonly>
-
-
                                 </div>
 
-                                @if ($occupancy_child > 0)
-                                <div class="{{ $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
-                                    <label for="occupancy_child"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
+                                <div
+                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
+                                    <label for="occupancy_child" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนผู้เข้าพัก (เด็ก):
                                     </label>
                                     <input type="number" name="occupancy_child" id="occupancy_child"
-                                        value="{{ old('occupancy_child', $occupancy_child) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
-                                        readonly>
+                                        value="{{ old('occupancy_child', $occupancy_child > 0 ? $occupancy_child : 0) }}"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_child > 0 ? 'text-gray-700' : 'text-gray-500 bg-gray-100' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        {{ $occupancy_child > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
-                                @endif
 
-                                @if ($occupancy_baby > 0)
-                                <div class="{{ $occupancy_child > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
-                                    <label for="occupancy_baby"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
+                                <div
+                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
+                                    <label for="occupancy_baby" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนผู้เข้าพัก (เด็กเล็ก):
                                     </label>
                                     <input type="number" name="occupancy_baby" id="occupancy_baby"
-                                        value="{{ old('occupancy_baby', $occupancy_baby) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
-                                        readonly>
+                                        value="{{ old('occupancy_baby', $occupancy_baby > 0 ? $occupancy_baby : 0) }}"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_baby > 0 ? 'text-gray-700' : 'text-gray-500 bg-gray-100' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        {{ $occupancy_baby > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
-                                @endif
                             </div>
 
                             <div class="mb-4 flex space-x-4">
@@ -396,6 +389,8 @@
                                 <div class="flex-1">
                                     <label for="extra_bed_count" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนเตียงเสริม:
+                                        <!-- ข้อความบอกค่าบริการเตียงเสริม -->
+                                        <span class="text-sm text-gray-500">200 บาทต่อ 1 เตียงเสริม</span>
                                     </label>
                                     <div class="flex space-x-2">
                                         <!-- ปุ่มลด -->
@@ -413,43 +408,6 @@
                                     <!-- ซ่อนค่าดั้งเดิมของเตียงเสริมเพื่อใช้ในเงื่อนไขการลบ -->
                                     <input type="hidden" name="extra_bed_count_hidden" id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
                                 </div>
-
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // ดึงค่าจาก hidden input
-                                        let originalExtraBedCount = parseInt(document.getElementById('extra_bed_count_hidden').value);
-                                        let extraBedCountInput = document.getElementById('extra_bed_count');
-                                        let numberOfRooms = parseInt(document.getElementById('number_of_rooms').value); // ดึงจำนวนห้องที่จอง
-
-                                        // เพิ่มเตียงเสริม
-                                        document.getElementById('increaseExtraBed').addEventListener('click', function() {
-                                            let currentCount = parseInt(extraBedCountInput.value);
-
-                                            // ห้ามเพิ่มเกินจำนวนห้องที่จอง
-                                            if (currentCount < numberOfRooms) {
-                                                extraBedCountInput.value = currentCount + 1;
-                                            } else {
-                                                alert("ไม่สามารถเพิ่มเตียงเสริมเกินจำนวนห้องที่จองได้");
-                                            }
-                                        });
-
-                                        // ลดเตียงเสริม
-                                        document.getElementById('decreaseExtraBed').addEventListener('click', function() {
-                                            let currentCount = parseInt(extraBedCountInput.value);
-
-                                            // เช็คว่าค่าปัจจุบันไม่ลดต่ำกว่าค่าที่ส่งมาถ้าค่าส่งมามากกว่า 0
-                                            if (originalExtraBedCount > 0) {
-                                                if (currentCount > originalExtraBedCount) {
-                                                    extraBedCountInput.value = currentCount - 1;
-                                                }
-                                            } else {
-                                                if (currentCount > 0) {
-                                                    extraBedCountInput.value = currentCount - 1;
-                                                }
-                                            }
-                                        });
-                                    });
-                                </script>
                             </div>
 
                         </div>
@@ -480,10 +438,14 @@
                                 placeholder="กรอกรหัสโปรโมชั่น (ถ้ามี)">
                         </div>
                         @endif
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-5 justify-end">
                             <button type="submit"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                 บันทึกการจอง
+                            </button>
+                            <button type="button" onclick="history.back()"
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                ย้อนกลับ
                             </button>
                         </div>
                     </div>
@@ -583,8 +545,7 @@
 
                             <div class="mb-4 flex space-x-4">
                                 <div class="flex-1">
-                                    <label for="number_of_rooms"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
+                                    <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนห้องที่ต้องการ:
                                     </label>
                                     <input type="text" name="number_of_rooms" id="number_of_rooms"
@@ -592,36 +553,29 @@
                                         value="{{ $number_of_rooms }}" readonly>
                                 </div>
 
-                                @if ($extra_bed_count > 0)
                                 <div class="flex-1">
-                                    <label for="extra_bed_count"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
+                                    <label for="extra_bed_count" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนเตียงเสริม:
+                                        <!-- ข้อความบอกค่าบริการเตียงเสริม -->
+                                        <span class="text-sm text-gray-500">200 บาทต่อ 1 เตียงเสริม</span>
                                     </label>
-                                    <input type="text" name="extra_bed_count" id="extra_bed_count"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $extra_bed_count }}" readonly>
-                                    <input type="hidden" name="extra_bed_count_hidden"
-                                        id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
-                                </div>
-                                @endif
-                            </div>
+                                    <div class="flex space-x-2">
+                                        <!-- ปุ่มลด -->
+                                        <button type="button" class="bg-gray-200 p-2 rounded" id="decreaseExtraBed">-</button>
 
-                            <div class="mb-4 flex space-x-4">
-                                <div class="flex-1">
-                                    <label for="checkin_date"
-                                        class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
-                                    <input type="date" name="checkin_date" id="checkin_date"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $checkin_date }}" readonly>
+                                        <!-- อินพุตสำหรับจำนวนเตียงเสริม -->
+                                        <input type="text" name="extra_bed_count" id="extra_bed_count"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            value="{{ $extra_bed_count }}" readonly>
+
+                                        <!-- ปุ่มเพิ่ม -->
+                                        <button type="button" class="bg-gray-200 p-2 rounded" id="increaseExtraBed">+</button>
+                                    </div>
+
+                                    <!-- ซ่อนค่าดั้งเดิมของเตียงเสริมเพื่อใช้ในเงื่อนไขการลบ -->
+                                    <input type="hidden" name="extra_bed_count_hidden" id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
                                 </div>
-                                <div class="flex-1">
-                                    <label for="checkout_date"
-                                        class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
-                                    <input type="date" name="checkout_date" id="checkout_date"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $checkout_date }}" readonly>
-                                </div>
+
                             </div>
                             @if (auth()->check())
                             <div class="mb-4">
@@ -723,6 +677,43 @@
                     toastSuccess.style.display = 'none';
                 }, 3000); // Hide after 3 seconds
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ดึงค่าจาก hidden input
+            let originalExtraBedCount = parseInt(document.getElementById('extra_bed_count_hidden').value);
+            let extraBedCountInput = document.getElementById('extra_bed_count');
+            let numberOfRooms = parseInt(document.getElementById('number_of_rooms').value); // ดึงจำนวนห้องที่จอง
+
+            // เพิ่มเตียงเสริม
+            document.getElementById('increaseExtraBed').addEventListener('click', function() {
+                let currentCount = parseInt(extraBedCountInput.value);
+
+                // ห้ามเพิ่มเกินจำนวนห้องที่จอง
+                if (currentCount < numberOfRooms) {
+                    extraBedCountInput.value = currentCount + 1;
+                } else {
+                    alert("ไม่สามารถเพิ่มเตียงเสริมเกินจำนวนห้องที่จองได้");
+                }
+            });
+
+            // ลดเตียงเสริม
+            document.getElementById('decreaseExtraBed').addEventListener('click', function() {
+                let currentCount = parseInt(extraBedCountInput.value);
+
+                // เช็คว่าค่าปัจจุบันไม่ลดต่ำกว่าค่าที่ส่งมาถ้าค่าส่งมามากกว่า 0
+                if (originalExtraBedCount > 0) {
+                    if (currentCount > originalExtraBedCount) {
+                        extraBedCountInput.value = currentCount - 1;
+                    }
+                } else {
+                    if (currentCount > 0) {
+                        extraBedCountInput.value = currentCount - 1;
+                    }
+                }
+            });
         });
     </script>
 

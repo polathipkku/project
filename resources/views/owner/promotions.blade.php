@@ -55,7 +55,7 @@
                 </a>
 
                 <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="Employee.html" id="Employee">
+                    href="{{ route('employee') }}" id="Employee">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-users mr-1"></i>Employee
                     </div>
@@ -69,7 +69,7 @@
                 </a>
 
                 <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="#" id="Stock">
+                    href="product" id="Stock">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
                     </div>

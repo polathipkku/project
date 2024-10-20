@@ -59,8 +59,9 @@ class OwnerController extends Controller
             return redirect()->route('checkin');
         }
         if ($userType === "2") {
-            return redirect()->route('home');
+            return back();
         }
+        
     }
 
     public function createUser(Request $request)

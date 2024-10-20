@@ -122,6 +122,8 @@
                         </button>
                     </div>
                 </div>
+                <p id="bookingCount" class="text-lg font-semibold mb-4"></p>
+
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-l bg-gray-300">
@@ -153,7 +155,7 @@
                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
                                     รอทำความสะอาด
                                 </span>
-                                @elseif($room->booking_status !== 'ทำการจอง' && $room->booking_status !== 'รอชำระเงิน' && $room->booking_status !== 'เช็คอินแล้ว')
+                                @elseif($room->room_status === 'พร้อมให้บริการ')
                                 <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                     <span class="w-2 h-2 me-1 bg-green-300 rounded-full mr-1"></span>
                                     ว่าง
@@ -184,14 +186,24 @@
                                     <i class="fa-solid fa-tools"></i>
                                 </a>
                             </td>
-                            <td class="px-4 py-2">
-                                <a href="/em_reserve/{{ $room->id }}?checkin_date=" + encodeURIComponent(document.getElementById('checkin-date').value) + "&checkout_date=" + encodeURIComponent(document.getElementById('checkout-date').value)"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-600" onclick="event.preventDefault(); 
-   window.location='/em_reserve/{{ $room->id }}?checkin_date=' + encodeURIComponent(document.getElementById('checkin-date').value) + '&checkout_date=' + encodeURIComponent(document.getElementById('checkout-date').value)">
+                            <td class="px-4 py-2" data-room-status="{{ $room->room_status }}">
+                                @if ($room->room_status === 'พร้อมให้บริการ')
+                                <a href="#"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold text-sm rounded-md hover:bg-blue-600 book-button"
+                                    onclick="event.preventDefault(); 
+        var checkinDate = encodeURIComponent(document.getElementById('checkin-date').value);
+        var checkoutDate = encodeURIComponent(document.getElementById('checkout-date').value);
+        window.location='/em_reserve/{{ $room->id }}?checkin_date=' + checkinDate + '&checkout_date=' + checkoutDate;">
                                     <i class="fa-solid fa-book-open mr-2"></i> จอง
                                 </a>
-
+                                @else
+                                <button disabled
+                                    class="inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold text-sm rounded-md cursor-not-allowed">
+                                    <i class="fa-solid fa-book-open mr-2"></i> ไม่พร้อมให้จอง
+                                </button>
+                                @endif
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -352,20 +364,34 @@
                             const row = document.createElement('tr');
                             row.className = 'bg-white border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200';
                             row.innerHTML = `
-        <td class="px-4 py-2 text-center">${index + 1}</td>
-        <td class="px-4 py-2 text-left">${booking.booking_name}</td>
-        <td class="px-4 py-2 text-left">${booking.checkin_date}</td>
-        <td class="px-4 py-2 text-left">${booking.checkout_date}</td>
-        <td class="px-4 py-2 text-left">
-            <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                <span class="w-2 h-2 bg-yellow-300 rounded-full mr-1"></span>
-                ${booking.booking_status}
-            </span>
-        </td>`;
+            <td class="px-4 py-2 text-center">${index + 1}</td>
+            <td class="px-4 py-2 text-left">${booking.booking_name}</td>
+            <td class="px-4 py-2 text-left">${booking.checkin_date}</td>
+            <td class="px-4 py-2 text-left">${booking.checkout_date}</td>
+            <td class="px-4 py-2 text-left">
+                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 bg-yellow-300 rounded-full mr-1"></span>
+                    ${booking.booking_detail_status}
+                </span>
+            </td>`;
                             bookingTableBody.appendChild(row);
                         });
 
-
+                        // เช็คเงื่อนไขสำหรับปุ่มจอง
+                        const availableRooms = document.querySelectorAll('[data-room-status="พร้อมให้บริการ"]');
+                        if (availableRooms.length <= data.bookingCount) {
+                            availableRooms.forEach(room => {
+                                const bookButton = room.querySelector('.book-button');
+                                if (bookButton) {
+                                    // เปลี่ยนปุ่มจองให้เป็นปุ่ม disabled
+                                    bookButton.outerHTML = `
+                    <button disabled
+                        class="inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold text-sm rounded-md cursor-not-allowed">
+                        <i class="fa-solid fa-book-open mr-2"></i> ไม่พร้อมให้จอง
+                    </button>`;
+                                }
+                            });
+                        }
 
                         // Show the booking results section
                         bookingResults.classList.remove('hidden');

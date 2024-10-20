@@ -21,10 +21,7 @@
 
 <body class="bg-gray-100">
     <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
-        {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
-        <a href="" class="mx-5"><i class="fa-solid fa-phone"></i>0961826631</a> --}}
     </div>
-
     <header class="bg-white shadow-lg pt-3">
         <div class="container mx-auto flex items-center justify-between h-24 px-5">
             <nav class="text-base">
@@ -34,59 +31,64 @@
                     <a href="contact" class="hover:text-blue-400">ติดต่อ</a>
                 </div>
             </nav>
-            <div class="logo" id="logo">
-                <a href="home" class="pl-24">Thunthree</a>
-            </div>
-            <div class="flex items-center space-x-4 text-gray-800 text-base">
-                <nav class="flex space-x-10">
-                    @guest
-                    <!-- ปุ่ม Login -->
-                    <a href="#" onclick="showLoginForm()" class="flex items-center space-x-1 hover:text-blue-400">
-                        <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>เข้าสู่ระบบ</span>
-                    </a>
 
-                    <!-- ปุ่ม Register -->
-                    <a href="#" onclick="showRegisterForm()"
-                        class="flex items-center space-x-1 hover:text-blue-400">
-                        <i class="fa-solid fa-user"></i>
-                        <span>สมัครสมาชิก</span>
-                    </a>
-                    @endguest
-                    @auth
-                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
-                            class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                    <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
-                            class="fa-solid fa-star ml-2"></i></a>
-                    <button id="profileButton" type="button" class="text-black hover:text-blue-400 focus:outline-none">
-                        <i class="fa-solid fa-user"></i>
-                        <span class="sr-only">User Menu</span>
-                    </button>
-                    <div id="profileDropdown"
-                        class="absolute hidden right-40 ml-2 mt-1 w-38 bg-white rounded-md shadow-lg box-shadow-md">
-                        <div class="py-1">
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
-                            <a href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <span class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
-                                    Logout
-                                </span>
-                            </a>
+            <div class="mx-auto" id="logo">
+                <a href="home" class="">Thunthree</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                @auth
+                    <nav class="flex items-center space-x-10 text-base">
+                        <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                                class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                        {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+                                class="fa-solid fa-star ml-2"></i></a> --}}
+                        <div class="relative">
+                            <button id="profileButton" type="button"
+                                class="text-black hover:text-blue-400 focus:outline-none">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="sr-only">User Menu</span>
+                            </button>
+                            <div id="profileDropdown"
+                                class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
+                                <div class="py-1">
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
+                                </div>
+                            </div>
                             <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
                                 @csrf
                             </form>
                         </div>
-                    </div>
-                    @endauth
-                    <!-- End  User Menu Dropdown -->
-                </nav>
-                <button id="booking-btn"
-                    class="bg-blue-500 text-white px-8 py-4 rounded-lg border-2 border-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 transition-colors">
-                    จองตอนนี้
-                </button>
+                    </nav>
+                @endauth
+
+                <div class="flex flex-col items-end space-y-2 mb-4">
+                    <nav class="flex items-center space-x-2">
+                        @guest
+                            <a href="#" onclick="showLoginForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>เข้าสู่ระบบ</span>
+                            </a>
+                            <a href="#" onclick="showRegisterForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-user"></i>
+                                <span>สมัครสมาชิก</span>
+                            </a>
+                        @endguest
+                    </nav>
+                    <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
+                        href="{{ route('userbooking') }}" id="userbooking">
+                        เช็คห้องว่าง
+                    </a>
+
+                </div>
             </div>
         </div>
     </header>
@@ -197,55 +199,8 @@
     </main>
 
 
-    <footer class="bg-gray-800 mt-10 text-white">
-        <div class="container mx-auto p-5">
-            <div class="flex flex-wrap">
-                <!-- ข้อมูลการติดต่อ -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Tunthree Resort</h4>
-                    <div class="mt-4">
-                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
-                            <i class="fa fa-map-marker mr-2"></i>
-                            <span>Location</span>
-                        </a>
-                        <a href="tel:0940028212" class="flex items-center mb-2">
-                            <i class="fa fa-phone mr-2"></i>
-                            <span>Call 0940028212</span>
-                        </a>
-                        <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
-                            <i class="fa fa-envelope mr-2"></i>
-                            <span>polathip.b@kkumail.com</span>
-                        </a>
-                    </div>
+    <x-footer />
 
-                </div>
-                <!-- ลิงก์หลัก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Quick Links</h4>
-                    <div class="mt-4">
-                        <a href="index.html" class="block mb-2">Home</a>
-                        <a href="service.html" class="block mb-2">Services</a>
-                        <a href="contact.html" class="block mb-2">Contact Us</a>
-                    </div>
-                </div>
-                <!-- ฟอร์มสมัครสมาชิก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Subscribe</h4>
-                    <form action="#" class="mt-4">
-                        <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
-                        <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="text-center ">
-                <small>
-                    &copy; 2024 Tunthree Resort. All rights reserved.
-                    <a href="#" class="hover:underline">Privacy Policy</a> •
-                    <a href="#" class="hover:underline">Terms of Service</a>
-                </small>
-            </div>
-        </div>
-    </footer>
 
     <div id="loginForm" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">

@@ -127,7 +127,6 @@
                                 <span class="text-blue-500 text-sm "> ({{ count($details) }} ห้อง)</span>
                                 @endif
                             </td>
-
                             <td class="px-4 py-2">
                                 {{ $details[0]->checkin_date }}
                             </td>
@@ -141,11 +140,11 @@
                             <td class="px-4 py-2 text-center">
                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
-                                    {{ $details[0]->booking_status }}
+                                    {{ $details[0]->booking_detail_status }}
                                 </span>
                             </td>
                             <td class="px-4 py-2 text-center">
-                                @if(count($details) == 1 && $details[0]->booking_status === 'รอเลือกห้อง')
+                                @if(count($details) == 1 && $details[0]->booking_detail_status === 'รอเลือกห้อง')
                                 <button onclick="showModal('{{ $details[0]->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">
                                     เช็คอิน
                                 </button>
@@ -183,11 +182,11 @@
                                             <td class="px-4 py-2">
                                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
-                                                    {{ $detail->booking_status }}
+                                                    {{ $detail->booking_detail_status }}
                                                 </span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                @if($detail->booking_status === 'รอเลือกห้อง')
+                                                @if($detail->booking_detail_status === 'รอเลือกห้อง')
                                                 <button onclick="showModal('{{ $detail->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300">
                                                     เช็คอิน
                                                 </button>

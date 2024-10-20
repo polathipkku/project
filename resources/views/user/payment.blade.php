@@ -32,9 +32,8 @@
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
                 <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $bookingDetail->booking_name }}</p>
-                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $bookingDetail->occupancy_person }}</p>
+                <p><strong>จำนวนผู้เข้าพัก:</strong> {{$bookingDetail->booking->person_count}}</p>
                 <p><strong>เบอร์โทรศัพท์:</strong> {{ $bookingDetail->phone }}</p>
-
                 <p class="mr-4"><strong>เช็คอิน:</strong>
                     {{ \Carbon\Carbon::parse($bookingDetail->checkin_date)->format('d-m-Y') }}
                 </p>
@@ -185,7 +184,6 @@
 
                 document.getElementById('pay-button').style.display = 'none';
 
-                // Confirm Payment through Stripe
                 stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
                     if (result.error) {
                         // ใช้ SweetAlert เพื่อแจ้งเตือนข้อผิดพลาด
@@ -206,12 +204,13 @@
                                 body: JSON.stringify({
                                     booking_id: bookingId,
                                     payment_status: 'succeeded',
-                                    booking_status: 'รอเลือกห้อง'
+                                    booking_detail_status: 'รอเลือกห้อง',
+                                    booking_status: 'ชำระเงินเสร็จสิ้น'
                                 })
-                            }).then(response => response.json())
+                            })
+                            .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    // ใช้ SweetAlert เพื่อแจ้งเตือนเมื่อชำระเงินสำเร็จ
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'ชำระเงินสำเร็จ',
@@ -221,7 +220,6 @@
                                         showConfirmButton: false
                                     });
 
-                                    // ตั้งเวลานับถอยหลังเพื่อเปลี่ยนเส้นทางไปหน้าอื่น
                                     setTimeout(() => {
                                         window.location.href = '/';
                                     }, 3000);
@@ -229,7 +227,6 @@
                             })
                             .catch(error => {
                                 console.error('Error:', error);
-                                // ใช้ SweetAlert เพื่อแจ้งเตือนเมื่อเกิดข้อผิดพลาดในการอัปเดตสถานะ
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'เกิดข้อผิดพลาด',
@@ -246,8 +243,9 @@
             }
         });
 
+
+
         function cancelBooking(bookingId) {
-            // ใช้ SweetAlert แทน confirm
             Swal.fire({
                 title: 'ยืนยันการยกเลิก',
                 text: 'คุณต้องการยกเลิกการจองและการชำระเงินหรือไม่?',
@@ -259,19 +257,20 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // ทำการยกเลิกการจอง
                     fetch('/cancel-booking/' + bookingId, {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
                                     'content'),
                                 'Content-Type': 'application/json'
-                            }
+                            },
+                            body: JSON.stringify({
+                                payment_status: 'cancel'
+                            })
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // ใช้ SweetAlert แทน alert
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'ยกเลิกสำเร็จ',
@@ -303,6 +302,7 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>

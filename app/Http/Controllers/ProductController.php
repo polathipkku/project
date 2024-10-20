@@ -28,8 +28,6 @@ class ProductController extends Controller
         $drinks = Product::with('stock', 'productType')->whereHas('productType', function ($query) {
             $query->where('product_type_name', 'เครื่องดื่ม');
         })->get();
-
-
         return view('employee.store', compact('drinks'));
     }
 

@@ -21,14 +21,15 @@
   <link rel="stylesheet" href="/css/hero.css">
   <link href="src/output.css" rel="stylesheet">
   <title>Thunthree</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
 </head>
 
 <body class="bg-gray-100">
   <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
-    {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
-        <a href="" class="mx-5"><i class="fa-solid fa-phone"></i>0961826631</a> --}}
   </div>
-
   <header class="bg-white shadow-lg pt-3">
     <div class="container mx-auto flex items-center justify-between h-24 px-5">
       <nav class="text-base">
@@ -48,8 +49,8 @@
         <nav class="flex items-center space-x-10 text-base">
           <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
               class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-          <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
-              class="fa-solid fa-star ml-2"></i></a>
+          {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+            class="fa-solid fa-star ml-2"></i></a> --}}
           <div class="relative">
             <button id="profileButton" type="button"
               class="text-black hover:text-blue-400 focus:outline-none">
@@ -100,43 +101,46 @@
     </div>
   </header>
 
-  <div id="backdrop"
-    class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
-  </div>
+  {{-- <div id="backdrop"
+        class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
+    </div>
 
-  <div id="sidebar" class="sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
-    <h2 class="text-2xl font-bold mb-5">จองห้องพัก</h2>
-    <form>
-      <div class="mb-4">
-        <label for="checkin_date" class="block text-gray-700">เช็คอิน</label>
-        <input type="text" id="checkin_date" name="checkin" class="w-full border p-2 rounded">
-      </div>
-      <div class="mb-4">
-        <label for="checkout_date" class="block text-gray-700">เช็คเอาท์</label>
-        <input type="text" id="checkout_date" name="checkout" class="w-full border p-2 rounded">
-      </div>
-      <div class="mb-4">
-        <label for="rooms" class="block text-gray-700">จำนวนห้อง</label>
-        <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded" min="1">
-      </div>
-      <input type="hidden" id="startDate">
-      <input type="hidden" id="endDate">
-      <input type="hidden" id="totalDay">
-      <button id="reserve-button" type="button" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
-        เช็คห้องว่าง
-      </button>
+    <div id="sidebar" class="sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
+        <h2 class="text-2xl font-bold mb-5">จองห้องพัก</h2>
+        <form>
+            <div class="mb-4">
+                <label for="checkin_date" class="block text-gray-700">เช็คอิน</label>
+                <input type="text" id="checkin_date" name="checkin" class="w-full border p-2 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="checkout_date" class="block text-gray-700">เช็คเอาท์</label>
+                <input type="text" id="checkout_date" name="checkout" class="w-full border p-2 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="rooms" class="block text-gray-700">จำนวนห้อง</label>
+                <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded"
+                    min="1">
+            </div>
+            <input type="hidden" id="startDate">
+            <input type="hidden" id="endDate">
+            <input type="hidden" id="totalDay">
+            <button id="reserve-button" type="button"
+                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
+                เช็คห้องว่าง
+            </button>
 
-      <script>
-        document.getElementById('reserve-button').addEventListener('click', function() {
-          var checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
-          var checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
-          var numberOfRooms = encodeURIComponent(document.getElementById('rooms').value);
+            <script>
+                document.getElementById('reserve-button').addEventListener('click', function() {
+                    var checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
+                    var checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
+                    var numberOfRooms = encodeURIComponent(document.getElementById('rooms').value);
 
-          var url = `{{ route('userbooking') }}?checkin_date=${checkinDate}&checkout_date=${checkoutDate}&number_of_rooms=${numberOfRooms}`;
-          window.location.href = url;
-        });
-      </script>
-    </form>
+                    var url =
+                        `{{ route('userbooking') }}?checkin_date=${checkinDate}&checkout_date=${checkoutDate}&number_of_rooms=${numberOfRooms}`;
+  window.location.href = url;
+  });
+  </script>
+  </form>
   </div>
 
   <script>
@@ -170,10 +174,11 @@
         }
       });
       reserveButton.addEventListener('click', function() {
-        alert("Check-in: " + valuestartdate.value + "\nCheck-out: " + valueenddate.value + "\nจำนวนวันเข้าพัก: " + totalDay.value);
+        alert("Check-in: " + valuestartdate.value + "\nCheck-out: " + valueenddate.value +
+          "\nจำนวนวันเข้าพัก: " + totalDay.value);
       });
     });
-  </script>
+  </script> --}}
 
   <main class="container w-full  ">
     <div class="relative" id="card-1">
@@ -276,49 +281,136 @@
             <p><strong>เวลาเช็คเอาท์:</strong> 12:00 น.</p>
           </div>
           <div class="text-center mt-8 ">
-            <button id="reserve-button" type="button" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
+            <a id="reserve-button" href="{{ route('userbooking') }}"
+              class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
               เช็คห้องว่าง
-            </button>
+            </a>
           </div>
         </div>
       </div>
     </div>
 
 
+    <style>
+      @media (min-width: 1024px) {
+        .swiper-slide:nth-child(4) {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+    </style>
 
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section class="my-16">
+        <h2 class="text-4xl font-bold mb-10 text-center text-gray-800">โปรโมชั่นพิเศษ</h2>
+        <div class="flex justify-center">
+          <div class="w-full max-w-6xl">
+            @if ($promotions->isEmpty())
+            <!-- No promotions available message -->
+            <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
+            @else
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                @foreach ($promotions as $promotion)
+                <div class="swiper-slide">
+                  <div
+                    class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
+                    <div class="flex justify-center mb-4">
+                      <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                      {{ $promotion->campaign_name }}
+                    </h3>
 
+                    <!-- Display discount information -->
+                    <p class="text-lg mb-2">
+                      <span class="font-semibold">ส่วนลด:</span>
+                      <span class="text-blue-500 font-bold">
+                        @if ($promotion->type === 'percentage')
+                        {{ $promotion->discount_value }}%
+                        @else
+                        {{ $promotion->discount_value }} ฿
+                        @endif
+                      </span>
+                    </p>
 
+                    <!-- Display minimum conditions, if available -->
+                    <div class="text-gray-600 mb-4">
+                      @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
+                      @if ($promotion->minimum_nights)
+                      <p>เงื่อนไข: เข้าพักขั้นต่ำ {{ $promotion->minimum_nights }}
+                        คืน</p>
+                      @endif
 
-    <div class="flex flex-col justify-center">
-      <section class="my-10 text-center">
-        <h2 class="text-3xl font-bold mb-5">โปรโมชั่นพิเศษ</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
-          <!-- โปรวันธรรมดา -->
-          <div class="p-5 border rounded-lg shadow-md">
-            <i class="fa-solid fa-calendar-week text-4xl text-blue-500 mb-3"></i>
-            <h3 class="text-2xl font-semibold mb-2">ลดพิเศษช่วงกลางสัปดาห์</h3>
-            <p>รับส่วนลด 10% สำหรับการจองห้องพักระหว่างวันจันทร์ถึงวันพฤหัสบดี</p>
-            <p class="text-gray-600">เงื่อนไข: จองล่วงหน้า 1 สัปดาห์</p>
-          </div>
+                      @if ($promotion->minimum_booking_amount)
+                      <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
+                        บาท</p>
+                      @endif
+                      @else
+                      <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
+                      <p>ยอดจองขั้นต่ำ: ไม่มี</p>
+                      @endif
+                    </div>
 
-          <!-- โปรสุดคุ้ม -->
-          <div class="p-5 border rounded-lg shadow-md">
-            <i class="fa-solid fa-gift text-4xl text-blue-500 mb-3"></i>
-            <h3 class="text-2xl font-semibold mb-2">โปรสุดคุ้ม</h3>
-            <p>รับส่วนลด 15% สำหรับการจองห้องพัก 2 คืน</p>
-            <p class="text-gray-600">เงื่อนไข: ใช้รหัสโปรโมชั่น <strong>TWO15</strong> เมื่อทำการจอง</p>
-          </div>
-
-          <!-- โปรเพิ่มเตียง -->
-          <div class="p-5 border rounded-lg shadow-md">
-            <i class="fa-solid fa-bed text-4xl text-blue-500 mb-3"></i>
-            <h3 class="text-2xl font-semibold mb-2">เพิ่มเตียงฟรี</h3>
-            <p>รับเตียงเสริมฟรี 1 เตียงสำหรับการจองห้องพัก 3 คืน</p>
-            <p class="text-gray-600">เงื่อนไข: จองล่วงหน้า 2 สัปดาห์</p>
+                    <!-- Display promo code -->
+                    @if ($promotion->promo_code)
+                    <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
+                        class="text-blue-500">{{ $promotion->promo_code }}</strong>
+                    </p>
+                    <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
+                      class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                      คัดลอกโค้ด
+                    </button>
+                    @endif
+                  </div>
+                </div>
+                @endforeach
+              </div>
+            </div>
+            @endif
           </div>
         </div>
       </section>
     </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.swiper-container', {
+          slidesPerView: 1,
+          spaceBetween: 30,
+          centeredSlides: <?= $promotions->count() === 1 ? 'true' : 'false' ?>,
+          loop: <?= $promotions->count() > 3 ? 'true' : 'false' ?>,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          breakpoints: {
+            640: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+          },
+        });
+      });
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+          alert('โค้ดโปรโมชั่นถูกคัดลอกแล้ว!');
+        }, function() {
+          alert('เกิดข้อผิดพลาดในการคัดลอกโค้ด');
+        });
+      }
+    </script>
+
+
+
 
 
     <div class="flex flex-col gap-10 mt-10" id="card-2">
@@ -443,55 +535,7 @@
 
 
 
-  <footer class="bg-gray-800 mt-10 text-white">
-    <div class="container mx-auto p-5">
-      <div class="flex flex-wrap">
-        <!-- ข้อมูลการติดต่อ -->
-        <div class="w-full md:w-1/3 mb-6">
-          <h4 class="text-xl font-bold">Tunthree Resort</h4>
-          <div class="mt-4">
-            <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
-              <i class="fa fa-map-marker mr-2"></i>
-              <span>Location</span>
-            </a>
-            <a href="tel:0940028212" class="flex items-center mb-2">
-              <i class="fa fa-phone mr-2"></i>
-              <span>Call 0940028212</span>
-            </a>
-            <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
-              <i class="fa fa-envelope mr-2"></i>
-              <span>polathip.b@kkumail.com</span>
-            </a>
-          </div>
-
-        </div>
-        <!-- ลิงก์หลัก -->
-        <div class="w-full md:w-1/3 mb-6">
-          <h4 class="text-xl font-bold">Quick Links</h4>
-          <div class="mt-4">
-            <a href="index.html" class="block mb-2">Home</a>
-            <a href="service.html" class="block mb-2">Services</a>
-            <a href="contact.html" class="block mb-2">Contact Us</a>
-          </div>
-        </div>
-        <!-- ฟอร์มสมัครสมาชิก -->
-        <div class="w-full md:w-1/3 mb-6">
-          <h4 class="text-xl font-bold">Subscribe</h4>
-          <form action="#" class="mt-4">
-            <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
-            <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
-          </form>
-        </div>
-      </div>
-      <div class="text-center ">
-        <small>
-          &copy; 2024 Tunthree Resort. All rights reserved.
-          <a href="#" class="hover:underline">Privacy Policy</a> •
-          <a href="#" class="hover:underline">Terms of Service</a>
-        </small>
-      </div>
-    </div>
-  </footer>
+  <x-footer />
 
 
 
@@ -536,91 +580,104 @@
 
   <div id="registerForm"
     class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md relative">
-      <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm relative">
+      <div class="absolute top-2 right-2">
         <button onclick="hideRegisterForm()" class="focus:outline-none">
-          <img src="images/reject.png" alt="Reject" class="w-6 h-6">
+          <img src="images/reject.png" alt="Reject" class="w-4 h-4">
         </button>
       </div>
-      <h2 class="text-3xl font-bold mb-2 text-center">Register</h2>
-      <form class="space-y-6" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+      <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+      <form class="space-y-4" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <div class="mb-4">
+
+        <div class="relative">
+          <label for="name"
+            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Name</label>
           <input id="name" name="name" type="text" autocomplete="name" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Name">
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
         </div>
-
-        <div class="mb-4">
+        <div class="relative">
+          <label for="email"
+            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Email</label>
           <input id="email" name="email" type="email" autocomplete="email" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            :value="old('email')" placeholder="Email" autofocus>
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4"
+            :value="old('email')">
         </div>
 
-        <div class="mb-4">
-          <input id="password" name="password" type="password" autocomplete="new-password" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Password">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="relative">
+            <label for="password"
+              class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+          </div>
+          <div class="relative">
+            <label for="password_confirmation"
+              class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Confirm Password</label>
+            <input id="password_confirmation" name="password_confirmation" type="password"
+              autocomplete="new-password" required
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+          </div>
         </div>
 
-        <div class="mb-4">
-          <input id="password_confirmation" name="password_confirmation" type="password"
-            autocomplete="new-password" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Confirm Password">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="relative">
+            <label for="tel"
+              class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Telephone</label>
+            <input id="tel" name="tel" type="tel" autocomplete="tel" required
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+          </div>
+          <div class="relative">
+            <label for="birthday"
+              class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Birthday</label>
+            <input id="birthday" name="birthday" type="date" required
+              class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+          </div>
         </div>
 
-        <div class="mb-4">
-          <input id="tel" name="tel" type="text" autocomplete="tel" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Telephone">
+        <div class="relative">
+          <label for="address"
+            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Address</label>
+          <input id="address" name="address" type="text"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
         </div>
 
-        <div class="mb-4">
-          <input id="start_date" name="start_date" type="date" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
-        </div>
-
-        <div class="mb-4">
-          <input id="birthday" name="birthday" type="date" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
-        </div>
-
-        <div class="mb-4">
-          <input id="address" name="address" type="text" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-            placeholder="Address">
-        </div>
-
-        <div class="mb-4">
-          <input id="image" name="image" type="file" required
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        <div class="relative">
+          <label for="image" class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Profile
+            Image</label>
+          <input id="image" name="image" type="file"
+            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
         </div>
 
         @if (config('jetstream.features.terms_and_privacy_policy'))
-        <div class="mb-4">
+        <div class="flex items-center mt-4">
           <input id="terms" name="terms" type="checkbox"
             class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-          <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a
-              href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a
-              href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
+          <label for="terms" class="text-xs text-gray-900 ml-2">I agree to the
+            <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and
+            <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a>
+          </label>
         </div>
         @endif
 
-        <!-- Register Button -->
         <button type="submit"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Register</button>
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm focus:outline-none focus:shadow-outline mt-6">
+          Register
+        </button>
 
-
-        <!-- Link to show login form -->
-        <div class="text-center mt-2">
-          <p class="text-sm text-gray-600">Already have an account? <a href="#"
-              class="text-blue-600 hover:text-blue-800" onclick="showLoginForm()">Login</a></p>
+        <div class="text-center">
+          <p class="text-xs text-gray-600">Already have an account?
+            <a href="#" class="text-blue-600 hover:text-blue-800"
+              onclick="showLoginForm()">Login</a>
+          </p>
         </div>
       </form>
+
     </div>
   </div>
+
   <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
   <script src="/js/hero.js"></script>

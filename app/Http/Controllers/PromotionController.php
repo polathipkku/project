@@ -100,7 +100,7 @@ class PromotionController extends Controller
     public function getActivePromotion($booking)
     {
         // ตัวอย่างการตรวจสอบโปรโมชั่นที่ใช้งานได้ตามข้อมูลการจอง
-        $promotion = Promotion::where('promotion_status', 1) 
+        $promotion = Promotion::where('promotion_status', 1)
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now())
             ->first();
@@ -140,6 +140,18 @@ class PromotionController extends Controller
         }
 
         return true;
+    }
+
+    public function showPromotionsForHome()
+    {
+        // Fetch only active promotions
+        $promotions = Promotion::where('promotion_status', 1)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->get();
+
+        // Pass the promotions to the 'home' view
+        return view('user.home', compact('promotions'));
     }
 
 

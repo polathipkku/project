@@ -19,10 +19,7 @@
 
 <body class="bg-gray-100">
     <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
-        {{-- <a href="" class="mx-5"><i class="fa-solid fa-envelope"></i> supanat.d@kkumail.com</a>
-        <a href="" class="mx-5"><i class="fa-solid fa-phone"></i>0961826631</a> --}}
     </div>
-
     <header class="bg-white shadow-lg pt-3">
         <div class="container mx-auto flex items-center justify-between h-24 px-5">
             <nav class="text-base">
@@ -42,8 +39,8 @@
                 <nav class="flex items-center space-x-10 text-base">
                     <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
                             class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                    <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
-                            class="fa-solid fa-star ml-2"></i></a>
+                    {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+                        class="fa-solid fa-star ml-2"></i></a> --}}
                     <div class="relative">
                         <button id="profileButton" type="button"
                             class="text-black hover:text-blue-400 focus:outline-none">
@@ -450,60 +447,100 @@
         </div>
     </div>
 
-    <div id="registerForm" class="fixed inset-0 bg-gray-900  bg-opacity-50 flex justify-center items-center z-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm relative">
-            <div class="absolute top-0 right-0 mt-4 mr-4 z-10">
+    <div id="registerForm"
+        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm relative">
+            <div class="absolute top-2 right-2">
                 <button onclick="hideRegisterForm()" class="focus:outline-none">
-                    <img src="images/reject.png" alt="Reject" class="w-6 h-6">
+                    <img src="images/reject.png" alt="Reject" class="w-4 h-4">
                 </button>
             </div>
-            <h2 class="text-3xl font-bold mb-2 text-center">Register</h2>
-            <form class="space-y-6" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+            <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+            <form class="space-y-4" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="mb-4">
-                    <input id="name" name="name" type="text" autocomplete="name" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Name">
+
+                <div class="relative">
+                    <label for="name"
+                        class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Name</label>
+                    <input id="name" name="name" type="text" autocomplete="name" required
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                </div>
+                <div class="relative">
+                    <label for="email"
+                        class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Email</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4"
+                        :value="old('email')">
                 </div>
 
-                <div class="mb-4">
-                    <input id="email" name="email" type="email" autocomplete="email" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" :value="old('email')" placeholder="Email" autofocus>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="relative">
+                        <label for="password"
+                            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Password</label>
+                        <input id="password" name="password" type="password" autocomplete="new-password" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                    </div>
+                    <div class="relative">
+                        <label for="password_confirmation"
+                            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Confirm Password</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password"
+                            autocomplete="new-password" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <input id="password" name="password" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Password">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="relative">
+                        <label for="tel"
+                            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Telephone</label>
+                        <input id="tel" name="tel" type="tel" autocomplete="tel" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                    </div>
+                    <div class="relative">
+                        <label for="birthday"
+                            class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Birthday</label>
+                        <input id="birthday" name="birthday" type="date" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Confirm Password">
+                <div class="relative">
+                    <label for="address"
+                        class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Address</label>
+                    <input id="address" name="address" type="text"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
                 </div>
 
-                <div class="mb-4">
-                    <input id="tel" name="tel" type="text" autocomplete="tel" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Telephone">
-                </div>
-
-                <div class="mb-4">
-                    <input id="birthday" name="birthday" type="date" required class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
-                </div>
-
-                <div class="mb-4">
-                    <input id="address" name="address" type="text" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Address">
-                </div>
-
-                <div class="mb-4">
-                    <input id="image" name="image" type="file" class="block w-full  px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                <div class="relative">
+                    <label for="image" class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Profile
+                        Image</label>
+                    <input id="image" name="image" type="file"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
-                <div class="mb-4">
-                    <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label for="terms" class="text-sm text-gray-900 ml-2">I agree to the <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a></label>
+                <div class="flex items-center mt-4">
+                    <input id="terms" name="terms" type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="terms" class="text-xs text-gray-900 ml-2">I agree to the
+                        <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and
+                        <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a>
+                    </label>
                 </div>
                 @endif
 
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Register</button>
+                <button type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm focus:outline-none focus:shadow-outline mt-6">
+                    Register
+                </button>
 
-                <div class="text-center mt-2">
-                    <p class="text-sm text-gray-600">Already have an account? <a href="#" class="text-blue-600 hover:text-blue-800" onclick="showLoginForm()">Login</a></p>
+                <div class="text-center">
+                    <p class="text-xs text-gray-600">Already have an account?
+                        <a href="#" class="text-blue-600 hover:text-blue-800"
+                            onclick="showLoginForm()">Login</a>
+                    </p>
                 </div>
             </form>
 

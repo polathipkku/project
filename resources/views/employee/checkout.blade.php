@@ -96,14 +96,14 @@
                     <tbody class="text-center">
                         @foreach($bookings as $booking)
                         @foreach($booking->bookingDetails as $detail)
-                        @if($detail->booking_status == 'เช็คอินแล้ว' && $detail->booking_status !== 'เช็คเอาท์')
+                        @if($detail->booking_detail_status == 'เช็คอินแล้ว' && $detail->booking_detail_status !== 'เช็คเอาท์')
                         <tr>
                             <td class="px-4 py-2">
                                 @if($detail->room)
                                 {{ $detail->room->room_name }}
                                 @endif
                             </td>
-                            <td class="px-4 py-2">{{ $detail->booking_status }}</td>
+                            <td class="px-4 py-2">{{ $detail->booking_detail_status }}</td>
                             <td class="px-4 py-2">{{ $detail->checkout_date }}</td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}" class="text-blue-500 hover:text-blue-700">
@@ -114,7 +114,7 @@
                             </td>
 
                             <td class="px-4 py-4 flex justify-center items-center border-b">
-                                @if($detail->booking_status === 'เช็คอินแล้ว')
+                                @if($detail->booking_detail_status === 'เช็คอินแล้ว')
                                 <button
                                     class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300"
                                     onclick="showCheckoutPopup('{{ $booking->id }}')">

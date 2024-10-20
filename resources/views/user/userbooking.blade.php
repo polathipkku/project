@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="dist\output.css">
     <link rel="shortcut icon" href="images/TTbell.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/hero.css">
+
 
     <title>Thunthree</title>
 
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
@@ -21,7 +21,7 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
-    <style>
+    {{-- <style>
         button {
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
@@ -34,74 +34,83 @@
             transform: scale(1.05);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-    </style>
+    </style> --}}
 </head>
 
 <body class="bg-gray-100">
-    <div class="hero_area">
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
-        <!-- header section strats -->
-        <header class="header_section">
-            <div class="header_top fixed top-0 left-0 w-full z-50 ">
-                <div class="container-fluid ">
-                    <div class="contact_nav">
-                        <a href="">
-                            <i class="fa-solid fa-phone"></i>
-                            <span>
-                                Call : 0940028212
-                            </span>
-                        </a>
-                        <a href="">
-                            <i class="fa-solid fa-envelope"></i>
-                            <span>
-                                Email : polathip.b@kkumail.com
-                            </span>
-                        </a>
-                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span>
-                                Location
-                            </span>
-                        </a>
-                    </div>
+    <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
+    </div>
+    <header class="bg-white shadow-lg pt-3">
+        <div class="container mx-auto flex items-center justify-between h-24 px-5">
+            <nav class="text-base">
+                <div class="container mx-auto flex justify-center space-x-10 py-3">
+                    <a href="gallery" class="hover:text-blue-400">แกลเลอรี่</a>
+                    <a href="travel" class="hover:text-blue-400">สถานที่ท่องเที่ยว</a>
+                    <a href="contact" class="hover:text-blue-400">ติดต่อ</a>
                 </div>
+            </nav>
+
+            <div class="mx-auto" id="logo">
+                <a href="home" class="">Thunthree</a>
             </div>
 
-            <div class="w-full flex flex-wrap items-center justify-between mx-auto py-4 max-xl:p-4 shadow-md fixed top-10 left-0  z-40 bg-white"
-                style="padding: 5%;">
-                <a href="{{ route('home') }}" class="text-black text-4xl font-bold">Tunthree Resort</a>
-                <div class="relative">
-                    <nav class="space-x-10 text-xl">
-
-                        <a href="history.html" class="text-black hover:text-blue-400">ประวัติการจอง<i
-                                class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                        <a href="about.html" class="text-black hover:text-blue-400">รีวิว<i
-                                class="fa-solid fa-star ml-2"></i></a>
-                        <a href="contact.html" class="text-black hover:text-blue-400">ติดต่อเรา<i
-                                class="fa-solid fa-comments ml-2"></i></a>
-                        <!-- User Menu Dropdown -->
+            <div class="flex items-center space-x-4">
+                @auth
+                <nav class="flex items-center space-x-10 text-base">
+                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                            class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                    {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+                        class="fa-solid fa-star ml-2"></i></a> --}}
+                    <div class="relative">
                         <button id="profileButton" type="button"
                             class="text-black hover:text-blue-400 focus:outline-none">
                             <i class="fa-solid fa-user"></i>
                             <span class="sr-only">User Menu</span>
                         </button>
                         <div id="profileDropdown"
-                            class="absolute hidden right-0 ml-2 mt-2 w-38 bg-white rounded-md shadow-lg">
+                            class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
                             <div class="py-1">
                                 <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
                                 <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
                                 <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
                             </div>
                         </div>
+                        <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
+                </nav>
+                @endauth
+
+                <div class="flex flex-col items-end space-y-2 mb-4">
+                    <nav class="flex items-center space-x-2">
+                        @guest
+                        <a href="#" onclick="showLoginForm()"
+                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>เข้าสู่ระบบ</span>
+                        </a>
+                        <a href="#" onclick="showRegisterForm()"
+                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                            <i class="fa-solid fa-user"></i>
+                            <span>สมัครสมาชิก</span>
+                        </a>
+                        @endguest
                     </nav>
+                    <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
+                        href="{{ route('userbooking') }}" id="userbooking">
+                        เช็คห้องว่าง
+                    </a>
+
                 </div>
-        </header>
-    </div>
+            </div>
+        </div>
+    </header>
     <div class="mx-auto pt-2 pb-2 ">
         <p class="text-gray-600 text-l max-xl:px-4 pt-8" style="margin-left: 7%;">
             <a href="{{ route('home') }}" class="text-black hover:text-blue-400">Home</a>
@@ -137,7 +146,7 @@
                 <div class="flex flex-col items-start">
                     <span class="font-semibold text-white mb-1">จำนวนห้องและผู้เข้าพัก</span>
                     <button id="guest-room-button"
-                        class="flex items-center bg-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-800">
+                        class="flex items-center bg-white px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none">
                         <i class="fa fa-user mr-2"></i> <span id="guest-summary">ผู้ใหญ่ 2 คน, 1 ห้อง</span>
                         <i class="fa fa-caret-down ml-2"></i>
                     </button>
@@ -312,95 +321,116 @@
         }
     </script>
 
-    <section id="room-availability" class=" mt-12 gap-8 mx-auto" style="padding-bottom: 10%; background-color: white; border: 1px solid #ddd; max-width: 1300px; height: 500px;">
-        <div class="w-full text-white py-2" style="background-color: #04233B; margin: -1px;"> <!-- Added margin to counteract border -->
+    <section id="room-availability" class="mt-12 gap-8 mx-auto"
+        style="padding-bottom: 10%; background-color: white; border: 1px solid #ddd; max-width: 1300px; height: 500px;">
+        <div class="w-full text-white py-2" style="background-color: #04233B; margin: -1px;">
+            <!-- Added margin to counteract border -->
             <h2 class="text-xl font-semibold ml-2">Thunthree Room</h2>
         </div>
-        <div class="grid grid-flow-col gap-1 mt-1">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <div class="w-full">
-                    <div id="default-carousel" class="relative w-full" data-carousel="slide">
-                        <div class="relative h-60 overflow-hidden">
-                            <!-- Item 1 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="/images/S__13500429.jpg" class="absolute block w-full h-full object-cover" alt="...">
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="/images/i-8.png" class="absolute block w-full h-full object-cover" alt="...">
-                            </div>
-                            <!-- Item 3 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="/images/i-11.png" class="absolute block w-full h-full object-cover" alt="...">
-                            </div>
-                            <!-- Item 4 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="/images/S__13500428.jpg" class="absolute block w-full h-full object-cover" alt="...">
-                            </div>
+        <div class="grid grid-cols-12 gap-4 mt-1 p-4"> <!-- Use grid-cols-12 to define 12 columns -->
+            <!-- Image Section: Occupying 5/12 of the space -->
+            <div class="col-span-5">
+                <div id="default-carousel" class="relative w-full" data-carousel="slide">
+                    <div class="relative h-60 overflow-hidden">
+                        <!-- Item 1 -->
+                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                            <img src="/images/S__13500429.jpg" class="absolute block w-full h-full object-cover"
+                                alt="...">
                         </div>
-                        <!-- Slider indicators -->
-                        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
+                        <!-- Item 2 -->
+                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                            <img src="/images/i-8.png" class="absolute block w-full h-full object-cover"
+                                alt="...">
                         </div>
-                        <!-- Slider controls -->
-                        <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
-                                </svg>
-                                <span class="sr-only">Previous</span>
-                            </span>
-                        </button>
-                        <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                </svg>
-                                <span class="sr-only">Next</span>
-                            </span>
-                        </button>
+                        <!-- Item 3 -->
+                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                            <img src="/images/i-11.png" class="absolute block w-full h-full object-cover"
+                                alt="...">
+                        </div>
+                        <!-- Item 4 -->
+                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                            <img src="/images/S__13500428.jpg" class="absolute block w-full h-full object-cover"
+                                alt="...">
+                        </div>
                     </div>
-                    <div class="text-gray-700 flex flex-col items-center justify-center mt-2">
-                        <span class="flex items-center space-x-2 text-sm text-align: center">
-                            <span>ภาพถ่าย</span>
-                        </span>
+                    <!-- Slider indicators -->
+                    <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false"
+                            aria-label="Slide 2" data-carousel-slide-to="1"></button>
+                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false"
+                            aria-label="Slide 3" data-carousel-slide-to="2"></button>
+                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false"
+                            aria-label="Slide 4" data-carousel-slide-to="3"></button>
                     </div>
-                    <div class="border-t-2 border-gray-300 mt-2"></div>
-                    <div class="text-gray-700 flex flex-col items-start space-y-2 mt-2" style="max-width: 100%; padding: 1rem;">
-                        <span class="flex items-center space-x-2 text-sm">
-                            <i class="fas fa-wifi text-black"></i>
-                            <span>ฟรี WiFi</span>
+                    <!-- Slider controls -->
+                    <button type="button"
+                        class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                        data-carousel-prev>
+                        <span
+                            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                            <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                            <span class="sr-only">Previous</span>
                         </span>
-                        <span class="flex items-center space-x-2 text-sm">
-                            <i class="fas fa-bed text-black"></i>
-                            <span>เตียงคิงไซต์</span>
+                    </button>
+                    <button type="button"
+                        class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                        data-carousel-next>
+                        <span
+                            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                            <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                            <span class="sr-only">Next</span>
                         </span>
-                        <span class="flex items-center space-x-2 text-sm">
-                            <i class="fas fa-users text-black"></i>
-                            <span>จำนวนสูงสุด ผู้ใหญ่ 2 คน</span>
-                        </span>
-                    </div>
+                    </button>
                 </div>
-
-                <div class="mr-4 w-64 text-sm">
-                    <h4 class="text-lg font-semibold">นโยบายการเข้าพัก</h4>
-                    <p>เช็คอิน: <span class="font-semibold">13:00</span> | เช็คเอาท์: <span class="font-semibold">12:00</span></p>
-                    <ul class="list-disc pl-4 space-y-2 text-gray-700">
-                        <li style="white-space: nowrap;">เช็คเอ้าท์หลัง 12.00 น. คิดชั่วโมงละ 500 บาท</li>
-                        <li style="white-space: nowrap;">ห้ามนำบุคคลภายนอกเข้าพัก (ปรับ 2000 บาท)</li>
-                        <li style="white-space: nowrap;">ห้องพักปลอดบุหรี่ (ปรับ 2000 บาท)</li>
-                        <li style="white-space: nowrap;">ไม่อนุญาตสัตว์เลี้ยง (ปรับ 2000 บาท)</li>
-                        <li style="white-space: nowrap;">งดใช้เสียงดังหลัง 22.00 น.</li>
-                        <li style="white-space: nowrap;">ไม่อนุญาตให้ประกอบอาหารในที่พัก</li>
-                        <li style="white-space: nowrap;">ทางรีสอร์ทไม่รับผิดชอบทรัพย์สินที่สูญหาย</li>
-                        <li style="white-space: nowrap;">ชำระค่าปรับสำหรับทรัพย์สินของรีสอร์ทที่เสียหาย</li>
-                        <li style="white-space: nowrap;">ไม่สามารถยกเลิก แก้ไข หรือเปลี่ยนแปลงวันเข้าพักได้</li>
-                    </ul>
+                <div class="text-gray-700 flex flex-col items-center justify-center mt-2">
+                    <span class="flex items-center space-x-2 text-sm text-align: center">
+                        <span>ภาพถ่าย</span>
+                    </span>
+                </div>
+                <div class="border-t-2 border-gray-300 mt-2"></div>
+                <div class="text-gray-700 flex flex-col items-start space-y-2 mt-2"
+                    style="max-width: 100%; padding: 1rem;">
+                    <span class="flex items-center space-x-2 text-sm">
+                        <i class="fas fa-wifi text-black"></i>
+                        <span>ฟรี WiFi</span>
+                    </span>
+                    <span class="flex items-center space-x-2 text-sm">
+                        <i class="fas fa-bed text-black"></i>
+                        <span>เตียงคิงไซต์</span>
+                    </span>
+                    <span class="flex items-center space-x-2 text-sm">
+                        <i class="fas fa-users text-black"></i>
+                        <span>จำนวนสูงสุด ผู้ใหญ่ 2 คน</span>
+                    </span>
                 </div>
             </div>
-            <div class="flex-1 flex items-center mb-36"></div>
+
+            <div class="col-span-4 ml-10 ">
+                <h4 class="text-lg font-semibold">นโยบายการเข้าพัก</h4>
+                <p>เช็คอิน: <span class="font-semibold">13:00</span> | เช็คเอาท์: <span
+                        class="font-semibold">12:00</span></p>
+                <ul class="list-disc pl-4 space-y-2 text-gray-700">
+                    <li style="white-space: nowrap;">เช็คเอ้าท์หลัง 12.00 น. คิดชั่วโมงละ 500 บาท</li>
+                    <li style="white-space: nowrap;">ห้ามนำบุคคลภายนอกเข้าพัก (ปรับ 2000 บาท)</li>
+                    <li style="white-space: nowrap;">ห้องพักปลอดบุหรี่ (ปรับ 2000 บาท)</li>
+                    <li style="white-space: nowrap;">ไม่อนุญาตสัตว์เลี้ยง (ปรับ 2000 บาท)</li>
+                    <li style="white-space: nowrap;">งดใช้เสียงดังหลัง 22.00 น.</li>
+                    <li style="white-space: nowrap;">ไม่อนุญาตให้ประกอบอาหารในที่พัก</li>
+                    <li style="white-space: nowrap;">ทางรีสอร์ทไม่รับผิดชอบทรัพย์สินที่สูญหาย</li>
+                    <li style="white-space: nowrap;">ชำระค่าปรับสำหรับทรัพย์สินของรีสอร์ทที่เสียหาย</li>
+                    <li style="white-space: nowrap;">ไม่สามารถยกเลิก แก้ไข หรือเปลี่ยนแปลงวันเข้าพักได้</li>
+                </ul>
+            </div>
+
+            <div id="flex-1" class="flex-1 flex items-center mb-36"></div>
         </div>
     </section>
 
@@ -418,94 +448,10 @@
             <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d933.7442758063276!2d104.03987679285655!3d16.5454448381507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e1!3m2!1sth!2sth!4v1721844367798!5m2!1sth!2sth" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
         </div>
     </section>
-    <!-- ส่วนรีวิวจากลูกค้า -->
-    <section class="container mx-auto mt-12 mb-12">
-        <h2 class="text-2xl font-semibold mb-4">รีวิวจากลูกค้า</h2>
-        <div class="grid gap-4">
-            <div class="p-4 border rounded-md shadow-sm">
-                <p class="text-gray-600">"ห้องพักสะอาดและสะดวกสบายมาก!" - คุณสมชาย</p>
-            </div>
-            <div class="p-4 border rounded-md shadow-sm">
-                <p class="text-gray-600">"พนักงานบริการดีเยี่ยม และอาหารเช้าอร่อย!" - คุณสมศรี</p>
-            </div>
-        </div>
-    </section>
 
-    <section class="info_section layout_padding2">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-3 info_col">
-                    <div class="info_contact">
-                        <h4>
+    <x-footer />
 
-                            Tunthree Resort
-
-                        </h4>
-                        <div class="contact_link_box">
-                            <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span>
-                                    Location
-                                </span>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-phone" aria-hidden="true"></i>
-                                <span>
-                                    Call 0940028212
-                                </span>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <span>
-                                    polathip.b@kkumail.com
-                                </span>
-                            </a>
-                            <a href="https://www.facebook.com/profile.php?id=100063483881013">
-                                <i class="fa fa-facebook" aria-hidden="true">
-                                    <span>
-                                        Thunthree
-                                    </span>
-                                </i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-2 mx-auto info_col">
-                    <div class="info_link_box">
-                        <h4>
-
-                        </h4>
-                        <div class="info_links">
-                            <a class="active" href="{{ route('home')}}">
-                                <img src="images/nav-bullet.png" alt="">
-                                Home
-                            </a>
-                            <a class="" href="service.html">
-                                <img src="images/nav-bullet.png" alt="">
-                                Services
-                            </a>
-                            <a class="" href="contact.html">
-
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 info_col ">
-                    <h4>
-                        Subscribe
-                    </h4>
-                    <form action="#">
-                        <input type="text" placeholder="Enter email" />
-                        <button type="submit">
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script src="/js/hero.js"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

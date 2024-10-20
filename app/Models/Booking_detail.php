@@ -25,6 +25,7 @@ class Booking_detail extends Model
         'checkin_date',
         'checkout_date',
         'extra_bed_count',
+        'booking_detail_status',
 
     ];
 

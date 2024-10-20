@@ -7,6 +7,11 @@ use App\Models\Product_room;
 
 class ProductRoomController extends Controller
 {
+    public function add_productroom()
+    {
+        $add_productroom = Product_room::all();
+        return view('owner.add_productroom', compact('add_productroom')); // Pass data to view
+    }
     public function productroom()
     {
         $productroom = Product_room::all();

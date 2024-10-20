@@ -164,12 +164,15 @@
                     {{-- เพิ่มฟิลด์ userType --}}
                     <input type="hidden" name="userType" value="1">
 
-                    <div class="flex items-center justify-end mt-4">
-                        <div class="flex justify-end w-full">
-                            <button id="submit" type="submit" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                            <button id="cancel" class="ml-4 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick="window.location.href = '/employee'">Cancel</button>
-                        </div>
-                    </div>
+                    <button type="submit"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">สร้างพนักงาน</button>
+
+                    <!-- ปุ่มยกเลิก -->
+                    <a href="{{ route('employee') }}"
+                        class="inline-block mt-4 text-center text-blue-600 hover:text-blue-800">
+                        <button type="button"
+                            class="text-white bg-gray-400 hover:bg-gray-500 rounded-lg text-sm px-5 py-2.5">ยกเลิก</button>
+                    </a>
                 </form>
 
             </div>
