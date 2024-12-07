@@ -8,13 +8,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ asset('css/output.css') }}" rel="stylesheet">
     <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <link rel="shortcut icon" href="/images/Logo_2.jpg" type="image/png">
     <link rel="stylesheet" href="/css/hero.css">
     <link href="src/output.css" rel="stylesheet">
     <title>Thunthree</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
 </head>
 
 <body class="bg-gray-100">
@@ -90,35 +100,90 @@
             </div>
         </div>
     </header>
-    <div id="backdrop" class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
+
+    {{-- <div id="backdrop"
+        class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">
     </div>
 
-    <div id="sidebar" class=" sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
+    <div id="sidebar" class="sidebar-hidden fixed top-0 right-0 w-1/4 h-full bg-white p-5 shadow-lg z-50">
         <h2 class="text-2xl font-bold mb-5">จองห้องพัก</h2>
         <form>
             <div class="mb-4">
-                <label for="checkin" class="block text-gray-700">เช็คอิน</label>
-                <input type="date" id="checkin" name="checkin" class="w-full border p-2 rounded">
+                <label for="checkin_date" class="block text-gray-700">เช็คอิน</label>
+                <input type="text" id="checkin_date" name="checkin" class="w-full border p-2 rounded">
             </div>
             <div class="mb-4">
-                <label for="checkout" class="block text-gray-700">เช็คเอาท์</label>
-                <input type="date" id="checkout" name="checkout" class="w-full border p-2 rounded">
+                <label for="checkout_date" class="block text-gray-700">เช็คเอาท์</label>
+                <input type="text" id="checkout_date" name="checkout" class="w-full border p-2 rounded">
             </div>
             <div class="mb-4">
                 <label for="rooms" class="block text-gray-700">จำนวนห้อง</label>
-                <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded" min="1">
+                <input type="number" id="rooms" name="rooms" class="w-full border p-2 rounded"
+                    min="1">
             </div>
-            <div class="mb-4">
-                <label for="guests" class="block text-gray-700">จำนวนผู้เข้าพัก</label>
-                <input type="number" id="guests" name="guests" class="w-full border p-2 rounded" min="1">
-            </div>
-            <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700">เช็คห้องว่าง</button>
-        </form>
+            <input type="hidden" id="startDate">
+            <input type="hidden" id="endDate">
+            <input type="hidden" id="totalDay">
+            <button id="reserve-button" type="button"
+                class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
+                เช็คห้องว่าง
+            </button>
+
+            <script>
+                document.getElementById('reserve-button').addEventListener('click', function() {
+                    var checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
+                    var checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
+                    var numberOfRooms = encodeURIComponent(document.getElementById('rooms').value);
+
+                    var url =
+                        `{{ route('userbooking') }}?checkin_date=${checkinDate}&checkout_date=${checkoutDate}&number_of_rooms=${numberOfRooms}`;
+    window.location.href = url;
+    });
+    </script>
+    </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var valuestartdate = document.getElementById('startDate');
+            var valueenddate = document.getElementById('endDate');
+            var totalDay = document.getElementById('totalDay');
+            var checkinInput = document.getElementById('checkin_date');
+            var checkoutDateInput = document.getElementById('checkout_date');
+
+            flatpickr(checkinInput, {
+                dateFormat: 'Y-m-d',
+                locale: 'th',
+                minDate: 'today',
+                mode: 'range',
+                onChange: function(array, str, instance) {
+                    if (array.length === 2) {
+                        var startDate = array[0];
+                        var endDate = array[1];
+                        var strStartDate = instance.formatDate(startDate, 'Y-m-d');
+                        var strEndDate = instance.formatDate(endDate, 'Y-m-d');
+                        valuestartdate.value = strStartDate;
+                        valueenddate.value = strEndDate;
+                        checkinInput.value = strStartDate;
+                        checkoutDateInput.value = strEndDate;
+                        var timeDiff = endDate - startDate;
+                        var totalDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                        totalDay.value = totalDays;
+                        document.getElementById('totalDay').textContent = totalDays + " วัน";
+                    }
+                }
+            });
+            reserveButton.addEventListener('click', function() {
+                alert("Check-in: " + valuestartdate.value + "\nCheck-out: " + valueenddate.value +
+                    "\nจำนวนวันเข้าพัก: " + totalDay.value);
+            });
+        });
+    </script> --}}
 
     <main class="container w-full  ">
         <div class="relative" id="card-1">
-            <img src="/images/i-6.jpeg" alt="Hotel" class="cropped-image w-full object-cover rounded-lg" id="card-1-img">
+            <img src="/images/i-6.jpeg" alt="Hotel" class="cropped-image w-full object-cover rounded-lg"
+                id="card-1-img">
             <div class="absolute bottom-0 left-0 bg-black bg-opacity-50 p-5 text-white rounded-br-lg">
                 <h1 class="text-4xl font-bold">ยินดีต้อนรับสู่โรงแรมของเรา</h1>
                 <p class="text-xl">สัมผัสธรรมชาติและความสะดวกสบาย</p>
@@ -131,47 +196,52 @@
         <div class="room-data mt-12 mb-24">
             <div class="container flex flex-col text-center mb-12">
                 <h1 class="text-xl">Thunthree</h1>
-                <p class="text-5xl">ห้องพัก</p>
+                <p class="text-4xl">ห้องพัก</p>
             </div>
             <div class="flex justify-center">
                 <div class="w-1/4">
                     <div class="grid grid-cols-2 gap-2">
                         <div class="col-span-1">
                             <a data-fancybox="gallery" data-src="images/i-8.png">
-                                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-8.png'); background-position: center; background-size: cover;" />
+                                <img alt=""
+                                    style="width: 100%; height: 150px; background-image: url('images/i-8.png'); background-position: center; background-size: cover;" />
                             </a>
                         </div>
                         <div class="col-span-1">
                             <a data-fancybox="gallery" data-src="images/i-9.png">
-                                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-9.png'); background-position: center; background-size: cover;" />
+                                <img alt=""
+                                    style="width: 100%; height: 150px; background-image: url('images/i-9.png'); background-position: center; background-size: cover;" />
                             </a>
                         </div>
                         <div class="col-span-2">
                             <a data-fancybox="gallery" data-src="images/i-10.png">
-                                <div style="width: 100%; height: 150px; background-image: url('images/i-10.png'); background-position: center; background-size: cover;">
+                                <div
+                                    style="width: 100%; height: 150px; background-image: url('images/i-10.png'); background-position: center; background-size: cover;">
                                 </div>
                             </a>
                         </div>
                         <div class="col-span-1">
                             <a data-fancybox="gallery" data-src="images/i-11.png">
-                                <img alt="" style="width: 100%; height: 150px; background-image: url('images/i-11.png'); background-position: center; background-size: cover;" />
+                                <img alt=""
+                                    style="width: 100%; height: 150px; background-image: url('images/i-11.png'); background-position: center; background-size: cover;" />
                             </a>
                         </div>
                         <div class="col-span-1">
                             <a data-fancybox="gallery" data-src="images/S__13500426.jpg">
-                                <img alt="" style="width: 100%; height: 150px; background-image: url('images/S__13500426.jpg'); background-position: center; background-size: cover;" />
+                                <img alt=""
+                                    style="width: 100%; height: 150px; background-image: url('images/S__13500426.jpg'); background-position: center; background-size: cover;" />
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="w-1/2 pl-4">
                     <div class="room-description">
-                        <p class="mt-2 text-gray-700 text-xl">
+                        <p class="mt-2 text-gray-700 text-lg">
                             ห้องพักสะดวกสบายเตียงนุ่ม ห้องกว้างน่าอยู่ สภาพบรรยากาศเต็มไปด้วยธรรมชาติ
                             เรามีทุกอย่างที่จำเป็นและพร้อมให้บริการเพื่อการผ่อนคลายที่สมบูรณ์แบบ
                             วันที่อยากผ่อนก็ได้พักผ่อนได้เต็มที่
                         </p>
-                        <p class="mt-4 text-gray-700 text-xl">
+                        <p class="mt-4 text-gray-700 text-lg">
                             เพลิดเพลินกับสิ่งอำนวยความสะดวกมากมายที่เตรียมไว้สำหรับคุณ เช่น อินเตอร์เน็ตไร้สาย,
                             เครื่องปรับอากาศ, โทรทัศน์จอแบน, ตู้เย็น, และห้องน้ำส่วนตัว
                             นอกจากนี้ยังมีพื้นที่ส่วนกลางสำหรับการพักผ่อนหย่อนใจ เช่น
@@ -211,49 +281,136 @@
                         <p><strong>เวลาเช็คเอาท์:</strong> 12:00 น.</p>
                     </div>
                     <div class="text-center mt-8 ">
-                        <button id="booking-btn" class="inline-block px-8 py-4 bg-white text-blue-500 font-semibold rounded-lg border-2 border-blue-500 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors w-64">
-                            จองตอนนี้
-                        </button>
+                        <a id="reserve-button" href="{{ route('userbooking') }}"
+                            class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700 text-center inline-block">
+                            เช็คห้องว่าง
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
 
+        <style>
+            @media (min-width: 1024px) {
+                .swiper-slide:nth-child(4) {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+            }
+        </style>
 
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section class="my-16">
+                <h2 class="text-4xl font-bold mb-10 text-center text-gray-800">โปรโมชั่นพิเศษ</h2>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-6xl">
+                        @if ($promotions->isEmpty())
+                        <!-- No promotions available message -->
+                        <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
+                        @else
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach ($promotions as $promotion)
+                                <div class="swiper-slide">
+                                    <div
+                                        class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
+                                        <div class="flex justify-center mb-4">
+                                            <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
+                                        </div>
+                                        <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                            {{ $promotion->campaign_name }}
+                                        </h3>
 
+                                        <!-- Display discount information -->
+                                        <p class="text-lg mb-2">
+                                            <span class="font-semibold">ส่วนลด:</span>
+                                            <span class="text-blue-500 font-bold">
+                                                @if ($promotion->type === 'percentage')
+                                                {{ $promotion->discount_value }}%
+                                                @else
+                                                {{ $promotion->discount_value }} ฿
+                                                @endif
+                                            </span>
+                                        </p>
 
+                                        <!-- Display minimum conditions, if available -->
+                                        <div class="text-gray-600 mb-4">
+                                            @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
+                                            @if ($promotion->minimum_nights)
+                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ {{ $promotion->minimum_nights }}
+                                                คืน</p>
+                                            @endif
 
-        <div class="flex flex-col justify-center">
-            <section class="my-10 text-center">
-                <h2 class="text-3xl font-bold mb-5">โปรโมชั่นพิเศษ</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
-                    <!-- โปรวันธรรมดา -->
-                    <div class="p-5 border rounded-lg shadow-md">
-                        <i class="fa-solid fa-calendar-week text-4xl text-blue-500 mb-3"></i>
-                        <h3 class="text-2xl font-semibold mb-2">ลดพิเศษช่วงกลางสัปดาห์</h3>
-                        <p>รับส่วนลด 10% สำหรับการจองห้องพักระหว่างวันจันทร์ถึงวันพฤหัสบดี</p>
-                        <p class="text-gray-600">เงื่อนไข: จองล่วงหน้า 1 สัปดาห์</p>
-                    </div>
+                                            @if ($promotion->minimum_booking_amount)
+                                            <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
+                                                บาท</p>
+                                            @endif
+                                            @else
+                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
+                                            <p>ยอดจองขั้นต่ำ: ไม่มี</p>
+                                            @endif
+                                        </div>
 
-                    <!-- โปรสุดคุ้ม -->
-                    <div class="p-5 border rounded-lg shadow-md">
-                        <i class="fa-solid fa-gift text-4xl text-blue-500 mb-3"></i>
-                        <h3 class="text-2xl font-semibold mb-2">โปรสุดคุ้ม</h3>
-                        <p>รับส่วนลด 15% สำหรับการจองห้องพัก 2 คืน</p>
-                        <p class="text-gray-600">เงื่อนไข: ใช้รหัสโปรโมชั่น <strong>TWO15</strong> เมื่อทำการจอง</p>
-                    </div>
-
-                    <!-- โปรเพิ่มเตียง -->
-                    <div class="p-5 border rounded-lg shadow-md">
-                        <i class="fa-solid fa-bed text-4xl text-blue-500 mb-3"></i>
-                        <h3 class="text-2xl font-semibold mb-2">เพิ่มเตียงฟรี</h3>
-                        <p>รับเตียงเสริมฟรี 1 เตียงสำหรับการจองห้องพัก 3 คืน</p>
-                        <p class="text-gray-600">เงื่อนไข: จองล่วงหน้า 2 สัปดาห์</p>
+                                        <!-- Display promo code -->
+                                        @if ($promotion->promo_code)
+                                        <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
+                                                class="text-blue-500">{{ $promotion->promo_code }}</strong>
+                                        </p>
+                                        <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
+                                            class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                            คัดลอกโค้ด
+                                        </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </section>
         </div>
+
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                new Swiper('.swiper-container', {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    centeredSlides: <?= $promotions->count() === 1 ? 'true' : 'false' ?>,
+                    loop: <?= $promotions->count() > 3 ? 'true' : 'false' ?>,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                        },
+                    },
+                });
+            });
+
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('โค้ดโปรโมชั่นถูกคัดลอกแล้ว!');
+                }, function() {
+                    alert('เกิดข้อผิดพลาดในการคัดลอกโค้ด');
+                });
+            }
+        </script>
+
+
+
 
 
         <div class="flex flex-col gap-10 mt-10" id="card-2">
@@ -268,7 +425,8 @@
                 </div>
                 <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
                     <a data-fancybox="gallery_2" href="/images/tb1.png">
-                        <img src="/images/tb1.png" alt="บรรยากาศ" class="w-full h-full object-cover rounded-lg shadow-md">
+                        <img src="/images/tb1.png" alt="บรรยากาศ"
+                            class="w-full h-full object-cover rounded-lg shadow-md">
                     </a>
                 </div>
             </section>
@@ -276,7 +434,8 @@
             <section class="flex flex-col lg:flex-row items-center gap-5 p-5 px-24">
                 <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
                     <a data-fancybox="gallery_3" href="/images/S__13500429.jpg">
-                        <img src="/images/S__13500429.jpg" alt="สิ่งอำนวยความสะดวก" class="w-full h-full object-cover rounded-lg shadow-md">
+                        <img src="/images/S__13500429.jpg" alt="สิ่งอำนวยความสะดวก"
+                            class="w-full h-full object-cover rounded-lg shadow-md">
                     </a>
                 </div>
                 <div class="flex-grow mb-5 lg:mb-0">
@@ -298,7 +457,8 @@
                 </div>
                 <div class="w-full lg:w-1/3 h-auto flex-shrink-0">
                     <a data-fancybox="gallery_1" href="/images/t-1.jpg">
-                        <img src="/images/t-1.jpg" alt="แหล่งท่องเที่ยว" class="w-full h-full object-cover rounded-lg shadow-md">
+                        <img src="/images/t-1.jpg" alt="แหล่งท่องเที่ยว"
+                            class="w-full h-full object-cover rounded-lg shadow-md">
                     </a>
                     <a data-fancybox="gallery_1" href="/images/t-2.jpg"></a>
                 </div>
@@ -313,22 +473,26 @@
                 <h3 class="text-5xl">จองห้องกับเรา</h3>
                 <p class="text-ml my-5 text-black">CHECK-IN 14.00 น | CHECK-OUT 12.00 น </p>
                 <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 justify-items-center my-10 max-md:flex-col">
-                    <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+                    <div
+                        class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
                         <i class="fa-solid fa-wifi text-4xl text-green-500"></i>
                         <p class="text-2xl font-bold my-3">ฟรี WIFI</p>
                         <p class="text-xl">มีให้ในห้อง</p>
                     </div>
-                    <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+                    <div
+                        class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
                         <i class="fa-solid fa-bell-concierge text-4xl text-yellow-500"></i>
                         <p class="text-2xl font-bold my-3">บริการดีเยี่ยม</p>
                         <p class="text-xl">มีพนักงานคอยให้บริการ</p>
                     </div>
-                    <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+                    <div
+                        class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
                         <i class="fa-solid fa-road text-4xl text-blue-400"></i>
                         <p class="text-2xl font-bold my-3">สะดวกสบาย</p>
                         <p class="text-xl">อยู่ติดถนนใกล้ห้างสรรพสินค้า</p>
                     </div>
-                    <div class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
+                    <div
+                        class="flex flex-col justify-center items-center max-md:py-3 transition-transform transform hover:scale-110">
                         <i class="fas fa-check-circle text-4xl text-green-500"></i>
                         <p class="text-2xl font-bold my-3">จองได้ทุกที่</p>
                         <p class="text-xl">จองได้ทุกที่ ทุกเวลา</p>
@@ -344,14 +508,19 @@
             </div>
             <div class="container flex flex-col md:flex-row justify-between items-start h-full">
                 <div class="map-left w-full md:w-2/3 h-450 mb-5 md:mb-0">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.6264764287885!2d104.0397957767188!3d16.54494445360664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e0!3m2!1sth!2sth!4v1722168540885!5m2!1sth!2sth" width="100%" height="420" class="border border-gray-300 rounded-lg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3824.6264764287885!2d104.0397957767188!3d16.54494445360664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313d1106b2de224b%3A0xa0b6a2d9170250bf!2z4LiY4Lix4LiZ4Lii4LmM4LiX4Lij4Li14Lij4Li14Liq4Lit4Lij4LmM4LiX!5e0!3m2!1sth!2sth!4v1722168540885!5m2!1sth!2sth"
+                        width="100%" height="420" class="border border-gray-300 rounded-lg" allowfullscreen=""
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
-                <div class="map-right w-full md:w-1/3 flex flex-col items-start p-10 bg-white rounded-lg shadow-md h-450">
+                <div
+                    class="map-right w-full md:w-1/3 flex flex-col items-start p-10 bg-white rounded-lg shadow-md h-450">
                     <h2 class="text-xl font-bold mb-3">ธันย์ทรีรีสอร์ท</h2>
                     <p class="mb-3">ธันย์ทรีรีสอร์ท 86 หมู่15 ถนนสมเด็จ – มุกดาหาร ต.บัวขาว อ, อำเภอ กุฉินารายณ์
                         กาฬสินธุ์ 46110</p>
                     <p class="mb-3">GPS: 16.54525038459086, 104.03995924942295</p>
-                    <a href="https://maps.app.goo.gl/TGK3RtsQrBcicC3R6" target="_blank" class="text-blue-500 underline mb-5"> Google Map</a>
+                    <a href="https://maps.app.goo.gl/TGK3RtsQrBcicC3R6" target="_blank"
+                        class="text-blue-500 underline mb-5"> Google Map</a>
                     <h3 class="text-lg font-bold mb-2">สถานที่ใกล้เคียง</h3>
                     <ul class="list-disc pl-5">
                         <li class="mb-2">โลตัส กุฉินารายณ์</li>
@@ -366,55 +535,7 @@
 
 
 
-    <footer class="bg-gray-800 mt-10 text-white">
-        <div class="container mx-auto p-5">
-            <div class="flex flex-wrap">
-                <!-- ข้อมูลการติดต่อ -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Tunthree Resort</h4>
-                    <div class="mt-4">
-                        <a href="https://maps.app.goo.gl/DvK7VftrFYtfJbAS7" class="flex items-center mb-2">
-                            <i class="fa fa-map-marker mr-2"></i>
-                            <span>Location</span>
-                        </a>
-                        <a href="tel:0940028212" class="flex items-center mb-2">
-                            <i class="fa fa-phone mr-2"></i>
-                            <span>Call 0940028212</span>
-                        </a>
-                        <a href="mailto:polathip.b@kkumail.com" class="flex items-center mb-2">
-                            <i class="fa fa-envelope mr-2"></i>
-                            <span>polathip.b@kkumail.com</span>
-                        </a>
-                    </div>
-
-                </div>
-                <!-- ลิงก์หลัก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Quick Links</h4>
-                    <div class="mt-4">
-                        <a href="index.html" class="block mb-2">Home</a>
-                        <a href="service.html" class="block mb-2">Services</a>
-                        <a href="contact.html" class="block mb-2">Contact Us</a>
-                    </div>
-                </div>
-                <!-- ฟอร์มสมัครสมาชิก -->
-                <div class="w-full md:w-1/3 mb-6">
-                    <h4 class="text-xl font-bold">Subscribe</h4>
-                    <form action="#" class="mt-4">
-                        <input type="email" placeholder="Enter email" class="p-2 w-full mb-2" />
-                        <button type="submit" class="bg-blue-500 p-2 w-full text-white">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="text-center ">
-                <small>
-                    &copy; 2024 Tunthree Resort. All rights reserved.
-                    <a href="#" class="hover:underline">Privacy Policy</a> •
-                    <a href="#" class="hover:underline">Terms of Service</a>
-                </small>
-            </div>
-        </div>
-    </footer>
+    <x-footer />
 
 
 
@@ -429,19 +550,29 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-4">
-                    <input id="email" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" type="email" name="email" :value="old('email')" placeholder="Email" required autofocus />
+                    <input id="email"
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                        type="email" name="email" :value="old('email')" placeholder="Email" required
+                        autofocus />
                 </div>
                 <div class="mb-4">
-                    <input id="password" class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" type="password" name="password" placeholder="Password" required autocomplete="current-password" />
+                    <input id="password"
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                        type="password" name="password" placeholder="Password" required
+                        autocomplete="current-password" />
                 </div>
                 <div class="flex items-center mb-6">
-                    <input id="remember_me" type="checkbox" name="remember" class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300" />
+                    <input id="remember_me" type="checkbox" name="remember"
+                        class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300" />
                     <label for="remember_me" class="ml-2 text-sm text-gray-600">Remember me</label>
-                    <a href="{{ route('password.request') }}" class="ml-auto text-sm text-blue-600 hover:text-blue-800">Forgot password</a>
+                    <a href="{{ route('password.request') }}"
+                        class="ml-auto text-sm text-blue-600 hover:text-blue-800">Forgot password</a>
                 </div>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Login</button>
                 <div class="text-center mt-4">
-                    <p class="text-sm text-gray-600">Don't have an account? <a href="#" class="text-blue-600 hover:text-blue-800" onclick="showRegisterForm()">Register</a></p>
+                    <p class="text-sm text-gray-600">Don't have an account? <a href="#"
+                            class="text-blue-600 hover:text-blue-800" onclick="showRegisterForm()">Register</a></p>
                 </div>
             </form>
         </div>
@@ -546,37 +677,10 @@
 
         </div>
     </div>
+
     <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
     <script src="/js/hero.js"></script>
-    <script>
-        const profileButton = document.getElementById("profileButton");
-        const profileDropdown = document.getElementById("profileDropdown");
-
-        profileButton.addEventListener("click", function(event) {
-            profileDropdown.classList.toggle("hidden");
-            event.stopPropagation();
-        });
-
-        document.addEventListener("click", function(event) {
-            const isProfileButtonClicked = profileButton.contains(event.target);
-            const isDropdownOpen = !profileDropdown.classList.contains("hidden");
-
-            if (!isProfileButtonClicked && isDropdownOpen) {
-                profileDropdown.classList.add("hidden");
-            }
-        });
-    </script>
-    <script>
-        document.getElementById('reserve-button').addEventListener('click', function() {
-            var checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
-            var checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
-            var numberOfRooms = encodeURIComponent(document.getElementById('rooms').value);
-
-            var url = `{{ route('userbooking') }}?checkin_date=${checkinDate}&checkout_date=${checkoutDate}&number_of_rooms=${numberOfRooms}`;
-            window.location.href = url;
-        });
-    </script>
 
 </body>
 

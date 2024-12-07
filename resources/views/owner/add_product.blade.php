@@ -141,13 +141,15 @@
                                 @endforeach
                             </select>
                         </div> -->
-                    <div>
-                        <select class="form-select" name="product_type_name" id="product_type" required>
+                    <div class="mb-4">
+                        <label for="product_type" class="block text-sm font-medium text-gray-700">ประเภทสินค้า</label>
+                        <select class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" name="product_type_name" id="product_type" required>
                             <option value="" selected disabled>เลือกประเภทสินค้า</option>
                             <option value="เครื่องดื่ม">เครื่องดื่ม</option>
                             <option value="เครื่องนอน">เครื่องนอน</option>
                         </select>
                     </div>
+
             </div>
 
             <br>

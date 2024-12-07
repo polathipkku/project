@@ -39,7 +39,7 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 gray-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-users mr-1"></i>Employee
                     </div>
@@ -57,7 +57,8 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('product') }}" id="Promotion">
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('promotions') }}" id="Promotion">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
                     </div>
@@ -121,18 +122,18 @@
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->checkout_date }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->room_type }}</td>
                                             <td class="px-3 py-4 text-center">
-                                                @if ($firstBooking->booking_status === 'ทำการจอง')
+                                                @if ($firstBooking->booking_detail_status === 'ทำการจอง')
                                                 <span class="mr-2 inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ทำการจอง</span>
-                                                @elseif($firstBooking->booking_status === 'รอเลือกห้อง')
+                                                @elseif($firstBooking->booking_detail_status === 'รอเลือกห้อง')
                                                 <span class="mr-2 inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">รอเช็คอิน</span>
-                                                @elseif($firstBooking->booking_status === 'เช็คเอาท์')
+                                                @elseif($firstBooking->booking_detail_status === 'เช็คเอาท์')
                                                 <span class="mr-2 inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">เช็คเอาท์</span>
-                                                @elseif($firstBooking->booking_status === 'เช็คอินแล้ว')
+                                                @elseif($firstBooking->booking_detail_status === 'เช็คอินแล้ว')
                                                 <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">เช็คอินแล้ว</span>
-                                                @elseif($firstBooking->booking_status === 'รอชำระเงิน')
+                                                @elseif($firstBooking->booking_detail_status === 'รอชำระเงิน')
                                                 <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">รอชำระเงิน</span>
-                                                @elseif($firstBooking->booking_status === 'ยกเลิกการจอง')
-                                                <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ $firstBooking->booking_status }}</span>
+                                                @elseif($firstBooking->booking_detail_status === 'ยกเลิกการจอง')
+                                                <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ยกเลิกการจอง</span>
                                                 @endif
                                             </td>
                                             <td class="px-4 py-2">

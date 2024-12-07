@@ -63,11 +63,12 @@ class Booking extends Model
     }
     public function checkin()
     {
-        return $this->hasOne(Checkin::class, 'booking_id');
+        return $this->hasOne(Checkin::class);
     }
+
     public function checkout()
     {
-        return $this->hasOne(Checkout::class, 'booking_id');
+        return $this->hasOne(Checkout::class);
     }
     protected static function boot()
     {

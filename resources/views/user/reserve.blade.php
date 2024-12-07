@@ -360,7 +360,7 @@
                                     </label>
                                     <input type="number" name="occupancy_child" id="occupancy_child"
                                         value="{{ old('occupancy_child', $occupancy_child > 0 ? $occupancy_child : 0) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_child > 0 ? 'text-gray-700' : 'text-gray-500 bg-gray-100' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_child > 0 ? 'text-gray-700' : 'text-gray-500' }} leading-tight focus:outline-none focus:shadow-outline h-full"
                                         {{ $occupancy_child > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
 
@@ -371,7 +371,7 @@
                                     </label>
                                     <input type="number" name="occupancy_baby" id="occupancy_baby"
                                         value="{{ old('occupancy_baby', $occupancy_baby > 0 ? $occupancy_baby : 0) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_baby > 0 ? 'text-gray-700' : 'text-gray-500 bg-gray-100' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_baby > 0 ? 'text-gray-700' : 'text-gray-500 ' }} leading-tight focus:outline-none focus:shadow-outline h-full"
                                         {{ $occupancy_baby > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
                             </div>

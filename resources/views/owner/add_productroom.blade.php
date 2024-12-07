@@ -92,14 +92,14 @@
         <section class="ml-10 bg-white" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
             <div class="max-w-screen-xl mx-auto py-10">
                 <div class="px-2 p-2 flex justify-between items-center">
-                    <h1 class="text-4xl mb-10 max-xl:px-4">สร้างโปรโมชั่น</h1>
+                    <h1 class="text-4xl mb-10 max-xl:px-4">สร้างค่าเสียหาย</h1>
                 </div>
 
                 <form action="{{ route('addProductroom') }}" method="post" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-6">
-                        <label for="productroom_name" class="block mb-2 text-sm font-medium text-gray-900">ชื่อสินค้า</label>
+                        <label for="productroom_name" class="block mb-2 text-sm font-medium text-gray-900">ชื่อสินค้าที่เสียหาย</label>
                         <input type="text" id="productroom_name" name="productroom_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                             required />

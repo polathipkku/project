@@ -171,15 +171,16 @@
                                             </span>
                                         </td>
                                         <td class="py-3 px-6 text-center">
-                                            @if($promotion->promotion_status && $promotion->end_date >= now())
+                                            @if($promotion->usage_count >= $promotion->max_usage_per_code)
+                                            <span class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm">ถึงขีดจำกัด</span>
+                                            @elseif($promotion->promotion_status && $promotion->end_date >= now())
                                             <span class="bg-green-100 text-green-800 py-1 px-3 rounded-full text-sm">เปิดใช้งาน</span>
                                             @elseif($promotion->promotion_status && $promotion->end_date < now())
-                                                <span class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-sm">หมดอายุ</span>
-                                                @else
-                                                <span class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-sm">ปิดใช้งาน</span>
-                                                @endif
+                                            <span class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-sm">หมดอายุ</span>
+                                             @else
+                                            <span class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-sm">ปิดใช้งาน</span>
+                                            @endif
                                         </td>
-
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex item-center justify-center">
                                                 <button class="transform hover:text-blue-500 hover:scale-110 transition duration-300 ease-in-out mr-3" onclick="showDetails({{ $promotion->id }})">

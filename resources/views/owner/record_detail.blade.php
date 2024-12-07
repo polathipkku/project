@@ -64,8 +64,8 @@
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">สถานะการจอง:</span>
                                     <span
-                                        class="px-2 py-1 rounded-full text-xs {{ $detail->booking_status == 'Confirmed' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800' }}">
-                                        {{ $detail->booking_status }}
+                                        class="px-2 py-1 rounded-full text-xs {{ $detail->booking_detail_status == 'Confirmed' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800' }}">
+                                        {{ $detail->booking_detail_status }}
                                     </span>
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">ห้องที่จอง:</span>
@@ -154,13 +154,17 @@
                         <div class="border-r border-gray-200 pr-4">
                             <div class="p-3 bg-indigo-50 rounded-lg">
                                 <p class="mb-1"><span class="font-semibold">เช็คอินโดย:</span>
-                                    {{ $bookingDetail->booking->checkin->user->name ?? 'ไม่ระบุ' }}
+                                    @if($bookingDetail->booking && $bookingDetail->booking->checkin && $bookingDetail->booking->checkin->user)
+                                    {{ $bookingDetail->booking->checkin->user->name }}
+                                    @else
+                                <p>ไม่พบชื่อผู้ใช้</p>
+                                @endif
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">ชื่อผู้เข้าพัก:</span>
                                     {{ $bookingDetail->booking->checkin->name }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">เวลาที่เช็คอิน:</span>
-                                    {{ $bookingDetail->booking->checkin->checkin_time }}
+                                    {{ $bookingDetail->booking->checkin->checkin }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">บัตรประชาชน:</span>
                                     {{ $bookingDetail->booking->checkin->id_card }}
@@ -192,7 +196,7 @@
                                 {{ $bookingDetail->booking->checkout->user->name ?? 'ไม่ระบุ' }}
                             </p>
                             <p class="mb-1"><span class="font-semibold">เวลาที่เช็คเอาท์:</span>
-                                {{ $bookingDetail->booking->checkout->checkout_time ?? 'ไม่ระบุ' }}
+                                {{ $bookingDetail->booking->checkout->checkout ?? 'ไม่ระบุ' }}
                             </p>
                             <p><strong>ค่าเสียหาย:</strong>
                                 {{ number_format($bookingDetail->booking->checkout->total_damages ?? 0, 2) }} บาท

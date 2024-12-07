@@ -16,6 +16,7 @@ use App\Models\Checkin;
 use App\Models\Checkout;
 use App\Models\Promotion;
 use App\Models\Checkoutextend;
+use App\Models\Maintenance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -637,7 +638,7 @@ class BookingController extends Controller
         $checkin->postcode = $request->postcode;
         $checkin->save();
 
-        return redirect()->route('checkin')->with('success', 'บันทึกข้อมูลสำเร็จ');
+        return redirect()->route('emroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 
 
@@ -677,38 +678,7 @@ class BookingController extends Controller
         return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
 
-    public function extendCheckout(Request $request)
-    {
-        $bookingDetailId = $request->input('booking_detail_id');
-        $extendDays = $request->input('extend_days');
 
-        // หา booking_detail ที่เกี่ยวข้อง
-        $bookingDetail = Booking_detail::findOrFail($bookingDetailId);
-
-        // อัปเดต checkout_date โดยเพิ่มจำนวนวัน
-        $currentCheckoutDate = Carbon::parse($bookingDetail->checkout_date);
-        $newCheckoutDate = $currentCheckoutDate->addDays($extendDays);
-
-        // คำนวณค่าใช้จ่ายเพิ่มเติม
-        $extraCharge = $extendDays * 500; // 500 บาทต่อวัน
-
-        // อัปเดต checkout_date ใน booking_detail
-        $bookingDetail->checkout_date = $newCheckoutDate;
-        $bookingDetail->save();
-
-        // บันทึกข้อมูลการเลื่อนเวลาเช็คเอาท์ลงในตาราง checkoutextend
-        $checkoutextend = Checkoutextend::create([
-            'booking_detail_id' => $bookingDetailId,
-            'extended_days' => $extendDays,
-            'extra_charge' => $extraCharge,
-        ]);
-
-        // คืนค่าข้อมูลเพื่อใช้ใน popup การชำระเงิน
-        return response()->json([
-            'extra_charge' => $extraCharge,
-            'checkoutextend_id' => $checkoutextend->id // ส่ง ID ของ checkoutextend เพื่อใช้ในการบันทึกการชำระเงิน
-        ]);
-    }
 
     public function savePayment(Request $request)
     {
@@ -776,12 +746,29 @@ class BookingController extends Controller
                 'total_damages' => $totalPrice, // Store total damages here
             ]);
 
-            // You can optionally return the checkout ID or details if needed
+
+            if (!empty($damagedItems)) {
+                foreach ($damagedItems as $itemId) {
+                    $productRoom = Product_room::find($itemId);
+
+                    if ($productRoom) {
+                        $maintenance = new Maintenance([
+                            'booking_id' => $bookingId,
+                            'product_room_id' => $itemId,
+                            'room_id' => $productRoom->room_id,
+                            'damage_cost' => $productRoom->productroom_price,
+                            'status' => 'Pending',
+                        ]);
+                        $maintenance->save();
+                    }
+                }
+            }
             return redirect()->back()->with('success', "เช็คเอาท์สำเร็จ. ค่าเสียหายรวม: ฿" . number_format($totalPrice, 2));
         }
 
         return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
+
 
 
     public function updateBookingDetail(Request $request)

@@ -24,9 +24,8 @@ use App\Http\Middleware\OwnerMiddleware;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
-})->name('welcome');
+
+Route::get('/welcome', [PromotionController::class, 'showPromotionsForHome'])->name('welcome');
 
 Route::get('/text', function () {
     return view('owner.text');
