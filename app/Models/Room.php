@@ -12,16 +12,22 @@ class Room extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'room_Number',
+        'room_name',
         'room_description',
         'price_night',
         'price_temporary',
-        'room_image',
+        'room_image', // Will store JSON of image names
         'room_status',
         'room_occupancy',
         'room_bed',
         'room_bathroom'
     ];
+
+    // Optional: Add casting for room_image as array
+    protected $casts = [
+        'room_image' => 'array',
+    ];
+
 
     public function bookings()
     {
@@ -42,5 +48,4 @@ class Room extends Model
         // สมมติว่าคุณมีสถานะ "รอเลือกห้อง" สำหรับการจองที่ยังรอห้อง
         return $this->bookings()->where('booking_status', 'รอเลือกห้อง');
     }
-
 }

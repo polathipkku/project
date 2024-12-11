@@ -132,8 +132,9 @@
 
                     <div class="room-group mb-6">
                         <label for="room_image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รูปห้อง</label>
-                        <input type="file" id="room_image" name="room_image" class="form-control" required>
+                        <input type="file" id="room_image" name="room_image[]" class="form-control" multiple required>
                     </div>
+
 
                     <div class="room-group mb-6">
                         <label for="รายละเอียดห้องพัก" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รายละเอียดห้องพัก</label>

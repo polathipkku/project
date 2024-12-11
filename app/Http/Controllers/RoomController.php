@@ -68,27 +68,35 @@ class RoomController extends Controller
             'room_description' => 'required',
             'price_night' => 'required|numeric',
             'price_temporary' => 'required|numeric',
-            'room_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'room_image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
             'room_status' => 'required',
             'room_occupancy' => 'required',
             'room_bed' => 'required',
             'room_bathroom' => 'required',
         ]);
 
-        $imageName = time() . '.' . $request->file('room_image')->extension();
-        $request->file('room_image')->move(public_path('images'), $imageName);
+        // Process each uploaded image
+        $images = [];
+        if ($request->hasfile('room_image')) {
+            foreach ($request->file('room_image') as $file) {
+                $originalName = $file->getClientOriginalName(); // Keep original name
+                $file->move(public_path('images'), $originalName);
+                $images[] = $originalName; // Store image names in an array
+            }
+        }
 
         $room = new Room;
         $room->room_name = $request->input('room_name');
         $room->room_description = $request->input('room_description');
         $room->price_night = $request->input('price_night');
         $room->price_temporary = $request->input('price_temporary');
-        $room->room_image = $imageName;
+        $room->room_image = json_encode($images); // Save as JSON
         $room->room_status = $request->input('room_status');
         $room->room_occupancy = $request->input('room_occupancy');
         $room->room_bed = $request->input('room_bed');
         $room->room_bathroom = $request->input('room_bathroom');
         $room->save();
+
         return redirect()->route('room')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 

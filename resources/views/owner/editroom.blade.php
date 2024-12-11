@@ -135,13 +135,23 @@
 
                     <div class="mb-6 room-group">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="room_image">รูปห้อง</label>
-                        <input class="block w-full text-l text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="room_image" type="file" name="room_image" value="{{$rooms->room_image}}">
-                        <img id="current_image" src="{{ asset('images/' . $rooms->room_image) }}" alt="Current Room Image" width="100px" height="100px">
+                        <input class="block w-full text-l text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="room_image" type="file" name="room_image[]" multiple>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            @if (!empty($rooms->room_image))
+                            @foreach (json_decode($rooms->room_image, true) as $image)
+                            <div class="relative">
+                                <img
+                                    src="{{ asset('images/' . $image) }}"
+                                    alt="Room Image"
+                                    class="w-32 h-32 object-cover border rounded">
+                                <p class="text-sm text-gray-600 mt-1 text-center">{{ $image }}</p>
+                            </div>
+                            @endforeach
+                            @else
+                            <p class="text-sm text-gray-500">ไม่มีรูปภาพสำหรับห้องนี้</p>
+                            @endif
+                        </div>
                     </div>
-
-
-
-
                     <div class="mb-6 room-group">
                         <label for="room_description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รายละเอียดห้อง</label>
                         <textarea id="room_description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-32 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="room_description">{{$rooms->room_description}}</textarea>
