@@ -49,8 +49,20 @@ class BookingController extends Controller
         $occupancy_child = $request->input('occupancy_child', 0);
         $occupancy_baby = $request->input('occupancy_baby', 0);
 
-        return view('user.reserve', compact('checkin_date', 'checkout_date', 'number_of_rooms', 'extra_bed_count', 'occupancy_person', 'occupancy_child', 'occupancy_baby'));
+        $user = auth()->user(); // ดึงข้อมูลผู้ใช้งานที่ล็อกอิน (ถ้ามี)
+
+        return view('user.reserve', compact(
+            'checkin_date',
+            'checkout_date',
+            'number_of_rooms',
+            'extra_bed_count',
+            'occupancy_person',
+            'occupancy_child',
+            'occupancy_baby',
+            'user'
+        ));
     }
+
 
 
 

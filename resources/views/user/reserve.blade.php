@@ -318,18 +318,21 @@
                             <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-1/2">
-                                    <label for="booking_name"
-                                        class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
+                                    <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
                                     <input type="text" name="booking_name" id="booking_name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ auth()->check() ? auth()->user()->name : '' }}"
+                                        {{ auth()->check() ? 'readonly' : 'required' }}>
                                 </div>
 
                                 <div class="w-1/2">
-                                    <label for="phone"
-                                        class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
                                     <input type="text" name="phone" id="phone"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ auth()->check() ? auth()->user()->tel : '' }}"
+                                        {{ auth()->check() ? 'readonly' : 'required' }}>
                                 </div>
+
                             </div>
 
                             @if (!auth()->check())
@@ -462,18 +465,18 @@
                         <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
                         <div class="mb-4 flex space-x-4">
                             <div class="flex-1">
-                                <label for="booking_name"
-                                    class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
+                                <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
                                 <input type="text" name="booking_name" id="booking_name"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    required>
+                                    value="{{ auth()->check() ? auth()->user()->name : '' }}"
+                                    {{ auth()->check() ? 'readonly' : 'required' }}>
                             </div>
                             <div class="flex-1">
-                                <label for="phone"
-                                    class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
                                 <input type="text" name="phone" id="phone"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    required>
+                                    value="{{ auth()->check() ? auth()->user()->tel : '' }}"
+                                    {{ auth()->check() ? 'readonly' : 'required' }}>
                             </div>
                         </div>
                         <hr class="border-t-2 border-gray-300 my-4">

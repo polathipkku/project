@@ -379,16 +379,19 @@
 
                         // เช็คเงื่อนไขสำหรับปุ่มจอง
                         const availableRooms = document.querySelectorAll('[data-room-status="พร้อมให้บริการ"]');
-                        if (availableRooms.length <= data.bookingCount) {
-                            availableRooms.forEach(room => {
+                        if (availableRooms.length > 0) {
+                            // จำกัดการจองตามจำนวน bookingCount
+                            availableRooms.forEach((room, index) => {
                                 const bookButton = room.querySelector('.book-button');
-                                if (bookButton) {
-                                    // เปลี่ยนปุ่มจองให้เป็นปุ่ม disabled
-                                    bookButton.outerHTML = `
+                                if (index < data.bookingCount) {
+                                    // ถ้าดัชนีห้องน้อยกว่า bookingCount ให้ปิดปุ่มจอง
+                                    if (bookButton) {
+                                        bookButton.outerHTML = `
                     <button disabled
                         class="inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold text-sm rounded-md cursor-not-allowed">
                         <i class="fa-solid fa-book-open mr-2"></i> ไม่พร้อมให้จอง
                     </button>`;
+                                    }
                                 }
                             });
                         }
