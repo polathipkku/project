@@ -91,15 +91,159 @@
             </a>
             @endguest
           </nav>
-          <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
-            href="{{ route('userbooking') }}" id="userbooking">
-            เช็คห้องว่าง
-          </a>
+          <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+            <div id="bookingButton"
+              class="flex items-center bg-gray-700 text-white rounded-lg shadow-lg px-6 py-3 w-[400px] hover:bg-gray-800 transition-all duration-300 cursor-pointer">
+              <!-- Icon and Text -->
+              <div class="flex items-center">
+                <span class="mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M8 7V3m8 4V3m5 18H3c-1.11 0-2-.89-2-2V8c0-1.11.89-2 2-2h18c1.11 0 2 .89 2 2v11c0 1.11-.89 2-2 2zM3 11h18" />
+                  </svg>
+                </span>
+                <span class="font-bold">จองตอนนี้</span>
+              </div>
+
+              <!-- Divider -->
+              <div class="flex-grow border-l border-gray-500 mx-4"></div>
+
+              <!-- Right Aligned Text -->
+              <div class="text-right">
+                <span class="text-lg font-pacifico"
+                  style="font-family: 'Pacifico', cursive;">Thunthree</span>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
     </div>
   </header>
+  <!-- Popup -->
+  <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div class="bg-gray-700 text-white rounded-lg w-[400px] p-6 relative">
+      <!-- Close Button -->
+      <button id="closePopup" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
+
+      <!-- Header -->
+      <h2 class="text-center text-lg font-pacifico mb-6" style="font-family: 'Pacifico', cursive;">จองตอนนี้</h2>
+
+      <!-- Form -->
+      <form class="space-y-4">
+        <!-- Check-In and Check-Out -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="checkin" class="block text-sm">วันที่เช็คอิน</label>
+            <input type="text" id="checkin" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+          </div>
+          <div>
+            <label for="checkout" class="block text-sm">วันที่เช็คเอาท์</label>
+            <input type="text" id="checkout" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex gap-4">
+            <div>
+              <label for="adults" class="text-sm">ผู้ใหญ่</label>
+              <input type="number" id="adults" min="1" value="2"
+                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            </div>
+            <div>
+              <label for="children" class="text-sm">เด็ก</label>
+              <input type="number" id="children" min="0" value="0"
+                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            </div>
+            <div>
+              <label for="infants" class="text-sm">เด็กเล็ก</label>
+              <input type="number" id="infants" min="0" value="0"
+                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Room -->
+        <div>
+          <label for="rooms" class="block text-sm">จำนวนห้อง</label>
+          <input type="number" id="rooms" min="1" value="1"
+            class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center mt-4">
+          <button type="submit"
+            class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition-all duration-300">
+            ยืนยันการจอง
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- เพิ่มสคริปต์สำหรับ flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <script>
+    // เปิด Popup
+    document.getElementById("bookingButton").addEventListener("click", () => {
+      document.getElementById("popup").classList.remove("hidden");
+    });
+
+    // ปิด Popup
+    document.getElementById("closePopup").addEventListener("click", () => {
+      document.getElementById("popup").classList.add("hidden");
+    });
+
+    // คลิกที่ Popup เพื่อปิด
+    document.getElementById("popup").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("popup")) {
+        document.getElementById("popup").classList.add("hidden");
+      }
+    });
+
+    // ใช้ flatpickr สำหรับเลือกช่วงวันที่ Check-In และ Check-Out
+    flatpickr("#checkin", {
+      mode: "single", // การเลือกแค่วันเดียว
+      dateFormat: "Y-m-d", // รูปแบบวันที่
+      minDate: "today", // ไม่ให้เลือกวันในอดีต
+      onChange: function(selectedDates, dateStr, instance) {
+        document.getElementById("checkin").value = dateStr;
+        // อัปเดตวันที่ Check-Out ให้เป็นหลังจาก Check-In
+        const checkout = document.getElementById("checkout");
+        checkout.disabled = false;
+        checkout.focus();
+      }
+    });
+
+    flatpickr("#checkout", {
+      mode: "single", // การเลือกแค่วันเดียว
+      dateFormat: "Y-m-d", // รูปแบบวันที่
+      minDate: "today", // ไม่ให้เลือกวันในอดีต
+      onChange: function(selectedDates, dateStr, instance) {
+        document.getElementById("checkout").value = dateStr;
+      }
+    });
+
+    document.getElementById('popup').addEventListener('submit', function(event) {
+      event.preventDefault(); // หยุดการส่งฟอร์มเพื่อควบคุมการกระทำด้วย JavaScript
+
+      // รับค่าจากฟอร์ม
+      let checkin = document.getElementById('checkin').value;
+      let checkout = document.getElementById('checkout').value;
+      let adults = document.getElementById('adults').value;
+      let children = document.getElementById('children').value;
+      let infants = document.getElementById('infants').value;
+      let rooms = document.getElementById('rooms').value;
+
+      // สร้าง URL ไปยังหน้า userbooking พร้อมข้อมูลจากฟอร์ม
+      let userBookingUrl = `/userbooking?checkin=${encodeURIComponent(checkin)}&checkout=${encodeURIComponent(checkout)}&adults=${adults}&children=${children}&infants=${infants}&rooms=${rooms}`;
+
+      // เปลี่ยนหน้าไปยัง userbooking
+      window.location.href = userBookingUrl;
+    });
+  </script>
 
   {{-- <div id="backdrop"
         class="fixed inset-0 bg-black opacity-0 z-40 pointer-events-none transition-opacity duration-300">

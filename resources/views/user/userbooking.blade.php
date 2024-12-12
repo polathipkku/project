@@ -124,7 +124,7 @@
     <section>
         <div class="w-full h-24 flex items-center justify-center px-4" style="background-color: #04233B;">
             <div class="flex flex-col items-start mr-4">
-                <span class="font-semibold text-white mb-1">Check-in</span>
+                <span class="font-semibold text-white mb-1">วันที่เช็คอิน</span>
                 <div class="relative">
                     <input type="text" id="checkin_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
                     <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
@@ -132,7 +132,7 @@
                 <input type="hidden" id="startDate" name="startDate">
             </div>
             <div class="flex flex-col items-start mr-4">
-                <span class="font-semibold text-white mb-1">Check-out</span>
+                <span class="font-semibold text-white mb-1">วันที่เช็คเอาท์</span>
                 <div class="relative">
                     <input type="text" id="checkout_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
                     <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
