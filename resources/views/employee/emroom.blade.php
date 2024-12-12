@@ -217,7 +217,6 @@
                         <table class="w-full border border-gray-300 rounded-lg shadow-sm">
                             <thead>
                                 <tr class="bg-gray-200 text-gray-700">
-                                    <th class="px-4 py-2 text-center font-semibold">No.</th>
                                     <th class="px-4 py-2 text-left font-semibold">ชื่อ</th>
                                     <th class="px-4 py-2 text-left font-semibold">วันที่ลูกค้าเลือกเช็คอิน</th>
                                     <th class="px-4 py-2 text-left font-semibold">วันที่ลูกค้าเลือกเช็คเอาท์</th>
@@ -359,21 +358,36 @@
                         // Clear previous booking rows
                         bookingTableBody.innerHTML = '';
 
-                        // Add new booking rows
-                        data.pendingBookings.forEach((booking, index) => {
+                        // Group bookings by booking_name
+                        const groupedBookings = data.pendingBookings.reduce((acc, booking) => {
+                            if (!acc[booking.booking_name]) {
+                                acc[booking.booking_name] = {
+                                    ...booking,
+                                    count: 1
+                                };
+                            } else {
+                                acc[booking.booking_name].count += 1;
+                            }
+                            return acc;
+                        }, {});
+
+                        // Add grouped booking rows
+                        Object.values(groupedBookings).forEach((booking, index) => {
                             const row = document.createElement('tr');
                             row.className = 'bg-white border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200';
                             row.innerHTML = `
-            <td class="px-4 py-2 text-center">${index + 1}</td>
-            <td class="px-4 py-2 text-left">${booking.booking_name}</td>
-            <td class="px-4 py-2 text-left">${booking.checkin_date}</td>
-            <td class="px-4 py-2 text-left">${booking.checkout_date}</td>
-            <td class="px-4 py-2 text-left">
-                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    <span class="w-2 h-2 bg-yellow-300 rounded-full mr-1"></span>
-                    ${booking.booking_detail_status}
-                </span>
-            </td>`;
+                <td class="px-4 py-2 text-left">
+                    ${booking.booking_name} 
+                    ${booking.count > 1 ? `<span class="text-red-500 text-xs">(${booking.count})</span>` : ''}
+                </td>
+                <td class="px-4 py-2 text-left">${booking.checkin_date}</td>
+                <td class="px-4 py-2 text-left">${booking.checkout_date}</td>
+                <td class="px-4 py-2 text-left">
+                    <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                        <span class="w-2 h-2 bg-yellow-300 rounded-full mr-1"></span>
+                        ${booking.booking_detail_status}
+                    </span>
+                </td>`;
                             bookingTableBody.appendChild(row);
                         });
 
@@ -387,10 +401,10 @@
                                     // ถ้าดัชนีห้องน้อยกว่า bookingCount ให้ปิดปุ่มจอง
                                     if (bookButton) {
                                         bookButton.outerHTML = `
-                    <button disabled
-                        class="inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold text-sm rounded-md cursor-not-allowed">
-                        <i class="fa-solid fa-book-open mr-2"></i> ไม่พร้อมให้จอง
-                    </button>`;
+                            <button disabled
+                                class="inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold text-sm rounded-md cursor-not-allowed">
+                                <i class="fa-solid fa-book-open mr-2"></i> ไม่พร้อมให้จอง
+                            </button>`;
                                     }
                                 }
                             });
@@ -403,6 +417,7 @@
                         console.error('Error:', error);
                         alert('An error occurred while fetching the booking data.');
                     });
+
             });
         });
     </script>

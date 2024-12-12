@@ -63,9 +63,6 @@ class BookingController extends Controller
         ));
     }
 
-
-
-
     public function em_reserve(Request $request, $id)
     {
         $rooms = Room::find($id);
@@ -81,7 +78,6 @@ class BookingController extends Controller
 
         return view('employee.em_reserve', compact('rooms', 'checkinDate', 'checkoutDate'));
     }
-
 
 
     public function reservation()

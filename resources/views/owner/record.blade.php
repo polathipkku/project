@@ -207,22 +207,6 @@
             </div>
         </section>
 
-        <script>
-            function toggleDropdown(bookingId) {
-                var dropdown = document.getElementById('dropdown-' + bookingId);
-                var detailButton = document.querySelector(`tr[data-booking-id="${bookingId}"] button`);
-
-                // Toggle dropdown visibility
-                if (dropdown.classList.contains('hidden')) {
-                    dropdown.classList.remove('hidden');
-                    detailButton.disabled = true; // Disable Detail button when dropdown is open
-                } else {
-                    dropdown.classList.add('hidden');
-                    detailButton.disabled = false; // Enable Detail button when dropdown is closed
-                }
-            }
-        </script>
-
 
         <section id="toast" class="hidden">
             <div id="toast-success" class=" flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
