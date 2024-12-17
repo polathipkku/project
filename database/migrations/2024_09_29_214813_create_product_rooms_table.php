@@ -16,12 +16,14 @@ class CreateProductRoomsTable extends Migration
         Schema::create('product_rooms', function (Blueprint $table) {
             $table->id();
             $table->string('productroom_name');
-            $table->decimal('productroom_price', 8, 2); 
+            $table->decimal('productroom_price', 8, 2);
             $table->integer('product_qty');
+            $table->string('productroom_category');
             $table->timestamps();
             $table->softDeletes();
         });
     }
+    
     
 
     /**

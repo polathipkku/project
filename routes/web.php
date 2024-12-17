@@ -118,6 +118,7 @@ Route::post('/em_reserve/{id}', [BookingController::class, 'emaddBooking']);
 Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('em_reserve');
 Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
 
+Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
 Route::get('/maintenance/{id}', [MaintenanceceController::class, 'maintenance'])->name('maintenance');
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
 Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');

@@ -137,44 +137,106 @@
 
                     <!-- Popup for checkout confirmation -->
                     <div id="checkoutPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div class="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
-                            <h2 class="text-lg font-bold mb-4 text-center">ห้องชำรุดหรือไม่?</h2>
-                            <p class="mb-4 text-center">กรุณาเลือกสถานะของห้อง:</p>
-                            <div class="flex justify-around mb-4">
-                                <button id="damagedButton" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-300">ชำรุด</button>
-                                <button id="notDamagedButton" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition duration-300">ไม่ชำรุด</button>
+                        <div class="bg-white p-6 rounded-lg shadow-2xl max-w-md w-full">
+                            <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">
+                                ห้องชำรุดหรือไม่?
+                            </h2>
+                            <p class="mb-6 text-center text-gray-600">
+                                กรุณาเลือกสถานะของห้อง:
+                            </p>
+                            <div class="flex space-x-4 justify-center mb-4">
+                                <button id="damagedButton"
+                                    class="bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-3 rounded-lg transition duration-300">
+                                    ชำรุด
+                                </button>
+                                <button id="notDamagedButton"
+                                    class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded-lg transition duration-300">
+                                    ไม่ชำรุด
+                                </button>
                             </div>
                             <div class="flex justify-center">
-                                <button class="mt-4 text-gray-500 underline" onclick="closePopup()">ปิด</button>
+                                <button class="mt-4 text-gray-500 hover:text-gray-700 underline transition duration-200"
+                                    onclick="closePopup()">
+                                    ปิด
+                                </button>
                             </div>
                         </div>
                     </div>
+
                     <div id="damagedItemsPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div class="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
-                            <h2 class="text-lg font-bold mb-4 text-center">เลือกรายการที่ชำรุด</h2>
-                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post">
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+                            <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">เลือกรายการที่ชำรุด</h2>
+
+                            <!-- Search Bar -->
+                            <div class="mb-4">
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    placeholder="ค้นหาชื่อสินค้า..."
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+                                    oninput="filterItems()">
+                            </div>
+
+                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post" class="space-y-4">
                                 @csrf
                                 <input type="hidden" name="booking_id" id="damagedBookingId">
-                                <div class="max-h-60 overflow-y-auto">
-                                    @foreach($productRooms as $item)
-                                    <div class="flex items-center mb-2">
-                                        <input type="checkbox" id="item-{{ $item->id }}" name="damaged_items[]" value="{{ $item->id }}" class="mr-2">
-                                        <label for="item-{{ $item->id }}" class="flex items-center">
-                                            <div>
-                                                <span class="text-gray-800">{{ $item->productroom_name }}</span>
-                                                <span class="text-gray-500 text-sm">฿{{ number_format($item->productroom_price, 2) }}</span>
-                                            </div>
-                                        </label>
+
+                                <!-- Section for items -->
+                                <div id="itemsContainer" class="max-h-72 overflow-y-auto divide-y divide-gray-200">
+                                    @foreach($productRooms->groupBy('productroom_category') as $category => $items)
+                                    <div class="category-group py-3">
+                                        <h3 class="text-lg font-medium text-gray-700 mb-3">{{ $category }}</h3>
+                                        @foreach($items as $item)
+                                        <div class="flex items-start mb-2 item-row">
+                                            <input
+                                                type="checkbox"
+                                                id="item-{{ $item->id }}"
+                                                name="damaged_items[]"
+                                                value="{{ $item->id }}"
+                                                class="w-4 h-4 mt-1 mr-2 border-gray-300 rounded focus:ring-blue-500">
+                                            <label for="item-{{ $item->id }}" class="flex items-center justify-between w-full">
+                                                <div>
+                                                    <span class="block text-gray-800 font-medium item-name">{{ $item->productroom_name }}</span>
+                                                    <span class="block text-gray-500 text-sm">฿{{ number_format($item->productroom_price, 2) }}</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        @endforeach
                                     </div>
                                     @endforeach
                                 </div>
-                                <div class="flex justify-center mt-4">
-                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">ยืนยัน</button>
-                                    <button type="button" class="ml-4 text-gray-500 underline" onclick="closeDamagedItemsPopup()">ยกเลิก</button>
+
+                                <!-- Action buttons -->
+                                <div class="flex justify-between items-center mt-6">
+                                    <button
+                                        type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded-md shadow-md transition duration-300">
+                                        ยืนยัน
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="text-gray-500 underline hover:text-gray-700 transition duration-300"
+                                        onclick="closeDamagedItemsPopup()">
+                                        ยกเลิก
+                                    </button>
                                 </div>
                             </form>
                         </div>
-                    </div>        
+                    </div>
+
+                    <script>
+                        function filterItems() {
+                            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+                            const itemRows = document.querySelectorAll('.item-row');
+
+                            itemRows.forEach(row => {
+                                const itemName = row.querySelector('.item-name').textContent.toLowerCase();
+                                row.style.display = itemName.includes(searchInput) ? 'flex' : 'none';
+                            });
+                        }
+                    </script>
+
+
 
                     <div id="paymentMethodPopup" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
                         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">

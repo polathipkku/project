@@ -28,8 +28,8 @@ class MaintenanceceController extends Controller
         $user = $maintenance->user;
         return view('employee.maintenancedetail', compact('room', 'maintenance', 'user'));
     }
-    
-    
+
+
     public function store(Request $request)
     {
         // Validate the request data
@@ -47,8 +47,9 @@ class MaintenanceceController extends Controller
             'Problem_detail' => $request->Problem_detail,
             'Maintenance_StartDate' => $request->Maintenance_StartDate,
             'problemType' => $request->problemType,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(), // ตรวจสอบค่าที่ส่งมาว่าเป็น NULL หรือไม่
         ]);
+
 
         // Update room status
         $room = Room::find($request->room_id);
@@ -60,12 +61,11 @@ class MaintenanceceController extends Controller
     }
 
     public function toggleRoomStatus(Request $request, $id)
-{
-    $room = Room::findOrFail($id);
-    $room->room_status = 'พร้อมให้บริการ';
-    $room->save();
+    {
+        $room = Room::findOrFail($id);
+        $room->room_status = 'พร้อมให้บริการ';
+        $room->save();
 
-    return redirect()->back()->with('success', 'Room status updated successfully');
-}
-
+        return redirect()->back()->with('success', 'Room status updated successfully');
+    }
 }

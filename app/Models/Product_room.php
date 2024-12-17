@@ -15,7 +15,9 @@ class Product_room extends Model
         'productroom_name',
         'productroom_price',
         'product_qty',
+        'productroom_category', // เพิ่มหมวดหมู่
     ];
+    
 
     public function checkoutDetails()
     {

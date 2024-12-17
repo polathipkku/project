@@ -220,13 +220,13 @@
                 console.log(`Show modal for booking ID: ${bookingId}, Check-in Date: ${checkinDate}`);
             }
         </script>
-
         <div id="userInformationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
             <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
                 <h2 class="text-2xl font-bold mb-4">กรอกข้อมูลผู้เข้าพัก</h2>
                 <form id="check-in-form" action="{{ route('updateBookingDetail') }}" method="post">
                     @csrf
                     <input type="hidden" name="booking_id" id="modal_booking_id">
+
                     <div class="mb-4">
                         <label for="room_id" class="block mb-2">เลือกห้อง:</label>
                         <select name="room_id" id="room_id" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -236,112 +236,135 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium">ชื่อ:</label>
-                        <input type="text" id="name" name="name" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">
-                    </div>
-                    <div class="mb-4">
-                        <label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>
-                        <input type="text" id="id_card" name="id_card" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">
-                    </div>
-                    <div class="mb-4">
-                        <label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>
-                        <input type="text" id="phone" name="phone" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">
-                    </div>
-                    <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium">ที่อยู่:</label>
-                        <input type="text" id="address" name="address" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">
-                    </div>
-                    <div class="mb-4">
-                        <label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>
-                        <input id="sub_district" name="sub_district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">
-                    </div>
-                    <div class="mb-4">
-                        <label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>
-                        <input id="district" name="district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">
-                    </div>
-                    <div class="mb-4">
-                        <label for="province" class="block text-sm font-medium">จังหวัด:</label>
-                        <input id="province" name="province" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">
-                    </div>
-                    <div class="mb-4">
-                        <label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>
-                        <input id="postcode" name="postcode" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
-                        <input type="number" id="extra_bed_count" name="extra_bed_count" min="0" value="0" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จำนวนเตียงเสริม">
-                    </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" onclick="closeModal()" class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">ยกเลิก</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">บันทึกข้อมูล</button>
-                    </div>
+                    <div id="guest-forms-container">
+                        <div class="guest-form mb-4 border-b border-gray-300 pb-4">
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium">ชื่อ:</label>
+                                <input type="text" id="name" name="name" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>
+                                    <input type="text" id="id_card" name="id_card" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>
+                                    <input type="text" id="phone" name="phone" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="address" class="block text-sm font-medium">ที่อยู่:</label>
+                                <input type="text" id="address" name="address" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>
+                                    <input id="sub_district" name="sub_district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">
+                                </div>
+                                <div>
+                                    <label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>
+                                    <input id="district" name="district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">
+                                </div>
+                                <div>
+                                    <label for="province" class="block text-sm font-medium">จังหวัด:</label>
+                                    <input id="province" name="province" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>
+                                <input id="postcode" name="postcode" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
+                                <input type="number" id="extra_bed_count" name="extra_bed_count" min="0" value="0" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จำนวนเตียงเสริม">
+                            </div>
+                        </div>
+
+                        <button type="button" id="add-guest-button" class="flex items-center gap-2 text-blue-500 hover:text-blue-700">
+                            <i class="fas fa-plus-circle"></i> เพิ่มข้อมูลผู้เข้าพัก
+                        </button>
+
+                        <div class="flex justify-end mt-4">
+                            <button type="button" onclick="closeModal()" class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">บันทึกข้อมูล</button>
+                        </div>
                 </form>
-
             </div>
         </div>
 
+        <script>
+            document.getElementById('add-guest-button').addEventListener('click', function() {
+                const guestFormContainer = document.getElementById('guest-forms-container');
+                const newGuestForm = document.querySelector('.guest-form').cloneNode(true);
 
-    </div>
+                // Clear the input fields in the cloned form
+                newGuestForm.querySelectorAll('input').forEach(input => input.value = '');
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            flatpickr("#checkin-date", {
-                dateFormat: "Y-m-d",
-                defaultDate: "today",
-                onChange: function(selectedDates, dateStr, instance) {
-                    filterBookings(dateStr);
-                }
+                guestFormContainer.appendChild(newGuestForm);
             });
+        </script>
 
-            function filterBookings(date) {
-                const rows = document.querySelectorAll('.booking-row');
-                let visibleRows = 0;
-
-                rows.forEach(row => {
-                    if (row.dataset.checkinDate === date) {
-                        row.style.display = '';
-                        visibleRows++;
-                    } else {
-                        row.style.display = 'none';
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                flatpickr("#checkin-date", {
+                    dateFormat: "Y-m-d",
+                    defaultDate: "today",
+                    onChange: function(selectedDates, dateStr, instance) {
+                        filterBookings(dateStr);
                     }
                 });
 
-                const noBookingsMessage = document.getElementById('no-bookings-message');
-                if (visibleRows === 0) {
-                    noBookingsMessage.classList.remove('hidden');
-                } else {
-                    noBookingsMessage.classList.add('hidden');
+                function filterBookings(date) {
+                    const rows = document.querySelectorAll('.booking-row');
+                    let visibleRows = 0;
+
+                    rows.forEach(row => {
+                        if (row.dataset.checkinDate === date) {
+                            row.style.display = '';
+                            visibleRows++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    const noBookingsMessage = document.getElementById('no-bookings-message');
+                    if (visibleRows === 0) {
+                        noBookingsMessage.classList.remove('hidden');
+                    } else {
+                        noBookingsMessage.classList.add('hidden');
+                    }
                 }
+
+                // Initial filtering
+                filterBookings(flatpickr.formatDate(new Date(), "Y-m-d"));
+            });
+
+            function showModal(bookingId) {
+                document.getElementById('modal_booking_id').value = bookingId;
+                document.getElementById('userInformationModal').classList.remove('hidden');
             }
 
-            // Initial filtering
-            filterBookings(flatpickr.formatDate(new Date(), "Y-m-d"));
-        });
+            function closeModal() {
+                document.getElementById('userInformationModal').classList.add('hidden');
+                document.getElementById('check-in-form').reset();
+            }
 
-        function showModal(bookingId) {
-            document.getElementById('modal_booking_id').value = bookingId;
-            document.getElementById('userInformationModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('userInformationModal').classList.add('hidden');
-            document.getElementById('check-in-form').reset();
-        }
-
-        $.Thailand({
-            database: 'https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/database/db.json', // เพิ่มลิงก์ไปยัง database
-            $district: $("#sub_district"), // input ของตำบล
-            $amphoe: $("#district"), // input ของอำเภอ
-            $province: $("#province"), // input ของจังหวัด
-            $zipcode: $("#postcode") // input ของรหัสไปรษณีย์
-        });
-    </script>
+            $.Thailand({
+                database: 'https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/database/db.json', // เพิ่มลิงก์ไปยัง database
+                $district: $("#sub_district"), // input ของตำบล
+                $amphoe: $("#district"), // input ของอำเภอ
+                $province: $("#province"), // input ของจังหวัด
+                $zipcode: $("#postcode") // input ของรหัสไปรษณีย์
+            });
+        </script>
 
 
 </body>

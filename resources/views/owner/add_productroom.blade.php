@@ -128,6 +128,24 @@
                         @enderror
                     </div>
 
+                    <!-- เพิ่มหมวดหมู่ -->
+                    <div class="mb-6">
+                        <label for="productroom_category" class="block mb-2 text-sm font-medium text-gray-900">หมวดหมู่ค่าเสียหาย</label>
+                        <select id="productroom_category" name="productroom_category"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+                            <option value="" disabled selected>เลือกหมวดหมู่</option>
+                            <option value="เฟอร์นิเจอร์">เฟอร์นิเจอร์</option>
+                            <option value="อุปกรณ์ไฟฟ้า">อุปกรณ์ไฟฟ้า</option>
+                            <option value="ของตกแต่ง">ของตกแต่ง</option>
+                            <option value="เครื่องใช้ในครัว">เครื่องใช้ในครัว</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                        @error('productroom_category')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
                     <button type="submit"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">เพิ่มค่าเสียหาย</button>
 
@@ -137,6 +155,7 @@
                             class="text-white bg-gray-400 hover:bg-gray-500 rounded-lg text-sm px-5 py-2.5">ยกเลิก</button>
                     </a>
                 </form>
+
 
 
             </div>

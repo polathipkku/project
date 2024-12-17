@@ -155,8 +155,21 @@
                                         <td class="py-3 px-6 text-center">
                                             <span>{{ $product->product_qty }}</span>
                                         </td>
+                                        <td class="py-3 px-6 text-center">
+                                            <div class="flex items-center justify-center">
+                                                <a href="" class="mr-3">
+                                                    <button class="text-black hover:text-blue-500">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="" class="delete-link">
+                                                    <button class="text-black hover:text-red-500" type="button" onclick="showToast('toast-danger')">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </td>
 
-                                     
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -168,7 +181,7 @@
         </main>
     </div>
 
-  
+
 
     <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
         @csrf
