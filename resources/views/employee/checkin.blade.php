@@ -227,57 +227,60 @@
                     @csrf
                     <input type="hidden" name="booking_id" id="modal_booking_id">
 
-                    <div class="mb-4">
-                        <label for="room_id" class="block mb-2">เลือกห้อง:</label>
-                        <select name="room_id" id="room_id" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
-                            @foreach($rooms as $room)
-                            <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <div id="guest-forms-container">
-                        <div class="guest-form mb-4 border-b border-gray-300 pb-4">
+
+                        <div class="mb-4">
+                            <label for="room_id" class="block mb-2">เลือกห้อง:</label>
+                            <select name="room_id" id="room_id" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
+                                @foreach($rooms as $room)
+                                <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div id="text" class="guest-form mb-4 border-b border-gray-300 pb-4">
                             <div class="mb-4">
                                 <label for="name" class="block text-sm font-medium">ชื่อ:</label>
-                                <input type="text" id="name" name="name" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">
+                                <input type="text" id="name" name="name_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">
                             </div>
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>
-                                    <input type="text" id="id_card" name="id_card" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">
+                                    <input type="text" id="id_card" name="id_card_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">
                                 </div>
                                 <div>
                                     <label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>
-                                    <input type="text" id="phone" name="phone" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">
+                                    <input type="text" id="phone" name="phone_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label for="address" class="block text-sm font-medium">ที่อยู่:</label>
-                                <input type="text" id="address" name="address" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">
+                                <input type="text" id="address" name="address_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">
                             </div>
 
                             <div class="grid grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>
-                                    <input id="sub_district" name="sub_district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">
+                                    <input id="sub_district" name="sub_district_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">
                                 </div>
                                 <div>
                                     <label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>
-                                    <input id="district" name="district" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">
+                                    <input id="district" name="district_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">
                                 </div>
                                 <div>
                                     <label for="province" class="block text-sm font-medium">จังหวัด:</label>
-                                    <input id="province" name="province" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">
+                                    <input id="province" name="province_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>
-                                <input id="postcode" name="postcode" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
+                                <input id="postcode" name="postcode_[1]" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
                             </div>
+
+
 
                             <div class="mb-4">
                                 <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
@@ -285,7 +288,7 @@
                             </div>
                         </div>
 
-                        <button type="button" id="add-guest-button" class="flex items-center gap-2 text-blue-500 hover:text-blue-700">
+                        <button type="button" id="add_name" class="flex items-center gap-2 text-blue-500 hover:text-blue-700">
                             <i class="fas fa-plus-circle"></i> เพิ่มข้อมูลผู้เข้าพัก
                         </button>
 
@@ -298,15 +301,61 @@
         </div>
 
         <script>
-            document.getElementById('add-guest-button').addEventListener('click', function() {
-                const guestFormContainer = document.getElementById('guest-forms-container');
-                const newGuestForm = document.querySelector('.guest-form').cloneNode(true);
+            var show_text = document.getElementById('text');
+            var add_name = document.getElementById('add_name');
+            var count = 1;
+            add_name.addEventListener('click', function() {
+                count++;
+                var create_div = document.createElement('div');
+                create_div.id = 'text' + count;
+                input =
+                    '<hr>' +
+                '<button class="btn btn-danger" type="button" onclick="removediv('+count+')">ลบ</button> ' +
+                    '<div class="mb-4">' +
+                    '<label for="name" class="block text-sm font-medium">ชื่อ:</label>' +
+                    '<input type="text"  id="name"  name="name_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">' +
+                    '</div>' +
+                    '<div class="grid grid-cols-2 gap-4 mb-4">' +
+                    '<div>' +
+                    '<label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>' +
+                    '<input type="text" id="id_card"  name="id_card_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">' +
+                    '</div>' +
+                    '<div>' +
+                    '<label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>' +
+                    '<input type="text" id="phone"  name="phone_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="mb-4">' +
+                    '<label for="address" class="block text-sm font-medium">ที่อยู่:</label>' +
+                    '<input type="text" id="address"  name="address_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">' +
+                    '</div>' +
+                    '<div class="grid grid-cols-3 gap-4 mb-4">' +
+                    '<div>' +
+                    '<label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>' +
+                    '<input id="sub_district"  name="sub_district_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">' +
+                    '</div>' +
+                    '<div>' +
+                    '<label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>' +
+                    '<input id="district"  name="district_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">' +
+                    '</div>' +
+                    '<div>' +
+                    '<label for="province" class="block text-sm font-medium">จังหวัด:</label>' +
+                    '<input id="province"  name="province_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="mb-4">' +
+                    '<label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>' +
+                    '<input id="postcode" name="postcode_['+count+']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
+                    '</div>';
 
-                // Clear the input fields in the cloned form
-                newGuestForm.querySelectorAll('input').forEach(input => input.value = '');
-
-                guestFormContainer.appendChild(newGuestForm);
+                create_div.innerHTML = input;
+                show_text.appendChild(create_div);
             });
+
+            function removediv(count) {
+                var delete_div = document.getElementById('text' + count);
+                delete_div.remove();
+            }
         </script>
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

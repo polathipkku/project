@@ -544,6 +544,7 @@ class BookingController extends Controller
 
     public function emaddBooking(Request $request, $id)
     {
+
         $request->validate([
             'booking_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -781,18 +782,18 @@ class BookingController extends Controller
 
     public function updateBookingDetail(Request $request)
     {
-        // Validation ของข้อมูลที่ส่งเข้ามา
+
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',
             'room_id' => 'required|exists:rooms,id',
-            'name' => 'required|string|max:255',
-            'id_card' => 'required|string|max:20',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
-            'sub_district' => 'required|string|max:255',
-            'province' => 'required|string|max:100',
-            'district' => 'required|string|max:100',
-            'postcode' => 'required|string|max:10',
+            'name_*' => 'required|array|min:1',
+            'id_card_*' => 'required|array|min:1',
+            'phone_*' => 'required|array|min:1',
+            'address_*' => 'required|array|min:1',
+            'sub_district_*' => 'required|array|min:1',
+            'province_*' => 'required|array|min:1',
+            'district_*' => 'required|array|min:1',
+            'postcode_*' => 'required|array|min:1',
             'extra_bed_count' => 'required|integer|min:0', // Validate จำนวนเตียงเสริม
         ]);
 
@@ -840,20 +841,42 @@ class BookingController extends Controller
             $room->save(); // บันทึกสถานะห้อง
 
             // บันทึกข้อมูลในตาราง Checkin
-            Checkin::create([
-                'booking_id' => $booking->id,
-                'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
-                'checkin' => now(), // วันที่เช็คอิน
-                'name' => $request->name,
-                'id_card' => $request->id_card,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'sub_district' => $request->sub_district,
-                'province' => $request->province,
-                'district' => $request->district,
-                'postcode' => $request->postcode,
-            ]);
-
+            // Checkin::create([
+            //     'booking_id' => $booking->id,
+            //     'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
+            //     'checkin' => now(), // วันที่เช็คอิน
+            //     'name' => $request->name,
+            //     'id_card' => $request->id_card,
+            //     'phone' => $request->phone,
+            //     'address' => $request->address,
+            //     'sub_district' => $request->sub_district,
+            //     'province' => $request->province,
+            //     'district' => $request->district,
+            //     'postcode' => $request->postcode,
+            // ]);
+            $name = $request->input('name_');
+            $id_card = $request->input('id_card_');
+            $phone = $request->input('phone_');
+            $address = $request->input('address_');
+            $sub_district = $request->input('sub_district_');
+            $province = $request->input('province_');
+            $district = $request->input('district_');
+            $postcode = $request->input('postcode_');
+            foreach ($name as $index => $na) {
+                Checkin::create([
+                    'booking_id' => $booking->id,
+                    'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
+                    'checkin' => now(), // วันที่เช็คอิน
+                    'name' => $na,
+                    'id_card' => $id_card[$index],
+                    'phone' => $phone[$index],
+                    'address' => $address[$index],
+                    'sub_district' => $sub_district[$index],
+                    'province' => $province[$index],
+                    'district' => $district[$index],
+                    'postcode' => $postcode[$index],
+                ]);
+            }
             DB::commit(); // ทำการ commit เมื่อทุกอย่างสำเร็จ
 
             // ส่งผู้ใช้กลับไปหน้า checkin พร้อมข้อความสำเร็จ
