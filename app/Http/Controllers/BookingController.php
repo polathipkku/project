@@ -23,11 +23,18 @@ use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
-    public function userbooking()
+    public function userbooking(Request $request)
     {
+        // รับค่าจาก query string
+        $checkin = $request->query('checkin');
+        $checkout = $request->query('checkout');
+        $adults = $request->query('adults', 1);
+        $children = $request->query('children', 0);
+        $infants = $request->query('infants', 0);
         $rooms = Room::all();
-        return view('user.userbooking', compact('rooms',));
+        return view('user.userbooking', compact('rooms', 'checkin', 'checkout', 'adults', 'children', 'infants'));
     }
+
     public function emroom()
     {
         $rooms = Room::all();

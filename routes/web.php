@@ -78,6 +78,7 @@ Route::post('/review', [ReviewController::class, 'submitReview'])->name('review.
 Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/employeehome', [RoomController::class, 'employeehome'])->name('employeehome');
 Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('userbooking');
+
 Route::get('/t', [BookingController::class, 't'])->name('t');
 Route::get('/reserve', [BookingController::class, 'showReserveForm'])->name('reserve');
 Route::post('/reserve', [BookingController::class, 'reserve'])->name('bookings.reserve');

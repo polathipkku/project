@@ -131,35 +131,33 @@
       <h2 class="text-center text-lg font-pacifico mb-6" style="font-family: 'Pacifico', cursive;">จองตอนนี้</h2>
 
       <!-- Form -->
-      <form class="space-y-4">
+      <form action="{{ route('userbooking') }}" method="GET" class="space-y-4">
         <!-- Check-In and Check-Out -->
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="checkin" class="block text-sm">วันที่เช็คอิน</label>
-            <input type="text" id="checkin" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            <input type="text" id="checkin" name="checkin" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
           </div>
           <div>
             <label for="checkout" class="block text-sm">วันที่เช็คเอาท์</label>
-            <input type="text" id="checkout" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            <input type="text" id="checkout" name="checkout" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
           </div>
         </div>
 
+        <!-- Guests -->
         <div>
           <div class="flex gap-4">
             <div>
               <label for="adults" class="text-sm">ผู้ใหญ่</label>
-              <input type="number" id="adults" min="1" value="2"
-                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+              <input type="number" id="adults" name="adults" min="1" value="2" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
             </div>
             <div>
               <label for="children" class="text-sm">เด็ก</label>
-              <input type="number" id="children" min="0" value="0"
-                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+              <input type="number" id="children" name="children" min="0" value="0" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
             </div>
             <div>
               <label for="infants" class="text-sm">เด็กเล็ก</label>
-              <input type="number" id="infants" min="0" value="0"
-                class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+              <input type="number" id="infants" name="infants" min="0" value="0" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
             </div>
           </div>
         </div>
@@ -167,18 +165,17 @@
         <!-- Room -->
         <div>
           <label for="rooms" class="block text-sm">จำนวนห้อง</label>
-          <input type="number" id="rooms" min="1" value="1"
-            class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+          <input type="number" id="rooms" name="rooms" min="1" value="1" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
         </div>
 
         <!-- Submit -->
         <div class="text-center mt-4">
-          <button type="submit"
-            class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition-all duration-300">
+          <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition-all duration-300">
             ยืนยันการจอง
           </button>
         </div>
       </form>
+
     </div>
   </div>
 
