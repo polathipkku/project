@@ -96,7 +96,6 @@
                                         <tr>
                                             <th scope="col" class="px-3 py-3 text-center">หมายเลขการจอง</th>
                                             <th scope="col" class="px-3 py-3 text-center">ชื่อผู้จอง</th>
-                                            <th scope="col" class="px-3 py-3 text-center">จำนวนผู้เข้าพัก</th>
                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คอิน</th>
                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คเอาท์</th>
                                             <th scope="col" class="px-3 py-3 text-center">ประเภทห้องพัก</th>
@@ -117,7 +116,6 @@
                                                 {{ $bookingId }}
                                             </th>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->booking_name }} @if ($hasDuplicates) <span class="text-red-500">({{ $bookings->count() }})</span> @endif </td>
-                                            <td class="px-3 py-4 text-center">{{ $firstBooking->occupancy_person }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->checkin_date }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->checkout_date }}</td>
                                             <td class="px-3 py-4 text-center">{{ $firstBooking->room_type }}</td>
@@ -150,7 +148,6 @@
                                                     <thead class="text-md text-gray-700 uppercase bg-gray-200">
                                                         <tr>
                                                             <th scope="col" class="px-3 py-3 text-center">ชื่อผู้จอง</th>
-                                                            <th scope="col" class="px-3 py-3 text-center">จำนวนผู้เข้าพัก</th>
                                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คอิน</th>
                                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คเอาท์</th>
                                                             <th scope="col" class="px-3 py-3 text-center">ประเภทห้องพัก</th>
@@ -161,7 +158,6 @@
                                                     <tbody>
                                                         <tr class="bg-white text-center">
                                                             <td class="px-3 py-4">{{ $firstBooking->booking_name }}</td>
-                                                            <td class="px-3 py-4">{{ $firstBooking->occupancy_person }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->checkin_date }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->checkout_date }}</td>
                                                             <td class="px-3 py-4">{{ $firstBooking->room_type }}</td>

@@ -126,19 +126,19 @@
             <div class="flex flex-col items-start mr-4">
                 <span class="font-semibold text-white mb-1">วันที่เช็คอิน</span>
                 <div class="relative">
-                    <input type="text" id="checkin_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
+                    <input type="text" id="checkin_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly value="{{ $checkin ?? '' }}">
                     <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
                 </div>
-                <input type="hidden" id="startDate" name="startDate">
+                <input type="hidden" id="startDate" name="startDate" value="{{ $checkin ?? '' }}">
             </div>
             <div class="flex flex-col items-start mr-4">
                 <span class="font-semibold text-white mb-1">วันที่เช็คเอาท์</span>
                 <div class="relative">
-                    <input type="text" id="checkout_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly>
+                    <input type="text" id="checkout_date" class="border border-gray-400 rounded-md px-2 py-1 pr-10" readonly value="{{ $checkout ?? '' }}">
                     <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
                 </div>
-                <input type="hidden" id="endDate" name="endDate">
-                <input type="hidden" id="totalDay" name="totalDay">
+                <input type="hidden" id="endDate" name="endDate" value="{{ $checkout ?? '' }}">
+                <input type="hidden" id="totalDay" name="totalDay" value="{{ isset($checkin, $checkout) ? \Carbon\Carbon::parse($checkin)->diffInDays(\Carbon\Carbon::parse($checkout)) : 1 }}">
             </div>
 
             <!-- Dropdown for Room, Adults, and Children -->
@@ -147,7 +147,10 @@
                     <span class="font-semibold text-white mb-1">จำนวนห้องและผู้เข้าพัก</span>
                     <button id="guest-room-button"
                         class="flex items-center bg-white px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none">
-                        <i class="fa fa-user mr-2"></i> <span id="guest-summary">ผู้ใหญ่ 2 คน, 1 ห้อง</span>
+                        <i class="fa fa-user mr-2"></i>
+                        <span id="guest-summary">
+                            ผู้ใหญ่ {{ $adults ?? 1 }} คน, เด็ก {{ $children ?? 0 }} คน, เด็กเล็ก {{ $infants ?? 0 }} คน
+                        </span>
                         <i class="fa fa-caret-down ml-2"></i>
                     </button>
                 </div>
@@ -168,9 +171,11 @@
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-semibold text-gray-700">ผู้ใหญ่</span>
                         <div class="flex items-center space-x-2">
-                            <button class="decrement-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
-                            <span id="adult-count" class="font-semibold text-gray-700 text-center w-6">2</span>
-                            <button class="increment-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
+                            <button
+                                class="decrement-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
+                            <span id="adult-count" class="font-semibold text-gray-700 text-center w-6">{{ $adults ?? 1 }}</span>
+                            <button
+                                class="increment-adult bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
                         </div>
                     </div>
                     <!-- Child Selection -->
@@ -180,18 +185,18 @@
                         <div class="flex items-center space-x-2">
                             <button
                                 class="decrement-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
-                            <span id="child-count" class="font-semibold text-gray-700 text-center w-6">0</span>
+                            <span id="child-count" class="font-semibold text-gray-700 text-center w-6">{{ $children ?? 0 }}</span>
                             <button
                                 class="increment-child bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="font-semibold text-gray-700">เด็กเล็ก<br><span
-                                class="text-gray-500 text-xs">(อายุ 0- 5 ปี)</span></span>
+                                class="text-gray-500 text-xs">(อายุ 0-5 ปี)</span></span>
                         <div class="flex items-center space-x-2">
                             <button
                                 class="decrement-baby bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">-</button>
-                            <span id="baby-count" class="font-semibold text-gray-700 text-center w-6">0</span>
+                            <span id="baby-count" class="font-semibold text-gray-700 text-center w-6">{{ $infants ?? 0 }}</span>
                             <button
                                 class="increment-baby bg-gray-200 w-8 h-8 rounded hover:bg-gray-300 focus:outline-none">+</button>
                         </div>
@@ -201,12 +206,14 @@
 
             <div class="flex flex-col items-start ml-3">
                 <span class="font-semibold text-white mb-1">จำนวนวันเข้าพัก</span>
-                <div id="stay-days" class="border border-gray-400 rounded-md px-2 py-1 ml-4 text-white">1 วัน</div>
+                <div id="stay-days" class="border border-gray-400 rounded-md px-2 py-1 ml-4 text-white">
+                    {{ isset($checkin, $checkout) ? \Carbon\Carbon::parse($checkin)->diffInDays(\Carbon\Carbon::parse($checkout)) : 1 }} วัน
+                </div>
             </div>
 
             <div class="mt-4 ml-4">
                 <button id="search-button" type="button"
-                    class="flex items-center justify-center  bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-800"
+                    class="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-800"
                     onclick="getAvailableRooms()">
                     ค้นหา
                 </button>
@@ -214,27 +221,13 @@
         </div>
     </section>
 
+
     <script>
-        // Set default dates to today and tomorrow
         document.addEventListener('DOMContentLoaded', () => {
-            let today = new Date();
-            let tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1);
-
-            let formatDate = date => {
-                return date.toISOString().split('T')[0];
-            };
-
-            let todayFormatted = formatDate(today);
-            let tomorrowFormatted = formatDate(tomorrow);
-
-            document.getElementById('checkin_date').value = todayFormatted;
-            document.getElementById('checkout_date').value = tomorrowFormatted;
-            document.getElementById('startDate').value = todayFormatted;
-            document.getElementById('endDate').value = tomorrowFormatted;
-
+            // แสดงข้อมูลห้องว่างเมื่อโหลดหน้า
             getAvailableRooms();
         });
+
         document.getElementById('guest-room-button').addEventListener('click', function() {
             document.getElementById('guest-room-popup').classList.toggle('hidden');
         });
@@ -260,7 +253,6 @@
         setupIncrementDecrement('.increment-adult', '.decrement-adult', 'adult-count', 1, updateGuestSummary);
         setupIncrementDecrement('.increment-child', '.decrement-child', 'child-count', 0, updateGuestSummary);
         setupIncrementDecrement('.increment-baby', '.decrement-baby', 'baby-count', 0, updateGuestSummary);
-
 
         // Update guest summary text
         function updateGuestSummary() {
@@ -320,6 +312,7 @@
                 .catch(error => console.error('Error:', error));
         }
     </script>
+
 
     <section id="room-availability" class="mt-12 gap-8 mx-auto"
         style="padding-bottom: 10%; background-color: white; border: 1px solid #ddd; max-width: 1300px; height: 500px;">
