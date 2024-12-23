@@ -81,6 +81,12 @@
                         <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
                     </div>
                 </a>
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('productroom') }}" id="Breakage">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-chimney-crack"></i>Breakage
+                    </div>
+                </a>
                 <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
                     href="{{ route('record') }}" id="Review">
                     <div class="mr-2 text-base flex items-center">

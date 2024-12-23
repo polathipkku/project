@@ -280,8 +280,6 @@
                                 <input id="postcode" name="postcode_[1]" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
                             </div>
 
-
-
                             <div class="mb-4">
                                 <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
                                 <input type="number" id="extra_bed_count" name="extra_bed_count" min="0" value="0" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จำนวนเตียงเสริม">

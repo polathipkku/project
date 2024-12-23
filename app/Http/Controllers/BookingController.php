@@ -97,8 +97,6 @@ class BookingController extends Controller
         return view('user.reservation', compact('bookings'));
     }
 
-
-
     public function employeehome()
     {
         $bookings = Booking::where('user_id', auth()->user()->id)->get();
@@ -108,15 +106,16 @@ class BookingController extends Controller
     {
         $bookings = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_detail_status', 'รอเลือกห้อง')
-                ->whereNull('room_id');
+                  ->whereNull('room_id');
         })->with(['bookingDetails' => function ($query) {
             $query->whereNull('room_id');
         }])->get();
-
+    
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
-
+    
         return view('employee.checkin', compact('bookings', 'rooms'));
     }
+    
 
 
     public function checkindetail($id)

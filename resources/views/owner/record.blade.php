@@ -63,7 +63,12 @@
                         <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
                     </div>
                 </a>
-
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('productroom') }}" id="Breakage">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-house-chimney-crack"></i>Breakage
+                    </div>
+                </a>
                 <a class="inline-block py-2 px-3 text-blue-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-regular fa-envelope mr-1"></i>Record
@@ -100,6 +105,8 @@
                                             <th scope="col" class="px-3 py-3 text-center">วันที่เช็คเอาท์</th>
                                             <th scope="col" class="px-3 py-3 text-center">ประเภทห้องพัก</th>
                                             <th scope="col" class="px-3 py-3 text-center">สถานะการจอง</th>
+                                            <th scope="col" class="px-3 py-3 text-center">จำนวนเตียงเสริม</th>
+                                            <th scope="col" class="px-3 py-3 text-center">ราคารวม</th>
                                             <th scope="col" class="px-3 py-3 text-center">รายละเอียดเพิ่มเติม</th>
                                         </tr>
                                     </thead>
@@ -134,10 +141,15 @@
                                                 <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ยกเลิกการจอง</span>
                                                 @endif
                                             </td>
+                                            @foreach ($bookings as $bookingDetail)
+                                            <td class="px-3 py-4 text-center">{{ number_format($bookingDetail->extra_bed_count) }}</td>
+                                            <td class="px-3 py-4 text-center">{{ number_format($bookingDetail->booking->total_cost, 2) }}</td>
+                                            @endforeach
+
                                             <td class="px-4 py-2">
                                                 <!-- Update the link to use bookingdetail_id -->
                                                 <a href="{{ route('record_detail', ['id' => $firstBooking->id]) }}" class="text-blue-500 hover:text-blue-700">
-                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">Detail</button>
+                                                    <button class="py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-700">รายละเอียด</button>
                                                 </a>
                                             </td>
                                         </tr>
@@ -194,7 +206,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                         @else
                         <p class="text-center text-gray-600">ไม่มีข้อมูลการจอง</p>
                         @endif
