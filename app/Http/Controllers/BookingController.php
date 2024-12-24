@@ -106,16 +106,16 @@ class BookingController extends Controller
     {
         $bookings = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_detail_status', 'รอเลือกห้อง')
-                  ->whereNull('room_id');
+                ->whereNull('room_id');
         })->with(['bookingDetails' => function ($query) {
             $query->whereNull('room_id');
         }])->get();
-    
+
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
-    
+
         return view('employee.checkin', compact('bookings', 'rooms'));
     }
-    
+
 
 
     public function checkindetail($id)
@@ -346,6 +346,9 @@ class BookingController extends Controller
         $babyCount = (int) $request->query('babyCount', 0);
         $requestedRooms = (int) $request->query('numberOfRooms', 0);
 
+        // คำนวณจำนวนวันเข้าพัก
+        $stayDays = (new \DateTime($startDate))->diff(new \DateTime($endDate))->days;
+
         // คำนวณจำนวนผู้ใหญ่เทียบเท่า
         $equivalentAdultCount = $adultCount + floor($childCount / 2) + floor($babyCount / 3);
 
@@ -370,7 +373,6 @@ class BookingController extends Controller
 
         // ตรวจสอบว่าผู้ใช้เลือกจำนวนห้องมากกว่าจำนวนที่คำนวณได้หรือไม่
         if ($requestedRooms > max($numberOfRoomsOption1, $numberOfRoomsOption2)) {
-            // ใช้จำนวนห้องที่ผู้ใช้เลือกถ้าเลือกมากกว่าจำนวนที่คำนวณได้
             $numberOfRoomsOption1 = $requestedRooms;
             $numberOfRoomsOption2 = $requestedRooms;
         }
@@ -385,7 +387,6 @@ class BookingController extends Controller
             ->pluck('room_id')
             ->toArray();
 
-        // ปรับปรุงการตรวจสอบจำนวนการจองที่รอเลือกห้อง
         $pendingRoomSelectionsCount = Booking_detail::where('booking_detail_status', 'รอเลือกห้อง', 'รอชำระเงิน')
             ->whereNull('room_id')
             ->whereHas('booking', function ($query) use ($startDate, $endDate) {
@@ -395,21 +396,17 @@ class BookingController extends Controller
             })
             ->count();
 
-        // ห้องที่ว่างอยู่ (ไม่รวมห้องที่ถูกจอง)
         $availableRooms = Room::where('room_status', 'พร้อมให้บริการ')
             ->whereNotIn('id', $bookedRooms)
             ->get();
 
-        // จำนวนห้องว่างจริง
         $actualAvailableRoomsCount = count($availableRooms) - $pendingRoomSelectionsCount;
 
-        // ดึงข้อมูลเตียงเสริม
         $stock = new Stock();
         $availableExtraBeds = $stock->getAvailableExtraBeds();
         $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
         $extraBedPrice = $extraBedProduct ? $extraBedProduct->product_price : 0;
 
-        // เงื่อนไขใหม่: ตรวจสอบกรณีผู้ใหญ่เกินจำนวนห้องที่ว่าง
         $maxAdultsPerRoom = 2;
         $requiredRooms = ceil($adultCount / $maxAdultsPerRoom);
 
@@ -429,12 +426,10 @@ class BookingController extends Controller
             $extraBedsOption1 = $extraBedsNeeded;
             $extraBedsOption2 = $extraBedsNeeded;
         } else {
-            // ใช้ค่าที่คำนวณจากเงื่อนไขเดิม
             $extraBedsOption1 = 0;
             $extraBedsOption2 = $equivalentAdultCount % 2 != 0 ? 1 : 0;
         }
 
-        // กรองห้องที่ว่าง
         $filteredAvailableRooms = [];
         foreach ($availableRooms as $room) {
             if ($this->isRoomAvailable($room, $startDate, $endDate)) {
@@ -445,41 +440,36 @@ class BookingController extends Controller
             }
         }
 
-        // ตัวเลือกห้องพัก
         $roomOptions = [];
 
-        // เงื่อนไขพิเศษสำหรับผู้ใหญ่ 2 คน เด็ก 1 คน เด็กเล็ก 1 คน -> แสดง 2 ห้องหรือ 1 ห้อง + เตียงเสริม
         if ($adultCount == 2 && $childCount == 1 && $babyCount == 1) {
-            // แสดงเฉพาะ 2 ห้อง หรือ 1 ห้อง + เตียงเสริม
             $roomOptions[] = [
-                'type' => 'special_case_with_extra_bed', // ตัวเลือกกรณีพิเศษ + เตียงเสริม
+                'type' => 'special_case_with_extra_bed',
                 'rooms' => 1,
                 'extraBeds' => 1,
-                'price' => 500 + $extraBedPrice, // ราคา 1 ห้อง + เตียงเสริม
+                'price' => $stayDays * (500 + $extraBedPrice),
             ];
 
             $roomOptions[] = [
-                'type' => 'special_case', // ตัวเลือกกรณีพิเศษ
+                'type' => 'special_case',
                 'rooms' => 2,
                 'extraBeds' => 0,
-                'price' => 2 * 500, // ราคา 2 ห้อง
+                'price' => $stayDays * (2 * 500),
             ];
         } else {
-            // ตัวเลือกที่ 1: จำนวนห้องปกติ
             $roomOptions[] = [
                 'type' => 'normal',
                 'rooms' => $numberOfRoomsOption1,
                 'extraBeds' => $extraBedsOption1,
-                'price' => ($numberOfRoomsOption1 * 500) + ($extraBedsOption1 * $extraBedPrice),
+                'price' => $stayDays * (($numberOfRoomsOption1 * 500) + ($extraBedsOption1 * $extraBedPrice)),
             ];
 
-            // ตัวเลือกที่ 2: จำนวนห้องน้อยลง + เตียงเสริม (ถ้าจำเป็น)
             if ($numberOfRoomsOption2 < $numberOfRoomsOption1 || $extraBedsOption2 > $extraBedsOption1) {
                 $roomOptions[] = [
                     'type' => 'with_extra_bed',
                     'rooms' => $numberOfRoomsOption2,
                     'extraBeds' => $extraBedsOption2,
-                    'price' => ($numberOfRoomsOption2 * 500) + ($extraBedsOption2 * $extraBedPrice),
+                    'price' => $stayDays * (($numberOfRoomsOption2 * 500) + ($extraBedsOption2 * $extraBedPrice)),
                 ];
             }
         }
@@ -714,75 +704,69 @@ class BookingController extends Controller
         return response()->json(['message' => 'ข้อมูลการชำระเงินถูกบันทึกเรียบร้อยแล้ว']);
     }
 
-
     public function submitDamagedItems(Request $request)
     {
         $bookingId = $request->input('booking_id');
         $damagedItems = $request->input('damaged_items', []);
         $totalPrice = 0;
 
-        foreach ($damagedItems as $itemId) {
-            $productRoom = Product_room::find($itemId);
-            if ($productRoom) {
-                // Create a new CheckoutDetail entry
-                $checkoutDetail = new CheckoutDetail([
-                    'booking_id' => $bookingId,
-                    'product_room_id' => $itemId,
-                    'totalpriceroom' => $productRoom->productroom_price,
-                ]);
-                $checkoutDetail->save();
-
-                // Accumulate total damage price
-                $totalPrice += $productRoom->productroom_price;
-            }
-        }
-
-        // Update the booking_details status
+        // ดึงข้อมูล booking_details ที่มี status เป็น 'เช็คอินแล้ว'
         $bookingDetails = Booking_detail::where('booking_id', $bookingId)
             ->where('booking_detail_status', 'เช็คอินแล้ว')
             ->first();
 
+        // ตรวจสอบว่า bookingDetails มีค่าหรือไม่
+        if (!$bookingDetails) {
+            return redirect()->back()->with('error', 'ไม่พบข้อมูลการจองที่เช็คอินแล้ว');
+        }
+
+        // ค่า booking_detail_id ที่จะใช้
+        $bookingDetailId = $bookingDetails->id;
+
+        // ลูปการบันทึก damagedItems
+        foreach ($damagedItems as $itemId) {
+            $productRoom = Product_room::find($itemId);
+            if ($productRoom) {
+                // สร้าง CheckoutDetail ใหม่
+                $checkoutDetail = new CheckoutDetail([
+                    'booking_id' => $bookingId,
+                    'product_room_id' => $itemId,
+                    'totalpriceroom' => $productRoom->productroom_price,
+                    'productroom_name' => $productRoom->productroom_name,
+                    'booking_detail_id' => $bookingDetailId, // ระบุ booking_detail_id
+                ]);
+                $checkoutDetail->save();
+
+                $totalPrice += $productRoom->productroom_price;
+            }
+        }
+
+        // อัพเดตสถานะ booking_detail เป็น 'เช็คเอาท์'
         if ($bookingDetails) {
             $bookingDetails->booking_detail_status = 'เช็คเอาท์';
             $bookingDetails->save();
 
-            // Get the related room and update its status
+            // อัพเดตสถานะห้อง
             $room = $bookingDetails->room;
             if ($room) {
                 $room->room_status = 'แจ้งซ่อมห้อง';
                 $room->save();
             }
 
-            // Record checkout information
+            // บันทึกข้อมูลการเช็คเอาท์
             $checkout = Checkout::create([
                 'booking_id' => $bookingId,
-                'checked_out_by' => auth()->id(), // Assuming you have an authenticated user
-                'checkout' => now(), // Checkout timestamp
-                'total_damages' => $totalPrice, // Store total damages here
+                'checked_out_by' => auth()->id(),
+                'checkout' => now(),
+                'total_damages' => $totalPrice,
             ]);
 
-
-            if (!empty($damagedItems)) {
-                foreach ($damagedItems as $itemId) {
-                    $productRoom = Product_room::find($itemId);
-
-                    if ($productRoom) {
-                        $maintenance = new Maintenance([
-                            'booking_id' => $bookingId,
-                            'product_room_id' => $itemId,
-                            'room_id' => $productRoom->room_id,
-                            'damage_cost' => $productRoom->productroom_price,
-                            'status' => 'Pending',
-                        ]);
-                        $maintenance->save();
-                    }
-                }
-            }
             return redirect()->back()->with('success', "เช็คเอาท์สำเร็จ. ค่าเสียหายรวม: ฿" . number_format($totalPrice, 2));
         }
 
         return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
+
 
 
 

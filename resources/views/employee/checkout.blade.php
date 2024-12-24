@@ -177,8 +177,8 @@
                                     oninput="filterItems()">
                             </div>
 
-                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post" class="space-y-4">
-                                @csrf
+                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="POST" class="space-y-4">
+                            @csrf
                                 <input type="hidden" name="booking_id" id="damagedBookingId">
 
                                 <!-- Section for items -->

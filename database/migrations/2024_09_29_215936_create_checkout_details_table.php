@@ -19,6 +19,8 @@ class CreateCheckoutDetailsTable extends Migration
             $table->unsignedBigInteger('product_room_id');
             $table->unsignedBigInteger('booking_detail_id')->nullable();
             $table->decimal('totalpriceroom', 10, 2)->nullable();
+            $table->string('productroom_name')->nullable();
+
             $table->timestamps();
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->foreign('booking_detail_id')->references('id')->on('booking_details')->onDelete('cascade');

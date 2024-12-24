@@ -35,7 +35,6 @@ class MaintenanceceController extends Controller
         // Validate the request data
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
-            'Problem_detail' => 'required|string',
             'Maintenance_StartDate' => 'required|date',
             'problemType' => 'required|string',
             'room_status' => 'required|in:พร้อมให้บริการ,ไม่พร้อมให้บริการ,แจ้งซ่อมห้อง',
@@ -44,7 +43,6 @@ class MaintenanceceController extends Controller
         // Create a new maintenance record
         Maintenance::create([
             'room_id' => $request->room_id,
-            'Problem_detail' => $request->Problem_detail,
             'Maintenance_StartDate' => $request->Maintenance_StartDate,
             'problemType' => $request->problemType,
             'user_id' => auth()->id(), // ตรวจสอบค่าที่ส่งมาว่าเป็น NULL หรือไม่

@@ -220,8 +220,8 @@
                 console.log(`Show modal for booking ID: ${bookingId}, Check-in Date: ${checkinDate}`);
             }
         </script>
-        <div id="userInformationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
-            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+        <div id="userInformationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full max-h-screen overflow-y-auto">
                 <h2 class="text-2xl font-bold mb-4">กรอกข้อมูลผู้เข้าพัก</h2>
                 <form id="check-in-form" action="{{ route('updateBookingDetail') }}" method="post">
                     @csrf
@@ -308,46 +308,54 @@
                 create_div.id = 'text' + count;
                 input =
                     '<hr>' +
-                '<button class="btn btn-danger" type="button" onclick="removediv('+count+')">ลบ</button> ' +
+                    '<div class="flex justify-end mt-3">' +
+                    '<button class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 flex items-center justify-center shadow-md" type="button" onclick="removediv(' + count + ')">' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" stroke="none">' +
+                    '<path d="M5 5h14l-1.5 14H6.5L5 5zm6 2v8h2V7h-2zM9 7v8h2V7H9zm6 0v8h2V7h-2z"/>' +
+                    '<path d="M16 4h-4V3h-4v1H4v2h16V4h-4z"/>' +
+                    '</svg>' +
+                    '</button>' +
+                    '</div>' +
                     '<div class="mb-4">' +
                     '<label for="name" class="block text-sm font-medium">ชื่อ:</label>' +
-                    '<input type="text"  id="name"  name="name_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">' +
+                    '<input type="text" id="name" name="name_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">' +
                     '</div>' +
                     '<div class="grid grid-cols-2 gap-4 mb-4">' +
                     '<div>' +
                     '<label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>' +
-                    '<input type="text" id="id_card"  name="id_card_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">' +
+                    '<input type="text" id="id_card" name="id_card_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">' +
                     '</div>' +
                     '<div>' +
                     '<label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>' +
-                    '<input type="text" id="phone"  name="phone_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">' +
+                    '<input type="text" id="phone" name="phone_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">' +
                     '</div>' +
                     '</div>' +
                     '<div class="mb-4">' +
                     '<label for="address" class="block text-sm font-medium">ที่อยู่:</label>' +
-                    '<input type="text" id="address"  name="address_['+count+']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">' +
+                    '<input type="text" id="address" name="address_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">' +
                     '</div>' +
                     '<div class="grid grid-cols-3 gap-4 mb-4">' +
                     '<div>' +
                     '<label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>' +
-                    '<input id="sub_district"  name="sub_district_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">' +
+                    '<input id="sub_district" name="sub_district_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">' +
                     '</div>' +
                     '<div>' +
                     '<label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>' +
-                    '<input id="district"  name="district_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">' +
+                    '<input id="district" name="district_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">' +
                     '</div>' +
                     '<div>' +
                     '<label for="province" class="block text-sm font-medium">จังหวัด:</label>' +
-                    '<input id="province"  name="province_['+count+']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">' +
+                    '<input id="province" name="province_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">' +
                     '</div>' +
                     '</div>' +
                     '<div class="mb-4">' +
                     '<label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>' +
-                    '<input id="postcode" name="postcode_['+count+']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
+                    '<input id="postcode" name="postcode_[' + count + ']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
                     '</div>';
 
                 create_div.innerHTML = input;
                 show_text.appendChild(create_div);
+
             });
 
             function removediv(count) {

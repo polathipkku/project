@@ -123,61 +123,61 @@
   </header>
   <!-- Popup -->
   <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
-    <div class="bg-gray-700 text-white rounded-lg w-[400px] p-6 relative">
+    <div class="bg-white text-gray-800 rounded-lg shadow-lg w-[400px] p-6 relative">
       <!-- Close Button -->
-      <button id="closePopup" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
+      <button id="closePopup" class="absolute top-2 right-2 text-gray-600 text-2xl hover:text-gray-900 transition">
+        &times;
+      </button>
 
       <!-- Header -->
-      <h2 class="text-center text-lg font-pacifico mb-6" style="font-family: 'Pacifico', cursive;">จองตอนนี้</h2>
+      <h2 class="text-center text-xl font-bold text-gray-700 mb-6">จองตอนนี้</h2>
 
       <!-- Form -->
-      <form action="{{ route('userbooking') }}" method="GET" class="space-y-4">
+      <form action="{{ route('userbooking') }}" method="GET" class="space-y-5">
         <!-- Check-In and Check-Out -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="checkin" class="block text-sm">วันที่เช็คอิน</label>
-            <input type="text" id="checkin" name="checkin" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            <label for="checkin" class="block text-sm font-bold text-gray-600">วันที่เช็คอิน</label>
+            <input type="text" id="checkin" name="checkin" placeholder="เลือกวันที่เช็คอิน" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
           </div>
           <div>
-            <label for="checkout" class="block text-sm">วันที่เช็คเอาท์</label>
-            <input type="text" id="checkout" name="checkout" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+            <label for="checkout" class="block text-sm font-bold text-gray-600">วันที่เช็คเอาท์</label>
+            <input type="text" id="checkout" name="checkout" placeholder="เลือกวันที่เช็คเอาท์" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
           </div>
         </div>
 
         <!-- Guests -->
-        <div>
-          <div class="flex gap-4">
-            <div>
-              <label for="adults" class="text-sm">ผู้ใหญ่</label>
-              <input type="number" id="adults" name="adults" min="1" value="2" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
-            </div>
-            <div>
-              <label for="children" class="text-sm">เด็ก</label>
-              <input type="number" id="children" name="children" min="0" value="0" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
-            </div>
-            <div>
-              <label for="infants" class="text-sm">เด็กเล็ก</label>
-              <input type="number" id="infants" name="infants" min="0" value="0" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
-            </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label for="adults" class="block text-sm font-bold text-gray-600">ผู้ใหญ่</label>
+            <input type="number" id="adults" name="adults" min="1" value="2" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label for="children" class="block text-sm font-bold text-gray-600">เด็ก</label>
+            <input type="number" id="children" name="children" min="0" value="0" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label for="infants" class="block text-sm font-bold text-gray-600">เด็กเล็ก</label>
+            <input type="number" id="infants" name="infants" min="0" value="0" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
           </div>
         </div>
 
         <!-- Room -->
         <div>
-          <label for="rooms" class="block text-sm">จำนวนห้อง</label>
-          <input type="number" id="rooms" name="rooms" min="1" value="1" class="w-full px-3 py-2 bg-gray-800 text-white rounded">
+          <label for="rooms" class="block text-sm font-bold text-gray-600">จำนวนห้อง</label>
+          <input type="number" id="rooms" name="rooms" min="1" value="1" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
         <!-- Submit -->
-        <div class="text-center mt-4">
-          <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition-all duration-300">
+        <div class="text-center">
+          <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300">
             ยืนยันการจอง
           </button>
         </div>
       </form>
-
     </div>
   </div>
+
 
   <!-- เพิ่มสคริปต์สำหรับ flatpickr -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
