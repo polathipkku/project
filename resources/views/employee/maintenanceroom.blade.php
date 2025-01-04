@@ -106,6 +106,7 @@
                             <th class=" px-4 py-2">หมายเลขห้อง</th>
                             <th class=" px-4 py-2">สถานะ</th>
                             <th class=" px-4 py-2">รายละเอียด</th>
+                            <th class=" px-4 py-2">รายละเอียด</th>
                             <th class=" px-4 py-2 " style="padding-right: 7.5%;"><span class="hidden">sdss</span>แจ้งซ่อมสำเร็จ</th>
                         </tr>
                     </thead>

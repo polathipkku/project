@@ -19,7 +19,7 @@ class CreateMaintenancesTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();  // ไม่ต้องมี `->change()` ที่นี่
             $table->text('problem_detail')->default('ไม่มีข้อมูล'); // กำหนดค่า default โดยตรงที่นี่
             $table->string('problemType');
-            $table->dateTime('maintenance_StartDate');       
+            $table->dateTime('maintenance_StartDate')->nullable();
             $table->timestamps();  
             $table->softDeletes();
     

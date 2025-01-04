@@ -302,7 +302,20 @@
             var show_text = document.getElementById('text');
             var add_name = document.getElementById('add_name');
             var count = 1;
+
             add_name.addEventListener('click', function() {
+                // ตรวจสอบค่าจำนวนเตียงเสริม
+                var extraBedCount = parseInt(document.getElementById('extra_bed_count').value) || 0;
+
+                // กำหนดจำนวนสูงสุดของผู้เข้าพักที่สามารถเพิ่มได้
+                var maxGuests = extraBedCount === 1 ? 3 : 2;
+
+                // ถ้าจำนวนผู้เข้าพักเกินจำนวนสูงสุดที่กำหนดให้ไม่สามารถเพิ่มได้
+                if (count >= maxGuests) {
+                    alert("คุณสามารถเพิ่มข้อมูลผู้เข้าพักได้สูงสุด " + maxGuests + " คน");
+                    return;
+                }
+
                 count++;
                 var create_div = document.createElement('div');
                 create_div.id = 'text' + count;
@@ -355,7 +368,6 @@
 
                 create_div.innerHTML = input;
                 show_text.appendChild(create_div);
-
             });
 
             function removediv(count) {

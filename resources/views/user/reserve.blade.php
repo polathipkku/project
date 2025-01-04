@@ -320,7 +320,7 @@
                                 <div class="w-1/2">
                                     <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
                                     <input type="text" name="booking_name" id="booking_name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value="{{ auth()->check() ? auth()->user()->name : '' }}"
                                         {{ auth()->check() ? 'readonly' : 'required' }}>
                                 </div>
@@ -328,51 +328,49 @@
                                 <div class="w-1/2">
                                     <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
                                     <input type="text" name="phone" id="phone"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value="{{ auth()->check() ? auth()->user()->tel : '' }}"
                                         {{ auth()->check() ? 'readonly' : 'required' }}>
                                 </div>
                             </div>
+
                             @if (!auth()->check())
                             <div class="mb-4">
-                                <label for="email"
-                                    class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
+                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
                                 <input type="email" name="email" id="email"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     required>
                             </div>
                             @endif
+
                             <div class="mb-8 flex space-x-4 items-stretch">
-                                <div
-                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
+                                <div class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
                                     <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนผู้เข้าพัก (ผู้ใหญ่):
                                     </label>
                                     <input type="number" name="number_of_guests" id="number_of_guests"
                                         value="{{ old('number_of_guests', $occupancy_person) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
                                         readonly>
                                 </div>
 
-                                <div
-                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
+                                <div class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
                                     <label for="occupancy_child" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนผู้เข้าพัก (เด็ก):
                                     </label>
                                     <input type="number" name="occupancy_child" id="occupancy_child"
                                         value="{{ old('occupancy_child', $occupancy_child > 0 ? $occupancy_child : 0) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_child > 0 ? 'text-gray-700' : 'text-gray-500' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-full"
                                         {{ $occupancy_child > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
 
-                                <div
-                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
+                                <div class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
                                     <label for="occupancy_baby" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนผู้เข้าพัก (เด็กเล็ก):
                                     </label>
                                     <input type="number" name="occupancy_baby" id="occupancy_baby"
                                         value="{{ old('occupancy_baby', $occupancy_baby > 0 ? $occupancy_baby : 0) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 {{ $occupancy_baby > 0 ? 'text-gray-700' : 'text-gray-500 ' }} leading-tight focus:outline-none focus:shadow-outline h-full"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-500 leading-tight focus:outline-none focus:shadow-outline h-full"
                                         {{ $occupancy_baby > 0 ? 'readonly' : 'disabled' }}>
                                 </div>
                             </div>
@@ -383,231 +381,219 @@
                                         จำนวนห้องที่ต้องการ:
                                     </label>
                                     <input type="text" name="number_of_rooms" id="number_of_rooms"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         value="{{ $number_of_rooms }}" readonly>
                                 </div>
                                 <div class="flex-1">
                                     <label for="extra_bed_count" class="block text-gray-700 text-sm font-bold mb-2">
                                         จำนวนเตียงเสริม:
-                                        <!-- ข้อความบอกค่าบริการเตียงเสริม -->
                                         <span class="text-sm text-gray-500">200 บาทต่อ 1 เตียงเสริม</span>
                                     </label>
                                     <div class="flex space-x-2">
-                                        <!-- ปุ่มลด -->
                                         <button type="button" class="bg-gray-200 p-2 rounded" id="decreaseExtraBed">-</button>
-
-                                        <!-- อินพุตสำหรับจำนวนเตียงเสริม -->
                                         <input type="text" name="extra_bed_count" id="extra_bed_count"
-                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             value="{{ $extra_bed_count }}" readonly>
-
-                                        <!-- ปุ่มเพิ่ม -->
                                         <button type="button" class="bg-gray-200 p-2 rounded" id="increaseExtraBed">+</button>
                                     </div>
-
-                                    <!-- ซ่อนค่าดั้งเดิมของเตียงเสริมเพื่อใช้ในเงื่อนไขการลบ -->
                                     <input type="hidden" name="extra_bed_count_hidden" id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
                                 </div>
                             </div>
 
-                        </div>
-
-
-                        <div class="mb-4 flex space-x-4">
-                            <div class="flex-1">
-                                <label for="checkin_date"
-                                    class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
-                                <input type="date" name="checkin_date" id="checkin_date"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ $checkin_date }}" readonly>
-                            </div>
-                            <div class="flex-1">
-                                <label for="checkout_date"
-                                    class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
-                                <input type="date" name="checkout_date" id="checkout_date"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ $checkout_date }}" readonly>
-                            </div>
-                        </div>
-                        @if (auth()->check())
-                        <div class="mb-4">
-                            <label for="promo_code"
-                                class="block text-gray-700 text-sm font-bold mb-2">รหัสโปรโมชั่น:</label>
-                            <input type="text" name="promo_code" id="promo_code"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="กรอกรหัสโปรโมชั่น (ถ้ามี)">
-                        </div>
-                        @endif
-                        <div class="flex items-center gap-5 justify-end">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                บันทึกการจอง
-                            </button>
-                            <button type="button" onclick="history.back()"
-                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                ย้อนกลับ
-                            </button>
-                        </div>
-                    </div>
-                </div>
-        </div>
-        </form>
-        <form id="otherBookingForm" action="{{ route('bookings.reserve') }}" method="post"
-            enctype="multipart/form-data" style="display:none;">
-            @csrf
-            <div class="max-w-5xl mx-auto">
-                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
-                    <div class="mb-4">
-                        <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
-                        <div class="mb-4 flex space-x-4">
-                            <div class="flex-1">
-                                <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
-                                <input type="text" name="booking_name" id="booking_name"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ auth()->check() ? auth()->user()->name : '' }}"
-                                    {{ auth()->check() ? 'readonly' : 'required' }}>
-                            </div>
-                            <div class="flex-1">
-                                <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
-                                <input type="text" name="phone" id="phone"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value="{{ auth()->check() ? auth()->user()->tel : '' }}"
-                                    {{ auth()->check() ? 'readonly' : 'required' }}>
-                            </div>
-                        </div>
-                        <hr class="border-t-2 border-gray-300 my-4">
-                        <div class="mb-4">
-                            <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
                             <div class="mb-4 flex space-x-4">
                                 <div class="flex-1">
-                                    <label for="bookingto_username"
-                                        class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้เข้าพัก:</label>
-                                    <input type="text" name="bookingto_username" id="bookingto_username"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <label for="checkin_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
+                                    <input type="date" name="checkin_date" id="checkin_date"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ $checkin_date }}" readonly>
                                 </div>
-
                                 <div class="flex-1">
-                                    <label for="bookingto_phone"
-                                        class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์ผู้เข้าพัก:</label>
-                                    <input type="text" name="bookingto_phone" id="bookingto_phone"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <label for="checkout_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
+                                    <input type="date" name="checkout_date" id="checkout_date"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ $checkout_date }}" readonly>
                                 </div>
                             </div>
 
-                            @if (!auth()->check())
-                            <div class="mb-4">
-                                <label for="email"
-                                    class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
-                                <input type="email" name="email" id="email"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    required>
-                            </div>
-                            @endif
-
-                            <div class="mb-8 flex space-x-4 items-stretch ">
-                                <div
-                                    class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
-                                    <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">
-                                        จำนวนผู้เข้าพัก (ผู้ใหญ่):
-                                    </label>
-                                    <input type="number" name="number_of_guests" id="number_of_guests"
-                                        value="{{ old('number_of_guests', $occupancy_person) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
-                                        readonly>
-                                </div>
-                                @if ($occupancy_child > 0)
-                                <div class="{{ $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
-                                    <label for="occupancy_child"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
-                                        จำนวนผู้เข้าพัก (เด็ก):
-                                    </label>
-                                    <input type="number" name="occupancy_child" id="occupancy_child"
-                                        value="{{ old('occupancy_child', $occupancy_child) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
-                                        readonly>
-                                </div>
-                                @endif
-
-                                @if ($occupancy_baby > 0)
-                                <div class="{{ $occupancy_child > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
-                                    <label for="occupancy_baby"
-                                        class="block text-gray-700 text-sm font-bold mb-2">
-                                        จำนวนผู้เข้าพัก (เด็กเล็ก):
-                                    </label>
-                                    <input type="number" name="occupancy_baby" id="occupancy_baby"
-                                        value="{{ old('occupancy_baby', $occupancy_baby) }}"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
-                                        readonly>
-                                </div>
-                                @endif
-                            </div>
-
-                            <div class="mb-4 flex space-x-4">
-                                <div class="flex-1">
-                                    <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">
-                                        จำนวนห้องที่ต้องการ:
-                                    </label>
-                                    <input type="text" name="number_of_rooms" id="number_of_rooms"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $number_of_rooms }}" readonly>
-                                </div>
-
-                                <div class="flex-1">
-                                    <label for="extra_bed_count" class="block text-gray-700 text-sm font-bold mb-2">
-                                        จำนวนเตียงเสริม:
-                                        <!-- ข้อความบอกค่าบริการเตียงเสริม -->
-                                        <span class="text-sm text-gray-500">200 บาทต่อ 1 เตียงเสริม</span>
-                                    </label>
-                                    <div class="flex space-x-2">
-                                        <!-- ปุ่มลด -->
-                                        <button type="button" class="bg-gray-200 p-2 rounded" id="decreaseExtraBed">-</button>
-
-                                        <!-- อินพุตสำหรับจำนวนเตียงเสริม -->
-                                        <input type="text" name="extra_bed_count" id="extra_bed_count"
-                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            value="{{ $extra_bed_count }}" readonly>
-
-                                        <!-- ปุ่มเพิ่ม -->
-                                        <button type="button" class="bg-gray-200 p-2 rounded" id="increaseExtraBed">+</button>
-                                    </div>
-
-                                    <!-- ซ่อนค่าดั้งเดิมของเตียงเสริมเพื่อใช้ในเงื่อนไขการลบ -->
-                                    <input type="hidden" name="extra_bed_count_hidden" id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
-                                </div>
-
-                            </div>
                             @if (auth()->check())
                             <div class="mb-4">
-                                <label for="promo_code"
-                                    class="block text-gray-700 text-sm font-bold mb-2">รหัสโปรโมชั่น:</label>
+                                <label for="promo_code" class="block text-gray-700 text-sm font-bold mb-2">รหัสโปรโมชั่น:</label>
                                 <input type="text" name="promo_code" id="promo_code"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                                     placeholder="กรอกรหัสโปรโมชั่น (ถ้ามี)">
                             </div>
                             @endif
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">บันทึกการจอง</button>
+
+                            <div class="flex items-center gap-5 justify-end">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    บันทึกการจอง
+                                </button>
+                                <button type="button" onclick="history.back()"
+                                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    ย้อนกลับ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
-        @if (session('error'))
-        <div id="toast-error"
-            class="fixed bottom-5 right-5 bg-red-500 text-white py-2 px-4 rounded shadow-lg">
-            {{ session('error') }}
-        </div>
-        @endif
+            </form>
+            <form id="otherBookingForm" action="{{ route('bookings.reserve') }}" method="post"
+                enctype="multipart/form-data" style="display:none;">
+                @csrf
+                <div class="max-w-5xl mx-auto">
+                    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        <h2 class="text-lg font-bold mb-4">กรุณากรอกข้อมูลการจองสำหรับผู้อื่น</h2>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้จอง</h3>
+                            <div class="mb-4 flex space-x-4">
+                                <div class="flex-1">
+                                    <label for="booking_name" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้จอง:</label>
+                                    <input type="text" name="booking_name" id="booking_name"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ auth()->check() ? auth()->user()->name : '' }}"
+                                        {{ auth()->check() ? 'readonly' : 'required' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์:</label>
+                                    <input type="text" name="phone" id="phone"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value="{{ auth()->check() ? auth()->user()->tel : '' }}"
+                                        {{ auth()->check() ? 'readonly' : 'required' }}>
+                                </div>
+                            </div>
+                            <hr class="border-t-2 border-gray-300 my-4">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">ข้อมูลผู้ที่จองให้</h3>
+                                <div class="mb-4 flex space-x-4">
+                                    <div class="flex-1">
+                                        <label for="bookingto_username"
+                                            class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้เข้าพัก:</label>
+                                        <input type="text" name="bookingto_username" id="bookingto_username"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    </div>
 
-        @if (session('success'))
-        <div id="toast-success"
-            class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded shadow-lg">
-            {{ session('success') }}
-        </div>
-        @endif
+                                    <div class="flex-1">
+                                        <label for="bookingto_phone"
+                                            class="block text-gray-700 text-sm font-bold mb-2">เบอร์โทรศัพท์ผู้เข้าพัก:</label>
+                                        <input type="text" name="bookingto_phone" id="bookingto_phone"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    </div>
+                                </div>
+
+                                @if (!auth()->check())
+                                <div class="mb-4">
+                                    <label for="email"
+                                        class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
+                                    <input type="email" name="email" id="email"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        required>
+                                </div>
+                                @endif
+
+                                <div class="mb-8 flex space-x-4 items-stretch ">
+                                    <div
+                                        class="{{ $occupancy_child > 0 || $occupancy_baby > 0 ? ($occupancy_child > 0 && $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2') : 'w-full' }} flex-grow h-full">
+                                        <label for="number_of_guests" class="block text-gray-700 text-sm font-bold mb-2">
+                                            จำนวนผู้เข้าพัก (ผู้ใหญ่):
+                                        </label>
+                                        <input type="number" name="number_of_guests" id="number_of_guests"
+                                            value="{{ old('number_of_guests', $occupancy_person) }}"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
+                                            readonly>
+                                    </div>
+                                    @if ($occupancy_child > 0)
+                                    <div class="{{ $occupancy_baby > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
+                                        <label for="occupancy_child"
+                                            class="block text-gray-700 text-sm font-bold mb-2">
+                                            จำนวนผู้เข้าพัก (เด็ก):
+                                        </label>
+                                        <input type="number" name="occupancy_child" id="occupancy_child"
+                                            value="{{ old('occupancy_child', $occupancy_child) }}"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
+                                            readonly>
+                                    </div>
+                                    @endif
+
+                                    @if ($occupancy_baby > 0)
+                                    <div class="{{ $occupancy_child > 0 ? 'w-1/3' : 'w-1/2' }} flex-grow h-full">
+                                        <label for="occupancy_baby"
+                                            class="block text-gray-700 text-sm font-bold mb-2">
+                                            จำนวนผู้เข้าพัก (เด็กเล็ก):
+                                        </label>
+                                        <input type="number" name="occupancy_baby" id="occupancy_baby"
+                                            value="{{ old('occupancy_baby', $occupancy_baby) }}"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-full"
+                                            readonly>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                <div class="mb-4 flex space-x-4">
+                                    <div class="flex-1">
+                                        <label for="number_of_rooms" class="block text-gray-700 text-sm font-bold mb-2">
+                                            จำนวนห้องที่ต้องการ:
+                                        </label>
+                                        <input type="text" name="number_of_rooms" id="number_of_rooms"
+                                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            value="{{ $number_of_rooms }}" readonly>
+                                    </div>
+
+                                    <div class="flex-1">
+                                        <label for="extra_bed_count" class="block text-gray-700 text-sm font-bold mb-2">
+                                            จำนวนเตียงเสริม:
+                                            <!-- ข้อความบอกค่าบริการเตียงเสริม -->
+                                            <span class="text-sm text-gray-500">200 บาทต่อ 1 เตียงเสริม</span>
+                                        </label>
+                                        <div class="flex space-x-2">
+                                            <!-- ปุ่มลด -->
+                                            <button type="button" class="bg-gray-200 p-2 rounded" id="decreaseExtraBed">-</button>
+
+                                            <!-- อินพุตสำหรับจำนวนเตียงเสริม -->
+                                            <input type="text" name="extra_bed_count" id="extra_bed_count"
+                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                value="{{ $extra_bed_count }}" readonly>
+
+                                            <!-- ปุ่มเพิ่ม -->
+                                            <button type="button" class="bg-gray-200 p-2 rounded" id="increaseExtraBed">+</button>
+                                        </div>
+
+                                        <!-- ซ่อนค่าดั้งเดิมของเตียงเสริมเพื่อใช้ในเงื่อนไขการลบ -->
+                                        <input type="hidden" name="extra_bed_count_hidden" id="extra_bed_count_hidden" value="{{ $extra_bed_count }}">
+                                    </div>
+
+                                </div>
+                                @if (auth()->check())
+                                <div class="mb-4">
+                                    <label for="promo_code"
+                                        class="block text-gray-700 text-sm font-bold mb-2">รหัสโปรโมชั่น:</label>
+                                    <input type="text" name="promo_code" id="promo_code"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        placeholder="กรอกรหัสโปรโมชั่น (ถ้ามี)">
+                                </div>
+                                @endif
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">บันทึกการจอง</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @if (session('error'))
+            <div id="toast-error"
+                class="fixed bottom-5 right-5 bg-red-500 text-white py-2 px-4 rounded shadow-lg">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            @if (session('success'))
+            <div id="toast-success"
+                class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded shadow-lg">
+                {{ session('success') }}
+            </div>
+            @endif
 
         </div>
     </main>

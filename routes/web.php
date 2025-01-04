@@ -27,9 +27,6 @@ use App\Http\Middleware\OwnerMiddleware;
 
 Route::get('/welcome', [PromotionController::class, 'showPromotionsForHome'])->name('welcome');
 
-Route::get('/text', function () {
-    return view('owner.text');
-})->name('text');
 
 Route::get('/home', [PromotionController::class, 'showPromotionsForHome'])->name('home');
 Route::get('/contact', function () {
@@ -106,9 +103,9 @@ Route::get('/checkout', [BookingController::class, 'checkout'])->name('checkout'
 Route::post('/extend-checkout', [BookingController::class, 'extendCheckout'])->name('extendCheckout');
 Route::post('/save-payment', [BookingController::class, 'savePayment'])->name('savePayment');
 
-Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
-Route::post('/damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
 Route::post('/submit-damaged-items', [BookingController::class, 'submitDamagedItems'])->name('submitDamagedItems');
+Route::post('/checkout-user', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
+Route::post('/checkoutuser', [BookingController::class, 'checkoutuser'])->name('checkoutuser');
 
 Route::post('/addBooking/{id}', [BookingController::class, 'addBooking'])->name('addBooking');
 Route::get('/emroom', [BookingController::class, 'emroom'])->name('emroom');
@@ -182,4 +179,6 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::post('/promotions/{id}/toggle-status', [PromotionController::class, 'toggleStatus'])->name('promotions.toggleStatus');
     Route::get('/record_detail/{id}', [BookingController::class, 'record_detail'])->name('record_detail');
     Route::get('/record', [BookingController::class, 'record'])->name('record');
+    Route::get('/test', [BookingController::class, 'test'])->name('test');
+    Route::get('/calendar', [BookingController::class, 'calendar'])->name('calendar');
 });

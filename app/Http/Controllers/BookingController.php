@@ -15,8 +15,8 @@ use App\Models\CheckoutDetail;
 use App\Models\Checkin;
 use App\Models\Checkout;
 use App\Models\Promotion;
-use App\Models\Checkoutextend;
 use App\Models\Maintenance;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,6 +46,54 @@ class BookingController extends Controller
         $rooms = Room::all();
         return view('user.t', compact('rooms',));
     }
+    public function test()
+    {
+        $bookingDetails = Booking_detail::selectRaw('checkin_date, COUNT(*) as room_count')
+            ->groupBy('checkin_date')
+            ->get();
+
+        // เตรียมข้อมูลสำหรับ FullCalendar
+        $events = $bookingDetails->map(function ($detail) {
+            return [
+                'title' => "{$detail->room_count} การจอง",
+                'start' => $detail->checkin_date,
+            ];
+        });
+
+        return view('owner.test', ['events' => $events]);
+    }
+
+    public function calendar()
+    {
+        // ข้อมูลเช็คอิน
+        $checkinDetails = Booking_detail::selectRaw('checkin_date, COUNT(*) as room_count')
+            ->groupBy('checkin_date')
+            ->get();
+
+        // ข้อมูลเช็คเอาท์
+        $checkoutDetails = Booking_detail::selectRaw('checkout_date, COUNT(*) as room_count')
+            ->groupBy('checkout_date')
+            ->get();
+
+        // เตรียมข้อมูลสำหรับปฏิทิน
+        $events = $checkinDetails->map(function ($detail) {
+            return [
+                'title' => "{$detail->room_count}  (เช็คอิน)",
+                'date' => Carbon::parse($detail->checkin_date)->toDateString(),
+                'type' => 'checkin',
+            ];
+        })->merge($checkoutDetails->map(function ($detail) {
+            return [
+                'title' => "{$detail->room_count}  (เช็คเอาท์)",
+                'date' => Carbon::parse($detail->checkout_date)->toDateString(),
+                'type' => 'checkout',
+            ];
+        }));
+
+        return view('owner.calendar', ['events' => $events]);
+    }
+
+
     public function showReserveForm(Request $request)
     {
         $extra_bed_count = $request->input('extra_bed_count', 0);
@@ -147,12 +195,18 @@ class BookingController extends Controller
         return view('owner.record_detail', compact('booking'));
     }
 
-    public function record()
+    public function record(Request $request)
     {
-        $bookings = Booking_detail::all();
-
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+            $bookings = Booking_detail::whereBetween('checkin_date', [$startDate, $endDate])->paginate(10);
+        } else {
+            $bookings = Booking_detail::paginate(10);
+        }
         return view('owner.record', compact('bookings'));
     }
+
 
     public function record_detail($bookingdetail_id)
     {
@@ -647,7 +701,6 @@ class BookingController extends Controller
     }
 
 
-
     public function checkoutuser(Request $request)
     {
         $bookingId = $request->input('booking_id');
@@ -677,98 +730,147 @@ class BookingController extends Controller
                 'checkout' => now(), // วันที่เช็คเอาท์
             ]);
 
-            return redirect()->back()->with('success', 'เช็คเอาท์สำเร็จ');
+            // ส่งผลลัพธ์เป็น JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'เช็คเอาท์สำเร็จ'
+            ]);
         }
 
-        return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
-    }
-
-
-
-    public function savePayment(Request $request)
-    {
-        $checkoutextendId = $request->input('checkoutextend_id');
-        $paymentMethod = $request->input('payment_method');
-        $cashRefund = $request->input('cash_refund');
-        $amountPaid = $request->input('amount_paid'); // Get the amount paid from the request
-
-        // Find the checkoutextend record
-        $checkoutextend = Checkoutextend::findOrFail($checkoutextendId);
-
-        // Update payment details
-        $checkoutextend->payment_method = $paymentMethod;
-        $checkoutextend->cash_refund = $cashRefund;
-        $checkoutextend->amount_paid = $amountPaid; // Save the amount paid
-        $checkoutextend->save();
-
-        return response()->json(['message' => 'ข้อมูลการชำระเงินถูกบันทึกเรียบร้อยแล้ว']);
+        return response()->json([
+            'success' => false,
+            'error' => 'ไม่สามารถทำเช็คเอาท์ได้'
+        ]);
     }
 
     public function submitDamagedItems(Request $request)
     {
-        $bookingId = $request->input('booking_id');
-        $damagedItems = $request->input('damaged_items', []);
-        $totalPrice = 0;
-
-        // ดึงข้อมูล booking_details ที่มี status เป็น 'เช็คอินแล้ว'
-        $bookingDetails = Booking_detail::where('booking_id', $bookingId)
-            ->where('booking_detail_status', 'เช็คอินแล้ว')
-            ->first();
-
-        // ตรวจสอบว่า bookingDetails มีค่าหรือไม่
-        if (!$bookingDetails) {
-            return redirect()->back()->with('error', 'ไม่พบข้อมูลการจองที่เช็คอินแล้ว');
-        }
-
-        // ค่า booking_detail_id ที่จะใช้
-        $bookingDetailId = $bookingDetails->id;
-
-        // ลูปการบันทึก damagedItems
-        foreach ($damagedItems as $itemId) {
-            $productRoom = Product_room::find($itemId);
-            if ($productRoom) {
-                // สร้าง CheckoutDetail ใหม่
-                $checkoutDetail = new CheckoutDetail([
-                    'booking_id' => $bookingId,
-                    'product_room_id' => $itemId,
-                    'totalpriceroom' => $productRoom->productroom_price,
-                    'productroom_name' => $productRoom->productroom_name,
-                    'booking_detail_id' => $bookingDetailId, // ระบุ booking_detail_id
-                ]);
-                $checkoutDetail->save();
-
-                $totalPrice += $productRoom->productroom_price;
-            }
-        }
-
-        // อัพเดตสถานะ booking_detail เป็น 'เช็คเอาท์'
-        if ($bookingDetails) {
-            $bookingDetails->booking_detail_status = 'เช็คเอาท์';
-            $bookingDetails->save();
-
-            // อัพเดตสถานะห้อง
-            $room = $bookingDetails->room;
-            if ($room) {
-                $room->room_status = 'แจ้งซ่อมห้อง';
-                $room->save();
-            }
-
-            // บันทึกข้อมูลการเช็คเอาท์
-            $checkout = Checkout::create([
-                'booking_id' => $bookingId,
-                'checked_out_by' => auth()->id(),
-                'checkout' => now(),
-                'total_damages' => $totalPrice,
+        try {
+            // Validate request
+            $request->validate([
+                'booking_id' => 'required|exists:bookings,id',
+                'damaged_items' => 'required|array',
+                'payment_method' => 'required|in:cash,transfer',
+                'amount_paid' => 'nullable|numeric|min:0',
             ]);
 
-            return redirect()->back()->with('success', "เช็คเอาท์สำเร็จ. ค่าเสียหายรวม: ฿" . number_format($totalPrice, 2));
+            $bookingId = $request->input('booking_id');
+            $damagedItems = $request->input('damaged_items', []);
+            $paymentMethod = $request->input('payment_method');
+            $amountPaid = $request->input('amount_paid', 0);
+            $totalPrice = 0;
+
+            // Begin transaction
+            DB::beginTransaction();
+            try {
+                // Get booking details with status 'เช็คอินแล้ว'
+                $bookingDetails = Booking_detail::where('booking_id', $bookingId)
+                    ->where('booking_detail_status', 'เช็คอินแล้ว')
+                    ->first();
+
+                if (!$bookingDetails) {
+                    return redirect()->back()->with('error', 'ไม่พบข้อมูลการจองที่เช็คอินแล้ว');
+                }
+
+                // Calculate total damage cost and record damage items
+                $bookingDetailId = $bookingDetails->id;
+                foreach ($damagedItems as $itemId) {
+                    $productRoom = Product_room::find($itemId);
+                    if ($productRoom) {
+                        // Create CheckoutDetail record
+                        $checkoutDetail = new CheckoutDetail([
+                            'booking_id' => $bookingId,
+                            'product_room_id' => $itemId,
+                            'totalpriceroom' => $productRoom->productroom_price,
+                            'productroom_name' => $productRoom->productroom_name,
+                            'booking_detail_id' => $bookingDetailId,
+                        ]);
+                        $checkoutDetail->save();
+
+                        $totalPrice += $productRoom->productroom_price;
+                    }
+                }
+
+                if ($totalPrice > 0) {
+                    // Handle payment
+                    if ($paymentMethod === 'cash') {
+                        $payChange = max(0, $amountPaid - $totalPrice);
+                        $payment = Payment::create([
+                            'payment_date' => now(),
+                            'payment_status' => 'completed',
+                            'total_price' => $totalPrice,
+                            'pay_price' => $amountPaid,
+                            'pay_change' => $payChange,
+                            'booking_id' => $bookingId,
+                            'payment_type_id' => 2, // เงินสด
+                        ]);
+                    } else {
+                        $payment = Payment::create([
+                            'payment_date' => now(),
+                            'payment_status' => 'completed',
+                            'total_price' => $totalPrice,
+                            'pay_price' => $totalPrice,
+                            'pay_change' => 0,
+                            'booking_id' => $bookingId,
+                            'payment_type_id' => 1, // โอนเงิน
+                        ]);
+                    }
+
+                    // Update booking status to 'completed' and checkout date
+                    $booking = Booking::find($bookingId);
+                    if ($booking) {
+                        $booking->update([
+                            'booking_status' => 'completed',
+                            'checkout_date' => now(),
+                        ]);
+
+                        // Update room status to 'รอทำความสะอาด'
+                        $room = $bookingDetails->room;
+                        if ($room) {
+                            $room->update(['room_status' => 'แจ้งซ่อมห้อง']);
+                        }
+
+                        // Create Maintenance record for room maintenance
+                        Maintenance::create([
+                            'room_id' => $room->id,
+                            'maintenance_status' => 'pending',
+                            'maintenance_date' => now(),
+                            'description' => 'Room reported for damages',
+                            'problemType' => $request->input('problemType', null)  // กำหนดเป็น NULL หากไม่มีการระบุค่า
+                        ]);
+
+                        // Checkout after payment
+                        $this->checkoutuser($request);
+                    }
+
+                    // Commit transaction
+                    DB::commit();
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'บันทึกค่าเสียหายและการชำระเงินสำเร็จ และเช็คเอาท์เรียบร้อยแล้ว',
+                        'total_price' => $totalPrice,
+                        'payment_id' => $payment->id
+                    ]);
+                }
+
+                // Rollback if no damaged items are selected
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'error' => 'ไม่มีรายการค่าเสียหายที่เลือก'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                throw $e;
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' . $e->getMessage()
+            ], 500);
         }
-
-        return redirect()->back()->with('error', 'ไม่สามารถทำเช็คเอาท์ได้');
     }
-
-
-
 
     public function updateBookingDetail(Request $request)
     {

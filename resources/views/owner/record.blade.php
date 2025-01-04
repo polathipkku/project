@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/src/output.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="/src/hero.css">
     <title>Tunthree</title>
 </head>
@@ -86,8 +88,43 @@
         </section>
 
         <section class="mx-10 bg-white w-4/5">
+
             <div class="mx-4 py-10 p-5 mb-10">
                 <h1 class="text-5xl mb-10 max-xl:px-4">ประวัติการจอง</h1>
+                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
+                    href="{{ route('calendar') }}" id="Promotion">
+                    <div class="mr-2 text-base flex items-center">
+                        <i class="fa-solid fa-rectangle-ad mr-1"></i>ปฏิทินการจอง
+                    </div>
+                </a>
+                <div class="mb-6">
+                    <form action="{{ route('record') }}" method="GET" class="flex items-center space-x-4">
+                        <div>
+                            <label for="start_date" class="block text-gray-700">วันที่เริ่มต้น</label>
+                            <input type="text" id="start_date" name="start_date" class="flatpickr-input bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 w-64" placeholder="เลือกวันที่เริ่มต้น" readonly>
+                        </div>
+                        <div>
+                            <label for="end_date" class="block text-gray-700">วันที่สิ้นสุด</label>
+                            <input type="text" id="end_date" name="end_date" class="flatpickr-input bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 w-64" placeholder="เลือกวันที่สิ้นสุด" readonly>
+                        </div>
+                        <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                            ค้นหา
+                        </button>
+                    </form>
+                </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        flatpickr("#start_date", {
+                            dateFormat: "Y-m-d",
+                        });
+                        flatpickr("#end_date", {
+                            dateFormat: "Y-m-d",
+                        });
+                    });
+                </script>
+
+
                 <div class="grid justify-items-stretch max-lg:grid-cols-1 max-xl:px-4">
                     <div class="grid max-lg:grid-cols-1">
                         @if (count($bookings) > 0)
@@ -213,6 +250,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
 
 
