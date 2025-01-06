@@ -17,8 +17,6 @@ class checkout extends Model
         'checked_out_by',
         'checkout',
         'total_damages',
-        'extended_days',
-        'extra_charge',
         
     ];
 

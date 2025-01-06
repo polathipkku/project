@@ -403,15 +403,15 @@
                             <div class="mb-4 flex space-x-4">
                                 <div class="flex-1">
                                     <label for="checkin_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คอิน:</label>
-                                    <input type="date" name="checkin_date" id="checkin_date"
+                                    <input type="text" name="checkin_date" id="checkin_date"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $checkin_date }}" readonly>
+                                        value="{{ \Carbon\Carbon::parse($checkin_date)->format('d-m-Y') }}" readonly>
                                 </div>
                                 <div class="flex-1">
                                     <label for="checkout_date" class="block text-gray-700 text-sm font-bold mb-2">วันที่เช็คเอาท์:</label>
-                                    <input type="date" name="checkout_date" id="checkout_date"
+                                    <input type="text" name="checkout_date" id="checkout_date"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-100 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        value="{{ $checkout_date }}" readonly>
+                                        value="{{ \Carbon\Carbon::parse($checkout_date)->format('d-m-Y') }}" readonly>
                                 </div>
                             </div>
 

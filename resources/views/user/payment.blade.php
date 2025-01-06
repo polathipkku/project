@@ -97,66 +97,68 @@
     <script>
         const stripe = Stripe("{{ env('STRIPE_KEY') }}");
         let timer;
-
-        document.getElementById('pay-button').addEventListener('click', async function() {
-            const bookingId = document.getElementById('booking_id').value;
-
-            // Start countdown timer
-            let countdown = 60; // 1 = 1 วินาที 
-
-            timer = setInterval(updateTimer, 1000);
-
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            const expirationTime = new Date("{{ $payment->expiration_time }}");
+            const now = new Date();
+            let countdown = Math.floor((expirationTime - now) / 1000);
+    
+            if (countdown > 0) {
+                timer = setInterval(updateTimer, 1000);
+            } else {
+                handleTimeout();
+            }
+    
             function updateTimer() {
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    handleTimeout();
+                    return;
+                }
+    
                 countdown--;
                 const minutes = Math.floor(countdown / 60);
                 const seconds = countdown % 60;
                 document.getElementById('countdown').textContent =
                     `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (countdown <= 0) {
-                    clearInterval(timer);
-                    document.getElementById('countdown').textContent = 'หมดเวลา';
-                    document.getElementById('pay-button').style.display = 'none';
-
-                    // ใช้ SweetAlert เพื่อแจ้งเตือน
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'หมดเวลาชำระเงิน',
-                        text: 'การจองของคุณถูกยกเลิกแล้ว',
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        // เรียกใช้ฟังก์ชันยกเลิกการจองหลังจากกดปุ่มตกลง
-                        cancelBooking(bookingId);
-                    });
-                }
             }
+    
+           function handleTimeout() {
+                document.getElementById('countdown').textContent = 'หมดเวลา';
+                document.getElementById('pay-button').style.display = 'none';
 
-
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'หมดเวลาชำระเงิน',
+                    text: 'การจองของคุณถูกยกเลิกแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    cancelBooking('{{ $bookingDetail->booking_id }}');
+                });
+            }
+        });
+    
+        document.getElementById('pay-button').addEventListener('click', async function () {
+            const bookingId = document.getElementById('booking_id').value;
+    
             try {
                 const response = await fetch('/create-payment-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
-                    body: JSON.stringify({
-                        booking_id: bookingId
-                    })
+                    body: JSON.stringify({ booking_id: bookingId })
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
+    
                 const data = await response.json();
                 const clientSecret = data.client_secret;
-
-                // Create Payment Method
-                const {
-                    paymentMethod,
-                    error: paymentMethodError
-                } = await stripe.createPaymentMethod({
+    
+                const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
                     type: 'promptpay',
                     billing_details: {
                         email: '{{ $userEmail }}',
@@ -164,139 +166,98 @@
                         phone: '{{ $bookingDetail->phone }}',
                     }
                 });
-
+    
                 if (paymentMethodError) {
-                    console.error(paymentMethodError.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: paymentMethodError.message,
+                        confirmButtonText: 'ตกลง'
+                    });
                     return;
                 }
-
-                // Confirm Payment through PromptPay
+    
                 const result = await stripe.confirmPromptPayPayment(clientSecret, {
                     payment_method: paymentMethod.id
                 });
-
-                // Create QR code for PromptPay
-                // new QRCode(document.getElementById('qrcode'), {
-                //     text: data.client_secret,
-                //     width: 128,
-                //     height: 128
-                // });
-
-                document.getElementById('pay-button').style.display = 'none';
-
-                stripe.confirmPromptPayPayment(data.client_secret).then((result) => {
-                    if (result.error) {
-                        // ใช้ SweetAlert เพื่อแจ้งเตือนข้อผิดพลาด
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'เกิดข้อผิดพลาด',
-                            text: result.error.message,
-                            confirmButtonText: 'ตกลง'
-                        });
-                    } else {
-                        fetch('/update-payment-status', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').getAttribute('content')
-                                },
-                                body: JSON.stringify({
-                                    booking_id: bookingId,
-                                    payment_status: 'succeeded',
-                                    booking_detail_status: 'รอเลือกห้อง',
-                                    booking_status: 'ชำระเงินเสร็จสิ้น'
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'ชำระเงินสำเร็จ',
-                                        text: 'การชำระเงินสำเร็จแล้ว! จะกลับไปยังหน้าหลักใน 3 วินาที',
-                                        timer: 3000,
-                                        timerProgressBar: true,
-                                        showConfirmButton: false
-                                    });
-
-                                    setTimeout(() => {
-                                        window.location.href = '/';
-                                    }, 3000);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'เกิดข้อผิดพลาด',
-                                    text: 'ไม่สามารถอัปเดตสถานะการชำระเงินได้',
-                                    confirmButtonText: 'ตกลง'
-                                });
-                            });
-                    }
-                });
-
-
+    
+                if (result.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: result.error.message,
+                        confirmButtonText: 'ตกลง'
+                    });
+                } else {
+                    updatePaymentStatus(bookingId);
+                }
             } catch (error) {
-                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: error.message,
+                    confirmButtonText: 'ตกลง'
+                });
             }
         });
-
-
-
+    
+        function updatePaymentStatus(bookingId) {
+            fetch('/update-payment-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    booking_id: bookingId,
+                    payment_status: 'succeeded',
+                    booking_detail_status: 'รอเลือกห้อง',
+                    booking_status: 'ชำระเงินเสร็จสิ้น'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ชำระเงินสำเร็จ',
+                        text: 'การชำระเงินสำเร็จแล้ว!',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        window.location.href = '/';
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถอัปเดตสถานะการชำระเงินได้',
+                    confirmButtonText: 'ตกลง'
+                });
+            });
+        }
+    
         function cancelBooking(bookingId) {
-            Swal.fire({
-                title: 'ยืนยันการยกเลิก',
-                text: 'คุณต้องการยกเลิกการจองและการชำระเงินหรือไม่?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'ใช่, ยกเลิกการจอง!',
-                cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/cancel-booking/' + bookingId, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                    'content'),
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                payment_status: 'cancel'
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'ยกเลิกสำเร็จ',
-                                    text: 'การยกเลิกการจองและการชำระเงินสำเร็จแล้ว',
-                                    confirmButtonText: 'ตกลง'
-                                }).then(() => {
-                                    window.location.href = '/';
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'ยกเลิกไม่สำเร็จ',
-                                    text: 'การยกเลิกไม่สำเร็จ',
-                                    confirmButtonText: 'ตกลง'
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'เกิดข้อผิดพลาด',
-                                text: 'เกิดข้อผิดพลาดในการยกเลิก',
-                                confirmButtonText: 'ตกลง'
-                            });
-                        });
+            fetch('/cancel-booking/' + bookingId, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payment_status: 'cancel' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ยกเลิกสำเร็จ',
+                        text: 'การยกเลิกการจองและการชำระเงินสำเร็จแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        window.location.href = '/';
+                    });
                 }
             });
         }

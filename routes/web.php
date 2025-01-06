@@ -87,12 +87,13 @@ Route::get('/reservation', [BookingController::class, 'reservation'])->name('res
 Route::get('/store', [ProductController::class, 'store'])->name('store');
 Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
 Route::get('/promotions-home', [PromotionController::class, 'showPromotionsForHome'])->name('promotions.home');
-Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking'); // Route::delete('/cancel-booking/{id}', [BookingController::class, 'cancelBooking'])->name('cancel.booking');
-// สร้าง Payment Intent
+// Route::post('/cancel-booking/{bookingId}', [BookingController::class, 'cancelBooking']);
+Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking'); 
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 // รับ booking_id
 Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
 Route::post('/update-payment-status', [PaymentController::class, 'updatePaymentStatus']);
+Route::get('/check-expired-payments', [PaymentController::class, 'checkAndCancelExpiredPayments']);
 
 Route::get('/checkin', [BookingController::class, 'checkinuser'])->name('checkin');
 Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('selectRoom');
@@ -117,10 +118,10 @@ Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('
 Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
 
 Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
-Route::get('/maintenance/{id}', [MaintenanceceController::class, 'maintenance'])->name('maintenance');
+Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'showMaintenanceDetail'])->name('maintenancedetail');
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
 Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');
-Route::get('/maintenancedetail/{id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');
+Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');
 Route::post('/toggleRoomStatus/{id}', [MaintenanceceController::class, 'toggleRoomStatus'])->name('toggleRoomStatus');
 Route::post('/update-booking-detail', [BookingController::class, 'updateBookingDetail'])->name('updateBookingDetail');
 

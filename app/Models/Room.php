@@ -36,7 +36,7 @@ class Room extends Model
 
     public function maintenances()
     {
-        return $this->hasMany(Maintenance::class, 'room_id');
+        return $this->hasMany(Maintenance::class);
     }
 
     public function bookingDetails()
@@ -48,4 +48,5 @@ class Room extends Model
         // สมมติว่าคุณมีสถานะ "รอเลือกห้อง" สำหรับการจองที่ยังรอห้อง
         return $this->bookings()->where('booking_status', 'รอเลือกห้อง');
     }
+    
 }

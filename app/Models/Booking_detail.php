@@ -29,25 +29,37 @@ class Booking_detail extends Model
 
     ];
 
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'booking_id');
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function checkin()
+    {
+        return $this->hasOne(Checkin::class);
+    }
+
+    public function checkout()
+    {
+        return $this->hasOne(Checkout::class);
     }
 
     public function checkoutDetails()
     {
         return $this->hasMany(CheckoutDetail::class);
     }
-    public function room()
-    {
-        return $this->belongsTo(Room::class, 'room_id');
-    }
+
     public function promotion()
     {
-        return $this->belongsTo(Promotion::class, 'promotion_id');
+        return $this->belongsTo(Promotion::class);
     }
-    public function checkoutExtends()
+    public function payment()
     {
-        return $this->hasMany(Checkoutextend::class);
+        return $this->hasOne(Payment::class, 'booking_id');
     }
 }

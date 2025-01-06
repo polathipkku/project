@@ -26,6 +26,8 @@
                     <div class="text-black text-lg ">Tunthree</div>
                 </div>
 
+
+
                 <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Users">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-user mr-2"></i>Users
@@ -44,21 +46,15 @@
                     </div>
                 </a>
 
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
+                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
                     <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Out
+                        <i class="fa-solid fa-person-walking-luggage fa-flip-horizontal mr-1"></i>Check Outsssss
                     </div>
                 </a>
 
                 <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
                     <div class="mr-2 text-base flex items-center">
                         <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="maintenanceroom">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-tools mr-1"></i>Maintenance
                     </div>
                 </a>
 
@@ -75,45 +71,46 @@
 
         <!-- --------------------------------------------------------------------------------------------------------------------- -->
 
-        <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
-            <div class="max-w-screen-xl mx-auto py-10 ">
-                <div class="px-2 p-2  flex justify-between items-center">
+        <section class="ml-10 bg-white shadow-lg rounded-lg overflow-hidden" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
+            <div class="max-w-screen-xl mx-auto py-10">
+                <div class="px-2 p-2 flex justify-between items-center">
                     <h1 class="text-4xl mb-10 max-xl:px-4">รายละเอียดการแจ้งซ่อม</h1>
                     <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/maintenanceroom'">
                         <i class="fa-solid fa-circle-xmark text-4xl text-red-500 group-hover:text-red-900"></i>
                     </button>
                 </div>
 
-                <form>
-                    <div class="grid grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="room_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ห้อง</label>
-                            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="room_id">{{ $room->id }}</div>
-                        </div>
-                        <div>
-                            <label for="user_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ชื่อผู้แจ้ง</label>
-                            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="user_name">{{ $user->name }}</div>
-                        </div>
-                        <div class="col-span-2">
-                            <label for="problemType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ประเภทปัญหา</label>
-                            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="problemType">{{ $maintenance->problemType }}</div>
-                        </div>
-                        <div class="col-span-2">
-                            <label for="created_at" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันที่แจ้ง</label>
-                            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-10 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" id="created_at">{{ $maintenance->created_at }}</div>
-                        </div>
-                        <div class="col-span-2">
-                            <label for="problem_detail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รายละเอียดปัญหา</label>
-                            <textarea readonly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-40 resize-none" id="problem_detail">{{ $maintenance->problem_detail }}</textarea>
-                        </div>
-                    </div>
-                </form>
+                <!-- Maintenance Details -->
+                <div class="space-y-4">
+                    <p class="text-lg text-gray-700"><strong>ชื่อห้อง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->room)->room_name }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>ชื่อผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->booking_name ?? 'ไม่มีข้อมูล' }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>โทรศัพท์ผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>ชื่อผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->name ?? 'ไม่มีข้อมูล' }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>หมายเลขบัตรประชาชนผู้เข้าพัก:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->id_card ?? 'ไม่มีข้อมูล' }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>โทรศัพท์ผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
+                    <p class="text-lg text-gray-700"><strong>ค่าเสียหายทั้งหมด:</strong> <span class="text-gray-500">{{ number_format(optional($maintenanceDetail->booking->checkout)->total_damages, 2) ?? 'ไม่มีข้อมูล' }} บาท</span></p>
+                    <p class="text-lg text-gray-700"><strong>สถานะการซ่อม:</strong>
+                        <span class="text-gray-500">{{ optional($maintenanceDetail->room->maintenances->first())->maintenances_status ?? 'ไม่มีข้อมูล' }}</span>
+                    </p>
 
-
-
-
+                    <!-- Damage Details -->
+                    <p class="text-lg text-gray-700"><strong>รายละเอียดค่าเสียหาย:</strong></p>
+                    <ul class="list-disc pl-6 text-gray-600 space-y-2">
+                        @forelse ($maintenanceDetail->booking->checkoutDetails as $detail)
+                        @if ($detail->booking_detail_id === $maintenanceDetail->id)
+                        <li>
+                            <strong>ชื่อสินค้า:</strong> <span class="text-gray-500">{{ $detail->productroom_name ?? 'ไม่มีข้อมูล' }}</span><br>
+                            <strong>ราคา:</strong> <span class="text-gray-500">{{ number_format($detail->totalpriceroom, 2) ?? 'ไม่มีข้อมูล' }} บาท</span>
+                        </li>
+                        @endif
+                        @empty
+                        <li class="text-gray-500">ไม่มีข้อมูล</li>
+                        @endforelse
+                    </ul>
+                </div>
             </div>
         </section>
+
     </div>
 
 

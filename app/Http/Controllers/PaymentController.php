@@ -8,6 +8,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -21,14 +22,23 @@ class PaymentController extends Controller
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
         }
 
-        // สร้างหรืออัพเดทข้อมูลการชำระเงิน
-        $payment = Payment::updateOrCreate(
-            ['booking_id' => $id],
-            [
+        // Check if payment exists
+        $payment = Payment::where('booking_id', $id)->first();
+
+        if ($payment) {
+            // Check if the payment is expired
+            if (Carbon::now()->greaterThan($payment->expiration_time)) {
+                return redirect()->route('home')->with('error', 'เวลาชำระเงินหมดอายุแล้ว');
+            }
+        } else {
+            // Create a new payment if it doesn't exist
+            $payment = Payment::create([
+                'booking_id' => $id,
                 'amount' => $bookingDetail->booking->total_cost,
                 'payment_status' => 'pending',
-            ]
-        );
+                'expiration_time' => now()->addMinutes(1),
+            ]);
+        }
 
         $userEmail = $bookingDetail->booking->user->email ?? null;
         $promotionData = $bookingDetail->booking->promotion ? [
@@ -55,7 +65,7 @@ class PaymentController extends Controller
                 'payment_method_types' => ['promptpay'],
             ]);
 
-            // อัพเดทข้อมูล Payment
+            // Update Payment
             $payment = Payment::where('booking_id', $bookingId)->first();
             $payment->payment_intent_id = $paymentIntent->id;
             $payment->payment_status = 'awaiting_confirmation';
@@ -72,74 +82,93 @@ class PaymentController extends Controller
         $bookingId = $request->input('booking_id');
         $status = $request->input('payment_status');
         $bookingStatus = $request->input('booking_status');
-        $bookingDetailStatus = $request->input('booking_detail_status'); 
-    
-    
+        $bookingDetailStatus = $request->input('booking_detail_status');
+
         $booking = Booking::find($bookingId);
         if ($booking) {
-            $booking->booking_status = $bookingStatus;  
+            $booking->booking_status = $bookingStatus;
             $booking->save();
         }
-    
-        $payment = Payment::where('booking_id', $bookingId)->first();  
+
+        $payment = Payment::where('booking_id', $bookingId)->first();
         if ($payment) {
             $payment->payment_status = $status;
             $payment->save();
         }
-    
-        $bookingDetails = Booking_detail::where('booking_id', $bookingId)->get();  // ดึงหลายรายการ
+
+        $bookingDetails = Booking_detail::where('booking_id', $bookingId)->get();
         if ($bookingDetails->isNotEmpty()) {
             foreach ($bookingDetails as $bookingDetail) {
-                $bookingDetail->booking_detail_status = $bookingDetailStatus;  
+                $bookingDetail->booking_detail_status = $bookingDetailStatus;
                 $bookingDetail->save();
             }
         }
-    
+
         return response()->json(['success' => true]);
     }
 
     public function cancelBooking(Request $request, $id)
     {
-        // ค้นหาข้อมูลการจองหลักจาก ID ของ booking ที่ส่งมาใน URL
         $booking = Booking::find($id);
-        
-        // ถ้าไม่พบข้อมูลการจอง ให้คืนค่าข้อความแสดงข้อผิดพลาด
+
         if (!$booking) {
             return response()->json(['success' => false, 'message' => 'ไม่พบการจองนี้']);
         }
-    
-        // อัปเดตสถานะใน booking 
+
         $booking->booking_status = 'ยกเลิกการจอง';
         $booking->save();
-    
-        // ค้นหารายการ booking_detail ที่มี booking_id ตรงกับการจองหลัก
+
         $bookingDetails = Booking_detail::where('booking_id', $id)->get();
-        
-        // ตรวจสอบว่าพบข้อมูลใน booking_detail หรือไม่
+
         if ($bookingDetails->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'ไม่พบรายละเอียดการจอง']);
         }
-    
+
         foreach ($bookingDetails as $bookingDetail) {
             $bookingDetail->booking_detail_status = 'ยกเลิกการจอง';
             $bookingDetail->save();
-            
+
             $payment = Payment::where('booking_id', $id)->first();
             if ($payment) {
-                $payment->payment_status = 'cancel'; 
+                $payment->payment_status = 'cancel';
                 $payment->save();
             }
-    
+
             $room = $bookingDetail->room;
             if ($room) {
                 $room->room_status = 'พร้อมให้บริการ';
                 $room->save();
             }
         }
-    
-        // คืนค่าข้อความแสดงผลสำเร็จ
+
         return response()->json(['success' => true, 'message' => 'ยกเลิกการจองและการชำระเงินสำเร็จ']);
     }
-    
-    
+
+    public function checkAndCancelExpiredPayments()
+    {
+        // ค้นหา payments ที่หมดอายุและยังไม่ได้ชำระ
+        $expiredPayments = Payment::where('payment_status', 'pending')
+            ->where('expiration_time', '<', Carbon::now())
+            ->get();
+
+        foreach ($expiredPayments as $payment) {
+            // อัปเดตสถานะ payment เป็น "ยกเลิก"
+            $payment->update(['payment_status' => 'cancel']);
+
+            // อัปเดตสถานะ booking เป็น "ยกเลิกการจอง"
+            $booking = Booking::find($payment->booking_id);
+            if ($booking) {
+                $booking->update(['booking_status' => 'ยกเลิกการจอง']);
+            }
+
+            // อัปเดตสถานะ booking_detail เป็น "ยกเลิกการจอง"
+            Booking_detail::where('booking_id', $payment->booking_id)
+                ->update(['booking_detail_status' => 'ยกเลิกการจอง']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'ตรวจสอบและยกเลิกการจองที่หมดอายุสำเร็จ',
+        ]);
+    }
 }

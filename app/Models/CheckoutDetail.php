@@ -13,10 +13,11 @@ class CheckoutDetail extends Model
     protected $fillable = [
         'booking_id',
         'product_room_id',
+        'booking_detail_id',
         'totalpriceroom',
         'productroom_name',
-        'booking_detail_id',
     ];
+    
 
     public function booking()
     {

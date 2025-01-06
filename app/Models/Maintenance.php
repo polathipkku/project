@@ -14,8 +14,9 @@ class Maintenance extends Model
 
     protected $fillable = [
         'room_id',
-        'Problem_detail',
         'Maintenance_StartDate',
+        'booking_detail_id',
+        'maintenances_status',
         'problemType',
         'user_id'
     ];
@@ -26,5 +27,13 @@ class Maintenance extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+    public function booking_detail()
+    {
+        return $this->belongsTo(Booking_detail::class, 'booking_detail_id');
     }
 }

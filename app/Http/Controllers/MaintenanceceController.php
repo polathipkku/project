@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Maintenance;
+use App\Models\CheckoutDetail;
+use App\Models\Booking_detail;
+use Illuminate\Support\Facades\DB;
 
 
 class MaintenanceceController extends Controller
@@ -15,20 +18,39 @@ class MaintenanceceController extends Controller
         $room = Room::find($id);
         return view('employee.maintenance', compact('room'));
     }
+
     public function maintenanceroom()
     {
-        $rooms = Room::all();
-        return view('employee.maintenanceroom', compact('rooms',));
+        $roomsUnderMaintenance = Room::whereHas('maintenances', function ($query) {
+            $query->where('maintenances_status', 'กำลังซ่อม');
+        })->get();
+
+        $bookingDetails = Booking_detail::whereIn('id', function ($query) {
+            $query->select('booking_detail_id')
+                ->from('maintenances')
+                ->where('maintenances_status', 'กำลังซ่อม');
+        })->get();
+
+        return view('employee.maintenanceroom', compact('roomsUnderMaintenance', 'bookingDetails'));
     }
 
-    public function maintenancedetail($id)
+    public function maintenancedetail($booking_detail_id)
     {
-        $room = Room::find($id);
-        $maintenance = Maintenance::where('room_id', $id)->first();
-        $user = $maintenance->user;
-        return view('employee.maintenancedetail', compact('room', 'maintenance', 'user'));
+        $maintenanceDetail = Booking_detail::with([
+            'room.maintenances' => function($query) use ($booking_detail_id) {
+                $query->where('booking_detail_id', $booking_detail_id);
+            }
+        ])->find($booking_detail_id);
+    
+        if (!$maintenanceDetail) {
+            return redirect()->route('maintenanceroom')->with('error', 'ไม่พบข้อมูลการแจ้งซ่อม');
+        }
+    
+        return view('employee.maintenancedetail', compact('maintenanceDetail'));
     }
-
+    
+    
+    
 
     public function store(Request $request)
     {
@@ -60,10 +82,24 @@ class MaintenanceceController extends Controller
 
     public function toggleRoomStatus(Request $request, $id)
     {
+        // ค้นหาห้องตาม id
         $room = Room::findOrFail($id);
+        
+        // อัปเดตสถานะห้องเป็น 'พร้อมให้บริการ'
         $room->room_status = 'พร้อมให้บริการ';
         $room->save();
-
-        return redirect()->back()->with('success', 'Room status updated successfully');
+    
+        // ค้นหาการแจ้งซ่อมที่เกี่ยวข้องกับห้องนี้ (ถ้ามี)
+        $maintenance = $room->maintenances()->where('maintenances_status', 'กำลังซ่อม')->first();
+        
+        // หากมีการแจ้งซ่อมให้เปลี่ยนสถานะเป็น 'ซ่อมสำเร็จ'
+        if ($maintenance) {
+            $maintenance->maintenances_status = 'ซ่อมสำเร็จ';
+            $maintenance->save();
+        }
+    
+        // คืนค่ากลับไปยังหน้าก่อนหน้า
+        return redirect()->back()->with('success', 'Room status and maintenance status updated successfully');
     }
+    
 }

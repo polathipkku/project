@@ -522,7 +522,7 @@
             var reserveButton = document.getElementById('reserve-button');
 
             flatpickr(checkinInput, {
-                dateFormat: 'Y-m-d',
+                dateFormat: 'd-m-Y',
                 locale: 'th',
                 minDate: 'today',
                 mode: 'range',

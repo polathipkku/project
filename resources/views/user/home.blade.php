@@ -203,11 +203,11 @@
     // ใช้ flatpickr สำหรับเลือกช่วงวันที่ Check-In และ Check-Out
     flatpickr("#checkin", {
       mode: "single", // การเลือกแค่วันเดียว
-      dateFormat: "Y-m-d", // รูปแบบวันที่
+      dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
       minDate: "today", // ไม่ให้เลือกวันในอดีต
       onChange: function(selectedDates, dateStr, instance) {
-        document.getElementById("checkin").value = dateStr;
-        // อัปเดตวันที่ Check-Out ให้เป็นหลังจาก Check-In
+        const formattedDate = instance.formatDate(selectedDates[0], "Y-m-d");
+        document.getElementById("checkin_date").value = formattedDate;
         const checkout = document.getElementById("checkout");
         checkout.disabled = false;
         checkout.focus();
@@ -216,12 +216,14 @@
 
     flatpickr("#checkout", {
       mode: "single", // การเลือกแค่วันเดียว
-      dateFormat: "Y-m-d", // รูปแบบวันที่
+      dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
       minDate: "today", // ไม่ให้เลือกวันในอดีต
       onChange: function(selectedDates, dateStr, instance) {
-        document.getElementById("checkout").value = dateStr;
+        const formattedDate = instance.formatDate(selectedDates[0], "Y-m-d");
+        document.getElementById("checkout_date").value = formattedDate;
       }
     });
+
 
     document.getElementById('popup').addEventListener('submit', function(event) {
       event.preventDefault(); // หยุดการส่งฟอร์มเพื่อควบคุมการกระทำด้วย JavaScript
