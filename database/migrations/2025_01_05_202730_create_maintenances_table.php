@@ -18,9 +18,7 @@ class CreateMaintenancesTable extends Migration
             $table->unsignedBigInteger('room_id');
             $table->unsignedBigInteger('booking_detail_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->text('problem_detail')->default('ไม่มีรายละเอียด');
             $table->string('maintenances_status')->nullable();
-            $table->string('problemType');
             $table->dateTime('maintenance_StartDate')->nullable();
             $table->timestamps();  
             $table->softDeletes();

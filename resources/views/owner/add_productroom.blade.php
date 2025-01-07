@@ -136,8 +136,7 @@
                             <option value="" disabled selected>เลือกหมวดหมู่</option>
                             <option value="เฟอร์นิเจอร์">เฟอร์นิเจอร์</option>
                             <option value="อุปกรณ์ไฟฟ้า">อุปกรณ์ไฟฟ้า</option>
-                            <option value="ของตกแต่ง">ของตกแต่ง</option>
-                            <option value="เครื่องใช้ในครัว">เครื่องใช้ในครัว</option>
+                            <option value="ผ้า">ผ้า</option>
                             <option value="อื่นๆ">อื่นๆ</option>
                         </select>
                         @error('productroom_category')

@@ -188,69 +188,66 @@
                         </div>
                     </div>
 
-
                     <div id="damagedItemsPopup"
                         class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-                        <div
-                            class="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full transform transition duration-300">
+                        <div class="bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full transform transition duration-300">
                             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 tracking-wide">
                                 เลือกรายการที่ชำรุด
                             </h2>
 
-                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}"
-                                method="post" class="space-y-6"
+                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post" class="space-y-6"
                                 onsubmit="showPaymentMethodPopup(); return false;">
                                 @csrf
                                 <input type="hidden" name="booking_id" id="damagedBookingId">
 
-                                <!-- Dropdown Filter -->
+                                <!-- Search Section -->
                                 <div class="relative mb-6">
-                                    <label for="categoryFilter"
-                                        class="block text-sm font-semibold text-gray-700 mb-2">
-                                        กรองตามหมวดหมู่
+                                    <label for="searchInput" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        ค้นหารายการสินค้า
                                     </label>
-                                    <select id="categoryFilter"
-                                        class="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="">ทั้งหมด</option>
-                                        @foreach ($productRooms->groupBy('productroom_category') as $category => $items)
-                                        <option value="{{ $category }}">{{ $category }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="flex">
+                                        <input type="text" id="searchInput" placeholder="พิมพ์ชื่อสินค้าหรือรายละเอียด"
+                                            class="flex-1 p-3 bg-gray-50 border border-gray-300 rounded-l-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <button type="button" onclick="searchItems()"
+                                            class="bg-indigo-600 text-white px-4 rounded-r-lg hover:bg-indigo-700 transition duration-300">
+                                            ค้นหา
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <!-- Items Section -->
                                 <div id="itemsContainer"
                                     class="max-h-80 overflow-y-auto bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-6 shadow-inner">
                                     @foreach ($productRooms->groupBy('productroom_category') as $category => $items)
-                                    <div class="category-group space-y-4"
-                                        data-category="{{ $category }}">
-                                        <h3
-                                            class="text-lg font-medium text-gray-600 border-b border-gray-300 pb-2">
+                                    <div class="category-group">
+                                        <h3 class="text-lg font-medium text-gray-600 border-b border-gray-300 pb-2 cursor-pointer"
+                                            onclick="toggleCategoryItems(this)">
                                             {{ $category }}
                                         </h3>
-                                        @foreach ($items as $item)
-                                        <div
-                                            class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="item-{{ $item->id }}"
-                                                    name="damaged_items[]" value="{{ $item->id }}"
-                                                    class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                                                    data-price="{{ $item->productroom_price }}"
-                                                    onchange="updateTotalAmount()">
-                                                <label for="item-{{ $item->id }}" class="ml-4">
-                                                    <p class="text-sm font-medium text-gray-800">
-                                                        {{ $item->productroom_name }}
-                                                    </p>
-                                                    <p class="text-sm text-gray-500">
-                                                        ฿{{ number_format($item->productroom_price, 2) }}
-                                                    </p>
-                                                </label>
+                                        <div class="items hidden space-y-4">
+                                            @foreach ($items as $item)
+                                            <div
+                                                class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition item">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" id="item-{{ $item->id }}" name="damaged_items[]"
+                                                        value="{{ $item->id }}"
+                                                        class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                                        data-price="{{ $item->productroom_price }}" onchange="updateTotalAmount()">
+                                                    <label for="item-{{ $item->id }}" class="ml-4">
+                                                        <p class="text-sm font-medium text-gray-800">
+                                                            {{ $item->productroom_name }}
+                                                        </p>
+                                                        <p class="text-sm text-gray-500">
+                                                            ฿{{ number_format($item->productroom_price, 2) }}
+                                                        </p>
+                                                    </label>
+                                                </div>
+                                                <div class="text-gray-500 text-sm">
+                                                    {{ $item->productroom_qty }}
+                                                </div>
                                             </div>
-                                            <div class="text-gray-500 text-sm">
-                                                {{ $item->productroom_qty }}
-                                            </div>
+                                            @endforeach
                                         </div>
-                                        @endforeach
                                     </div>
                                     @endforeach
                                 </div>
@@ -268,6 +265,58 @@
                             </form>
                         </div>
                     </div>
+
+                    <script>
+                        // ฟังก์ชันเปิด/ปิดการแสดงผลของหมวดหมู่
+                        function toggleCategoryItems(categoryHeader) {
+                            const itemsContainer = categoryHeader.nextElementSibling;
+                            itemsContainer.classList.toggle('hidden');
+                        }
+
+                        // ฟังก์ชันค้นหารายการสินค้า
+                        function searchItems() {
+                            const query = document.getElementById('searchInput').value.toLowerCase();
+                            const items = document.querySelectorAll('#itemsContainer .item');
+
+                            items.forEach(item => {
+                                const name = item.querySelector('label p:first-child').innerText.toLowerCase();
+                                const description = item.querySelector('label p:last-child').innerText.toLowerCase();
+
+                                if (name.includes(query) || description.includes(query)) {
+                                    item.style.display = 'flex';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+
+                            // แสดงหมวดหมู่ที่มีรายการที่ค้นหาได้
+                            const categoryGroups = document.querySelectorAll('.category-group');
+                            categoryGroups.forEach(group => {
+                                const visibleItems = group.querySelectorAll('.item:not([style*="display: none"])');
+                                if (visibleItems.length > 0) {
+                                    group.querySelector('.items').classList.remove('hidden');
+                                } else {
+                                    group.querySelector('.items').classList.add('hidden');
+                                }
+                            });
+                        }
+
+                        // ฟังก์ชันรีเซ็ตการค้นหาเมื่อป้อนข้อความใหม่
+                        document.getElementById('searchInput').addEventListener('input', function() {
+                            if (this.value === '') {
+                                const items = document.querySelectorAll('#itemsContainer .item');
+                                items.forEach(item => {
+                                    item.style.display = 'flex';
+                                });
+
+                                // ซ่อนหมวดหมู่ทั้งหมด
+                                const categoryGroups = document.querySelectorAll('.category-group .items');
+                                categoryGroups.forEach(group => {
+                                    group.classList.add('hidden');
+                                });
+                            }
+                        });
+                    </script>
 
 
                     <script>
@@ -349,7 +398,7 @@
                                 <div class="flex justify-center items-center">
                                     <div
                                         class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-200 w-60 h-60 flex items-center justify-center">
-                                        <img src="{{ asset('images/image.png') }}" alt="QR Code"
+                                        <img src="{{ asset('images/qrcodeimage.png') }}" alt="QR Code"
                                             class="w-48 h-48">
                                     </div>
                                 </div>

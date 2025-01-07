@@ -39,7 +39,8 @@ class MaintenanceceController extends Controller
         $maintenanceDetail = Booking_detail::with([
             'room.maintenances' => function($query) use ($booking_detail_id) {
                 $query->where('booking_detail_id', $booking_detail_id);
-            }
+            },
+            'booking.payment'  // Add this to eagerly load the payment details
         ])->find($booking_detail_id);
     
         if (!$maintenanceDetail) {
@@ -48,8 +49,6 @@ class MaintenanceceController extends Controller
     
         return view('employee.maintenancedetail', compact('maintenanceDetail'));
     }
-    
-    
     
 
     public function store(Request $request)

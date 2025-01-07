@@ -108,6 +108,7 @@
                         <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลความเสียหาย</h2>
                         <p class="mt-4 text-gray-700"><strong>ค่าเสียหายทั้งหมด:</strong> <span class="text-gray-500">{{ number_format(optional($maintenanceDetail->booking->checkout)->total_damages, 2) ?? 'ไม่มีข้อมูล' }} บาท</span></p>
                         <p class="mt-2 text-gray-700"><strong>สถานะการซ่อม:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->room->maintenances->first())->maintenances_status ?? 'ไม่มีข้อมูล' }}</span></p>
+                      
                     </div>
                 </div>
 

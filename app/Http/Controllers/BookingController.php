@@ -67,11 +67,13 @@ class BookingController extends Controller
     {
         // ข้อมูลเช็คอิน
         $checkinDetails = Booking_detail::selectRaw('checkin_date, COUNT(*) as room_count')
+            ->where('booking_detail_status', '!=', 'ยกเลิกการจอง')
             ->groupBy('checkin_date')
             ->get();
 
         // ข้อมูลเช็คเอาท์
         $checkoutDetails = Booking_detail::selectRaw('checkout_date, COUNT(*) as room_count')
+            ->where('booking_detail_status', '!=', 'ยกเลิกการจอง')
             ->groupBy('checkout_date')
             ->get();
 
@@ -92,7 +94,6 @@ class BookingController extends Controller
 
         return view('owner.calendar', ['events' => $events]);
     }
-
 
     public function showReserveForm(Request $request)
     {
@@ -164,18 +165,17 @@ class BookingController extends Controller
     {
         $bookings = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_detail_status', 'รอเลือกห้อง')
-                ->whereNull('room_id');
+                ->whereNull('room_id')
+                ->whereDate('checkin_date', Carbon::today());
         })->with(['bookingDetails' => function ($query) {
-            $query->whereNull('room_id');
+            $query->whereNull('room_id')
+                ->whereDate('checkin_date', Carbon::today());
         }])->get();
 
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
 
         return view('employee.checkin', compact('bookings', 'rooms'));
     }
-
-
-
     public function checkindetail($id)
     {
         $booking = Booking::find($id);
@@ -231,7 +231,7 @@ class BookingController extends Controller
         if (!$bookingDetail) {
             return redirect()->route('record')->with('error', 'ไม่พบข้อมูลการจอง');
         }
-        
+
         return view('owner.record_detail', compact('bookingDetail'));
     }
 
