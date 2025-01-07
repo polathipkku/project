@@ -73,29 +73,48 @@
 
         <section class="ml-10 bg-white shadow-lg rounded-lg overflow-hidden" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
             <div class="max-w-screen-xl mx-auto py-10">
-                <div class="px-2 p-2 flex justify-between items-center">
-                    <h1 class="text-4xl mb-10 max-xl:px-4">รายละเอียดการแจ้งซ่อม</h1>
-                    <button class="relative pr-12 mb-4 group" onclick="window.location.href ='/maintenanceroom'">
+                <div class="flex justify-between items-center border-b-2 pb-4">
+                    <h1 class="text-4xl font-bold text-gray-800">รายละเอียดการแจ้งซ่อม</h1>
+                    <button class="relative group" onclick="window.location.href ='/maintenanceroom'">
                         <i class="fa-solid fa-circle-xmark text-4xl text-red-500 group-hover:text-red-900"></i>
                     </button>
                 </div>
 
                 <!-- Maintenance Details -->
-                <div class="space-y-4">
-                    <p class="text-lg text-gray-700"><strong>ชื่อห้อง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->room)->room_name }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>ชื่อผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->booking_name ?? 'ไม่มีข้อมูล' }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>โทรศัพท์ผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>ชื่อผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->name ?? 'ไม่มีข้อมูล' }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>หมายเลขบัตรประชาชนผู้เข้าพัก:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->id_card ?? 'ไม่มีข้อมูล' }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>โทรศัพท์ผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
-                    <p class="text-lg text-gray-700"><strong>ค่าเสียหายทั้งหมด:</strong> <span class="text-gray-500">{{ number_format(optional($maintenanceDetail->booking->checkout)->total_damages, 2) ?? 'ไม่มีข้อมูล' }} บาท</span></p>
-                    <p class="text-lg text-gray-700"><strong>สถานะการซ่อม:</strong>
-                        <span class="text-gray-500">{{ optional($maintenanceDetail->room->maintenances->first())->maintenances_status ?? 'ไม่มีข้อมูล' }}</span>
-                    </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <!-- Room Information -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลห้องพัก</h2>
+                        <p class="mt-4 text-gray-700"><strong>ชื่อห้อง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->room)->room_name }}</span></p>
+                    </div>
 
-                    <!-- Damage Details -->
-                    <p class="text-lg text-gray-700"><strong>รายละเอียดค่าเสียหาย:</strong></p>
-                    <ul class="list-disc pl-6 text-gray-600 space-y-2">
+                    <!-- Booking Information -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลการจอง</h2>
+                        <p class="mt-4 text-gray-700"><strong>ชื่อผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->booking_name ?? 'ไม่มีข้อมูล' }}</span></p>
+                        <p class="mt-2 text-gray-700"><strong>โทรศัพท์ผู้จอง:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
+                    </div>
+
+                    <!-- Check-In Information -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลผู้เช็คอิน</h2>
+                        <p class="mt-4 text-gray-700"><strong>ชื่อผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->name ?? 'ไม่มีข้อมูล' }}</span></p>
+                        <p class="mt-2 text-gray-700"><strong>หมายเลขบัตรประชาชนผู้เข้าพัก:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->id_card ?? 'ไม่มีข้อมูล' }}</span></p>
+                        <p class="mt-2 text-gray-700"><strong>โทรศัพท์ผู้เช็คอิน:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->booking->checkin)->phone ?? 'ไม่มีข้อมูล' }}</span></p>
+                    </div>
+
+                    <!-- Damages and Maintenance Status -->
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลความเสียหาย</h2>
+                        <p class="mt-4 text-gray-700"><strong>ค่าเสียหายทั้งหมด:</strong> <span class="text-gray-500">{{ number_format(optional($maintenanceDetail->booking->checkout)->total_damages, 2) ?? 'ไม่มีข้อมูล' }} บาท</span></p>
+                        <p class="mt-2 text-gray-700"><strong>สถานะการซ่อม:</strong> <span class="text-gray-500">{{ optional($maintenanceDetail->room->maintenances->first())->maintenances_status ?? 'ไม่มีข้อมูล' }}</span></p>
+                    </div>
+                </div>
+
+                <!-- Damage Details -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md mt-8">
+                    <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">รายละเอียดค่าเสียหาย</h2>
+                    <ul class="list-disc pl-6 text-gray-600 space-y-2 mt-4">
                         @forelse ($maintenanceDetail->booking->checkoutDetails as $detail)
                         @if ($detail->booking_detail_id === $maintenanceDetail->id)
                         <li>

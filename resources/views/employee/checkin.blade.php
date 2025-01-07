@@ -128,8 +128,9 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">
-                                {{ $details[0]->checkin_date }}
+                                {{ \Carbon\Carbon::parse($details[0]->checkin_date)->format('d-m-y') }}
                             </td>
+
                             <td class="py-2 px-4">
                                 <a href="{{ route('checkindetail', ['id' => $details[0]->booking->id]) }}" class="text-blue-500 hover:text-blue-700 transition duration-300">
                                     <button class="py-2 px-4 rounded-md hover:underline focus:outline-none focus:shadow-outline-blue active:text-blue-800" type="button">
@@ -178,7 +179,9 @@
                                                 <span class="absolute right-6 text-red-500 text-sm mt-0.5">มีเตียงเสริม</span>
                                                 @endif
                                             </td>
-                                            <td class="px-4 py-2">{{ $detail->checkin_date }}</td>
+                                            <td class="px-4 py-2">
+                                                {{ \Carbon\Carbon::parse($detail->checkin_date)->format('d-m-y') }}
+                                            </td>
                                             <td class="px-4 py-2">
                                                 <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                                     <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>

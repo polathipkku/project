@@ -115,7 +115,9 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">{{ $detail->booking_detail_status }}</td>
-                            <td class="px-4 py-2">{{ $detail->checkout_date }}</td>
+                            <td class="px-4 py-2">
+                                {{ \Carbon\Carbon::parse($detail->checkout_date)->format('d-m-y') }}
+                            </td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}"
                                     class="text-blue-500 hover:text-blue-700">

@@ -97,7 +97,7 @@
                     <div class="flex items-center space-x-4">
                         <!-- Check-in date picker -->
                         <div class="flex flex-col items-start">
-                            <span class="font-semibold text-white mb-1">Check-in</span>
+                            <span class="font-semibold text-black mb-1">Check-in</span>
                             <div class="relative">
                                 <input type="text" id="checkin-date" class="border border-gray-400 rounded-md px-2 py-1 pr-10 bg-white cursor-pointer" readonly>
                                 <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
@@ -107,7 +107,7 @@
 
                         <!-- Check-out date picker -->
                         <div class="flex flex-col items-start">
-                            <span class="font-semibold text-white mb-1">Check-out</span>
+                            <span class="font-semibold text-black mb-1">Check-out</span>
                             <div class="relative">
                                 <input type="text" id="checkout-date" class="border border-gray-400 rounded-md px-2 py-1 pr-10 bg-white cursor-pointer" readonly>
                                 <i class="fa-regular fa-calendar absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>

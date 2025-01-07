@@ -231,6 +231,7 @@ class BookingController extends Controller
         if (!$bookingDetail) {
             return redirect()->route('record')->with('error', 'ไม่พบข้อมูลการจอง');
         }
+        
         return view('owner.record_detail', compact('bookingDetail'));
     }
 

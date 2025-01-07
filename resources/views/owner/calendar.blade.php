@@ -40,9 +40,16 @@
             <h1 class="text-2xl font-semibold text-gray-800 text-center mb-4">
                 ปฏิทินการจองห้องพัก
             </h1>
+
+            <!-- ปุ่มย้อนกลับ -->
+            <button onclick="window.history.back();" class="mb-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                ย้อนกลับ
+            </button>
+
             <div id="calendar"></div>
         </div>
     </div>
 </body>
+
 
 </html>
