@@ -36,7 +36,7 @@ class PaymentController extends Controller
                 'booking_id' => $id,
                 'amount' => $bookingDetail->booking->total_cost,
                 'payment_status' => 'pending',
-                'expiration_time' => now()->addMinutes(1),
+                'expiration_time' => now()->addMinutes(15),
             ]);
         }
 

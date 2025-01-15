@@ -59,7 +59,7 @@
                 <p><strong>รหัสโปรโมชั่น:</strong> ไม่มีโปรโมชั่น</p>
                 @endif
 
-                <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">1 นาที</span></p>
+                <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">15 นาที</span></p>
                 <p><small>ท่านมีเวลาคงเหลืออีก: <span class="text-red" id="countdown"></span></small></p>
             </div>
         </div>
