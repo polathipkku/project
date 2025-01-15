@@ -48,5 +48,8 @@ class Room extends Model
         // สมมติว่าคุณมีสถานะ "รอเลือกห้อง" สำหรับการจองที่ยังรอห้อง
         return $this->bookings()->where('booking_status', 'รอเลือกห้อง');
     }
-    
+    public function checkoutDetails()
+    {
+        return $this->hasManyThrough(CheckoutDetail::class, Booking_detail::class, 'room_id', 'booking_detail_id');
+    }
 }

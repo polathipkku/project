@@ -136,15 +136,21 @@
                                     @endforeach
                                 </td>
 
-
                                 <td class="px-4 py-4 flex justify-center items-center">
                                     <form action="{{ route('toggleRoomStatus', $room->id) }}" method="post">
                                         @csrf
+                                        @if($room->checkoutDetails->isNotEmpty() && $room->checkoutDetails->last()->thing_status === 'ซ่อมสำเร็จ')
                                         <button class="text-black hover:text-blue-500">
                                             <i class="fa-solid fa-tools"></i>
                                         </button>
+                                        @else
+                                        <span class="text-gray-500">ไม่สามารถกดได้</span>
+                                        @endif
                                     </form>
                                 </td>
+
+
+
 
                             </tr>
                             @endforeach

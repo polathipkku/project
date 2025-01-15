@@ -20,6 +20,7 @@ class CreateCheckoutDetailsTable extends Migration
             $table->unsignedBigInteger('booking_detail_id')->nullable();
             $table->decimal('totalpriceroom', 10, 2)->nullable();
             $table->string('productroom_name')->nullable();
+            $table->string('thing_status')->default('รอซ่อม');
 
             $table->timestamps();
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');

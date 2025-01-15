@@ -33,23 +33,66 @@ class MaintenanceceController extends Controller
 
         return view('employee.maintenanceroom', compact('roomsUnderMaintenance', 'bookingDetails'));
     }
-
     public function maintenancedetail($booking_detail_id)
     {
         $maintenanceDetail = Booking_detail::with([
-            'room.maintenances' => function($query) use ($booking_detail_id) {
+            'room.maintenances' => function ($query) use ($booking_detail_id) {
                 $query->where('booking_detail_id', $booking_detail_id);
             },
-            'booking.payment'  // Add this to eagerly load the payment details
+            'booking.payment', // Add this to eagerly load the payment details
+            'booking.checkoutDetails' // Load checkout details for counting thing_status
         ])->find($booking_detail_id);
-    
+
         if (!$maintenanceDetail) {
             return redirect()->route('maintenanceroom')->with('error', 'ไม่พบข้อมูลการแจ้งซ่อม');
         }
-    
-        return view('employee.maintenancedetail', compact('maintenanceDetail'));
+
+        $pendingRepairCount = $maintenanceDetail->booking->checkoutDetails
+            ->where('thing_status', 'รอซ่อม')
+            ->count();
+        $progressRepairCount = $maintenanceDetail->booking->checkoutDetails
+            ->where('thing_status', 'กำลังซ่อม')
+            ->count();
+
+        $completedRepairCount = $maintenanceDetail->booking->checkoutDetails
+            ->where('thing_status', 'ซ่อมสำเร็จ')
+            ->count();
+
+        return view('employee.maintenancedetail', compact('maintenanceDetail', 'pendingRepairCount', 'completedRepairCount', 'progressRepairCount'));
     }
-    
+
+    public function markAsCompleted($id)
+    {
+        // ค้นหาข้อมูลที่ต้องการเปลี่ยนสถานะ
+        $checkoutDetail = CheckoutDetail::find($id);
+
+        if (!$checkoutDetail) {
+            return redirect()->back()->with('error', 'ไม่พบข้อมูลที่ต้องการเปลี่ยนสถานะ');
+        }
+
+        // เปลี่ยนสถานะเป็น "ซ่อมสำเร็จ"
+        $checkoutDetail->thing_status = 'ซ่อมสำเร็จ';
+        $checkoutDetail->save();
+
+        return redirect()->back()->with('success', 'เปลี่ยนสถานะเป็น "ซ่อมสำเร็จ" เรียบร้อยแล้ว');
+    }
+
+
+    public function updateThingStatus($id)
+    {
+        $thing = CheckoutDetail::find($id); // แทน CheckoutDetail ด้วยโมเดลของคุณ
+
+        if (!$thing) {
+            return redirect()->back()->with('error', 'ไม่พบรายการสิ่งของ');
+        }
+
+        $thing->thing_status = 'กำลังซ่อม';
+        $thing->save();
+
+        return redirect()->back()->with('success', 'สถานะเปลี่ยนเป็น "กำลังซ่อม" เรียบร้อยแล้ว');
+    }
+
+
 
     public function store(Request $request)
     {
@@ -83,22 +126,21 @@ class MaintenanceceController extends Controller
     {
         // ค้นหาห้องตาม id
         $room = Room::findOrFail($id);
-        
+
         // อัปเดตสถานะห้องเป็น 'พร้อมให้บริการ'
         $room->room_status = 'พร้อมให้บริการ';
         $room->save();
-    
+
         // ค้นหาการแจ้งซ่อมที่เกี่ยวข้องกับห้องนี้ (ถ้ามี)
         $maintenance = $room->maintenances()->where('maintenances_status', 'กำลังซ่อม')->first();
-        
+
         // หากมีการแจ้งซ่อมให้เปลี่ยนสถานะเป็น 'ซ่อมสำเร็จ'
         if ($maintenance) {
             $maintenance->maintenances_status = 'ซ่อมสำเร็จ';
             $maintenance->save();
         }
-    
+
         // คืนค่ากลับไปยังหน้าก่อนหน้า
         return redirect()->back()->with('success', 'Room status and maintenance status updated successfully');
     }
-    
 }

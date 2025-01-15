@@ -119,6 +119,10 @@ Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('clea
 
 Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'showMaintenanceDetail'])->name('maintenancedetail');
+Route::put('/thing-status/{id}', [MaintenanceceController::class, 'updateThingStatus'])->name('updateThingStatus');
+Route::put('/thing-status/{id}/complete', [MaintenanceceController::class, 'markAsCompleted'])->name('markAsCompleted');
+
+
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
 Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');

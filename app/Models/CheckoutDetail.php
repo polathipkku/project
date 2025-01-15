@@ -16,6 +16,7 @@ class CheckoutDetail extends Model
         'booking_detail_id',
         'totalpriceroom',
         'productroom_name',
+        'thing_status',
     ];
     
 

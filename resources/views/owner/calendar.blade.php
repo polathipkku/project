@@ -18,14 +18,20 @@
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                locale: 'th', // ใช้ภาษาไทย
+                locale: 'th', // ภาษาไทย
                 events: @json($events), // รับข้อมูล events จาก backend
                 eventClassNames: function(info) {
                     if (info.event.extendedProps.type === 'checkout') {
-                        return ['bg-red-500', 'text-red-800', ]; // คลาส Tailwind CSS
+                        return ['bg-red-500', 'text-red-800']; // คลาส Tailwind CSS
                     }
                     return [];
                 },
+                dateClick: function(info) {
+                    // Redirect to record route with the selected date
+                    const selectedDate = info.dateStr;
+                    const url = `{{ route('record') }}?start_date=${selectedDate}&end_date=${selectedDate}`;
+                    window.location.href = url;
+                }
             });
 
             calendar.render();

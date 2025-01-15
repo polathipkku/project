@@ -223,7 +223,8 @@
                 console.log(`Show modal for booking ID: ${bookingId}, Check-in Date: ${checkinDate}`);
             }
         </script>
-        <div id="userInformationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
+        <div id="userInformationModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
             <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full max-h-screen overflow-y-auto">
                 <h2 class="text-2xl font-bold mb-4">กรอกข้อมูลผู้เข้าพัก</h2>
                 <form id="check-in-form" action="{{ route('updateBookingDetail') }}" method="post">
@@ -234,9 +235,10 @@
 
                         <div class="mb-4">
                             <label for="room_id" class="block mb-2">เลือกห้อง:</label>
-                            <select name="room_id" id="room_id" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select name="room_id" id="room_id" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
-                                @foreach($rooms as $room)
+                                @foreach ($rooms as $room)
                                 <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
                                 @endforeach
                             </select>
@@ -245,73 +247,290 @@
                         <div id="text" class="guest-form mb-4 border-b border-gray-300 pb-4">
                             <div class="mb-4">
                                 <label for="name" class="block text-sm font-medium">ชื่อ:</label>
-                                <input type="text" id="name" name="name_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">
+                                <input type="text" id="name" name="name_[1]" required
+                                    class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="ชื่อ">
                             </div>
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>
-                                    <input type="text" id="id_card" name="id_card_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">
+                                    <input type="text" id="id_card" name="id_card_[1]" required
+                                        class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="บัตรประชาชน">
                                 </div>
                                 <div>
                                     <label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>
-                                    <input type="text" id="phone" name="phone_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">
+                                    <input type="text" id="phone" name="phone_[1]" required
+                                        class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="เบอร์โทร">
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label for="address" class="block text-sm font-medium">ที่อยู่:</label>
-                                <input type="text" id="address" name="address_[1]" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">
+                                <input type="text" id="address" name="address_[1]" required
+                                    class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="บ้านเลขที่/หมู่บ้าน">
                             </div>
 
                             <div class="grid grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>
-                                    <input id="sub_district" name="sub_district_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">
+                                    <input id="sub_district" name="sub_district_[1]" type="text"
+                                        class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="ตำบล">
                                 </div>
                                 <div>
                                     <label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>
-                                    <input id="district" name="district_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">
+                                    <input id="district" name="district_[1]" type="text"
+                                        class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="อำเภอ">
                                 </div>
                                 <div>
                                     <label for="province" class="block text-sm font-medium">จังหวัด:</label>
-                                    <input id="province" name="province_[1]" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">
+                                    <input id="province" name="province_[1]" type="text"
+                                        class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="จังหวัด">
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>
-                                <input id="postcode" name="postcode_[1]" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">
+                                <input id="postcode" name="postcode_[1]" type="text" required
+                                    class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="รหัสไปรษณีย์">
                             </div>
+
 
                             <div class="mb-4">
-                                <label for="extra_bed_count" class="block text-sm font-medium">จำนวนเตียงเสริม:</label>
-                                <input type="number" id="extra_bed_count" name="extra_bed_count" min="0" value="0" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จำนวนเตียงเสริม">
+                                <label class="block text-sm font-medium">ต้องการเตียงเสริมหรือไม่:</label>
+                                <div class="flex items-center space-x-4">
+                                    <label>
+                                        <input type="radio" id="extra_bed_no" name="extra_bed_count"
+                                            value="0" checked class="form-radio">
+                                        ไม่เอาเตียงเสริม
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="extra_bed_yes" name="extra_bed_count"
+                                            value="1" class="form-radio">
+                                        เอาเตียงเสริม
+                                    </label>
+                                </div>
                             </div>
+
+
+
                         </div>
 
-                        <button type="button" id="add_name" class="flex items-center gap-2 text-blue-500 hover:text-blue-700">
+                        <button type="button" id="add_name"
+                            class="flex items-center gap-2 text-blue-500 hover:text-blue-700">
                             <i class="fas fa-plus-circle"></i> เพิ่มข้อมูลผู้เข้าพัก
                         </button>
 
                         <div class="flex justify-end mt-4">
-                            <button type="button" onclick="closeModal()" class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">บันทึกข้อมูล</button>
+                            <button type="button" onclick="closeModal()"
+                                class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">ยกเลิก</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">บันทึกข้อมูล</button>
                         </div>
                 </form>
             </div>
         </div>
 
-        <script>
-            var show_text = document.getElementById('text');
-            var add_name = document.getElementById('add_name');
-            var count = 1;
+        <div id="paymentMethodPopup"
+            class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-8 transform transition-all duration-300">
+                <h2 class="text-2xl font-bold text-center text-gray-800 tracking-wide">
+                    เลือกวิธีการชำระเงิน
+                </h2>
 
+                <p class="text-center text-gray-500" id="paymentExtraCharge">
+                    @if(isset($extraBedPrice) && $extraBedPrice > 0)
+                <p>ราคาของเตียงเสริม: {{ number_format($extraBedPrice, 2) }} บาท</p>
+                dd()
+                @else
+                <p>ไม่พบข้อมูลราคาของเตียงเสริม</p>
+                @endif
+                </p>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <label for="payment_transfer"
+                        class="flex flex-col items-center justify-center py-6 px-4 bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-indigo-500 hover:shadow-lg transition-all cursor-pointer">
+                        <input type="radio" name="payment_method" id="payment_transfer" value="transfer"
+                            class="hidden">
+                        <span class="text-lg font-medium text-gray-800">โอนเงิน</span>
+                        <span class="text-sm text-gray-400 mt-1">ชำระผ่าน QR Code</span>
+                    </label>
+                    <label for="payment_cash"
+                        class="flex flex-col items-center justify-center py-6 px-4 bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-indigo-500 hover:shadow-lg transition-all cursor-pointer">
+                        <input type="radio" name="payment_method" id="payment_cash" value="cash"
+                            class="hidden">
+                        <span class="text-lg font-medium text-gray-800">เงินสด</span>
+                        <span class="text-sm text-gray-400 mt-1">จ่ายด้วยเงินสด</span>
+                    </label>
+                </div>
+
+                <div id="cashPaymentFields" class="hidden space-y-4">
+                    <div>
+                        <label for="amountPaid" class="block text-gray-700 font-medium mb-2">
+                            จำนวนเงินที่ได้รับ:
+                        </label>
+                        <input type="number" id="amountPaid"
+                            class="w-full px-4 py-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            min="0" step="0.01" placeholder="ระบุจำนวนเงินที่ลูกค้าจ่าย"
+                            oninput="calculateChange()">
+                    </div>
+                    <div>
+                        <label for="cashRefund" class="block text-gray-700 font-medium mb-2">
+                            เงินทอน:
+                        </label>
+                        <input type="text" id="cashRefund"
+                            class="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                            readonly placeholder="คำนวณอัตโนมัติ">
+                    </div>
+                    <p id="paymentWarning" class="text-sm text-red-500 hidden">
+                        จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด
+                    </p>
+                </div>
+
+                <div id="transferPaymentFields" class="hidden text-center">
+                    <p class="text-gray-700 font-medium mb-4">
+                        สแกน QR Code เพื่อชำระเงิน
+                    </p>
+                    <div class="flex justify-center items-center">
+                        <div
+                            class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-200 w-60 h-60 flex items-center justify-center">
+                            <img src="{{ asset('images/qrcodeimage.png') }}" alt="QR Code" class="w-48 h-48">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <button onclick="closePaymentPopup()"
+                        class="text-gray-500 hover:text-gray-800 font-medium transition duration-300">
+                        ยกเลิก
+                    </button>
+                    <button onclick="confirmPayment()"
+                        class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition duration-300">
+                        ยืนยัน
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.querySelectorAll('input[name="payment_method"]').forEach((radio) => {
+                radio.addEventListener('change', function() {
+                    // ซ่อนฟอร์มเงินสดและโอนเงินก่อน
+                    document.getElementById('cashPaymentFields').classList.add('hidden');
+                    document.getElementById('transferPaymentFields').classList.add('hidden');
+
+                    // เช็คว่าผู้ใช้เลือกอะไร
+                    if (this.value === 'cash') {
+                        document.getElementById('cashPaymentFields').classList.remove('hidden');
+                    } else if (this.value === 'transfer') {
+                        document.getElementById('transferPaymentFields').classList.remove('hidden');
+                    }
+                });
+            });
+
+            // ฟังก์ชันสำหรับปิด popup และรีเซ็ตข้อมูล
+            function closePaymentPopup() {
+                // ปิด popup
+                document.getElementById('paymentMethodPopup').classList.add('hidden');
+
+                // รีเซ็ตการเลือกวิธีการชำระเงิน (ถ้าต้องการ)
+                var paymentMethods = document.getElementsByName('payment_method');
+                paymentMethods.forEach(function(method) {
+                    method.checked = false;
+                });
+
+                // ซ่อนฟิลด์การชำระเงินสดและการโอนเงิน
+                document.getElementById('cashPaymentFields').classList.add('hidden');
+                document.getElementById('transferPaymentFields').classList.add('hidden');
+
+                // รีเซ็ตฟอร์มการกรอกเงินสด
+                document.getElementById('amountPaid').value = '';
+                document.getElementById('cashRefund').value = '';
+                document.getElementById('paymentWarning').classList.add('hidden');
+            }
+
+            // ฟังก์ชั่นคำนวณเงินทอน
+            function calculateChange() {
+                const amountPaid = parseFloat(document.getElementById('amountPaid').value);
+                const totalAmount = 200;
+
+                if (!isNaN(amountPaid)) {
+                    const change = amountPaid - totalAmount;
+                    if (change >= 0) {
+                        document.getElementById('cashRefund').value = `฿${change.toFixed(2)}`;
+                    } else {
+                        document.getElementById('cashRefund').value = '฿0.00';
+                    }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // ฟังก์ชันที่ตรวจสอบการเลือกเตียงเสริม
+                const extraBedRadios = document.querySelectorAll('input[name="extra_bed_count"]');
+                const checkInForm = document.getElementById('check-in-form');
+                const paymentMethodPopup = document.getElementById('paymentMethodPopup');
+
+                // ตรวจสอบการเลือกเตียงเสริมเมื่อกด "บันทึกข้อมูล"
+                checkInForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // ป้องกันการส่งฟอร์มทันที
+
+                    const selectedExtraBed = document.querySelector('input[name="extra_bed_count"]:checked')
+                        .value;
+
+                    if (selectedExtraBed === '1') {
+                        // หากเลือกเตียงเสริม ให้แสดงป๊อปอัพการชำระเงิน
+                        paymentMethodPopup.classList.remove('hidden');
+                    } else {
+                        // หากไม่เลือกเตียงเสริม ให้ส่งฟอร์มต่อไป
+                        checkInForm.submit();
+                    }
+                });
+
+                // ฟังก์ชันยืนยันการชำระเงิน
+                window.confirmPayment = function() {
+                    const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+                    if (!paymentMethod) {
+                        alert('กรุณาเลือกวิธีการชำระเงิน');
+                        return;
+                    }
+
+                    // ถ้าผู้ใช้เลือกชำระเงินด้วยเงินสด
+                    if (paymentMethod.value === 'cash') {
+                        const amountPaid = parseFloat(document.getElementById('amountPaid').value);
+                        const totalAmount = parseFloat(document.getElementById('paymentExtraCharge').dataset
+                            .totalAmount);
+
+                        if (isNaN(amountPaid) || amountPaid < totalAmount) {
+                            document.getElementById('paymentWarning').classList.remove('hidden');
+                            return; // หยุดการส่งฟอร์มถ้ายังไม่จ่ายครบ
+                        } else {
+                            document.getElementById('paymentWarning').classList.add('hidden');
+                        }
+                    }
+
+                    // ส่งฟอร์มหลังจากยืนยัน
+                    checkInForm.submit();
+                };
+            });
+
+                var show_text = document.getElementById('text');
+            var add_name = document.getElementById('add_name');
+            var count = 1; // จำนวนเริ่มต้น
+
+            // ฟังก์ชันเพิ่มผู้เข้าพัก
             add_name.addEventListener('click', function() {
-                // ตรวจสอบค่าจำนวนเตียงเสริม
-                var extraBedCount = parseInt(document.getElementById('extra_bed_count').value) || 0;
+                // ตรวจสอบค่าจำนวนเตียงเสริมจาก radio buttons
+                var extraBedCount = document.querySelector('input[name="extra_bed_count"]:checked').value;
 
                 // กำหนดจำนวนสูงสุดของผู้เข้าพักที่สามารถเพิ่มได้
-                var maxGuests = extraBedCount === 1 ? 3 : 2;
+                var maxGuests = extraBedCount === "1" ? 3 : 2;
 
                 // ถ้าจำนวนผู้เข้าพักเกินจำนวนสูงสุดที่กำหนดให้ไม่สามารถเพิ่มได้
                 if (count >= maxGuests) {
@@ -319,10 +538,11 @@
                     return;
                 }
 
+                // เพิ่มจำนวนผู้เข้าพัก
                 count++;
                 var create_div = document.createElement('div');
                 create_div.id = 'text' + count;
-                input =
+                create_div.innerHTML =
                     '<hr>' +
                     '<div class="flex justify-end mt-3">' +
                     '<button class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 flex items-center justify-center shadow-md" type="button" onclick="removediv(' + count + ')">' +
@@ -369,13 +589,16 @@
                     '<input id="postcode" name="postcode_[' + count + ']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
                     '</div>';
 
-                create_div.innerHTML = input;
                 show_text.appendChild(create_div);
             });
 
-            function removediv(count) {
-                var delete_div = document.getElementById('text' + count);
-                delete_div.remove();
+            // ฟังก์ชันลบข้อมูล
+            function removediv(id) {
+                var element = document.getElementById('text' + id);
+                element.parentNode.removeChild(element);
+
+                // อัพเดตค่า count ให้เท่ากับจำนวน div ที่เหลืออยู่
+                count = document.querySelectorAll('[id^="text"]').length;
             }
         </script>
 

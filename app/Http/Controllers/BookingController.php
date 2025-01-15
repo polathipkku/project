@@ -207,16 +207,18 @@ class BookingController extends Controller
 
     public function record(Request $request)
     {
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $startDate = $request->input('start_date');
-            $endDate = $request->input('end_date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date') ?? $startDate;
+    
+        if ($startDate) {
             $bookings = Booking_detail::whereBetween('checkin_date', [$startDate, $endDate])->paginate(10);
         } else {
             $bookings = Booking_detail::paginate(10);
         }
+    
         return view('owner.record', compact('bookings'));
     }
-
+    
 
     public function record_detail($bookingdetail_id)
     {
@@ -751,6 +753,8 @@ class BookingController extends Controller
                         'totalpriceroom' => $productRoom->productroom_price,
                         'productroom_name' => $productRoom->productroom_name,
                         'booking_detail_id' => $bookingDetailId,
+                        'thing_status' => 'รอซ่อม',
+
                     ]);
                     $totalPrice += $productRoom->productroom_price;
                 }
@@ -892,20 +896,6 @@ class BookingController extends Controller
             $room->room_status = 'ไม่พร้อมให้บริการ';
             $room->save(); // บันทึกสถานะห้อง
 
-            // บันทึกข้อมูลในตาราง Checkin
-            // Checkin::create([
-            //     'booking_id' => $booking->id,
-            //     'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
-            //     'checkin' => now(), // วันที่เช็คอิน
-            //     'name' => $request->name,
-            //     'id_card' => $request->id_card,
-            //     'phone' => $request->phone,
-            //     'address' => $request->address,
-            //     'sub_district' => $request->sub_district,
-            //     'province' => $request->province,
-            //     'district' => $request->district,
-            //     'postcode' => $request->postcode,
-            // ]);
             $name = $request->input('name_');
             $id_card = $request->input('id_card_');
             $phone = $request->input('phone_');
@@ -938,4 +928,6 @@ class BookingController extends Controller
             return redirect()->route('checkin')->with('error', 'เกิดข้อผิดพลาดในการเช็คอิน: ' . $e->getMessage());
         }
     }
+
+    
 }
