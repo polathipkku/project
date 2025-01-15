@@ -209,16 +209,16 @@ class BookingController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date') ?? $startDate;
-    
+
         if ($startDate) {
             $bookings = Booking_detail::whereBetween('checkin_date', [$startDate, $endDate])->paginate(10);
         } else {
             $bookings = Booking_detail::paginate(10);
         }
-    
+
         return view('owner.record', compact('bookings'));
     }
-    
+
 
     public function record_detail($bookingdetail_id)
     {
@@ -240,7 +240,6 @@ class BookingController extends Controller
     public function reserve(Request $request)
     {
 
-        // Validation remains the same
         $request->validate([
             'number_of_guests' => 'required|integer|min:1',
             'checkin_date' => 'required|date',
@@ -257,7 +256,6 @@ class BookingController extends Controller
         $checkin_date = \Carbon\Carbon::createFromFormat('d-m-Y', $request->checkin_date)->format('Y-m-d');
         $checkout_date = \Carbon\Carbon::createFromFormat('d-m-Y', $request->checkout_date)->format('Y-m-d');
 
-        // Room availability check remains the same
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
         $availableRooms = [];
 
@@ -275,7 +273,7 @@ class BookingController extends Controller
         $checkoutDate = new \DateTime($request->checkout_date);
         $interval = $checkinDate->diff($checkoutDate);
         $days = $interval->days;
-        $roomPricePerDay = 500; // Room price per day
+        $roomPricePerDay = 500;
         $totalCost = $days * $roomPricePerDay * $request->number_of_rooms;
 
         $booking = new Booking();
@@ -284,7 +282,6 @@ class BookingController extends Controller
 
         $totalGuests = ($request->number_of_guests ?? 0) + ($request->occupancy_child ?? 0) + ($request->occupancy_baby ?? 0);
         $booking->person_count = $totalGuests;
-        // Promo code check remains the same
         if (!empty($request->promo_code)) {
             $promotion = Promotion::where('promo_code', $request->promo_code)
                 ->where('start_date', '<=', now())
@@ -294,7 +291,6 @@ class BookingController extends Controller
             if ($promotion) {
                 $usageCount = Booking::where('promotion_id', $promotion->id)->count();
 
-                // Promo validation checks remain the same
                 if ($usageCount < $promotion->max_usage_per_code) {
                     if (!is_null($promotion->minimum_nights) && $days < $promotion->minimum_nights) {
                         return redirect()->back()->with('error', 'จำนวนคืนไม่ตรงกับเงื่อนไขของโปรโมชัน');
@@ -303,7 +299,6 @@ class BookingController extends Controller
                         return redirect()->back()->with('error', 'ยอดจองไม่ถึงขั้นต่ำที่กำหนดในโปรโมชัน');
                     }
 
-                    // Calculate discount
                     $discountAmount = $promotion->type === 'percentage'
                         ? ($promotion->discount_value / 100) * $totalCost
                         : min($promotion->discount_value, $totalCost);
@@ -320,12 +315,10 @@ class BookingController extends Controller
             }
         }
 
-        // Save the booking (keeping the original conditions)
         $booking->total_cost = $totalCost;
         $booking->booking_status = 'รอชำระเงิน';
         $booking->save();
 
-        // Insert into booking_details and handle extra beds
         $extraBedCount = $request->extra_bed_count ?? 0;
         $extraBedRemaining = $extraBedCount;
 
@@ -356,7 +349,6 @@ class BookingController extends Controller
             ]);
         }
 
-        // Handle remaining extra beds
         while ($extraBedRemaining > 0) {
             DB::table('booking_details')->insert([
                 'booking_id' => $booking->id,
@@ -379,7 +371,6 @@ class BookingController extends Controller
             $extraBedRemaining--;
         }
 
-        // Calculate the total extra bed cost
         $totalExtraBeds = $extraBedCount;
         $totalBedCost = 0;
 
@@ -388,7 +379,6 @@ class BookingController extends Controller
             if ($extraBedProduct) {
                 $totalBedCost = $extraBedProduct->product_price * $totalExtraBeds;
 
-                // Update roomservice for extra beds
                 $roomservice = new Roomservice();
                 $roomservice->product_id = $extraBedProduct->id;
                 $roomservice->booking_id = $booking->id;
@@ -398,9 +388,8 @@ class BookingController extends Controller
             }
         }
 
-        // Update total_bed and total_cost in the booking
         $booking->total_bed = $totalExtraBeds;
-        $booking->total_cost += $totalBedCost; // Add bed cost to total cost
+        $booking->total_cost += $totalBedCost;
         $booking->save();
 
         return redirect()->route('payment', ['booking_id' => $booking->id])->with('success', 'บันทึกข้อมูลสำเร็จ');
@@ -610,7 +599,6 @@ class BookingController extends Controller
 
     public function emaddBooking(Request $request, $id)
     {
-
         $request->validate([
             'booking_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -627,6 +615,8 @@ class BookingController extends Controller
             'extra_bed_count' => 'nullable|integer|min:0',
         ]);
 
+        $extraBedCount = $request->has('extra_bed_count') ? $request->extra_bed_count : 0;
+
         $room = Room::find($id);
         $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
 
@@ -638,11 +628,9 @@ class BookingController extends Controller
             return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
         }
 
-        // Update room status
         $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
 
-        // Calculate total cost based on room type and days
         $checkinDate = new \DateTime($request->checkin_date);
         $checkoutDate = new \DateTime($request->checkout_date);
         $interval = $checkinDate->diff($checkoutDate);
@@ -651,54 +639,71 @@ class BookingController extends Controller
         $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? $room->price_night : $room->price_temporary;
         $totalCost = $days * $roomPricePerDay;
 
-        // Save booking to 'bookings' table
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
-        $booking->room_quantity = 1; // assuming 1 room is booked
+        $booking->room_quantity = 1;
         $booking->total_cost = $totalCost;
-        $booking->total_bed = 0; // Initialize total_bed to 0
+        $booking->total_bed = 0;
         $booking->booking_status = 'รอชำระเงิน';
         $booking->save();
 
-        // Save booking details to 'booking_details' table
         $bookingDetail = new Booking_detail();
         $bookingDetail->booking_id = $booking->id;
         $bookingDetail->room_id = $room->id;
         $bookingDetail->booking_name = $request->booking_name;
         $bookingDetail->phone = $request->phone;
         $bookingDetail->occupancy_person = $request->occupancy_person;
-        $bookingDetail->extra_bed_count = $request->extra_bed_count; // Add this line to save extra bed count
+        $bookingDetail->extra_bed_count = $extraBedCount;
         $bookingDetail->checkin_date = $request->checkin_date;
         $bookingDetail->checkout_date = $request->checkout_date;
         $bookingDetail->room_type = $request->room_type;
         $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
         $bookingDetail->save();
 
-        // Add extra bed count to total_bed in booking
-        $booking->total_bed += $request->extra_bed_count; // Add extra beds to total_bed
+        $booking->total_bed += $extraBedCount;
         $booking->save();
 
-        // Check for extra beds
-        if ($request->extra_bed_count > 0) {
+        if ($extraBedCount > 0) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
                 $roomservice = new Roomservice();
                 $roomservice->product_id = $extraBedProduct->id;
                 $roomservice->booking_id = $booking->id;
-                $roomservice->quantity = $request->extra_bed_count;
-                $roomservice->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                $roomservice->quantity = $extraBedCount;
+                $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
                 $roomservice->save();
 
-                // Add extra bed cost to total cost
                 $totalCost += $roomservice->total_price;
 
-                // Update total cost in booking
                 $booking->total_cost = $totalCost;
                 $booking->save();
             }
         }
+        $payment = new Payment();
+        $payment->payment_date = now();
+        $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
+        $payment->total_price = $totalCost;
+        $payment->booking_id = $booking->id;
+        $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
 
-        // Save check-in information
+        // กรณีชำระเงินด้วยเงินสด
+        if ($payment->payment_type_id == 2) {
+            $payment->pay_price = $request->amount_paid;
+            $payment->pay_change = $request->amount_paid - $totalCost;
+
+            if ($payment->pay_price < $totalCost) {
+                return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
+            }
+        } else {
+            // กรณีโอนเงิน
+            $payment->pay_price = 0;
+            $payment->pay_change = 0;
+        }
+
+        // บันทึกข้อมูลการชำระเงิน
+        $payment->save();
+
+
         $checkin = new Checkin();
         $checkin->booking_id = $booking->id;
         $checkin->checked_in_by = auth()->user()->id;
@@ -838,7 +843,6 @@ class BookingController extends Controller
 
     public function updateBookingDetail(Request $request)
     {
-
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',
             'room_id' => 'required|exists:rooms,id',
@@ -850,51 +854,81 @@ class BookingController extends Controller
             'province_*' => 'required|array|min:1',
             'district_*' => 'required|array|min:1',
             'postcode_*' => 'required|array|min:1',
-            'extra_bed_count' => 'required|integer|min:0', // Validate จำนวนเตียงเสริม
+            'extra_bed_count' => 'required|integer|min:0',
+
         ]);
 
-        DB::beginTransaction(); // เริ่มการ transaction เพื่อความปลอดภัยของข้อมูล
+        DB::beginTransaction();
 
         try {
-            // ค้นหาข้อมูลการจองและห้องที่เลือก
             $booking = Booking::findOrFail($request->booking_id);
             $room = Room::findOrFail($request->room_id);
 
-            // ค้นหา bookingDetails ที่ยังไม่ได้เลือกห้อง (room_id เป็น NULL)
             $bookingDetail = $booking->bookingDetails()
                 ->whereNull('room_id')
-                ->firstOrFail(); // ถ้าไม่พบจะ throw exception อัตโนมัติ
+                ->firstOrFail();
 
-            // อัปเดตสถานะการเช็คอินและกำหนด room_id
             $bookingDetail->room_id = $room->id;
             $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
-            $bookingDetail->extra_bed_count = $request->extra_bed_count; // อัปเดตจำนวนเตียงเสริม
-            $bookingDetail->save(); // บันทึกการเปลี่ยนแปลง
+            $bookingDetail->extra_bed_count = $request->extra_bed_count;
+            $bookingDetail->save();
 
-            // หากมีเตียงเสริมเพิ่มเข้าไปในบริการห้อง
+            $roomPrice = $room->room_price;
+            $booking->total_cost += $roomPrice;
+
+
+
             if ($request->extra_bed_count > 0) {
                 $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
                 if ($extraBedProduct) {
+                    $extraBedTotalPrice = $extraBedProduct->product_price * $request->extra_bed_count;
+
                     $roomservice = new Roomservice();
                     $roomservice->product_id = $extraBedProduct->id;
                     $roomservice->booking_id = $booking->id;
-                    $roomservice->quantity = $request->extra_bed_count; // ใช้จำนวนเตียงเสริมจากฟอร์ม
-                    $roomservice->total_price = $extraBedProduct->product_price * $request->extra_bed_count;
+                    $roomservice->quantity = $request->extra_bed_count;
+                    $roomservice->total_price = $extraBedTotalPrice;
                     $roomservice->save();
 
-                    // อัปเดตค่าใช้จ่ายรวมของการจอง
-                    $booking->total_cost += $roomservice->total_price; // บวกเพิ่มค่าเตียงเสริม
+                    // เพิ่มราคาของเตียงเสริมในค่าใช้จ่ายทั้งหมดของการจอง
+                    $booking->total_cost += $extraBedTotalPrice;
+                    $booking->save();
+
+                    if ($extraBedTotalPrice > 0) {
+                        $payment = new Payment();
+                        $payment->payment_date = now();
+                        $payment->payment_status = 'completed'; // เริ่มต้นสถานะการชำระเงิน
+                        $payment->total_price = $extraBedTotalPrice;
+                        $payment->booking_id = $booking->id;
+                        $payment->amount = $extraBedTotalPrice;
+
+                        // ตรวจสอบประเภทการชำระเงิน (เงินสดหรือโอนเงิน)
+                        $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
+
+                        if ($payment->payment_type_id == 2) {
+                            // กรณีชำระเงินสด
+                            $payment->pay_price = $request->amount_paid;
+                            $payment->pay_change = $request->amount_paid - $extraBedTotalPrice;
+
+                            // ตรวจสอบว่าจำนวนเงินที่ได้รับเพียงพอ
+                            if ($payment->pay_price < $extraBedTotalPrice) {
+                                return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมดสำหรับเตียงเสริม');
+                            }
+                        } else {
+                            // กรณีโอนเงิน
+                            $payment->pay_price = 0;
+                            $payment->pay_change = 0;
+                        }
+                        $payment->save();
+                    }
                 }
             }
 
-            // บวกเพิ่มราคาห้องเข้ากับ total_cost
-            $roomPrice = $room->room_price; // สมมติว่ามี room_price ในตาราง rooms
-            $booking->total_cost += $roomPrice;
-            $booking->save(); // บันทึกการเปลี่ยนแปลงค่าใช้จ่าย
 
-            // อัปเดตสถานะห้อง
+            $booking->save();
+
             $room->room_status = 'ไม่พร้อมให้บริการ';
-            $room->save(); // บันทึกสถานะห้อง
+            $room->save();
 
             $name = $request->input('name_');
             $id_card = $request->input('id_card_');
@@ -904,11 +938,12 @@ class BookingController extends Controller
             $province = $request->input('province_');
             $district = $request->input('district_');
             $postcode = $request->input('postcode_');
+
             foreach ($name as $index => $na) {
                 Checkin::create([
                     'booking_id' => $booking->id,
-                    'checked_in_by' => auth()->id(), // ผู้เช็คอิน (หากมีการล็อกอิน)
-                    'checkin' => now(), // วันที่เช็คอิน
+                    'checked_in_by' => auth()->id(),
+                    'checkin' => now(),
                     'name' => $na,
                     'id_card' => $id_card[$index],
                     'phone' => $phone[$index],
@@ -919,15 +954,12 @@ class BookingController extends Controller
                     'postcode' => $postcode[$index],
                 ]);
             }
-            DB::commit(); // ทำการ commit เมื่อทุกอย่างสำเร็จ
 
-            // ส่งผู้ใช้กลับไปหน้า checkin พร้อมข้อความสำเร็จ
+            DB::commit();
             return redirect()->route('checkin')->with('success', 'เช็คอินเรียบร้อยแล้ว ห้องหมายเลข ' . $room->room_name);
         } catch (\Exception $e) {
-            DB::rollBack(); // หากมีข้อผิดพลาด ย้อนกลับการเปลี่ยนแปลงทั้งหมด
+            DB::rollBack();
             return redirect()->route('checkin')->with('error', 'เกิดข้อผิดพลาดในการเช็คอิน: ' . $e->getMessage());
         }
     }
-
-    
 }

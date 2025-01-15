@@ -346,13 +346,7 @@
                 </h2>
 
                 <p class="text-center text-gray-500" id="paymentExtraCharge">
-                    @if(isset($extraBedPrice) && $extraBedPrice > 0)
-                <p>ราคาของเตียงเสริม: {{ number_format($extraBedPrice, 2) }} บาท</p>
-                dd()
-                @else
-                <p>ไม่พบข้อมูลราคาของเตียงเสริม</p>
-                @endif
-                </p>
+                <p>ราคาของเตียงเสริม: 200 บาท</p>
 
                 <div class="grid grid-cols-2 gap-4">
                     <label for="payment_transfer"
