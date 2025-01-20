@@ -33,6 +33,10 @@ class User extends Authenticatable
         'birthday',
         'address',
         'image',
+        'salary',
+        'work_shift',
+        'position',
+        'payment_date',
 
     ];
     public function bookings()

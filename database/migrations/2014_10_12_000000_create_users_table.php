@@ -25,6 +25,10 @@ return new class extends Migration
             $table->date('birthday')->nullable();//เพิ่ม
             $table->text('address')->default('');//เพิ่ม
             $table->string('image')->default('');//เพิ่ม
+            $table->decimal('salary', 10, 2)->nullable(); // เงินเดือน
+            $table->string('work_shift')->nullable();    // กะเวลาการทำงาน
+            $table->string('position')->nullable();      // ตำแหน่ง
+            $table->date('payment_date')->nullable();    // เวลาจ่ายเงินเดือน
 
             $table->string('password');
             $table->rememberToken();

@@ -134,6 +134,35 @@
 
 
                     </div>
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เงินเดือน</label>
+                            <input type="number" step="0.01" id="salary" name="salary" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                        </div>
+                        <div>
+                            <label for="work_shift" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">กะเวลาทำงาน</label>
+                            <select id="work_shift" name="work_shift" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="กลางวัน">กลางวัน</option>
+                                <option value="กลางคืน">กลางคืน</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="position" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ตำแหน่ง</label>
+                            <select id="position" name="position" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="พนักงานทำความสะอาด">พนักงานทำความสะอาด</option>
+                                <option value="พนักงานซักผ้า">พนักงานซักผ้า</option>
+                                <option value="พนักงานต้อนรับ">พนักงานต้อนรับ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="payment_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันที่จ่ายเงินเดือน</label>
+                            <input type="date" id="payment_date" name="payment_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="2025-02-01" required />
+                        </div>
+                    </div>
+
 
                     <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">อัพโหลดรูปภาพพนักงาน</label>

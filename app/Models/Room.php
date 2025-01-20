@@ -13,7 +13,6 @@ class Room extends Model
 
     protected $fillable = [
         'room_name',
-        'room_description',
         'price_night',
         'price_temporary',
         'room_image', // Will store JSON of image names
