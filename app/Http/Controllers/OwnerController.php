@@ -61,7 +61,6 @@ class OwnerController extends Controller
         if ($userType === "2") {
             return redirect()->route('home');
         }
-        
     }
 
     public function createUser(Request $request)
@@ -74,12 +73,16 @@ class OwnerController extends Controller
             'birthday' => 'required|date',
             'address' => 'required|string|max:255',
             'image' => 'required|image|max:10240',
+            'salary' => 'required|numeric',
+            'work_shift' => 'required|string',
+            'position' => 'required|string',
+            'payment_date' => 'required|date',
         ]);
 
         $imageName = time() . '.' . $request->file('image')->extension();
         $request->file('image')->move(public_path('images'), $imageName);
 
-        $user = User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -89,6 +92,10 @@ class OwnerController extends Controller
             'image' => $imageName,
             'userType' => $request->userType,
             'start_date' => $request->start_date ?? null,
+            'salary' => $request->salary,
+            'work_shift' => $request->work_shift,
+            'position' => $request->position,
+            'payment_date' => $request->payment_date,
         ]);
 
         return redirect()->route('employee')->with('success', 'บันทึกข้อมูลสำเร็จ');

@@ -16,7 +16,6 @@ class RoomController extends Controller
         $search = $request->input('search');
         if ($search) {
             $rooms = Room::where('room_name', 'LIKE', "%{$search}%")
-                ->orWhere('room_description', 'LIKE', "%{$search}%")
                 ->get();
         } else {
             $rooms = $this->getAllRooms();
@@ -65,7 +64,6 @@ class RoomController extends Controller
     {
         $request->validate([
             'room_name' => 'required|unique:rooms,room_name',
-            'room_description' => 'required',
             'price_night' => 'required|numeric',
             'price_temporary' => 'required|numeric',
             'room_image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image
@@ -87,7 +85,6 @@ class RoomController extends Controller
 
         $room = new Room;
         $room->room_name = $request->input('room_name');
-        $room->room_description = $request->input('room_description');
         $room->price_night = $request->input('price_night');
         $room->price_temporary = $request->input('price_temporary');
         $room->room_image = json_encode($images); // Save as JSON
@@ -112,7 +109,6 @@ class RoomController extends Controller
 
         $request->validate([
             'room_name' => 'required',
-            'room_description' => 'required',
             'price_night' => 'required|numeric',
             'price_temporary' => 'required|numeric',
             'room_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -123,7 +119,6 @@ class RoomController extends Controller
         ]);
 
         $room->room_name = $request->room_name;
-        $room->room_description = $request->room_description;
         $room->price_night = $request->price_night;
         $room->price_temporary = $request->price_temporary;
         $room->room_status = $request->room_status;
