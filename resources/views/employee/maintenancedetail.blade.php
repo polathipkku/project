@@ -149,13 +149,41 @@
                 </div>
                 <!-- Pending Repairs List -->
                 <div id="pendingRepairs" class="p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">รายการที่รอเปลี่ยนสินค้า</h2>
                     <ul class="space-y-4">
                         @forelse ($maintenanceDetail->booking->checkoutDetails as $item)
-                        @if ($item->thing_status === 'รอซ่อม')
+                        @if ($item->thing_status === 'รอซ่อม' && $item->productroom->repair_type === 'ซื้อเปลี่ยน')
                         <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-800">{{ $item->productroom_name ?? 'ไม่มีข้อมูล' }}</p>
-                                <p class="text-yellow-600">สถานะ: {{ $item->thing_status }}</p>
+                            <div class="flex items-start space-x-4">
+                                <div>
+                                    <p class="font-medium text-gray-800">{{ $item->productroom_name ?? 'ไม่มีข้อมูล' }}</p>
+                                    <p class="text-yellow-600">สถานะ: {{ $item->thing_status }}</p>
+                                </div>
+                            </div>
+                            <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    เปลี่ยนสินค้า
+                                </button>
+                            </form>
+                        </li>
+                        @endif
+                        @empty
+                        <li class="text-gray-500 text-center py-4">ไม่มีรายการสิ่งของที่รอเปลี่ยนสินค้า</li>
+                        @endforelse
+                    </ul>
+
+                    <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">รายการที่รอแจ้งซ่อม</h2>
+                    <ul class="space-y-4">
+                        @forelse ($maintenanceDetail->booking->checkoutDetails as $item)
+                        @if ($item->thing_status === 'รอซ่อม' && $item->productroom->repair_type === 'แจ้งซ่อม')
+                        <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-start space-x-4">
+                                <div>
+                                    <p class="font-medium text-gray-800">{{ $item->productroom_name ?? 'ไม่มีข้อมูล' }}</p>
+                                    <p class="text-yellow-600">สถานะ: {{ $item->thing_status }}</p>
+                                </div>
                             </div>
                             <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
                                 @csrf
@@ -167,10 +195,11 @@
                         </li>
                         @endif
                         @empty
-                        <li class="text-gray-500 text-center py-4">ไม่มีรายการสิ่งของที่รอซ่อม</li>
+                        <li class="text-gray-500 text-center py-4">ไม่มีรายการสิ่งของที่รอแจ้งซ่อม</li>
                         @endforelse
                     </ul>
                 </div>
+
 
                 <!-- In Progress Repairs List -->
                 <div id="inProgressRepairs" class="p-6 hidden">

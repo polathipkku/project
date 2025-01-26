@@ -262,6 +262,19 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                <!-- Custom Input Section -->
+                                <div class="space-y-4 mt-6">
+                                    <h3 class="text-lg font-medium text-gray-600">เพิ่มรายการเอง</h3>
+                                    <div class="flex items-center space-x-4">
+                                        <input type="text" name="custom_damaged_items[productroom_name]"
+                                            class="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="ชื่อรายการสินค้า">
+                                        <input type="number" name="custom_damaged_items[totalpriceroom]"
+                                            class="block w-32 p-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="ราคา" step="0.01">
+                                    </div>
+                                </div>
+
 
                                 <!-- Action Buttons -->
                                 <div class="flex justify-between items-center mt-6">
@@ -276,7 +289,6 @@
                             </form>
                         </div>
                     </div>
-
 
                     <script>
                         // Filter by category

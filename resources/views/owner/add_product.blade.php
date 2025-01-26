@@ -103,11 +103,7 @@
                         <label for="stock_qty" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">จำนวนสินค้า</label>
                         <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="stock_qty" required>
                     </div>
-                    <br>
-                    <div>
-                        <label for="product_detail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รายละเอียดสินค้า</label>
-                        <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="product_detail" required></textarea>
-                    </div>
+                    <br>    
                     <br>
                     <div>
                         <label for="product_img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">รูปสินค้า</label>

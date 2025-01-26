@@ -16,7 +16,6 @@ class Product extends Model
         "product_types_id",
         "product_name",
         "product_price",
-        "product_detail",
         "product_status",
         "product_img",
         "product_type_name",

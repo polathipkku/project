@@ -41,7 +41,6 @@ class ProductController extends Controller
         $request->validate([
             'product_name' => 'required|unique:products,product_name',
             'product_price' => 'required',
-            'product_detail' => 'required|string ',
             'product_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'product_status' => 'required',
             'stock_qty' => 'required',
@@ -64,7 +63,6 @@ class ProductController extends Controller
         $product = new Product;
         $product->product_name = $request->product_name;
         $product->product_price = $request->product_price;
-        $product->product_detail = $request->product_detail;
         $product->product_status = $request->product_status;
 
         $imageName = time() . '.' . $request->product_img->extension();
@@ -93,7 +91,6 @@ class ProductController extends Controller
         $request->validate([
             'product_name' => 'required|unique:products,product_name,' . $id,
             'product_price' => 'required',
-            'product_detail' => 'required|string',
             'product_status' => 'required',
             'stock_qty' => 'required',
             'product_type_name' => 'required',
@@ -101,7 +98,6 @@ class ProductController extends Controller
 
         $product->product_name = $request->product_name;
         $product->product_price = $request->product_price;
-        $product->product_detail = $request->product_detail;
         $product->product_status = $request->product_status;
 
         // Check if a new image is uploaded

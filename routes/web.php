@@ -121,6 +121,7 @@ Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->m
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'showMaintenanceDetail'])->name('maintenancedetail');
 Route::put('/thing-status/{id}', [MaintenanceceController::class, 'updateThingStatus'])->name('updateThingStatus');
 Route::put('/thing-status/{id}/complete', [MaintenanceceController::class, 'markAsCompleted'])->name('markAsCompleted');
+Route::put('/update-multiple-thing-status', [MaintenanceceController::class, 'updateMultipleThingStatus'])->name('updateMultipleThingStatus');
 
 
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');

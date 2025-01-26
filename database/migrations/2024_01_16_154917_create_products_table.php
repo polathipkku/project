@@ -19,7 +19,6 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('product_types_id');
             $table->string('product_name');
             $table->decimal('product_price', 10, 2);
-            $table->string('product_detail');
             $table->string('product_status');
             $table->string('product_img')->nullable();
             $table->timestamps();

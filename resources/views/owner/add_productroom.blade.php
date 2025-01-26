@@ -137,9 +137,23 @@
                             <option value="เฟอร์นิเจอร์">เฟอร์นิเจอร์</option>
                             <option value="อุปกรณ์ไฟฟ้า">อุปกรณ์ไฟฟ้า</option>
                             <option value="ผ้า">ผ้า</option>
+                            <option value="สินค้าเปลี่ยนได้">สินค้าเปลี่ยนได้</option>
                             <option value="อื่นๆ">อื่นๆ</option>
                         </select>
                         @error('productroom_category')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-6">
+                        <label for="repair_type" class="block mb-2 text-sm font-medium text-gray-900">ประเภคการซ่อม</label>
+                        <select id="repair_type" name="repair_type"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+                            <option value="" disabled selected>เลือกประเภคการซ่อม</option>
+                            <option value="แจ้งซ่อม">แจ้งซ่อม</option>
+                            <option value="ซื้อเปลี่ยน">ซื้อเปลี่ยน</option>
+
+                        </select>
+                        @error('repair_type')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

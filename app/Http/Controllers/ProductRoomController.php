@@ -24,15 +24,17 @@ class ProductRoomController extends Controller
             'productroom_name' => 'required',
             'productroom_price' => 'required|numeric',
             'product_qty' => 'required|integer|min:1',
-            'productroom_category' => 'required|string', // ตรวจสอบหมวดหมู่
+            'productroom_category' => 'required|string',
+            'repair_type' => 'required|string',
         ]);
         
 
-        $productRoom = new Product_room(); // Assuming you have a model named ProductRoom
+        $productRoom = new Product_room();
         $productRoom->productroom_name = $request->productroom_name;
         $productRoom->productroom_price = $request->productroom_price;
         $productRoom->product_qty = $request->product_qty;
-        $productRoom->productroom_category = $request->productroom_category; // บันทึกหมวดหมู่
+        $productRoom->productroom_category = $request->productroom_category;
+        $productRoom->repair_type = $request->repair_type;
         $productRoom->save();
         
 

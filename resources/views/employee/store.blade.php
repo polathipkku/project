@@ -105,8 +105,6 @@
                         <tr class="text-l bg-gray-300">
                             <th class="px-4 py-2">ชื่อสินค้า</th>
                             <th class="px-4 py-2">ราคา</th>
-                            <th class="px-4 py-2">สถานะ</th>
-                            <th class="px-4 py-2">ประเภท</th>
                             <th class="px-4 py-2">จำนวนคงเหลือ</th>
                             <th class="px-4 py-2">เลือกจำนวน</th>
                             <th class="px-4 py-2">ซื้อ</th>
@@ -119,21 +117,8 @@
                             <!-- Display product image -->
                             <td class="px-4 py-2">{{ $drink->product_name }}</td>
                             <td class="px-4 py-2">{{ $drink->product_price }} บาท</td>
-                            <td class="px-4 py-2">
-                                @if($drink->product_status === 'พร้อมให้บริการ')
-                                <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                                    <span class="w-2 h-2 me-1 bg-green-300 rounded-full mr-1"></span>
-                                    พร้อมให้บริการ
-                                </span>
-                                @else
-                                <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                                    <span class="w-2 h-2 me-1 bg-red-300 rounded-full mr-1"></span>
-                                    ไม่พร้อมให้บริการ
-                                </span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-2">{{ $drink->productType->product_type_name }}</td>
-                            <td class="px-4 py-2">{{ $drink->stock->stock_qty }} ชิ้น</td>
+                          
+                            <td class="px-4 py-2">{{ $drink->stock->stock_qty }} </td>
                             <td class="px-4 py-2">
                                 <form action="{{ route('buyProduct') }}" method="POST">
                                     @csrf

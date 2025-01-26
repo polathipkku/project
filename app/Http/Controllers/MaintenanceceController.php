@@ -80,16 +80,42 @@ class MaintenanceceController extends Controller
 
     public function updateThingStatus($id)
     {
-        $thing = CheckoutDetail::find($id); // แทน CheckoutDetail ด้วยโมเดลของคุณ
+        $thing = CheckoutDetail::find($id);
 
         if (!$thing) {
             return redirect()->back()->with('error', 'ไม่พบรายการสิ่งของ');
         }
 
-        $thing->thing_status = 'กำลังซ่อม';
+        if ($thing->productroom->repair_type === 'ซื้อเปลี่ยน') {
+            $thing->thing_status = 'ซ่อมสำเร็จ';
+        } else {
+            $thing->thing_status = 'กำลังซ่อม';
+        }
+
         $thing->save();
 
-        return redirect()->back()->with('success', 'สถานะเปลี่ยนเป็น "กำลังซ่อม" เรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'สถานะอัปเดตเรียบร้อยแล้ว');
+    }
+    public function updateMultipleThingStatus(Request $request)
+    {
+        $selectedItems = $request->input('selected_items', []);
+
+        if (empty($selectedItems)) {
+            return redirect()->back()->with('error', 'กรุณาเลือกรายการที่ต้องการอัปเดต');
+        }
+
+        $items = CheckoutDetail::whereIn('id', $selectedItems)->get();
+
+        foreach ($items as $item) {
+            if ($item->productroom->repair_type === 'ซื้อเปลี่ยน') {
+                $item->thing_status = 'ซ่อมสำเร็จ';
+            } else {
+                $item->thing_status = 'กำลังซ่อม';
+            }
+            $item->save();
+        }
+
+        return redirect()->back()->with('success', 'สถานะของสินค้าที่เลือกได้รับการอัปเดตเรียบร้อยแล้ว');
     }
 
 
