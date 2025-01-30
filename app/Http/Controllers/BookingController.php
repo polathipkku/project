@@ -44,7 +44,7 @@ class BookingController extends Controller
     public function t()
     {
         $rooms = Room::all();
-        return view('user.t', compact('rooms',));
+        return view('user.t', compact('rooms', ));
     }
     public function test()
     {
@@ -140,17 +140,27 @@ class BookingController extends Controller
         $bookings = Booking_detail::whereHas('booking', function ($query) {
             $query->where('user_id', auth()->user()->id);
         })
-            ->with([
-                'booking.review',
-                'booking.payment',
-            ])
-            ->get();
+        ->with([
+            'booking.review',
+            'booking.payment',
+        ])
+        ->orderBy('created_at', 'desc') // ดึงข้อมูลที่มีการสร้างใหม่ที่สุด
+        ->get();
 
-        // จัดกลุ่มข้อมูลสำหรับการเรียก startCountdown
+        // จัดกลุ่มข้อมูลและกรองสถานะ "รอชำระเงิน"
         $countdownData = $bookings->groupBy('booking_id')->map(function ($bookings, $bookingId) {
-            $expirationTime = optional($bookings->first()->booking->payment)->expiration_time;
-            return $expirationTime ? ['bookingId' => $bookingId, 'expirationTime' => $expirationTime] : null;
-        })->filter()->values();
+            $firstBooking = $bookings->first();
+            // ตรวจสอบสถานะการจองว่าเป็น "รอชำระเงิน" และยังไม่ถูกยกเลิก
+            if ($firstBooking->booking_detail_status === 'รอชำระเงิน' && $firstBooking->booking->payment->status !== 'cancel') {
+                $expirationTime = optional($firstBooking->booking->payment)->expiration_time;
+                return $expirationTime ? [
+                    'bookingId' => $bookingId,
+                    'expirationTime' => $expirationTime,
+                    'bookingStatus' => 'รอชำระเงิน'
+                ] : null;
+            }
+            return null;
+        })->filter()->values(); // กรองข้อมูลที่ไม่ตรงตามเงื่อนไข
 
         return view('user.reservation', compact('bookings', 'countdownData'));
     }
@@ -167,10 +177,12 @@ class BookingController extends Controller
             $query->where('booking_detail_status', 'รอเลือกห้อง')
                 ->whereNull('room_id')
                 ->whereDate('checkin_date', Carbon::today());
-        })->with(['bookingDetails' => function ($query) {
-            $query->whereNull('room_id')
-                ->whereDate('checkin_date', Carbon::today());
-        }])->get();
+        })->with([
+                    'bookingDetails' => function ($query) {
+                        $query->whereNull('room_id')
+                            ->whereDate('checkin_date', Carbon::today());
+                    }
+                ])->get();
 
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
 
@@ -778,16 +790,31 @@ class BookingController extends Controller
             }
 
             if ($totalPrice > 0) {
-                $payChange = $paymentMethod === 'cash' ? max(0, $amountPaid - $totalPrice) : 0;
-                Payment::create([
-                    'payment_date' => now(),
-                    'payment_status' => 'completed',
-                    'total_price' => $totalPrice,
-                    'pay_price' => $amountPaid,
-                    'pay_change' => $payChange,
-                    'booking_id' => $bookingId,
-                    'payment_type_id' => $paymentMethod === 'cash' ? 2 : 1,
-                ]);
+                // Handle payment
+                if ($paymentMethod === 'cash') {
+                    $payChange = max(0, $amountPaid - $totalPrice);
+                    $payment = Payment::create([
+                        'payment_date' => now(),
+                        'payment_status' => 'completed',
+                        'total_price' => $totalPrice,
+                        'pay_price' => $amountPaid,
+                        'pay_change' => $payChange,
+                        'booking_id' => $bookingId,
+                        'payment_method' => 'เงินสด', // กำหนด payment_method เป็น 'เงินสด'
+                        'payment_type' => 'ค่าเสียหาย', // กำหนด payment_type เป็น 'พนักงานจอง'
+                    ]);
+                } else {
+                    $payment = Payment::create([
+                        'payment_date' => now(),
+                        'payment_status' => 'completed',
+                        'total_price' => $totalPrice,
+                        'pay_price' => $totalPrice,
+                        'pay_change' => 0,
+                        'booking_id' => $bookingId,
+                        'payment_method' => 'โอนเงิน', // กำหนด payment_method เป็น 'โอนเงิน'
+                        'payment_type' => 'ค่าเสียหาย', // กำหนด payment_type เป็น 'พนักงานจอง'
+                    ]);
+                }
             }
 
             $room = $bookingDetails->room;
@@ -903,9 +930,10 @@ class BookingController extends Controller
                         $payment->amount = $extraBedTotalPrice;
 
                         // ตรวจสอบประเภทการชำระเงิน (เงินสดหรือโอนเงิน)
-                        $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
+                        $payment->payment_method = $request->payment_method === 'cash' ? 'เงินสด' : 'โอนเงิน'; // กำหนด payment_method
+                        $payment->payment_type = 'ค่าเตียงเสริม(กรณีเช็คอิน)'; // กำหนด payment_type
 
-                        if ($payment->payment_type_id == 2) {
+                        if ($payment->payment_method === 'เงินสด') {
                             // กรณีชำระเงินสด
                             $payment->pay_price = $request->amount_paid;
                             $payment->pay_change = $request->amount_paid - $extraBedTotalPrice;

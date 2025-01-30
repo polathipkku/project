@@ -115,6 +115,12 @@ class PaymentController extends Controller
             return response()->json(['success' => false, 'message' => 'ไม่พบการจองนี้']);
         }
 
+        // ตรวจสอบสถานะการจองก่อนว่าเป็น "รอชำระเงิน" หรือไม่
+        if ($booking->booking_status !== 'รอชำระเงิน') {
+            return response()->json(['success' => false, 'message' => 'สถานะการจองไม่สามารถยกเลิกได้']);
+        }
+
+        // เปลี่ยนสถานะการจองเป็น "ยกเลิกการจอง"
         $booking->booking_status = 'ยกเลิกการจอง';
         $booking->save();
 

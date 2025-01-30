@@ -147,83 +147,90 @@
                     </div>
 
                     @if (count($bookings) > 0)
-                    <div class="overflow-x-auto">
-                        @php
-                        $groupedBookings = $bookings->groupBy('booking_id');
-                        @endphp
-                        <table class="w-full">
-                            <thead>
-                                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                    <th class="py-3 px-6 text-left">รหัสการจอง</th>
-                                    <th class="py-3 px-6 text-left">ชื่อผู้จอง</th>
-                                    <th class="py-3 px-6 text-center">จำนวนผู้เข้าพัก</th>
-                                    <th class="py-3 px-6 text-center">วันที่เช็คอิน</th>
-                                    <th class="py-3 px-6 text-center">วันที่เช็คเอาท์</th>
-                                    <th class="py-3 px-6 text-center">ประเภทห้องพัก</th>
-                                    <th class="py-3 px-6 text-center">สถานะการจอง</th>
-                                    <th class="py-3 px-6 text-center">เวลาที่เหลือ</th>
-                                    <th class="py-3 px-6 text-center">ดำเนินการ</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-600 text-sm">
-                                @foreach ($groupedBookings as $bookingId => $bookings)
-                                @php
-                                $firstBooking = $bookings->first();
-                                $hasDuplicates = $bookings->count() > 1;
-                                @endphp
-                                <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
-                                    <td class="py-3 px-6 text-left">
-                                        <span class="font-medium">{{ $firstBooking->booking->booking_random_id }}</span>
-                                    </td>
-                                    <td class="py-3 px-6 text-left">
-                                        {{ $firstBooking->booking_name }}
-                                        @if ($hasDuplicates)
-                                        <span class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm ml-2">
-                                            ({{ $bookings->count() }})
-                                        </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        {{ $firstBooking->booking->person_count }}
-                                    </td>
-                                    <td class="py-3 px-6 text-center">{{ $firstBooking->checkin_date }}</td>
-                                    <td class="py-3 px-6 text-center">{{ $firstBooking->checkout_date }}</td>
-                                    <td class="py-3 px-6 text-center">
-                                        <span class="bg-purple-100 text-purple-800 py-1 px-3 rounded-full text-sm">
-                                            {{ $firstBooking->room_type }}
-                                        </span>
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        @if ($firstBooking->booking_detail_status === 'ทำการจอง')
-                                        <span class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-sm">
-                                            ทำการจอง
-                                        </span>
-                                        @elseif ($firstBooking->booking_detail_status === 'รอเลือกห้อง')
-                                        <span class="bg-green-100 text-green-800 py-1 px-3 rounded-full text-sm">
-                                            รอเช็คอิน
-                                        </span>
-                                        @elseif ($firstBooking->booking_detail_status === 'เช็คเอาท์')
-                                        <span class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm">
-                                            เช็คเอาท์
-                                        </span>
-                                        @elseif ($firstBooking->booking_detail_status === 'เช็คอินแล้ว')
-                                        <span class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-sm">
-                                            เช็คอินแล้ว
-                                        </span>
-                                        @elseif ($firstBooking->booking_detail_status === 'รอชำระเงิน')
-                                        <span class="bg-orange-100 text-orange-800 py-1 px-3 rounded-full text-sm">
-                                            รอชำระเงิน
-                                        </span>
-                                        @elseif ($firstBooking->booking_detail_status === 'ยกเลิกการจอง')
-                                        <span class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-sm">
-                                            ยกเลิกการจอง
-                                        </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-6 text-center">
-                                        <span id="countdown-{{ $bookingId }}" class="font-medium text-red-500"></span>
-                                    </td>
-                                    {{-- <td class="py-2 px-4 text-center">
+                        <div class="overflow-x-auto">
+                            @php
+                                $groupedBookings = $bookings->groupBy('booking_id');
+                            @endphp
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6 text-left">รหัสการจอง</th>
+                                        <th class="py-3 px-6 text-left">ชื่อผู้จอง</th>
+                                        <th class="py-3 px-6 text-center">จำนวนผู้เข้าพัก</th>
+                                        <th class="py-3 px-6 text-center">วันที่เช็คอิน</th>
+                                        <th class="py-3 px-6 text-center">วันที่เช็คเอาท์</th>
+                                        <th class="py-3 px-6 text-center">ประเภทห้องพัก</th>
+                                        <th class="py-3 px-6 text-center">สถานะการจอง</th>
+                                        <th class="py-3 px-6 text-center">เวลาที่เหลือ</th>
+                                        <th class="py-3 px-6 text-center">ดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-600 text-sm">
+                                    @foreach ($groupedBookings as $bookingId => $bookings)
+                                        @php
+                                            $firstBooking = $bookings->first();
+                                            $hasDuplicates = $bookings->count() > 1;
+                                        @endphp
+                                        <tr id="booking-row-{{ $bookingId }}"
+                                            class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                                            <td class="py-3 px-6 text-left">
+                                                <span
+                                                    class="font-medium">{{ $firstBooking->booking->booking_random_id }}</span>
+                                            </td>
+                                            <td class="py-3 px-6 text-left">
+                                                {{ $firstBooking->booking_name }}
+                                                @if ($hasDuplicates)
+                                                    <span
+                                                        class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm ml-2">
+                                                        ({{ $bookings->count() }})
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="py-3 px-6 text-center">
+                                                {{ $firstBooking->booking->person_count }}
+                                            </td>
+                                            <td class="py-3 px-6 text-center">{{ $firstBooking->checkin_date }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $firstBooking->checkout_date }}</td>
+                                            <td class="py-3 px-6 text-center">
+                                                <span
+                                                    class="bg-purple-100 text-purple-800 py-1 px-3 rounded-full text-sm">
+                                                    {{ $firstBooking->room_type }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-6 text-center status">
+                                                @if ($firstBooking->booking_detail_status === 'ทำการจอง')
+                                                    <span
+                                                        class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-sm">
+                                                        ทำการจอง
+                                                    </span>
+                                                @elseif ($firstBooking->booking_detail_status === 'รอเลือกห้อง')
+                                                    <span
+                                                        class="bg-green-100 text-green-800 py-1 px-3 rounded-full text-sm">
+                                                        รอเช็คอิน
+                                                    </span>
+                                                @elseif ($firstBooking->booking_detail_status === 'เช็คเอาท์')
+                                                    <span
+                                                        class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full text-sm">
+                                                        เช็คเอาท์
+                                                    </span>
+                                                @elseif ($firstBooking->booking_detail_status === 'เช็คอินแล้ว')
+                                                    <span
+                                                        class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-sm">
+                                                        เช็คอินแล้ว
+                                                    </span>
+                                                @elseif ($firstBooking->booking_detail_status === 'รอชำระเงิน')
+                                                    <span
+                                                        class="bg-orange-100 text-orange-800 py-1 px-3 rounded-full text-sm">
+                                                        รอชำระเงิน
+                                                    </span>
+                                                @elseif ($firstBooking->booking_detail_status === 'ยกเลิกการจอง')
+                                                    <span
+                                                        class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-sm">
+                                                        ยกเลิกการจอง
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            {{-- <td class="py-2 px-4 text-center">
                                                 <div class="flex item-center justify-center">
                                                     <a href="{{ route('record_detail', ['id' => $bookingId]) }}"
                                     class="transform hover:text-blue-500 hover:scale-110 transition duration-300 ease-in-out">
@@ -231,42 +238,60 @@
                                     </a>
                     </div>
                     </td> --}}
-                    <td class="py-3 px-6 text-center">
-                        @if ($firstBooking->booking_detail_status === 'รอชำระเงิน')
-                        <button onclick="redirectToPayment('{{ $bookingId }}')"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            กลับไปชำระเงิน
-                        </button>
-                        @endif
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                    </table>
+                                            <td class="py-3 px-6 text-center countdown">
+                                                <span id="countdown-{{ $bookingId }}"
+                                                    class="font-medium text-red-500"></span>
+                                            </td>
+                                            <td class="py-3 px-6 text-center payment-button">
+                                                @if ($firstBooking->booking_detail_status === 'รอชำระเงิน')
+                                                    <button onclick="redirectToPayment('{{ $bookingId }}')"
+                                                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                                        กลับไปชำระเงิน
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p class="text-gray-600 text-center py-4">ไม่พบการจอง</p>
+                    @endif
                 </div>
-                @else
-                <p class="text-gray-600 text-center py-4">ไม่พบการจอง</p>
-                @endif
             </div>
-        </div>
         </div>
     </main>
 
 
-<script>
+    <script>
         const countdownData = @json($countdownData);
 
         countdownData.forEach(item => {
-            startCountdown(item.bookingId, item.expirationTime);
+            startCountdown(item.bookingId, item.expirationTime, item.bookingStatus);
         });
 
-        function startCountdown(bookingId, expirationTime) {
+        function startCountdown(bookingId, expirationTime, bookingStatus) {
+            // ตรวจสอบสถานะการจองก่อนนับเวลา
+            if (bookingStatus !== 'รอชำระเงิน') {
+                return; // ไม่เริ่มนับเวลาเมื่อสถานะไม่เป็น "รอชำระเงิน"
+            }
+
             const countdownElement = document.getElementById(`countdown-${bookingId}`);
             const expirationTimestamp = new Date(expirationTime).getTime();
 
             const interval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = expirationTimestamp - now;
+
+                // ตรวจสอบสถานะการจองจาก UI ว่า "ยกเลิกการจอง" แล้วหรือไม่
+                const bookingRow = document.querySelector(`#booking-row-${bookingId}`);
+                const statusElement = bookingRow ? bookingRow.querySelector('.status') : null;
+                if (statusElement && statusElement.innerText.includes('ยกเลิกการจอง')) {
+                    clearInterval(interval); // หยุดการนับเวลาเมื่อการจองถูกยกเลิก
+                    countdownElement.innerHTML = ""; // ซ่อนเวลา
+                    return;
+                }
 
                 if (distance <= 0) {
                     cancelBooking(bookingId);
@@ -294,6 +319,32 @@
                 .then(data => {
                     if (data.success) {
                         console.log(`การจอง ${bookingId} ถูกยกเลิกแล้ว`);
+
+                        // อัปเดต UI โดยไม่ต้องโหลดหน้าใหม่
+                        const bookingRow = document.querySelector(`#booking-row-${bookingId}`);
+                        if (bookingRow) {
+                            // อัปเดตสถานะการจองใน UI เป็น "ยกเลิกการจอง"
+                            const statusElement = bookingRow.querySelector('.status');
+                            if (statusElement) {
+                                statusElement.innerHTML = `
+                            <span class="bg-red-100 text-red-800 py-1 px-3 rounded-full text-sm">
+                                ยกเลิกการจอง
+                            </span>
+                        `;
+                            }
+
+                            // ลบปุ่ม "กลับไปชำระเงิน" ออก
+                            const paymentButton = bookingRow.querySelector('.payment-button');
+                            if (paymentButton) {
+                                paymentButton.remove();
+                            }
+
+                            // ลบข้อมูลเวลาที่เหลือออก
+                            const countdownElement = bookingRow.querySelector('.countdown');
+                            if (countdownElement) {
+                                countdownElement.remove();
+                            }
+                        }
                     } else {
                         console.error('ยกเลิกการจองไม่สำเร็จ');
                     }
