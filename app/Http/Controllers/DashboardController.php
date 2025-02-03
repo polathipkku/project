@@ -21,36 +21,32 @@ class DashboardController extends Controller
 {
     public function dashboard(Request $request)
     {
-        // รับค่าจากฟอร์ม
-        $startDate = $request->input('start_date', Carbon::today()->toDateString());
-        $endDate = $request->input('end_date', Carbon::today()->toDateString());
-
-        // แปลงวันที่ให้เป็น Carbon object
-        $startDate = Carbon::parse($startDate);
-        $endDate = Carbon::parse($endDate);
+        // ตรวจสอบและแปลงวันที่จาก input (ถ้ามีค่าเข้ามา)
+        $startDate = $request->has('start_date') ? Carbon::createFromFormat('d/m/Y', $request->start_date) : Carbon::today();
+        $endDate = $request->has('end_date') ? Carbon::createFromFormat('d/m/Y', $request->end_date) : Carbon::today();
 
         // คำนวณจำนวนห้องที่มีสถานะ "พร้อมให้บริการ"
         $availableRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')->count();
 
-        // คำนวณจำนวนห้องที่ถูกจองแล้วในช่วงวันที่เลือก
+        // คำนวณจำนวนห้องที่ถูกจองในช่วงวันที่เลือก
         $bookedRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')
             ->whereHas('bookingDetails.booking', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('checkin_date', [$startDate, $endDate])
-                    ->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+                      ->where('booking_status', 'ชำระเงินเสร็จสิ้น');
             })
             ->count();
 
-        // จำนวนห้องว่าง = จำนวนห้องที่พร้อมให้บริการ - จำนวนห้องที่ถูกจอง
+        // คำนวณจำนวนห้องว่าง
         $roomsAvailable = $availableRoomsCount - $bookedRoomsCount;
 
-        // การจองในช่วงวันที่เลือก
+        // นับจำนวนการจอง
         $bookingsCount = Booking_detail::whereBetween('checkin_date', [$startDate, $endDate])
             ->whereHas('booking', function ($query) {
                 $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
             })
             ->count();
 
-        // รายได้ในช่วงวันที่เลือก
+        // คำนวณรายได้ในช่วงวันที่เลือก
         $totalRevenue = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
         })
@@ -67,38 +63,28 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // สร้าง array รายได้ตามเดือน (ม.ค. - ธ.ค.)
+        // จัดรูปแบบรายได้รายเดือน
         $revenueData = [];
         for ($i = 1; $i <= 12; $i++) {
             $revenueData[] = $monthlyRevenue[$i] ?? 0;
         }
 
-        // คำนวณจำนวนผู้เข้าพักในแต่ละวันของเดือนนี้
+        // คำนวณจำนวนผู้เข้าพักในแต่ละวัน
         $guestData = [];
         $dates = [];
-
-        // เก็บค่าเริ่มต้นของ $startDate ไว้ในตัวแปรใหม่เพื่อไม่ให้ $startDate ถูกเปลี่ยนแปลง
         $currentDate = $startDate->copy();
 
         while ($currentDate <= $endDate) {
-            // คำนวณจำนวนผู้เข้าพัก (room_quantity) ในวันที่ $currentDate
             $guests = Booking_detail::join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
                 ->whereDate('booking_details.checkin_date', $currentDate)
                 ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น')
                 ->sum('bookings.room_quantity');
 
-            // เพิ่มข้อมูลผู้เข้าพักใน array
             $guestData[] = $guests;
-
-            // แปลงชื่อเดือนให้เป็นภาษาไทย
-            $monthNameInThai = $currentDate->locale('th')->isoFormat('D MMM');
-            $dates[] = $monthNameInThai;
-
-            // เพิ่มวันโดยไม่แก้ไข $startDate โดยตรง
+            $dates[] = $currentDate->locale('th')->isoFormat('D MMM');
             $currentDate->addDay();
         }
 
-        // ส่งข้อมูลทั้งหมดไปยัง View
         return view('owner.dashboard', compact(
             'totalRevenue',
             'revenueData',

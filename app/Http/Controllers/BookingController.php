@@ -633,113 +633,117 @@ class BookingController extends Controller
             'postcode' => 'required|string|max:10',
             'extra_bed_count' => 'nullable|integer|min:0',
         ]);
-
-        $extraBedCount = $request->has('extra_bed_count') ? $request->extra_bed_count : 0;
-
+    
+        $extraBedCount = $request->extra_bed_count ?? 0;
+    
         $room = Room::find($id);
-        $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
-
-        if (!$isRoomAvailable || $room->room_status !== 'พร้อมให้บริการ') {
-            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้ในช่วงเวลาที่ระบุ หรือห้องไม่พร้อมให้บริการ');
+        if (!$room || $room->room_status !== 'พร้อมให้บริการ') {
+            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้');
         }
-
+    
         if ($request->occupancy_person > $room->room_occupancy) {
-            return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
+            return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนเกินกว่าที่ห้องรองรับได้');
         }
-
+    
+        $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
+        if (!$isRoomAvailable) {
+            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้ในช่วงเวลาที่ระบุ');
+        }
+    
+        // แปลงวันที่ให้เป็นรูปแบบที่ถูกต้อง
+        $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin_date)->format('Y-m-d');
+        $checkoutDate = Carbon::createFromFormat('d-m-Y', $request->checkout_date)->format('Y-m-d');
+    
         $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
-
-        $checkinDate = new \DateTime($request->checkin_date);
-        $checkoutDate = new \DateTime($request->checkout_date);
-        $interval = $checkinDate->diff($checkoutDate);
-        $days = $interval->days;
-
+    
+        // คำนวณค่าห้องพัก
+        $days = Carbon::parse($checkinDate)->diffInDays(Carbon::parse($checkoutDate));
         $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? $room->price_night : $room->price_temporary;
         $totalCost = $days * $roomPricePerDay;
-
-        $booking = new Booking();
-        $booking->user_id = auth()->user()->id;
-        $booking->room_quantity = 1;
-        $booking->total_cost = $totalCost;
-        $booking->total_bed = 0;
-        $booking->booking_status = 'ชำระเงินเสร็จสิ้น';
-        $booking->save();
-
-        $bookingDetail = new Booking_detail();
-        $bookingDetail->booking_id = $booking->id;
-        $bookingDetail->room_id = $room->id;
-        $bookingDetail->booking_name = $request->booking_name;
-        $bookingDetail->phone = $request->phone;
-        $bookingDetail->occupancy_person = $request->occupancy_person;
-        $bookingDetail->extra_bed_count = $extraBedCount;
-        $bookingDetail->checkin_date = $request->checkin_date;
-        $bookingDetail->checkout_date = $request->checkout_date;
-        $bookingDetail->room_type = $request->room_type;
-        $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
-        $bookingDetail->save();
-
-        $booking->total_bed += $extraBedCount;
-        $booking->save();
-
+    
+        // สร้าง Booking
+        $booking = Booking::create([
+            'user_id' => auth()->id(),
+            'room_quantity' => 1,
+            'total_cost' => $totalCost,
+            'total_bed' => $extraBedCount,
+            'booking_status' => 'ชำระเงินเสร็จสิ้น',
+        ]);
+    
+        // สร้าง Booking Detail
+        Booking_detail::create([
+            'booking_id' => $booking->id,
+            'room_id' => $room->id,
+            'booking_name' => $request->booking_name,
+            'phone' => $request->phone,
+            'occupancy_person' => $request->occupancy_person,
+            'extra_bed_count' => $extraBedCount,
+            'checkin_date' => $checkinDate,
+            'checkout_date' => $checkoutDate,
+            'room_type' => $request->room_type,
+            'booking_detail_status' => 'เช็คอินแล้ว',
+        ]);
+    
+        // คำนวณเตียงเสริม (ถ้ามี)
         if ($extraBedCount > 0) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
-                $roomservice = new Roomservice();
-                $roomservice->product_id = $extraBedProduct->id;
-                $roomservice->booking_id = $booking->id;
-                $roomservice->quantity = $extraBedCount;
-                $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
-                $roomservice->save();
-
-                $totalCost += $roomservice->total_price;
-
-                $booking->total_cost = $totalCost;
-                $booking->save();
+                Roomservice::create([
+                    'product_id' => $extraBedProduct->id,
+                    'booking_id' => $booking->id,
+                    'quantity' => $extraBedCount,
+                    'total_price' => $extraBedProduct->product_price * $extraBedCount,
+                ]);
+    
+                $totalCost += $extraBedProduct->product_price * $extraBedCount;
+                $booking->update(['total_cost' => $totalCost]);
             }
         }
+    
+        // สร้าง Payment
         $payment = new Payment();
         $payment->payment_date = now();
-        $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
         $payment->total_price = $totalCost;
         $payment->booking_id = $booking->id;
         $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
-
-        // กรณีชำระเงินด้วยเงินสด
+    
         if ($payment->payment_type_id == 2) {
-            $payment->pay_price = $request->amount_paid;
-            $payment->pay_change = $request->amount_paid - $totalCost;
-
-            if ($payment->pay_price < $totalCost) {
-                return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
+            if ($request->has('amount_paid')) {
+                $payment->pay_price = $request->amount_paid;
+                $payment->pay_change = max($request->amount_paid - $totalCost, 0);
+    
+                if ($payment->pay_price < $totalCost) {
+                    return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
+                }
+            } else {
+                return redirect()->back()->with('error', 'กรุณากรอกจำนวนเงินที่ชำระ');
             }
         } else {
-            // กรณีโอนเงิน
             $payment->pay_price = 0;
             $payment->pay_change = 0;
         }
-
-        // บันทึกข้อมูลการชำระเงิน
+    
+        $payment->payment_status = 'completed';
         $payment->save();
-
-
-        $checkin = new Checkin();
-        $checkin->booking_id = $booking->id;
-        $checkin->checked_in_by = auth()->user()->id;
-        $checkin->checkin = now();
-        $checkin->name = $request->booking_name;
-        $checkin->phone = $request->phone;
-        $checkin->id_card = $request->id_card;
-        $checkin->address = $request->address;
-        $checkin->sub_district = $request->sub_district;
-        $checkin->province = $request->province;
-        $checkin->district = $request->district;
-        $checkin->postcode = $request->postcode;
-        $checkin->save();
-
+    
+        // บันทึก Check-in
+        Checkin::create([
+            'booking_id' => $booking->id,
+            'checked_in_by' => auth()->id(),
+            'checkin' => now(),
+            'name' => $request->booking_name,
+            'phone' => $request->phone,
+            'id_card' => $request->id_card,
+            'address' => $request->address,
+            'sub_district' => $request->sub_district,
+            'province' => $request->province,
+            'district' => $request->district,
+            'postcode' => $request->postcode,
+        ]);
+    
         return redirect()->route('emroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
-    }
-
+    }    
 
     public function submitDamagedItems(Request $request)
     {
