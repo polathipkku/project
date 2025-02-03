@@ -86,7 +86,10 @@ class MaintenanceceController extends Controller
             return redirect()->back()->with('error', 'ไม่พบรายการสิ่งของ');
         }
 
-        if ($thing->productroom->repair_type === 'ซื้อเปลี่ยน') {
+        // ตรวจสอบว่า productroom มีข้อมูลหรือไม่
+        $repairType = $thing->productroom->repair_type ?? 'แจ้งซ่อม';
+
+        if ($repairType === 'ซื้อเปลี่ยน') {
             $thing->thing_status = 'ซ่อมสำเร็จ';
         } else {
             $thing->thing_status = 'กำลังซ่อม';
@@ -96,6 +99,7 @@ class MaintenanceceController extends Controller
 
         return redirect()->back()->with('success', 'สถานะอัปเดตเรียบร้อยแล้ว');
     }
+
     public function updateMultipleThingStatus(Request $request)
     {
         $selectedItems = $request->input('selected_items', []);
@@ -107,11 +111,15 @@ class MaintenanceceController extends Controller
         $items = CheckoutDetail::whereIn('id', $selectedItems)->get();
 
         foreach ($items as $item) {
-            if ($item->productroom->repair_type === 'ซื้อเปลี่ยน') {
+            // ตรวจสอบว่ามี productroom หรือไม่
+            $repairType = $item->productroom->repair_type ?? 'แจ้งซ่อม';
+
+            if ($repairType === 'ซื้อเปลี่ยน') {
                 $item->thing_status = 'ซ่อมสำเร็จ';
             } else {
                 $item->thing_status = 'กำลังซ่อม';
             }
+
             $item->save();
         }
 

@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         #calendar {
             max-width: 600px;

@@ -18,74 +18,7 @@
 
     <div style="display: flex; background-color: #F5F3FF;">
 
-        <section class="sticky bg-white rounded-2xl p-2" id="nav-content" style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
-            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
-
-                <div style="display: grid; place-items: center; margin-bottom: 30px;">
-                    <img src="/images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
-                    <div class="text-black text-lg ">Tunthree</div>
-                </div>
-
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Dashboard">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-layer-group mr-1"></i>
-                        Dashboard
-                    </div>
-                </a>
-
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Users">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-user mr-2"></i>Users
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-users mr-1"></i>Employee
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('room') }}" id="Room">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-door-open mr-1"></i>Room
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Stock">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('promotions') }}" id="Promotion">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
-                    </div>
-                </a>
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('productroom') }}" id="Breakage">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-chimney-crack"></i>Breakage
-                    </div>
-                </a>
-                <a class="inline-block py-2 px-3 text-blue-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-regular fa-envelope mr-1"></i>Record
-                    </div>
-                </a>
-
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
-                    </div>
-                </a>
-                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                    @csrf
-                </form>
-        </section>
+        @include('components.admin_sidebar')
 
         <section class="mx-10 bg-white w-4/5">
             <div class="mx-4 py-10 p-5 mb-10">
@@ -103,7 +36,7 @@
                             <label for="end_date" class="block text-gray-700">วันที่สิ้นสุด</label>
                             <input type="text" id="end_date" name="end_date" class="flatpickr-input bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 w-full lg:w-80" placeholder="เลือกวันที่สิ้นสุด" readonly>
                         </div>
-                        <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                        <button type="submit" class="py-2 px-4 mt-6 bg-blue-500 text-white rounded-lg hover:bg-blue-700">
                             ค้นหา
                         </button>
                     </form>
@@ -122,10 +55,10 @@
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
                         flatpickr("#start_date", {
-                            dateFormat: "Y-m-d",
+                            dateFormat: "d-m-Y",
                         });
                         flatpickr("#end_date", {
-                            dateFormat: "Y-m-d",
+                            dateFormat: "d-m-Y",
                         });
                     });
                 </script>
@@ -183,6 +116,8 @@
                                             <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">เช็คอินแล้ว</span>
                                             @elseif($firstBooking->booking_detail_status === 'รอชำระเงิน')
                                             <span class="mr-2 inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">รอชำระเงิน</span>
+                                            @elseif($firstBooking->booking_detail_status === 'ไม่มาเช็คอิน')
+                                            <span class="mr-2 inline-flex items-center bg-gray-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ไม่มาเช็คอิน</span>
                                             @elseif($firstBooking->booking_detail_status === 'ยกเลิกการจอง')
                                             <span class="mr-2 inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">ยกเลิกการจอง</span>
                                             @endif

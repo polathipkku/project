@@ -70,13 +70,13 @@ class OwnerController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::defaults()],
             'tel' => 'required|string|max:20',
-            'birthday' => 'required|date',
+            'birthday' => 'required|date_format:d/m/Y',
             'address' => 'required|string|max:255',
             'image' => 'required|image|max:10240',
             'salary' => 'required|numeric',
             'work_shift' => 'required|string',
             'position' => 'required|string',
-            'payment_date' => 'required|date',
+            'payment_date' => 'required|date_format:d/m/Y',
         ]);
 
         $imageName = time() . '.' . $request->file('image')->extension();
@@ -87,15 +87,15 @@ class OwnerController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'tel' => $request->tel,
-            'birthday' => $request->birthday,
+            'birthday' => Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d'),
             'address' => $request->address,
             'image' => $imageName,
             'userType' => $request->userType,
-            'start_date' => $request->start_date ?? null,
+            'start_date' => $request->start_date ? Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d') : null,
             'salary' => $request->salary,
             'work_shift' => $request->work_shift,
             'position' => $request->position,
-            'payment_date' => $request->payment_date,
+            'payment_date' => Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d'),
         ]);
 
         return redirect()->route('employee')->with('success', 'บันทึกข้อมูลสำเร็จ');
@@ -114,10 +114,14 @@ class OwnerController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'tel' => 'required|string|max:20',
-            'start_date' => 'required|date',
-            'birthday' => 'required|date',
+            'start_date' => 'required|date_format:d/m/Y',
+            'birthday' => 'required|date_format:d/m/Y',
             'address' => 'required|string|max:255',
-            'image' => 'image|max:10240', // 10MB max size
+            'image' => 'image|max:10240',
+            'salary' => 'required|numeric',
+            'work_shift' => 'required|string',
+            'position' => 'required|string',
+            'payment_date' => 'required|date_format:d/m/Y',
         ]);
 
         $user = User::find($id);
@@ -129,18 +133,18 @@ class OwnerController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->tel = $request->tel;
-        $user->start_date = $request->start_date;
-        $user->birthday = $request->birthday;
+        $user->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+        $user->birthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
         $user->address = $request->address;
+        $user->salary = $request->salary;
+        $user->work_shift = $request->work_shift;
+        $user->position = $request->position;
+        $user->payment_date = Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d');
 
-        // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete the old image if exists
             if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+                Storage::delete('public/images/' . $user->image);
             }
-
-            // Save the new image
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
             $user->image = $imageName;
@@ -151,13 +155,14 @@ class OwnerController extends Controller
         return redirect()->route('employee')->with('success', 'ข้อมูลพนักงานอัปเดตเรียบร้อย');
     }
 
-
-
     public function delete($id)
     {
         $user = User::find($id);
 
         if ($user) {
+            if ($user->image) {
+                Storage::delete('public/images/' . $user->image);
+            }
             $user->delete();
             return redirect()->route('employee')->with('success', 'ลบข้อมูลสำเร็จ');
         } else {

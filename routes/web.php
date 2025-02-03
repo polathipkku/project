@@ -11,6 +11,7 @@ use App\Http\Controllers\MaintenanceceController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductRoomController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -63,10 +64,10 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/dashboardd', function () {
         $users = User::all();
-        return view('dashboard', compact('users'));
-    })->name('dashboard');
+        return view('dashboardd', compact('users'));
+    })->name('dashboardd');
 });
 Route::post('/store-information', [BookingController::class, 'storeInformation'])->name('storeInformation');
 Route::get('/text', [RoomController::class, 'text'])->name('text');
@@ -88,7 +89,7 @@ Route::get('/store', [ProductController::class, 'store'])->name('store');
 Route::post('/buy-product', [ProductController::class, 'buyProduct'])->name('buyProduct');
 Route::get('/promotions-home', [PromotionController::class, 'showPromotionsForHome'])->name('promotions.home');
 // Route::post('/cancel-booking/{bookingId}', [BookingController::class, 'cancelBooking']);
-Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking'); 
+Route::post('/cancel-booking/{id}', [PaymentController::class, 'cancelBooking'])->name('cancel.booking');
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 // รับ booking_id
 Route::get('/payment/{booking_id}', [PaymentController::class, 'showPaymentPage'])->name('payment');
@@ -115,6 +116,11 @@ Route::get('/pending-room-selection', [BookingController::class, 'showPendingRoo
 Route::post('/emaddBooking/{id}', [BookingController::class, 'emaddBooking'])->name('emaddBooking');
 Route::post('/em_reserve/{id}', [BookingController::class, 'emaddBooking']);
 Route::get('/em_reserve/{id}', [BookingController::class, 'em_reserve'])->name('em_reserve');
+Route::get('/receipt', [BookingController::class, 'receiptpickuprent'])->name('receipt');
+Route::get('/receipt/{id}', [BookingController::class, 'receiptpickuprent'])->name('receipt.pickup');
+Route::get('/tt', [BookingController::class, 'receiptpickuprentt'])->name('tt');
+Route::get('/tt/{id}', [BookingController::class, 'receiptpickuprentt'])->name('tt.pickup');
+
 Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
 
 Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
@@ -129,6 +135,7 @@ Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');
 Route::post('/toggleRoomStatus/{id}', [MaintenanceceController::class, 'toggleRoomStatus'])->name('toggleRoomStatus');
 Route::post('/update-booking-detail', [BookingController::class, 'updateBookingDetail'])->name('updateBookingDetail');
+Route::get('/booking/{id}/pdf', [BookingController::class, 'generatePdf'])->name('booking.generatePdf');
 
 Route::get('/', [OwnerController::class, 'checkUserType']);
 
@@ -156,7 +163,7 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
 
     Route::get('/employee', [OwnerController::class, 'employee'])->name('employee');
     Route::get('/add_employee', [OwnerController::class, 'add_employee'])->name('add_employee');
-    Route::get('/employeedetail', [OwnerController::class, 'employeedetail'])->name('employeedetail');
+    Route::get('/employeedetail/{id}', [OwnerController::class, 'employeedetail'])->name('employeedetail');
     Route::get('/product', [ProductController::class, 'product'])->name('product');
 
     Route::get('/add_productroom', [ProductRoomController::class, 'add_productroom'])->name('add_productroom');
@@ -170,7 +177,11 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/product/delete/{id}', [ProductController::class, 'deleteProduct']);
     Route::get('/add_product', [ProductController::class, 'add_product'])->name('add_product');
 
-    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/owner/dashboard', [DashboardController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/custom-dashboard', [DashboardController::class, 'customDashboard'])->name('custom-dashboard');
+    Route::post('/dashboard/filter', [DashboardController::class, 'filterDashboardData']);
+    Route::get('/dashboard/revenue', [DashboardController::class, 'getRevenueData']);
 
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');

@@ -196,9 +196,7 @@
                                 เลือกรายการที่ชำรุด
                             </h2>
 
-                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}"
-                                method="post" class="space-y-6"
-                                onsubmit="showPaymentMethodPopup(); return false;">
+                            <form id="damagedItemsForm" action="{{ route('submitDamagedItems') }}" method="post" class="space-y-6">
                                 @csrf
                                 <input type="hidden" name="booking_id" id="damagedBookingId">
 
@@ -262,20 +260,12 @@
                                     </div>
                                     @endforeach
                                 </div>
-                                <!-- Custom Input Section -->
-                                <div class="space-y-4 mt-6">
-                                    <h3 class="text-lg font-medium text-gray-600">เพิ่มรายการเอง</h3>
-                                    <div class="flex items-center space-x-4">
-                                        <input type="text" name="custom_damaged_items[productroom_name]"
-                                            class="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            placeholder="ชื่อรายการสินค้า">
-                                        <input type="number" name="custom_damaged_items[totalpriceroom]"
-                                            class="block w-32 p-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            placeholder="ราคา" step="0.01">
-                                    </div>
-                                </div>
+                                <div id="customDamagesList" class="space-y-4"></div>
 
-
+                                <button type="button" onclick="addCustomDamageField()"
+                                    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition duration-300 mt-4">
+                                    <span>+ เพิ่มรายการ</span>
+                                </button>
                                 <!-- Action Buttons -->
                                 <div class="flex justify-between items-center mt-6">
                                     <button type="submit"
@@ -289,40 +279,6 @@
                             </form>
                         </div>
                     </div>
-
-                    <script>
-                        // Filter by category
-                        document.getElementById('categoryFilter').addEventListener('change', function() {
-                            const selectedCategory = this.value.toLowerCase();
-                            const categories = document.querySelectorAll('.category-group');
-
-                            categories.forEach(category => {
-                                if (!selectedCategory || category.dataset.category.toLowerCase() === selectedCategory) {
-                                    category.classList.remove('hidden');
-                                } else {
-                                    category.classList.add('hidden');
-                                }
-                            });
-                        });
-
-                        // Search filter for items
-                        document.getElementById('searchFilter').addEventListener('input', function() {
-                            const searchTerm = this.value.toLowerCase();
-                            const items = document.querySelectorAll('.category-group .flex.items-center');
-
-                            items.forEach(item => {
-                                const itemName = item.querySelector('label p').textContent.toLowerCase();
-                                if (itemName.includes(searchTerm)) {
-                                    item.classList.remove('hidden');
-                                } else {
-                                    item.classList.add('hidden');
-                                }
-                            });
-                        });
-                    </script>
-
-
-
                     <div id="paymentMethodPopup"
                         class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
                         <div
@@ -407,16 +363,84 @@
                     </div>
 
 
-
                     <script>
                         document.querySelector('meta[name="csrf-token"]').content;
 
                         let currentBookingId;
                         let totalAmount = 0;
+                        let customDamageIndex = 0;
 
-                        // Update total amount based on damaged items selected
+                        document.addEventListener("DOMContentLoaded", function() {
+                            window.customDamageIndex = 0;
+                            const damagedItemsForm = document.getElementById('damagedItemsForm');
+                            if (damagedItemsForm) {
+                                damagedItemsForm.addEventListener('submit', function(e) {
+                                    e.preventDefault(); // ป้องกันการ submit form แบบปกติ
+                                    updateTotalAmount(); // คำนวณยอดรวมก่อนแสดง popup ชำระเงิน
+                                    document.getElementById('damagedItemsPopup').classList.add('hidden');
+                                    showPaymentMethodPopup(); // เพิ่มบรรทัดนี้เพื่อแสดงหน้า paymentMethodPopup
+                                    return false;
+                                });
+                            }
+
+                            function addCustomDamageField() {
+                                const listContainer = document.getElementById('customDamagesList');
+                                if (!listContainer) {
+                                    console.error("❌ ไม่พบ customDamagesList ใน DOM");
+                                    return;
+                                }
+
+                                const container = document.createElement('div');
+                                container.className = 'bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition';
+                                container.innerHTML = `
+            <div class="flex items-center gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อรายการ</label>
+                    <input type="text" 
+                        name="custom_damages[${customDamageIndex}][name]"
+                        class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
+                        placeholder="ระบุชื่อรายการ" required>
+                </div>
+                <div class="w-32">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ราคา</label>
+                    <input type="number" 
+                        name="custom_damages[${customDamageIndex}][price]"
+                        class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
+                        placeholder="ราคา" 
+                        step="0.01" 
+                        min="0"
+                        required
+                        onchange="updateTotalAmount()">
+                </div>
+                <div class="flex items-end">
+                    <button type="button" 
+                        class="p-3 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                        onclick="removeCustomDamage(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+                                listContainer.appendChild(container);
+                                customDamageIndex++;
+                            }
+
+                            window.addCustomDamageField = addCustomDamageField;
+                        });
+
+                        // ลบรายการค่าเสียหายที่เพิ่มเอง
+                        function removeCustomDamage(button) {
+                            button.closest('.bg-white').remove();
+                            updateTotalAmount();
+                        }
+
+                        // อัปเดตยอดรวมทั้งหมด
                         function updateTotalAmount() {
                             totalAmount = 0;
+
+                            // รวมราคาจาก product_room ที่เลือก
                             const selectedItems = document.querySelectorAll('input[name="damaged_items[]"]:checked');
                             selectedItems.forEach(item => {
                                 const price = parseFloat(item.getAttribute('data-price'));
@@ -424,19 +448,30 @@
                                     totalAmount += price;
                                 }
                             });
-                            // Update display of total amount
-                            const totalAmountDisplay = document.getElementById('totalAmountDisplay');
-                            if (totalAmountDisplay) {
-                                totalAmountDisplay.textContent = `ยอดรวม: ฿${totalAmount.toFixed(2)}`;
+
+                            // รวมราคาจากรายการที่เพิ่มเอง
+                            const customPrices = document.querySelectorAll('input[name^="custom_damages"][name$="[price]"]');
+                            customPrices.forEach(input => {
+                                const price = parseFloat(input.value);
+                                if (!isNaN(price)) {
+                                    totalAmount += price;
+                                }
+                            });
+
+                            // อัปเดตแสดงผลราคารวม
+                            const paymentExtraCharge = document.getElementById('paymentExtraCharge');
+                            if (paymentExtraCharge) {
+                                paymentExtraCharge.innerHTML = `ยอดชำระทั้งหมด: ฿${totalAmount.toFixed(2)}`;
                             }
                         }
 
-                        // Handle Checkout flow
+                        // แสดง Checkout popup
                         function showCheckoutPopup(bookingId) {
                             currentBookingId = bookingId;
                             toggleModal('checkoutPopup', true);
                         }
 
+                        // จัดการกรณีไม่มีความเสียหาย
                         function handleNotDamaged() {
                             fetch('/checkout-user', {
                                     method: 'POST',
@@ -464,6 +499,7 @@
                             closeAllModals();
                         }
 
+                        // ปิด Modal ต่างๆ
                         function closePopup() {
                             document.getElementById('checkoutPopup').classList.add('hidden');
                         }
@@ -476,25 +512,35 @@
                             document.getElementById('paymentMethodPopup').classList.add('hidden');
                         }
 
-                        function showDamagedItemsPopup() {
+                        // แสดง Modal รายการที่เสียหาย
+                        window.showDamagedItemsPopup = function() {
                             document.getElementById('damagedBookingId').value = currentBookingId;
-                            toggleModal('checkoutPopup', false);
-                            toggleModal('damagedItemsPopup', true);
-                        }
+                            document.getElementById('checkoutPopup').classList.add('hidden');
+                            document.getElementById('damagedItemsPopup').classList.remove('hidden');
+                            document.getElementById('customDamagesList').innerHTML = '';
+                            customDamageIndex = 0;
 
-                        function showPaymentMethodPopup() {
-                            updateTotalAmount(); // Ensure total is calculated
-                            toggleModal('damagedItemsPopup', false);
-                            toggleModal('paymentMethodPopup', true);
+                            // รีเซ็ตการเลือกวิธีชำระเงิน
+                            const paymentMethodInputs = document.querySelectorAll('input[name="payment_method"]');
+                            paymentMethodInputs.forEach(input => input.checked = false);
 
-                            // Update payment display
+                            // ซ่อนส่วนแสดงผลวิธีชำระเงินทั้งหมด
+                            document.getElementById('cashPaymentFields').classList.add('hidden');
+                            document.getElementById('transferPaymentFields').classList.add('hidden');
+                        };
+
+                        // แสดง Payment Method Popup
+                        window.showPaymentMethodPopup = function() {
+                            updateTotalAmount();
+                            document.getElementById('damagedItemsPopup').classList.add('hidden');
+                            document.getElementById('paymentMethodPopup').classList.remove('hidden');
+
                             const paymentExtraCharge = document.getElementById('paymentExtraCharge');
                             if (paymentExtraCharge) {
-                                paymentExtraCharge.innerHTML =
-                                    `<span class="text-xl font-bold text-gray-800">ยอดชำระทั้งหมด:</span> <span class="text-2xl font-extrabold text-red-600">฿${totalAmount.toFixed(2)}</span>`;
+                                paymentExtraCharge.innerHTML = `<span class="text-xl font-bold text-gray-800">ยอดชำระทั้งหมด:</span> <span class="text-2xl font-extrabold text-red-600">฿${totalAmount.toFixed(2)}</span>`;
                             }
-                        }
-
+                        };
+                        // คำนวณเงินทอน
                         function calculateChange() {
                             const amountPaid = parseFloat(document.getElementById('amountPaid').value || 0);
                             const warningMessage = document.getElementById('paymentWarning');
@@ -504,7 +550,6 @@
                                 const change = amountPaid - totalAmount;
                                 cashRefund.value = change > 0 ? change.toFixed(2) : '0.00';
 
-                                // Show or hide warning based on payment validation
                                 if (amountPaid < totalAmount) {
                                     warningMessage.classList.remove('hidden');
                                 } else {
@@ -513,6 +558,7 @@
                             }
                         }
 
+                        // สลับการแสดง Modal
                         function toggleModal(modalId, show) {
                             const modal = document.getElementById(modalId);
                             if (modal) {
@@ -520,11 +566,26 @@
                             }
                         }
 
+                        // ยืนยันการชำระเงิน
                         function confirmPayment() {
                             const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
                             const amountPaid = document.getElementById('amountPaid')?.value;
                             const damagedItems = Array.from(document.querySelectorAll('input[name="damaged_items[]"]:checked'))
                                 .map(item => item.value);
+
+                            // เก็บข้อมูลรายการที่เพิ่มเอง
+                            const customDamages = [];
+                            const customNameInputs = document.querySelectorAll('input[name^="custom_damages"][name$="[name]"]');
+                            const customPriceInputs = document.querySelectorAll('input[name^="custom_damages"][name$="[price]"]');
+
+                            customNameInputs.forEach((nameInput, index) => {
+                                if (nameInput.value && customPriceInputs[index].value) {
+                                    customDamages.push({
+                                        name: nameInput.value,
+                                        price: parseFloat(customPriceInputs[index].value)
+                                    });
+                                }
+                            });
 
                             if (!paymentMethod) {
                                 alert('กรุณาเลือกวิธีการชำระเงิน');
@@ -539,6 +600,7 @@
                             const formData = {
                                 booking_id: currentBookingId,
                                 damaged_items: damagedItems,
+                                custom_damages: customDamages,
                                 payment_method: paymentMethod === '1' ? 'transfer' : 'cash',
                                 amount_paid: amountPaid || 0,
                                 total_price: totalAmount
@@ -567,17 +629,41 @@
                                 });
                         }
 
-                        // Utility functions
-                        function toggleModal(modalId, show = true) {
-                            document.getElementById(modalId).classList.toggle('hidden', !show);
-                        }
-
+                        // ปิด Modal ทั้งหมด
                         function closeAllModals() {
                             ['checkoutPopup', 'damagedItemsPopup', 'paymentMethodPopup'].forEach(modalId => {
                                 toggleModal(modalId, false);
                             });
                         }
 
+                        // Filter by category
+                        document.getElementById('categoryFilter').addEventListener('change', function() {
+                            const selectedCategory = this.value.toLowerCase();
+                            const categories = document.querySelectorAll('.category-group');
+
+                            categories.forEach(category => {
+                                if (!selectedCategory || category.dataset.category.toLowerCase() === selectedCategory) {
+                                    category.classList.remove('hidden');
+                                } else {
+                                    category.classList.add('hidden');
+                                }
+                            });
+                        });
+
+                        // Search filter for items
+                        document.getElementById('searchFilter').addEventListener('input', function() {
+                            const searchTerm = this.value.toLowerCase();
+                            const items = document.querySelectorAll('.category-group .flex.items-center');
+
+                            items.forEach(item => {
+                                const itemName = item.querySelector('label p').textContent.toLowerCase();
+                                if (itemName.includes(searchTerm)) {
+                                    item.classList.remove('hidden');
+                                } else {
+                                    item.classList.add('hidden');
+                                }
+                            });
+                        });
 
                         // Event listeners
                         document.addEventListener('DOMContentLoaded', function() {
@@ -634,7 +720,6 @@
                 @else
                 <p class="text-gray-600"> ไม่พบการจอง </p>
                 @endif
-
 
 
             </div>

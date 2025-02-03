@@ -28,95 +28,15 @@
     <div style="display: flex; background-color: #F5F3FF;">
 
         <!-- Sidebar -->
-        <section class="sticky bg-white rounded-2xl p-2" id="nav-content"
-            style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
-            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
-
-                <!-- Logo -->
-                <div style="display: grid; place-items: center; margin-bottom: 30px;">
-                    <img src="/images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
-                    <div class="text-black text-lg ">Tunthree</div>
-                </div>
-
-                <!-- Menu Items -->
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm"
-                    href="#" id="Dashboard">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-layer-group mr-1"></i>
-                        Dashboard
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm"
-                    href="#" id="Users">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-user mr-2"></i>Users
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('employee') }}" id="Employee">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-users mr-1"></i>Employee
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('room') }}" id="Room">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-door-open mr-1"></i>Room
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-blue-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('product') }}" id="Stock">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('promotions') }}" id="Promotion">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
-                    </div>
-                </a>
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('productroom') }}" id="Breakage">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-chimney-crack"></i>Breakage
-                    </div>
-                </a>
-                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm"
-                    href="{{ route('record') }}" id="Review">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-database mr-1"></i>Record
-                    </div>
-
-                    <!-- Logout -->
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                        class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm"
-                        style="position: absolute; bottom: 10px;" id="Logout">
-                        <div class="mr-2 text-base flex items-center">
-                            <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
-                        </div>
-                    </a>
-                    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                        @csrf
-                    </form>
-            </div>
-        </section>
+        @include('components.admin_sidebar')
 
         <!-- Promotion Management Table -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
             <div class="container mx-auto px-6 py-8">
                 <div class="flex justify-between items-center mb-6">
-                    {{-- <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
-                        <i class="fas fa-bars"></i>
-                    </button> --}}
                     <h3 class="text-3xl font-medium text-gray-700">จัดการสินค้า</h3>
                 </div>
-
+        
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -124,24 +44,28 @@
                                 @csrf
                                 <div class="relative">
                                     <input type="text" name="search" placeholder="ค้นหาสินค้า" class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
-                                    <div class="absolute top-0 left-0 inline-flex items-center p-2">
+                                    <div class="absolute top-1/2 left-3 transform -translate-y-1/2">
                                         <i class="fas fa-search text-gray-400"></i>
                                     </div>
                                 </div>
                             </form>
-                            <button onclick="window.location.href='{{ route('add_product') }}'" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+                            <button onclick="window.location.href='{{ route('add_product') }}'"
+                                class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110">
                                 <i class="fas fa-plus mr-2"></i>เพิ่มสินค้า
                             </button>
                         </div>
-
-                        <!-- Promotion Table -->
+        
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
                                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">ลำดับ</th>
+                                        <th class="py-3 px-6 text-left">รูปสินค้า</th>
                                         <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
-                                        <th class="py-3 px-6 text-left">รายละเอียด</th>
+                                        <th class="py-3 px-6 text-center">ราคา</th>
+                                        <th class="py-3 px-6 text-center">ประเภท</th>
+                                        <th class="py-3 px-6 text-center">จำนวนในสต็อก</th>
+                                        <th class="py-3 px-6 text-center">สถานะ</th>
                                         <th class="py-3 px-6 text-center">ดำเนินการ</th>
                                     </tr>
                                 </thead>
@@ -149,9 +73,18 @@
                                     @foreach($product as $productItem)
                                     <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
                                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->index + 1 }}</td>
+                                        <td class="py-3 px-6 text-left">
+                                            <img src="{{ asset('images/' . $productItem->product_img) }}" alt="{{ $productItem->product_name }}"
+                                                class="w-12 h-12 object-cover rounded">
+                                        </td>
                                         <td class="py-3 px-6 text-left">{{ $productItem->product_name }}</td>
-                                        <td class="py-3 px-6 text-blue-500 hover:text-blue-700">
-                                            <a href="{{ url('/roomdetail/'.$productItem->id) }}">รายละเอียด</a>
+                                        <td class="py-3 px-6 text-center">{{ number_format($productItem->product_price, 2) }} บาท</td>
+                                        <td class="py-3 px-6 text-center">{{ $productItem->productType->product_type_name }}</td>
+                                        <td class="py-3 px-6 text-center">{{ $productItem->stock->stock_qty }}</td>
+                                        <td class="py-3 px-6 text-center">
+                                            <span class="px-3 py-1 rounded-lg text-white {{ $productItem->product_status == 'พร้อมให้บริการ' ? 'bg-green-500' : 'bg-red-500' }}">
+                                                {{ $productItem->product_status == 'พร้อมให้บริการ' ? 'พร้อมให้บริการ' : 'ไม่พร้อมให้บริการ' }}
+                                            </span>
                                         </td>
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex items-center justify-center">
@@ -161,7 +94,7 @@
                                                     </button>
                                                 </a>
                                                 <a href="{{ url('/product/delete/'.$productItem->id) }}" class="delete-link">
-                                                    <button class="text-black hover:text-red-500" type="button" onclick="showToast('toast-danger')">
+                                                    <button class="text-black hover:text-red-500" type="button">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </a>
@@ -171,7 +104,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

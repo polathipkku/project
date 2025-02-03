@@ -16,7 +16,7 @@ class CreateCheckoutDetailsTable extends Migration
         Schema::create('checkout_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
-            $table->unsignedBigInteger('product_room_id');
+            $table->unsignedBigInteger('product_room_id')->nullable()->constrained('product_rooms')->onDelete('cascade');
             $table->unsignedBigInteger('booking_detail_id')->nullable();
             $table->decimal('totalpriceroom', 10, 2)->nullable();
             $table->string('productroom_name')->nullable();

@@ -57,10 +57,10 @@
                                     {{ $bookingDetail->booking->id ?? 'ไม่มีข้อมูล' }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">ชื่อผู้จอง:</span>
-                                {{ $bookingDetail->booking->bookingDetails->first()->booking_name ?? 'ไม่มีข้อมูล' }}
+                                    {{ $bookingDetail->booking->bookingDetails->first()->booking_name ?? 'ไม่มีข้อมูล' }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">โทรศัพท์:</span>
-                                {{ $bookingDetail->booking->bookingDetails->first()->phone ?? 'ไม่มีข้อมูล' }}
+                                    {{ $bookingDetail->booking->bookingDetails->first()->phone ?? 'ไม่มีข้อมูล' }}
                                 </p>
                                 <p class="mb-1"><span class="font-semibold">สถานะการจอง:</span>
                                     <span
@@ -82,11 +82,13 @@
                             <!-- แสดงข้อมูลการจองเพียงครั้งเดียว -->
                             <div class="mb-4 p-3 bg-gray-50 rounded-lg">
                                 <div class="flex gap-5">
-                                    <p class="mb-1"><span class="font-semibold">วันที่เลือกเช็คอิน:</span>
-                                        {{ $bookingDetail->booking->bookingDetails->first()->checkin_date ?? 'ไม่มีข้อมูล' }}
+                                    <p class="mb-1">
+                                        <span class="font-semibold">วันที่เลือกเช็คอิน:</span>
+                                        {{ \Carbon\Carbon::parse($bookingDetail->booking->bookingDetails->first()->checkin_date ?? null)->format('d-m-Y') ?? 'ไม่มีข้อมูล' }}
                                     </p>
-                                    <p class="mb-1"><span class="font-semibold">วันที่เลือกเช็คเอาท์:</span>
-                                        {{ $bookingDetail->booking->bookingDetails->first()->checkout_date ?? 'ไม่มีข้อมูล' }}
+                                    <p class="mb-1">
+                                        <span class="font-semibold">วันที่เลือกเช็คเอาท์:</span>
+                                        {{ \Carbon\Carbon::parse($bookingDetail->booking->bookingDetails->first()->checkout_date ?? null)->format('d-m-Y') ?? 'ไม่มีข้อมูล' }}
                                     </p>
                                 </div>
                                 <p class="mb-1"><span class="font-semibold">จำนวนผู้เข้าพักผู้ใหญ่:</span>

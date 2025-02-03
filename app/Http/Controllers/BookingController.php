@@ -20,6 +20,8 @@ use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class BookingController extends Controller
 {
@@ -144,17 +146,26 @@ class BookingController extends Controller
                 'booking.review',
                 'booking.payment',
             ])
+            ->orderBy('created_at', 'desc') // ดึงข้อมูลที่มีการสร้างใหม่ที่สุด
             ->get();
 
-        // จัดกลุ่มข้อมูลสำหรับการเรียก startCountdown
+        // จัดกลุ่มข้อมูลและกรองสถานะ "รอชำระเงิน"
         $countdownData = $bookings->groupBy('booking_id')->map(function ($bookings, $bookingId) {
-            $expirationTime = optional($bookings->first()->booking->payment)->expiration_time;
-            return $expirationTime ? ['bookingId' => $bookingId, 'expirationTime' => $expirationTime] : null;
-        })->filter()->values();
+            $firstBooking = $bookings->first();
+            // ตรวจสอบสถานะการจองว่าเป็น "รอชำระเงิน" และยังไม่ถูกยกเลิก
+            if ($firstBooking->booking_detail_status === 'รอชำระเงิน' && $firstBooking->booking->payment->status !== 'cancel') {
+                $expirationTime = optional($firstBooking->booking->payment)->expiration_time;
+                return $expirationTime ? [
+                    'bookingId' => $bookingId,
+                    'expirationTime' => $expirationTime,
+                    'bookingStatus' => 'รอชำระเงิน'
+                ] : null;
+            }
+            return null;
+        })->filter()->values(); // กรองข้อมูลที่ไม่ตรงตามเงื่อนไข
 
         return view('user.reservation', compact('bookings', 'countdownData'));
     }
-
 
     public function employeehome()
     {
@@ -163,14 +174,22 @@ class BookingController extends Controller
     }
     public function checkinuser()
     {
+        // อัปเดตสถานะเป็น "ไม่มาเช็คอิน" หากเลยวันเช็คเอาท์แล้วแต่ยังอยู่ใน "รอเลือกห้อง"
+        Booking_detail::where('booking_detail_status', 'รอเลือกห้อง')
+            ->whereDate('checkout_date', '<=', Carbon::today()) // วันที่ปัจจุบันเกินวันเช็คเอาท์
+            ->update(['booking_detail_status' => 'ไม่มาเช็คอิน']);
+
+        // ดึงข้อมูลการจองที่ต้องเช็คอินวันนี้
         $bookings = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_detail_status', 'รอเลือกห้อง')
                 ->whereNull('room_id')
                 ->whereDate('checkin_date', Carbon::today());
-        })->with(['bookingDetails' => function ($query) {
-            $query->whereNull('room_id')
-                ->whereDate('checkin_date', Carbon::today());
-        }])->get();
+        })->with([
+            'bookingDetails' => function ($query) {
+                $query->whereNull('room_id')
+                    ->whereDate('checkin_date', Carbon::today());
+            }
+        ])->get();
 
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
 
@@ -644,7 +663,7 @@ class BookingController extends Controller
         $booking->room_quantity = 1;
         $booking->total_cost = $totalCost;
         $booking->total_bed = 0;
-        $booking->booking_status = 'รอชำระเงิน';
+        $booking->booking_status = 'ชำระเงินเสร็จสิ้น';
         $booking->save();
 
         $bookingDetail = new Booking_detail();
@@ -727,9 +746,12 @@ class BookingController extends Controller
         try {
             $request->validate([
                 'booking_id' => 'required|exists:bookings,id',
-                'damaged_items' => 'nullable|array', // ทำให้ไม่จำเป็นต้องมี damaged_items เสมอ
+                'damaged_items' => 'nullable|array',
                 'payment_method' => 'required|in:cash,transfer',
                 'amount_paid' => 'nullable|numeric|min:0',
+                'custom_damages' => 'nullable|array',
+                'custom_damages.*.name' => 'nullable|string|max:255',
+                'custom_damages.*.price' => 'nullable|numeric|min:0',
             ]);
 
             $bookingId = $request->input('booking_id');
@@ -749,6 +771,8 @@ class BookingController extends Controller
             }
 
             $bookingDetailId = $bookingDetails->id;
+
+            // Process predefined damaged items
             foreach ($damagedItems as $itemId) {
                 $productRoom = Product_room::find($itemId);
                 if ($productRoom) {
@@ -759,11 +783,28 @@ class BookingController extends Controller
                         'productroom_name' => $productRoom->productroom_name,
                         'booking_detail_id' => $bookingDetailId,
                         'thing_status' => 'รอซ่อม',
-
                     ]);
                     $totalPrice += $productRoom->productroom_price;
                 }
             }
+
+            // Process custom damages
+            $customDamages = $request->input('custom_damages', []);
+            foreach ($customDamages as $damage) {
+                if (!empty($damage['name']) && !empty($damage['price'])) {
+                    CheckoutDetail::create([
+                        'booking_id' => $bookingId,
+                        'product_room_id' => null,
+                        'totalpriceroom' => $damage['price'],
+                        'productroom_name' => $damage['name'],
+                        'booking_detail_id' => $bookingDetailId,
+                        'thing_status' => 'รอซ่อม',
+                    ]);
+                    $totalPrice += $damage['price'];
+                }
+            }
+
+            // Create maintenance record if damages exist
             if ($totalPrice > 0) {
                 $room = $bookingDetails->room;
                 if ($room) {
@@ -777,6 +818,7 @@ class BookingController extends Controller
                 }
             }
 
+            // Create payment record
             if ($totalPrice > 0) {
                 $payChange = $paymentMethod === 'cash' ? max(0, $amountPaid - $totalPrice) : 0;
                 Payment::create([
@@ -790,6 +832,7 @@ class BookingController extends Controller
                 ]);
             }
 
+            // Update room status
             $room = $bookingDetails->room;
             if ($room) {
                 $newRoomStatus = $totalPrice > 0 ? 'แจ้งซ่อมห้อง' : 'รอทำความสะอาด';
@@ -798,10 +841,13 @@ class BookingController extends Controller
 
             DB::commit();
 
-            return $this->checkoutuser($request); // เรียกใช้การเช็คเอาท์หลังจากจัดการสถานะ
+            return $this->checkoutuser($request);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'error' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'error' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -961,5 +1007,50 @@ class BookingController extends Controller
             DB::rollBack();
             return redirect()->route('checkin')->with('error', 'เกิดข้อผิดพลาดในการเช็คอิน: ' . $e->getMessage());
         }
+    }
+
+    public function receiptpickuprent($id)
+    {
+        // ดึงข้อมูลการจองพร้อมความสัมพันธ์ที่เกี่ยวข้อง
+        $booking = Booking::with([
+            'bookingDetails.room',
+            'payment.paymentType',
+            'user',
+            'promotion'
+        ])->findOrFail($id);
+
+        // สร้างเลขที่ใบเสร็จ
+        $receipt_number = 'INV' . str_pad($booking->id, 8, '0', STR_PAD_LEFT);
+
+        // เตรียมข้อมูลสำหรับ view
+        $data = [
+            'booking' => $booking,
+            'customer_name' => $booking->user->name,
+            'customer_phone' => $booking->user->tel,
+            'receipt_number' => $receipt_number,
+            'date' => now()->format('d/m/Y H:i'),
+            'room_cost' => number_format($booking->room_quantity * 500, 2), // ค่าห้อง
+            'extra_bed_cost' => number_format($booking->total_bed * 200, 2), // ค่าเตียงเสริม
+            'total_cost' => number_format($booking->payment->total_price, 2), // ราคาทั้งหมด
+        ];
+
+        // สร้าง PDF
+        if (view()->exists('user.receipt')) {  // แก้ path ให้ตรงกับที่เก็บไฟล์ view
+            $pdf = PDF::loadView('user.receipt', $data);
+            $pdf->setPaper('A4');
+            return $pdf->stream('receipt.pdf');
+        }
+
+        return response()->json(['error' => 'ไม่พบไฟล์ view'], 404);
+    }
+
+
+    public function receiptpickuprentt()
+    {
+
+        $pdf = PDF::loadView('user.tt');
+        $pdf->setPaper('A4');
+        return $pdf->stream('receipt.pdf');
+        return $pdfs->stream();
     }
 }

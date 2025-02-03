@@ -10,74 +10,13 @@
 
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
     <title>Tunthree</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
     <div style="display: flex; background-color: #F5F3FF;">
 
-        <section class="sticky bg-white rounded-2xl p-2" id="nav-content" style="height: 100vh; width: 180px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin-left: 2%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
-            <div class="w-full lg:w-auto flex-grow lg:flex lg:flex-col bg-white lg:bg-transparent text-black">
-
-                <div style="display: grid; place-items: center; margin-bottom: 30px;">
-                    <img src="images/Logo.jpg" alt="Logo" style="width: 80px; height: auto; margin-bottom: -10px;">
-                    <div class="text-black text-lg ">Tunthree</div>
-                </div>
-
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Dashboard">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-layer-group mr-1"></i>
-                        Dashboard
-                    </div>
-                </a>
-
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:text-blue-700 hover:text-sm" href="#" id="Users">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-user mr-2"></i>Users
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-blue-700 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="Employee.html" id="Employee">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-users mr-1"></i>Employee
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('room') }}" id="Room">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-door-open mr-1"></i>Room
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="{{ route('product') }}" id="Stock">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-house-circle-check mr-1"></i>Stock
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Promotion">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-rectangle-ad mr-1"></i>Promotion
-                    </div>
-                </a>
-
-                <a class="inline-block py-2 px-3 text-gray-500 lg:flex lg:flex-col items-start justify-start mb-1 transition duration-300 ease-in-out hover:bg-transparent hover:text-blue-700 hover:text-sm" href="#" id="Review">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-regular fa-envelope mr-1"></i>Review
-                    </div>
-                </a>
-
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="inline-block py-2 px-3 text-gray-500 no-underline lg:flex lg:flex-col items-start justify-start mb-6 transition duration-300 ease-in-out hover:bg-transparent hover:text-red-500 hover:text-sm" style="position: absolute; bottom: 10px;" id="Logout">
-                    <div class="mr-2 text-base flex items-center">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout
-                    </div>
-                </a>
-                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                    @csrf
-                </form>
-            </div>
-        </section>
+        @include('components.admin_sidebar')
 
         <section class="ml-10 bg-white" id="room-add" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%;">
             <div class="max-w-screen-xl mx-auto py-10 ">
@@ -91,66 +30,135 @@
 
                 </div>
 
-                <form method="POST" action="{{url('/employee/update/'.$user->id)}}" enctype="multipart/form-data">
+                <form method="POST" action="{{ url('/employee/update/'.$user->id) }}" enctype="multipart/form-data">
                     @csrf
-                    <div>
-                        <label for="name" value="{{ __('Name') }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ชื่อพนักงาน</label>
-                        <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$user->name}}" required />
+                
+                    <div class="grid gap-6 mb-6 md:grid-cols-3">
+                        <div>
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ชื่อพนักงาน</label>
+                            <input type="text" id="name" name="name" value="{{ $user->name }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required />
+                        </div>
+                
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">อีเมลพนักงาน</label>
+                            <input type="email" id="email" name="email" value="{{ $user->email }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required />
+                        </div>
+                
+                        <div>
+                            <label for="tel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เบอร์โทรพนักงาน</label>
+                            <input type="text" id="tel" name="tel" value="{{ $user->tel }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required />
+                        </div>
                     </div>
-                    <br>
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">อีเมลพนักงาน</label>
-                        <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" :value="old('email', $user->email)" value="{{$user->email}}" required />
+                    <div class="grid gap-6 mb-6 md:grid-cols-3">
+                        <div>
+                            <label for="position" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ตำแหน่ง</label>
+                            <select id="position" name="position"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="พนักงานทำความสะอาด" {{ $user->position == 'พนักงานทำความสะอาด' ? 'selected' : '' }}>พนักงานทำความสะอาด</option>
+                                <option value="พนักงานซักผ้า" {{ $user->position == 'พนักงานซักผ้า' ? 'selected' : '' }}>พนักงานซักผ้า</option>
+                                <option value="พนักงานต้อนรับ" {{ $user->position == 'พนักงานต้อนรับ' ? 'selected' : '' }}>พนักงานต้อนรับ</option>
+                            </select>
+                        </div>
+                
+                        <div>
+                            <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เงินเดือน</label>
+                            <input type="number" step="0.01" id="salary" name="salary" value="{{ $user->salary }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required />
+                        </div>
+                
+                        <div>
+                            <label for="work_shift" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">กะเวลาทำงาน</label>
+                            <select id="work_shift" name="work_shift"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="กลางวัน" {{ $user->work_shift == 'กลางวัน' ? 'selected' : '' }}>กลางวัน</option>
+                                <option value="กลางคืน" {{ $user->work_shift == 'กลางคืน' ? 'selected' : '' }}>กลางคืน</option>
+                            </select>
+                        </div>
                     </div>
-                    <br>
-                    <div>
-                        <label for="tel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เบอร์โทรพนักงาน</label>
-                        <input type="text" id="tel" name="tel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$user->tel}}" required />
+                
+                
+                    <div class="grid gap-6 mb-6 md:grid-cols-3">
+                        <div>
+                            <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันที่เริ่มทำงาน</label>
+                            <div class="relative">
+                                <input type="text" id="start_date" name="start_date" value="{{$user->start_date}}"
+                                    class="datepicker block w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="เลือกวันที่เริ่มทำงาน" required />
+                                <svg class="absolute left-3 top-3 w-5 h-5 text-gray-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3M16 7V3M3 10h18M5 20h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="birthday" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันเกิดพนักงาน</label>
+                            <div class="relative">
+                                <input type="text" id="birthday" name="birthday" value="{{$user->birthday}}"
+                                    class="datepicker block w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="เลือกวันเกิด" required />
+                                <svg class="absolute left-3 top-3 w-5 h-5 text-gray-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3M16 7V3M3 10h18M5 20h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="payment_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันที่จ่ายเงินเดือน</label>
+                            <div class="relative">
+                                <input type="text" id="payment_date" name="payment_date" value="{{$user->payment_date}}"
+                                    class="datepicker block w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="เลือกวันที่จ่ายเงินเดือน" required />
+                                <svg class="absolute left-3 top-3 w-5 h-5 text-gray-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3M16 7V3M3 10h18M5 20h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <br>
+                
                     <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div>
-                            <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันเริ่มงาน</label>
-                            <input type="date" id="start_date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$user->start_date}}" required />
-                        </div>
-                        <div>
-                            <label for="birthday" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันเกิด</label>
-                            <input type="date" id="birthday" name="birthday" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$user->birthday}}" required />
-                        </div>
-                    </div>
-
-                    <div class="mb-6 room-group">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="room_image">อัพโหลดรูปภาพพนักงาน</label>
-                        <input class="block w-full text-l text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="room_image" type="file" name="image" accept="image/*">
-                        @if ($user->image)
-                        <img id="current_image" src="{{ asset('images/' . $user->image) }}" alt="Current Room Image" width="100px" height="100px">
-                        @else
-                        <p>No image available</p>
-                        @endif
-                    </div>
-
-
-                    <div class="mb-6">
-                        <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ที่อยู่พนักงาน</label>
-                        <textarea type="text" id="address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-32 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>{{$user->address}}</textarea>
-                    </div>
-
-
-                    @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                    <div class="mt-4">
-                        <x-jet-label for="terms">
-                            <div class="flex items-center">
-                                <x-jet-checkbox name="terms" id="terms" />
-                                <div class="ml-2">
-                                    {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                    'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
-                                    'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
-                                    ]) !!}
+                        <div class="w-full">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">อัพโหลดรูปภาพพนักงาน</label>
+                            <div id="drop-area"
+                                class="flex flex-col items-center justify-center w-full h-32 p-4 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-600 hover:border-blue-500 relative overflow-hidden">
+                                <input type="file" id="image" name="image" class="hidden" accept="image/*">
+                                
+                                <!-- UI แสดงรูปเดิม -->
+                                <div id="preview-container" class="w-full h-full {{ $user->image ? '' : 'hidden' }}">
+                                    <img id="preview-image" src="{{ asset('images/' . $user->image) }}" class="w-full h-full object-cover rounded-lg">
+                                    <button id="change-image"
+                                        class="absolute bottom-2 right-2 px-3 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
+                                        เปลี่ยนรูป
+                                    </button>
+                                </div>
+                                
+                                <!-- UI อัปโหลดรูป -->
+                                <div id="upload-icon" class="flex flex-col items-center justify-center gap-2 {{ $user->image ? 'hidden' : '' }}">
+                                    <i class="fa-solid fa-upload text-gray-500 text-4xl"></i>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        ลากและวางไฟล์ที่นี่ หรือคลิกเพื่อเลือก
+                                    </p>
                                 </div>
                             </div>
-                        </x-jet-label>
+                        </div>
+                
+                        <div>
+                            <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ที่อยู่พนักงาน</label>
+                            <textarea id="address" name="address"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-32 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required>{{ old('address', $user->address) }}</textarea>
+                        </div>
                     </div>
-                    @endif
 
                     <input type="hidden" name="userType" value="1">
 
@@ -170,6 +178,69 @@
 
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datepicker", {
+                dateFormat: "d/m/Y",
+                clickOpens: true, // ให้เปิดปฏิทินเท่านั้น
+            allowInput: false, // ห้ามพิมพ์
+            disableMobile: true // ปิด datepicker บนมือถือ
+            });
+
+            // กำหนดค่า maxDate สำหรับวันเกิด (ต้องมีอายุ 18+)
+            flatpickr("#birthday", {
+                dateFormat: "d/m/Y",
+                maxDate: new Date().fp_incr(-18 * 365), // นับย้อนหลัง 18 ปี
+            });
+        });
+    </script>
+    {{-- -----------------uploadpic----------------- --}}
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('image');
+        const uploadIcon = document.getElementById('upload-icon');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const changeImageButton = document.getElementById('change-image');
+    
+        dropArea.addEventListener('click', () => fileInput.click());
+    
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                previewImage.src = URL.createObjectURL(file);
+                uploadIcon.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+            }
+        });
+    
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('border-blue-500');
+        });
+    
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('border-blue-500');
+        });
+    
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('border-blue-500');
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                fileInput.files = event.dataTransfer.files;
+                previewImage.src = URL.createObjectURL(file);
+                uploadIcon.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+            }
+        });
+    
+        changeImageButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            fileInput.click();
+        });
+    </script>
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 
 </html>
