@@ -39,6 +39,7 @@
                     <h1 class="text-4xl mb-10 max-xl:px-4">Check-In</h1>
                     <input id="checkin-date" type="text" class="flatpickr input px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เลือกวันที่เช็คอิน" data-default-date="today" />
                 </div>
+                @if (count($bookings) > 0)
                 <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-lg">
                     <thead>
                         <tr class="text-lg bg-gray-300">
@@ -147,6 +148,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+
                             </td>
                         </tr>
                         @endif
@@ -155,6 +157,9 @@
                     </tbody>
 
                 </table>
+                @else
+                <p class="text-gray-600"> ไม่พบรายการรอเช็คอิน </p>
+                @endif
             </div>
         </section>
 
@@ -460,7 +465,7 @@
                 };
             });
 
-                var show_text = document.getElementById('text');
+            var show_text = document.getElementById('text');
             var add_name = document.getElementById('add_name');
             var count = 1; // จำนวนเริ่มต้น
 

@@ -206,7 +206,7 @@
       dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
       minDate: "today", // ไม่ให้เลือกวันในอดีต
       onChange: function(selectedDates, dateStr, instance) {
-        const formattedDate = instance.formatDate(selectedDates[0], "Y-m-d");
+        const formattedDate = instance.formatDate(selectedDates[0], "d-m-Y");
         document.getElementById("checkin_date").value = formattedDate;
         const checkout = document.getElementById("checkout");
         checkout.disabled = false;
@@ -219,7 +219,7 @@
       dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
       minDate: "today", // ไม่ให้เลือกวันในอดีต
       onChange: function(selectedDates, dateStr, instance) {
-        const formattedDate = instance.formatDate(selectedDates[0], "Y-m-d");
+        const formattedDate = instance.formatDate(selectedDates[0], "d-m-Y");
         document.getElementById("checkout_date").value = formattedDate;
       }
     });

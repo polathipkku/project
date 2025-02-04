@@ -530,8 +530,8 @@
                     if (array.length === 2) {
                         var startDate = array[0];
                         var endDate = array[1];
-                        var strStartDate = instance.formatDate(startDate, 'Y-m-d');
-                        var strEndDate = instance.formatDate(endDate, 'Y-m-d');
+                        var strStartDate = instance.formatDate(startDate, 'd-m-Y');
+                        var strEndDate = instance.formatDate(endDate, 'd-m-Y');
                         valuestartdate.value = strStartDate;
                         valueenddate.value = strEndDate;
                         checkinInput.value = strStartDate;

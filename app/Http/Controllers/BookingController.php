@@ -229,11 +229,31 @@ class BookingController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date') ?? $startDate;
 
+        $query = Booking_detail::with('booking');
+
         if ($startDate) {
-            $bookings = Booking_detail::whereBetween('checkin_date', [$startDate, $endDate])->paginate(10);
-        } else {
-            $bookings = Booking_detail::paginate(10);
+            $query->whereBetween('checkin_date', [$startDate, $endDate]);
         }
+
+        // Get all bookings first
+        $allBookings = $query->get();
+
+        // Group the bookings by booking_id
+        $groupedBookings = $allBookings->groupBy('booking_id');
+
+        // Manually paginate the grouped results
+        $perPage = 10;
+        $currentPage = request()->get('page', 1);
+        $currentPageItems = $groupedBookings->forPage($currentPage, $perPage);
+
+        // Create a new LengthAwarePaginator instance
+        $bookings = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $groupedBookings->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
         return view('owner.record', compact('bookings'));
     }
@@ -417,8 +437,9 @@ class BookingController extends Controller
 
     public function checkAvailability(Request $request)
     {
-        $startDate = $request->query('startDate');
-        $endDate = $request->query('endDate');
+        $startDate = \Carbon\Carbon::createFromFormat('d-m-Y', $request->query('startDate'))->format('Y-m-d');
+        $endDate = \Carbon\Carbon::createFromFormat('d-m-Y', $request->query('endDate'))->format('Y-m-d');
+
         $adultCount = (int) $request->query('adultCount', 2);
         $childCount = (int) $request->query('childCount', 0);
         $babyCount = (int) $request->query('babyCount', 0);
@@ -586,12 +607,12 @@ class BookingController extends Controller
     public function showPendingRoomSelection(Request $request)
     {
         $request->validate([
-            'checkin_date' => 'required|date',
-            'checkout_date' => 'required|date|after_or_equal:checkin_date',
+            'checkin_date' => 'required|date_format:d-m-Y',
+            'checkout_date' => 'required|date_format:d-m-Y|after_or_equal:checkin_date',
         ]);
 
-        $checkinDate = $request->input('checkin_date');
-        $checkoutDate = $request->input('checkout_date');
+        $checkinDate = \Carbon\Carbon::createFromFormat('d-m-Y', $request->input('checkin_date'))->format('Y-m-d');
+        $checkoutDate = \Carbon\Carbon::createFromFormat('d-m-Y', $request->input('checkout_date'))->format('Y-m-d');
 
         $pendingBookings = Booking_detail::where('booking_detail_status', 'รอเลือกห้อง')
             ->where(function ($query) use ($checkinDate, $checkoutDate) {
@@ -608,13 +629,23 @@ class BookingController extends Controller
                             ->where('checkout_date', '>=', $checkoutDate);
                     });
             })
-            ->get();
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'checkin_date' => \Carbon\Carbon::parse($booking->checkin_date)->format('d-m-Y'),
+                    'checkout_date' => \Carbon\Carbon::parse($booking->checkout_date)->format('d-m-Y'),
+                    'booking_name' => $booking->booking_name,
+                    'booking_detail_status' => $booking->booking_detail_status,
+                ];
+            });
 
         return response()->json([
             'pendingBookings' => $pendingBookings,
-            'bookingCount' => $pendingBookings->count(), // ส่งจำนวนการจอง
+            'bookingCount' => $pendingBookings->count(),
         ]);
     }
+
 
     public function emaddBooking(Request $request, $id)
     {
@@ -634,116 +665,113 @@ class BookingController extends Controller
             'extra_bed_count' => 'nullable|integer|min:0',
         ]);
     
-        $extraBedCount = $request->extra_bed_count ?? 0;
+        $extraBedCount = $request->has('extra_bed_count') ? $request->extra_bed_count : 0;
     
         $room = Room::find($id);
-        if (!$room || $room->room_status !== 'พร้อมให้บริการ') {
-            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้');
+        $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
+    
+        if (!$isRoomAvailable || $room->room_status !== 'พร้อมให้บริการ') {
+            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้ในช่วงเวลาที่ระบุ หรือห้องไม่พร้อมให้บริการ');
         }
     
         if ($request->occupancy_person > $room->room_occupancy) {
-            return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนเกินกว่าที่ห้องรองรับได้');
+            return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
         }
-    
-        $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
-        if (!$isRoomAvailable) {
-            return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้ในช่วงเวลาที่ระบุ');
-        }
-    
-        // แปลงวันที่ให้เป็นรูปแบบที่ถูกต้อง
-        $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin_date)->format('Y-m-d');
-        $checkoutDate = Carbon::createFromFormat('d-m-Y', $request->checkout_date)->format('Y-m-d');
     
         $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
     
-        // คำนวณค่าห้องพัก
+        // ใช้ Carbon เพื่อแปลงวันที่ให้เป็นรูปแบบ Y-m-d
+        $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin_date)->format('Y-m-d');
+        $checkoutDate = Carbon::createFromFormat('d-m-Y', $request->checkout_date)->format('Y-m-d');
+        
+        // คำนวณจำนวนวันระหว่าง checkin และ checkout
         $days = Carbon::parse($checkinDate)->diffInDays(Carbon::parse($checkoutDate));
+    
         $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? $room->price_night : $room->price_temporary;
         $totalCost = $days * $roomPricePerDay;
     
-        // สร้าง Booking
-        $booking = Booking::create([
-            'user_id' => auth()->id(),
-            'room_quantity' => 1,
-            'total_cost' => $totalCost,
-            'total_bed' => $extraBedCount,
-            'booking_status' => 'ชำระเงินเสร็จสิ้น',
-        ]);
+        $booking = new Booking();
+        $booking->user_id = auth()->user()->id;
+        $booking->room_quantity = 1;
+        $booking->total_cost = $totalCost;
+        $booking->total_bed = 0;
+        $booking->booking_status = 'ชำระเงินเสร็จสิ้น';
+        $booking->save();
     
-        // สร้าง Booking Detail
-        Booking_detail::create([
-            'booking_id' => $booking->id,
-            'room_id' => $room->id,
-            'booking_name' => $request->booking_name,
-            'phone' => $request->phone,
-            'occupancy_person' => $request->occupancy_person,
-            'extra_bed_count' => $extraBedCount,
-            'checkin_date' => $checkinDate,
-            'checkout_date' => $checkoutDate,
-            'room_type' => $request->room_type,
-            'booking_detail_status' => 'เช็คอินแล้ว',
-        ]);
+        $bookingDetail = new Booking_detail();
+        $bookingDetail->booking_id = $booking->id;
+        $bookingDetail->room_id = $room->id;
+        $bookingDetail->booking_name = $request->booking_name;
+        $bookingDetail->phone = $request->phone;
+        $bookingDetail->occupancy_person = $request->occupancy_person;
+        $bookingDetail->extra_bed_count = $extraBedCount;
+        $bookingDetail->checkin_date = $checkinDate;  // แปลงวันที่เป็น Y-m-d
+        $bookingDetail->checkout_date = $checkoutDate;  // แปลงวันที่เป็น Y-m-d
+        $bookingDetail->room_type = $request->room_type;
+        $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
+        $bookingDetail->save();
     
-        // คำนวณเตียงเสริม (ถ้ามี)
+        $booking->total_bed += $extraBedCount;
+        $booking->save();
+    
         if ($extraBedCount > 0) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
-                Roomservice::create([
-                    'product_id' => $extraBedProduct->id,
-                    'booking_id' => $booking->id,
-                    'quantity' => $extraBedCount,
-                    'total_price' => $extraBedProduct->product_price * $extraBedCount,
-                ]);
+                $roomservice = new Roomservice();
+                $roomservice->product_id = $extraBedProduct->id;
+                $roomservice->booking_id = $booking->id;
+                $roomservice->quantity = $extraBedCount;
+                $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
+                $roomservice->save();
     
-                $totalCost += $extraBedProduct->product_price * $extraBedCount;
-                $booking->update(['total_cost' => $totalCost]);
+                $totalCost += $roomservice->total_price;
+    
+                $booking->total_cost = $totalCost;
+                $booking->save();
             }
         }
     
-        // สร้าง Payment
         $payment = new Payment();
         $payment->payment_date = now();
+        $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
         $payment->total_price = $totalCost;
         $payment->booking_id = $booking->id;
         $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
     
+        // กรณีชำระเงินด้วยเงินสด
         if ($payment->payment_type_id == 2) {
-            if ($request->has('amount_paid')) {
-                $payment->pay_price = $request->amount_paid;
-                $payment->pay_change = max($request->amount_paid - $totalCost, 0);
+            $payment->pay_price = $request->amount_paid;
+            $payment->pay_change = $request->amount_paid - $totalCost;
     
-                if ($payment->pay_price < $totalCost) {
-                    return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
-                }
-            } else {
-                return redirect()->back()->with('error', 'กรุณากรอกจำนวนเงินที่ชำระ');
+            if ($payment->pay_price < $totalCost) {
+                return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
             }
         } else {
+            // กรณีโอนเงิน
             $payment->pay_price = 0;
             $payment->pay_change = 0;
         }
     
-        $payment->payment_status = 'completed';
+        // บันทึกข้อมูลการชำระเงิน
         $payment->save();
     
-        // บันทึก Check-in
-        Checkin::create([
-            'booking_id' => $booking->id,
-            'checked_in_by' => auth()->id(),
-            'checkin' => now(),
-            'name' => $request->booking_name,
-            'phone' => $request->phone,
-            'id_card' => $request->id_card,
-            'address' => $request->address,
-            'sub_district' => $request->sub_district,
-            'province' => $request->province,
-            'district' => $request->district,
-            'postcode' => $request->postcode,
-        ]);
+        $checkin = new Checkin();
+        $checkin->booking_id = $booking->id;
+        $checkin->checked_in_by = auth()->user()->id;
+        $checkin->checkin = now();
+        $checkin->name = $request->booking_name;
+        $checkin->phone = $request->phone;
+        $checkin->id_card = $request->id_card;
+        $checkin->address = $request->address;
+        $checkin->sub_district = $request->sub_district;
+        $checkin->province = $request->province;
+        $checkin->district = $request->district;
+        $checkin->postcode = $request->postcode;
+        $checkin->save();
     
         return redirect()->route('emroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
-    }    
+    }
 
     public function submitDamagedItems(Request $request)
     {
