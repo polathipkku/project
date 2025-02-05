@@ -19,6 +19,33 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function getDailyOccupancy($startDate, $endDate)
+    {
+        // Define days of the week in Thai
+        $daysOfWeek = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์'];
+
+        // Initialize an array to store daily occupancy
+        $dailyOccupancy = array_fill(0, 7, 0);
+
+        // Query to get bookings grouped by day of the week
+        $occupancyQuery = Booking_detail::join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
+            ->whereBetween('booking_details.checkin_date', [$startDate, $endDate])
+            ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น')
+            ->selectRaw('DAYOFWEEK(booking_details.checkin_date) as day_of_week, SUM(bookings.room_quantity) as total_guests')
+            ->groupBy('day_of_week')
+            ->get();
+
+        // Adjust day of week (MySQL DAYOFWEEK starts from Sunday=1)
+        foreach ($occupancyQuery as $entry) {
+            $adjustedDay = ($entry->day_of_week - 1 + 6) % 7; // Convert to 0-indexed, starting from Monday
+            $dailyOccupancy[$adjustedDay] = $entry->total_guests;
+        }
+
+        return [
+            'labels' => $daysOfWeek,
+            'data' => $dailyOccupancy
+        ];
+    }
     public function dashboard(Request $request)
     {
         // ตรวจสอบและแปลงวันที่จาก input (ถ้ามีค่าเข้ามา)
@@ -37,7 +64,7 @@ class DashboardController extends Controller
         $bookedRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')
             ->whereHas('bookingDetails.booking', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('checkin_date', [$startDate, $endDate])
-                      ->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+                    ->where('booking_status', 'ชำระเงินเสร็จสิ้น');
             })
             ->count();
 
@@ -89,7 +116,15 @@ class DashboardController extends Controller
             $dates[] = $currentDate->locale('th')->isoFormat('D MMM');
             $currentDate->addDay();
         }
-
+        $dailyOccupancy = $this->getDailyOccupancy($startDate, $endDate);
+        $expensesData = array_fill(0, 12, 1500); // สร้างอาร์เรย์ 12 เดือน มีค่า 1500 ทุกเดือน
+        $expenseCategories = [
+            'ค่าอาหาร' => 5000,
+            'ค่าสาธารณูปโภค' => 3000,
+            'ค่าพนักงาน' => 10000,
+            'ค่าซ่อมบำรุง' => 2000,
+            'ค่าวัสดุอุปกรณ์' => 1500
+        ];
         return view('owner.dashboard', compact(
             'totalRevenue',
             'revenueData',
@@ -98,7 +133,10 @@ class DashboardController extends Controller
             'guestData',
             'dates',
             'startDate',
-            'endDate'
+            'endDate',
+            'expensesData',
+            'expenseCategories',
+            'dailyOccupancy'
         ));
     }
 }

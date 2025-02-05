@@ -33,7 +33,7 @@
                         <option value="90" {{ request('filter_days') == '90' ? 'selected' : '' }}>3 เดือน</option>
                     </select>
                 </div>
-            
+
                 <!-- กำหนดวันที่เอง -->
                 <div class="mr-4">
                     <label for="start_date" class="text-sm text-gray-500">วันที่เริ่มต้น</label>
@@ -45,21 +45,21 @@
                     <input type="text" name="end_date" id="end_date" class="ml-2 p-2 border rounded"
                         value="{{ $endDate->format('d/m/Y') }}">
                 </div>
-            
+
                 <button type="submit" class="p-2 bg-blue-600 text-white rounded">ค้นหา</button>
             </form>
-            
+
             <script>
-                document.getElementById('filter_days').addEventListener('change', function () {
+                document.getElementById('filter_days').addEventListener('change', function() {
                     let filterDays = this.value;
                     let today = new Date();
                     let startDateInput = document.getElementById('start_date');
                     let endDateInput = document.getElementById('end_date');
-            
+
                     if (filterDays) {
                         let startDate = new Date();
                         startDate.setDate(today.getDate() - parseInt(filterDays));
-            
+
                         // ฟังก์ชันแปลงวันที่เป็น d/m/Y
                         function formatDate(date) {
                             let day = String(date.getDate()).padStart(2, '0');
@@ -67,10 +67,10 @@
                             let year = date.getFullYear();
                             return `${day}/${month}/${year}`;
                         }
-            
+
                         startDateInput.value = formatDate(startDate);
                         endDateInput.value = formatDate(today);
-                        
+
                         // ปิดการแก้ไข input (ป้องกันการเปลี่ยนแปลง)
                         startDateInput.setAttribute('readonly', true);
                         endDateInput.setAttribute('readonly', true);
@@ -81,9 +81,9 @@
                     }
                 });
             </script>
-            
-            
-            
+
+
+
 
             <!-- Key Metrics -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -169,6 +169,14 @@
                     <h2 class="text-lg font-semibold mb-4">จำนวนการเข้าพัก</h2>
                     <canvas id="occupancyChart"></canvas>
                 </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h2 class="text-lg font-semibold mb-4">จำนวนการเข้าพักตามวันของสัปดาห์</h2>
+                    <canvas id="dailyOccupancyChart"></canvas>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h2 class="text-lg font-semibold mb-4">รายจ่ายแยกหมวดหมู่</h2>
+                    <canvas id="expenseCategoriesChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -183,12 +191,20 @@
                         'ต.ค.', 'พ.ย.', 'ธ.ค.'
                     ],
                     datasets: [{
-                        label: 'รายได้ (บาท)',
-                        data: @json($revenueData),
-                        backgroundColor: 'rgba(99, 102, 241, 0.5)',
-                        borderColor: 'rgb(99, 102, 241)',
-                        borderWidth: 1
-                    }]
+                            label: 'รายได้ (บาท)',
+                            data: @json($revenueData),
+                            backgroundColor: 'rgba(99, 102, 241, 0.5)',
+                            borderColor: 'rgb(99, 102, 241)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'รายจ่าย (บาท)',
+                            data: @json($expensesData),
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -199,7 +215,6 @@
                     }
                 }
             });
-
             new Chart(document.getElementById('occupancyChart'), {
                 type: 'line',
                 data: {
@@ -220,23 +235,80 @@
                     }
                 }
             });
+            new Chart(document.getElementById('dailyOccupancyChart'), {
+                type: 'bar',
+                data: {
+                    labels: @json($dailyOccupancy['labels']),
+                    datasets: [{
+                        label: 'จำนวนการเข้าพัก',
+                        data: @json($dailyOccupancy['data']),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // This makes it a horizontal bar chart
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            // Polar Area Chart for Expenses
+            new Chart(document.getElementById('expenseCategoriesChart'), {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(@json($expenseCategories)),
+                    datasets: [{
+                        label: 'ค่าใช้จ่าย (บาท)',
+                        data: Object.values(@json($expenseCategories)),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'รายจ่ายแยกตามหมวดหมู่'
+                        }
+                    }
+                }
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-      flatpickr("#start_date", {
-        dateFormat: "d/m/Y",
-        allowInput: false, // ไม่อนุญาตให้พิมพ์
-        clickOpens: true   // เปิดปฏิทินเมื่อคลิก
-    });
+        flatpickr("#start_date", {
+            dateFormat: "d/m/Y",
+            allowInput: false, // ไม่อนุญาตให้พิมพ์
+            clickOpens: true // เปิดปฏิทินเมื่อคลิก
+        });
 
-    flatpickr("#end_date", {
-        dateFormat: "d/m/Y",
-        allowInput: false, // ไม่อนุญาตให้พิมพ์
-        clickOpens: true   // เปิดปฏิทินเมื่อคลิก
-    });
+        flatpickr("#end_date", {
+            dateFormat: "d/m/Y",
+            allowInput: false, // ไม่อนุญาตให้พิมพ์
+            clickOpens: true // เปิดปฏิทินเมื่อคลิก
+        });
     </script>
-    
+
 </body>
 
 </html>
