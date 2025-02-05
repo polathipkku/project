@@ -1063,7 +1063,7 @@ class BookingController extends Controller
             'date' => now()->format('d/m/Y H:i'),
             'room_cost' => number_format($booking->room_quantity * 500, 2), // ค่าห้อง
             'extra_bed_cost' => number_format($booking->total_bed * 200, 2), // ค่าเตียงเสริม
-            'total_cost' => number_format($booking->payment->total_price, 2), // ราคาทั้งหมด
+            // 'total_cost' => number_format($booking->payment->total_price, 2), // ราคาทั้งหมด
         ];
 
         // สร้าง PDF

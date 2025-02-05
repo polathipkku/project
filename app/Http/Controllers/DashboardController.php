@@ -22,8 +22,13 @@ class DashboardController extends Controller
     public function dashboard(Request $request)
     {
         // ตรวจสอบและแปลงวันที่จาก input (ถ้ามีค่าเข้ามา)
-        $startDate = $request->has('start_date') ? Carbon::createFromFormat('d/m/Y', $request->start_date) : Carbon::today();
-        $endDate = $request->has('end_date') ? Carbon::createFromFormat('d/m/Y', $request->end_date) : Carbon::today();
+        if ($request->has('filter_days')) {
+            $endDate = Carbon::today();
+            $startDate = Carbon::today()->subDays($request->filter_days);
+        } else {
+            $startDate = $request->has('start_date') ? Carbon::createFromFormat('d/m/Y', $request->start_date) : Carbon::today();
+            $endDate = $request->has('end_date') ? Carbon::createFromFormat('d/m/Y', $request->end_date) : Carbon::today();
+        }
 
         // คำนวณจำนวนห้องที่มีสถานะ "พร้อมให้บริการ"
         $availableRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')->count();

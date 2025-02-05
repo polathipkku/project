@@ -22,6 +22,19 @@
         <div class="flex-1 p-6 bg-white backdrop-blur-md shadow-lg rounded-xl mx-6 w-full">
             <h1 class="text-2xl font-bold mb-6">แดชบอร์ดการจัดการโรงแรม</h1>
             <form action="{{ route('owner.dashboard') }}" method="GET" class="flex items-center mb-6">
+                <!-- Dropdown เลือกช่วงเวลา -->
+                <div class="mr-4">
+                    <label for="filter_days" class="text-sm text-gray-500">เลือกช่วงเวลา</label>
+                    <select name="filter_days" id="filter_days" class="ml-2 p-2 border rounded">
+                        <option value="">กำหนดเอง</option>
+                        <option value="7" {{ request('filter_days') == '7' ? 'selected' : '' }}>7 วัน</option>
+                        <option value="14" {{ request('filter_days') == '14' ? 'selected' : '' }}>14 วัน</option>
+                        <option value="30" {{ request('filter_days') == '30' ? 'selected' : '' }}>1 เดือน</option>
+                        <option value="90" {{ request('filter_days') == '90' ? 'selected' : '' }}>3 เดือน</option>
+                    </select>
+                </div>
+            
+                <!-- กำหนดวันที่เอง -->
                 <div class="mr-4">
                     <label for="start_date" class="text-sm text-gray-500">วันที่เริ่มต้น</label>
                     <input type="text" name="start_date" id="start_date" class="ml-2 p-2 border rounded"
@@ -32,8 +45,45 @@
                     <input type="text" name="end_date" id="end_date" class="ml-2 p-2 border rounded"
                         value="{{ $endDate->format('d/m/Y') }}">
                 </div>
+            
                 <button type="submit" class="p-2 bg-blue-600 text-white rounded">ค้นหา</button>
             </form>
+            
+            <script>
+                document.getElementById('filter_days').addEventListener('change', function () {
+                    let filterDays = this.value;
+                    let today = new Date();
+                    let startDateInput = document.getElementById('start_date');
+                    let endDateInput = document.getElementById('end_date');
+            
+                    if (filterDays) {
+                        let startDate = new Date();
+                        startDate.setDate(today.getDate() - parseInt(filterDays));
+            
+                        // ฟังก์ชันแปลงวันที่เป็น d/m/Y
+                        function formatDate(date) {
+                            let day = String(date.getDate()).padStart(2, '0');
+                            let month = String(date.getMonth() + 1).padStart(2, '0');
+                            let year = date.getFullYear();
+                            return `${day}/${month}/${year}`;
+                        }
+            
+                        startDateInput.value = formatDate(startDate);
+                        endDateInput.value = formatDate(today);
+                        
+                        // ปิดการแก้ไข input (ป้องกันการเปลี่ยนแปลง)
+                        startDateInput.setAttribute('readonly', true);
+                        endDateInput.setAttribute('readonly', true);
+                    } else {
+                        // ถ้าเลือก "กำหนดเอง" ให้เปิดการแก้ไข input
+                        startDateInput.removeAttribute('readonly');
+                        endDateInput.removeAttribute('readonly');
+                    }
+                });
+            </script>
+            
+            
+            
 
             <!-- Key Metrics -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
