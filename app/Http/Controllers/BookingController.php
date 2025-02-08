@@ -815,6 +815,7 @@ class BookingController extends Controller
                         'productroom_name' => $productRoom->productroom_name,
                         'booking_detail_id' => $bookingDetailId,
                         'thing_status' => 'รอซ่อม',
+                        'repairmaintenances_type' => $productRoom->repair_type,
                     ]);
                     $totalPrice += $productRoom->productroom_price;
                 }
@@ -831,6 +832,7 @@ class BookingController extends Controller
                         'productroom_name' => $damage['name'],
                         'booking_detail_id' => $bookingDetailId,
                         'thing_status' => 'รอซ่อม',
+                        'repairmaintenances_type' => 'แจ้งซ่อม',
                     ]);
                     $totalPrice += $damage['price'];
                 }

@@ -86,8 +86,7 @@ class MaintenanceceController extends Controller
             return redirect()->back()->with('error', 'ไม่พบรายการสิ่งของ');
         }
 
-        // ตรวจสอบว่า productroom มีข้อมูลหรือไม่
-        $repairType = $thing->productroom->repair_type ?? 'แจ้งซ่อม';
+        $repairType = $thing->repairmaintenances_type ?? 'แจ้งซ่อม';
 
         if ($repairType === 'ซื้อเปลี่ยน') {
             $thing->thing_status = 'ซ่อมสำเร็จ';
@@ -99,6 +98,26 @@ class MaintenanceceController extends Controller
 
         return redirect()->back()->with('success', 'สถานะอัปเดตเรียบร้อยแล้ว');
     }
+
+    public function toggleRepairType($id)
+    {
+        $thing = CheckoutDetail::find($id);
+    
+        if (!$thing) {
+            return redirect()->back()->with('error', 'ไม่พบข้อมูลสิ่งของ');
+        }
+    
+        if ($thing->repairmaintenances_type === 'แจ้งซ่อม') {
+            $thing->repairmaintenances_type = 'ซื้อเปลี่ยน';
+        } else {
+            $thing->repairmaintenances_type = 'แจ้งซ่อม';
+        }
+    
+        $thing->save();
+    
+        return redirect()->back()->with('success', 'เปลี่ยนสถานะซ่อมสำเร็จ');
+    }
+    
 
     public function updateMultipleThingStatus(Request $request)
     {

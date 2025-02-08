@@ -101,10 +101,11 @@
                 </div>
                 <!-- Pending Repairs List -->
                 <div id="pendingRepairs" class="p-6">
+                    <!-- รายการที่รอเปลี่ยนสินค้า -->
                     <h2 class="text-lg font-bold text-gray-800 mb-4">รายการที่รอเปลี่ยนสินค้า</h2>
                     <ul class="space-y-4">
                         @forelse ($maintenanceDetail->booking->checkoutDetails as $item)
-                        @if ($item->thing_status === 'รอซ่อม' && ($item->productroom->repair_type ?? 'แจ้งซ่อม') === 'ซื้อเปลี่ยน')
+                        @if ($item->thing_status === 'รอซ่อม' && ($item->repairmaintenances_type ?? 'แจ้งซ่อม') === 'ซื้อเปลี่ยน')
                         <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                             <div class="flex items-start space-x-4">
                                 <div>
@@ -112,13 +113,23 @@
                                     <p class="text-yellow-600">สถานะ: {{ $item->thing_status }}</p>
                                 </div>
                             </div>
-                            <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    เปลี่ยนสินค้า
-                                </button>
-                            </form>
+                            <!-- ปุ่มอยู่ข้างกัน -->
+                            <div class="flex space-x-2">
+                                <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        เปลี่ยนสินค้า
+                                    </button>
+                                </form>
+                                <form action="{{ route('toggleRepairType', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        เปลี่ยนเป็น "แจ้งซ่อม"
+                                    </button>
+                                </form>
+                            </div>
                         </li>
                         @endif
                         @empty
@@ -126,10 +137,11 @@
                         @endforelse
                     </ul>
 
+                    <!-- รายการที่รอแจ้งซ่อม -->
                     <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">รายการที่รอแจ้งซ่อม</h2>
                     <ul class="space-y-4">
                         @forelse ($maintenanceDetail->booking->checkoutDetails as $item)
-                        @if ($item->thing_status === 'รอซ่อม' && ($item->productroom->repair_type ?? 'แจ้งซ่อม') === 'แจ้งซ่อม')
+                        @if ($item->thing_status === 'รอซ่อม' && ($item->repairmaintenances_type ?? 'แจ้งซ่อม') === 'แจ้งซ่อม')
                         <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                             <div class="flex items-start space-x-4">
                                 <div>
@@ -137,13 +149,23 @@
                                     <p class="text-yellow-600">สถานะ: {{ $item->thing_status }}</p>
                                 </div>
                             </div>
-                            <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    เปลี่ยนเป็น "กำลังซ่อม"
-                                </button>
-                            </form>
+                            <!-- ปุ่มอยู่ข้างกัน -->
+                            <div class="flex space-x-2">
+                                <form action="{{ route('updateThingStatus', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        เปลี่ยนเป็น "กำลังซ่อม"
+                                    </button>
+                                </form>
+                                <form action="{{ route('toggleRepairType', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        เปลี่ยนเป็น "ซื้อเปลี่ยน"
+                                    </button>
+                                </form>
+                            </div>
                         </li>
                         @endif
                         @empty
@@ -151,6 +173,7 @@
                         @endforelse
                     </ul>
                 </div>
+
 
 
                 <!-- In Progress Repairs List -->

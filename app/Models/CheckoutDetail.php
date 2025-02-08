@@ -17,6 +17,7 @@ class CheckoutDetail extends Model
         'totalpriceroom',
         'productroom_name',
         'thing_status',
+        'repairmaintenances_type',
     ];
     
 

@@ -21,6 +21,9 @@ class CreateCheckoutDetailsTable extends Migration
             $table->decimal('totalpriceroom', 10, 2)->nullable();
             $table->string('productroom_name')->nullable();
             $table->string('thing_status')->default('รอซ่อม');
+            $table->string('thing_status')->default('รอซ่อม');
+            $table->string('repairmaintenances_type')->nullable();
+
 
             $table->timestamps();
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
