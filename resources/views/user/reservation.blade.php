@@ -257,7 +257,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('receipt.pickup', ['id' => $firstBooking->id]) }}">Download Receipt</a>
+                        <a href="{{ route('receipt.pickup', ['id' => $firstBooking->id]) }}">ดาวน์โหลดใบเสร็จ</a>
                     </td>
                     </tr>
                     @endforeach
