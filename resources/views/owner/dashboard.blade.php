@@ -214,84 +214,84 @@
                         }
                     }
                 }
-            });
-            new Chart(document.getElementById('occupancyChart'), {
-                type: 'line',
-                data: {
-                    labels: @json($dates),
-                    datasets: [{
-                        label: 'จำนวนผู้เข้าพัก',
-                        data: @json($guestData),
-                        borderColor: 'rgb(34, 197, 94)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+        });
+        new Chart(document.getElementById('occupancyChart'), {
+            type: 'line',
+            data: {
+                labels: @json($dates),
+                datasets: [{
+                    label: 'จำนวนผู้เข้าพัก',
+                    data: @json($guestData),
+                    borderColor: 'rgb(34, 197, 94)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            });
-            new Chart(document.getElementById('dailyOccupancyChart'), {
-                type: 'bar',
-                data: {
-                    labels: @json($dailyOccupancy['labels']),
-                    datasets: [{
-                        label: 'จำนวนการเข้าพัก',
-                        data: @json($dailyOccupancy['data']),
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
+            }
+        });
+        new Chart(document.getElementById('dailyOccupancyChart'), {
+            type: 'bar',
+            data: {
+                labels: @json($dailyOccupancy['labels']),
+                datasets: [{
+                    label: 'จำนวนการเข้าพัก',
+                    data: @json($dailyOccupancy['data']),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', // This makes it a horizontal bar chart
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
                 },
-                options: {
-                    indexAxis: 'y', // This makes it a horizontal bar chart
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        }
+                scales: {
+                    x: {
+                        beginAtZero: true
                     }
                 }
-            });
-            // Polar Area Chart for Expenses
-            new Chart(document.getElementById('expenseCategoriesChart'), {
-                type: 'polarArea',
-                data: {
-                    labels: Object.keys(@json($expenseCategories)),
-                    datasets: [{
-                        label: 'ค่าใช้จ่าย (บาท)',
-                        data: Object.values(@json($expenseCategories)),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)'
-                        ]
-                    }]
+            }
+        });
+        // Polar Area Chart for Expenses
+        new Chart(document.getElementById('expenseCategoriesChart'), {
+        type: 'polarArea',
+        data: {
+            labels: Object.keys(@json($expenseCategories)),
+            datasets: [{
+                label: 'ค่าใช้จ่าย (บาท)',
+                data: Object.values(@json($expenseCategories)),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'รายจ่ายแยกตามหมวดหมู่'
-                        }
-                    }
+                title: {
+                    display: true,
+                    text: 'รายจ่ายแยกตามหมวดหมู่'
                 }
-            });
+            }
+        }
+        });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

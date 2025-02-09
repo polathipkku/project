@@ -12,6 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductRoomController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Middleware\OwnerMiddleware;
 
 /*
@@ -129,6 +130,9 @@ Route::put('/thing-status/{id}', [MaintenanceceController::class, 'updateThingSt
 Route::put('/thing-status/{id}/complete', [MaintenanceceController::class, 'markAsCompleted'])->name('markAsCompleted');
 Route::put('/update-multiple-thing-status', [MaintenanceceController::class, 'updateMultipleThingStatus'])->name('updateMultipleThingStatus');
 Route::put('/toggle-repair-type/{id}', [MaintenanceceController::class, 'toggleRepairType'])->name('toggleRepairType');
+
+Route::get('/expenses', [ExpenseController::class, 'expenses'])->name('expenses');
+Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
 
 
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');

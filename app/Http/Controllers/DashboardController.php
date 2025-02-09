@@ -14,6 +14,8 @@ use App\Models\Checkout;
 use App\Models\Promotion;
 use App\Models\Maintenance;
 use App\Models\Payment;
+use App\Models\Expense;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -116,15 +118,35 @@ class DashboardController extends Controller
             $dates[] = $currentDate->locale('th')->isoFormat('D MMM');
             $currentDate->addDay();
         }
+
         $dailyOccupancy = $this->getDailyOccupancy($startDate, $endDate);
-        $expensesData = array_fill(0, 12, 1500); // สร้างอาร์เรย์ 12 เดือน มีค่า 1500 ทุกเดือน
-        $expenseCategories = [
-            'ค่าอาหาร' => 5000,
-            'ค่าสาธารณูปโภค' => 3000,
-            'ค่าพนักงาน' => 10000,
-            'ค่าซ่อมบำรุง' => 2000,
-            'ค่าวัสดุอุปกรณ์' => 1500
-        ];
+
+        // รวมรายจ่ายจากตาราง expenses และ salary ของตาราง users
+        $expensesByMonth = Expense::whereYear('expenses_date', Carbon::now()->year)
+            ->selectRaw('MONTH(expenses_date) as month, SUM(expenses_price) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        // รวมรายจ่ายพนักงานจาก salary ของตาราง user
+        $employeeExpensesByMonth = User::whereYear('payment_date', Carbon::now()->year)
+            ->selectRaw('MONTH(payment_date) as month, SUM(salary) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        // จัดรูปแบบรายจ่ายรายเดือน (หากเดือนใดยังไม่มีค่าใช้จ่าย ให้กำหนดเป็น 0)
+        $expensesData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $expensesData[] = ($expensesByMonth[$i] ?? 0) + ($employeeExpensesByMonth[$i] ?? 0);
+        }
+
+        // ดึงข้อมูลรายจ่ายแยกตามหมวดหมู่
+        $expenseCategories = Expense::selectRaw('expenses_name, SUM(expenses_price) as total')
+            ->groupBy('expenses_name')
+            ->pluck('total', 'expenses_name')
+            ->toArray();
+
         return view('owner.dashboard', compact(
             'totalRevenue',
             'revenueData',
