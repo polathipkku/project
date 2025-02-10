@@ -28,7 +28,7 @@ return new class extends Migration
             $table->decimal('salary', 10, 2)->nullable(); // เงินเดือน
             $table->string('work_shift')->nullable();    // กะเวลาการทำงาน
             $table->string('position')->nullable();      // ตำแหน่ง
-            $table->date('payment_date')->nullable();    // เวลาจ่ายเงินเดือน
+            $table->string('payment_date', 2)->nullable();    // เวลาจ่ายเงินเดือน
 
             $table->string('password');
             $table->rememberToken();

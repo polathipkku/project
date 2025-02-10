@@ -95,7 +95,7 @@ class OwnerController extends Controller
             'salary' => $request->salary,
             'work_shift' => $request->work_shift,
             'position' => $request->position,
-            'payment_date' => Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d'),
+            'payment_date' => Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('d'),
         ]);
 
         return redirect()->route('employee')->with('success', 'บันทึกข้อมูลสำเร็จ');

@@ -128,14 +128,12 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->pluck('total', 'month');
 
-        // รวมรายจ่ายพนักงานจาก salary ของตาราง user
-        $employeeExpensesByMonth = User::whereYear('payment_date', Carbon::now()->year)
-            ->selectRaw('MONTH(payment_date) as month, SUM(salary) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
+        // เงินเดือนพนักงาน (คำนวณทุกเดือนเท่ากัน)
+        $employeeExpensesByMonth = collect(range(1, 12))->mapWithKeys(function ($month) {
+            return [$month => User::sum('salary')];
+        });
 
-        // จัดรูปแบบรายจ่ายรายเดือน (หากเดือนใดยังไม่มีค่าใช้จ่าย ให้กำหนดเป็น 0)
+        // จัดรูปแบบรายจ่ายรายเดือน
         $expensesData = [];
         for ($i = 1; $i <= 12; $i++) {
             $expensesData[] = ($expensesByMonth[$i] ?? 0) + ($employeeExpensesByMonth[$i] ?? 0);
@@ -158,7 +156,7 @@ class DashboardController extends Controller
             'endDate',
             'expensesData',
             'expenseCategories',
-            'dailyOccupancy'
+            'dailyOccupancy',
         ));
     }
 }
