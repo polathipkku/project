@@ -133,6 +133,11 @@ Route::put('/toggle-repair-type/{id}', [MaintenanceceController::class, 'toggleR
 
 Route::get('/expenses', [ExpenseController::class, 'expenses'])->name('expenses');
 Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
+Route::get('/expenses/{id}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
+Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+Route::put('/expenses/{id}', [ExpenseController::class, 'update'])->name('expenses.update');
+
+
 
 
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');

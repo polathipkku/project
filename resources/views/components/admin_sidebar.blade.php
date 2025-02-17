@@ -17,6 +17,7 @@
         ['id' => 'product', 'label' => 'สต็อก', 'icon' => 'fa-house-circle-check', 'route' => route('product')],
         ['id' => 'promotions', 'label' => 'โปรโมชั่น', 'icon' => 'fa-rectangle-ad', 'route' => route('promotions')],
         ['id' => 'productroom', 'label' => 'ค่าเสียหาย', 'icon' => 'fa-house-chimney-crack', 'route' => route('productroom')],
+        ['id' => 'expenses', 'label' => 'ค่าใช้จ่าย', 'icon' => 'fas fa-money-bill', 'route' => route('expenses')],
         ['id' => 'record', 'label' => 'ประวัติ', 'icon' => 'fa-database', 'route' => route('record')],
         ];
         $currentRoute = Route::currentRouteName();

@@ -29,4 +29,38 @@ class ExpenseController extends Controller
 
         return redirect()->route('expenses')->with('success', 'เพิ่มค่าใช้จ่ายเรียบร้อย');
     }
+    public function edit($id)
+    {
+        $expense = Expense::findOrFail($id);
+        return view('owner.expenses_edit', compact('expense'));
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'expenses_name' => 'required|string|max:255',
+            'expenses_price' => 'required|numeric',
+            'expenses_date' => 'required|date',
+        ]);
+
+        $expense = Expense::findOrFail($id);
+        $expense->update([
+            'expenses_name' => $request->expenses_name,
+            'expenses_price' => $request->expenses_price,
+            'expenses_date' => $request->expenses_date,
+        ]);
+
+        return redirect()->route('expenses')->with('success', 'อัปเดตค่าใช้จ่ายเรียบร้อย');
+    }
+
+    public function destroy($id)
+    {
+        $expense = Expense::findOrFail($id);
+        $expense->delete();
+
+        return redirect()->route('expenses')->with('success', 'ลบค่าใช้จ่ายเรียบร้อยแล้ว');
+    }
+
+
+
+
 }
