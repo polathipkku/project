@@ -19,6 +19,29 @@ class MaintenanceceController extends Controller
         return view('employee.maintenance', compact('room'));
     }
 
+    public function repairreport()
+    {
+        $repairCounts = CheckoutDetail::select(
+            'room_id',
+            'product_room_id',
+            'productroom_name',
+            'repairmaintenances_type',
+            DB::raw('SUM(totalpriceroom) as total_price'),
+            DB::raw('COUNT(*) as repair_count')
+        )
+        ->with('room') // Eager load room relationship
+        ->whereNotNull('repairmaintenances_type')
+        ->groupBy(
+            'room_id',
+            'product_room_id',
+            'productroom_name',
+            'repairmaintenances_type'
+        )
+        ->get();
+    
+        return view('owner.repairreport', compact('repairCounts'));
+    }
+
     public function maintenanceroom()
     {
         $roomsUnderMaintenance = Room::whereHas('maintenances', function ($query) {

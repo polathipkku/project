@@ -63,7 +63,7 @@
                             <option value="เฟอร์นิเจอร์">เฟอร์นิเจอร์</option>
                             <option value="อุปกรณ์ไฟฟ้า">อุปกรณ์ไฟฟ้า</option>
                             <option value="ผ้า">ผ้า</option>
-                            <option value="สินค้าเปลี่ยนได้">สินค้าเปลี่ยนได้</option>
+                            <option value="แก้ว">แก้ว</option>
                             <option value="อื่นๆ">อื่นๆ</option>
                         </select>
                         @error('productroom_category')

@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>จัดการประเภทการชำระเงิน</title>
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
-
 </head>
 
 <body>
@@ -50,45 +49,32 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-600 text-sm">
-                                    @foreach ($payment_types as $index => $paymentType)
-                                        <tr
-                                            class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
-                                            <td class="py-3 px-6 text-center whitespace-nowrap">{{ $index + 1 }}</td>
-                                            <td class="py-3 px-6 text-center">
-                                                @if ($paymentType->payment_type === 'bank_transfer')
-                                                    โอนเงิน
-                                                @else
-                                                    เงินสด
-                                                @endif
-                                            </td>
-                                            <td class="py-3 px-6 text-center">
-                                                @if ($paymentType->qr_code)
-                                                    <img src="{{ asset('storage/' . $paymentType->qr_code) }}"
-                                                        class="w-12 h-12 mx-auto">
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="py-3 px-6 text-center">
-                                                <div class="flex items-center justify-center">
-                                                    <button
-                                                        onclick="openEditModal('{{ $paymentType->id }}', '{{ $paymentType->payment_type }}', '{{ $paymentType->qr_code ? asset('storage/' . $paymentType->qr_code) : null }}')"
-                                                        class="text-black hover:text-blue-500 mr-3">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                    </button>
-                                                    <form
-                                                        action="{{ route('payment_types.destroy', $paymentType->id) }}"
-                                                        method="POST" class="inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-black hover:text-red-500"
-                                                            onclick="return confirm('ยืนยันการลบ?')">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                    @foreach ($payment_types as $index => $payment_type)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td class="text-center">{{ $payment_type->payment_type }}</td>
+                                        <td class="text-center">
+                                            @if($payment_type->qr_code)
+                                            <img src="{{ asset('storage/qr_codes/' . $payment_type->qr_code) }}" alt="QR Code" class="mx-auto w-20">
+                                            @else
+                                            ไม่มี QR Code
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button onclick="openEditModal('{{ $payment_type->id }}', '{{ $payment_type->payment_type }}', '{{ $payment_type->qr_code ? asset('storage/qr_codes/' . $payment_type->qr_code) : null }}')"
+                                                class="bg-yellow-500 text-white px-3 py-1 rounded-lg mr-2">
+                                                <i class="fas fa-edit"></i> แก้ไข
+                                            </button>
+                                            <form action="{{ route('payment_types.destroy', $payment_type->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg"
+                                                    onclick="return confirm('คุณต้องการลบประเภทการชำระเงินนี้ใช่หรือไม่?')">
+                                                    <i class="fas fa-trash"></i> ลบ
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -103,13 +89,11 @@
     <div id="addPaymentTypeModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 class="text-lg font-semibold mb-4">เพิ่มประเภทการชำระเงิน</h2>
-            <form action="{{ route('payment_types.store') }}" method="POST" enctype="multipart/form-data"
-                onsubmit="return validatePaymentType()">
+            <form action="{{ route('payment_types.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return validatePaymentType()">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-gray-700">เลือกประเภทการชำระเงิน:</label>
-                    <select name="payment_type" required id="paymentTypeName"
-                        class="w-full px-3 py-2 border rounded-lg">
+                    <select name="payment_type" required id="paymentTypeName" class="w-full px-3 py-2 border rounded-lg">
                         <option value="bank_transfer">โอนเงิน</option>
                         <option value="cash">เงินสด</option>
                     </select>
@@ -119,11 +103,11 @@
                     <input type="file" name="qr_code" accept="image/*" class="w-full border p-2 rounded-lg">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" onclick="closeModal()"
-                        class="px-4 py-2 bg-gray-400 text-white rounded-lg mr-2">ยกเลิก</button>
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded-lg mr-2">ยกเลิก</button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">เพิ่มข้อมูล</button>
                 </div>
             </form>
+
         </div>
     </div>
 
@@ -132,7 +116,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 class="text-lg font-semibold mb-4">แก้ไขประเภทการชำระเงิน</h2>
             <form action="{{ route('payment_types.update', '') }}" method="POST" enctype="multipart/form-data"
-                id="editPaymentTypeForm">
+                id="editPaymentTypeForm" onsubmit="return validateEditForm()">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" id="editPaymentTypeId">
@@ -140,16 +124,10 @@
                     <label class="block text-gray-700">เลือกประเภทการชำระเงิน:</label>
                     <select name="payment_type" required id="editPaymentTypeSelect"
                         class="w-full px-3 py-2 border rounded-lg">
-                        <option value="bank_transfer"
-                            {{ $paymentType->payment_type == 'bank_transfer' ? 'selected' : '' }}>
-                            โอนเงิน
-                        </option>
-                        <option value="cash" {{ $paymentType->payment_type == 'cash' ? 'selected' : '' }}>
-                            เงินสด
-                        </option>
+                        <option value="bank_transfer">โอนเงิน</option>
+                        <option value="cash">เงินสด</option>
                     </select>
                 </div>
-
                 <div class="mb-4">
                     <label class="block text-gray-700">QR Code (ถ้ามี):</label>
                     <input type="file" name="qr_code" id="editPaymentTypeQRCode" accept="image/*"
@@ -168,26 +146,17 @@
 
     <script>
         function openEditModal(id, paymentType, qrCode) {
-            // เปิด Modal
             document.getElementById('editPaymentTypeModal').classList.remove('hidden');
-
-            // กำหนดค่า id
             document.getElementById('editPaymentTypeId').value = id;
-
-            // กำหนดค่าเดิมให้กับ select dropdown
-            const selectElement = document.getElementById('editPaymentTypeSelect');
-            selectElement.value = paymentType;
-
-            // อัพเดท action URL
+            document.getElementById('editPaymentTypeSelect').value = paymentType;
             document.getElementById('editPaymentTypeForm').action = `/payment_types/${id}`;
 
-            // แสดง QR Code ถ้ามี
             const currentQRCode = document.getElementById('currentQRCode');
             if (qrCode && qrCode !== 'null') {
                 currentQRCode.innerHTML = `
-            <div class="text-sm text-gray-600 mb-2">QR Code ปัจจุบัน:</div>
-            <img src="${qrCode}" class="w-32 h-32 mx-auto mb-2">
-        `;
+                    <div class="text-sm text-gray-600 mb-2">QR Code ปัจจุบัน:</div>
+                    <img src="${qrCode}" class="w-32 h-32 mx-auto mb-2">
+                `;
             } else {
                 currentQRCode.innerHTML = '<div class="text-sm text-gray-600">ไม่มี QR Code</div>';
             }
@@ -210,7 +179,6 @@
                 alert('กรุณาอัปโหลด QR Code สำหรับการโอนเงิน');
                 return false;
             }
-
             return true;
         }
 
@@ -226,7 +194,6 @@
             return true;
         }
     </script>
-
 </body>
 
 </html>

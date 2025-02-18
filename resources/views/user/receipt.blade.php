@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ใบเสร็จรับเงิน</title>
     <style>
-        @font-face {
-            font-family: 'THSarabunNew';
-            src: url('/storage/fonts/THSarabunNew.ttf') format('truetype');
-        }
-
         body {
-            font-family: 'THSarabunNew';
+            font-family: 'Noto Sans Thai', 'THSarabunNew', sans-serif;
             font-size: 16px;
             line-height: 1.3;
             margin: 0;
@@ -38,9 +37,46 @@
         }
 
         .company-name {
-            font-size: 22px;
-            color: #2c3e50;
+            font-size: 20px;
             margin-bottom: 3px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: 700;
+        }
+
+        .phone-name .label {
+            font-size: 12px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: 700;
+        }
+
+        .phone-name .number {
+            font-size: 12px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: normal;
+        }
+
+        .label {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .room-cost {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .ss {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .info {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: normal;
+            font-size: 12px;
         }
 
         .receipt-title {
@@ -53,6 +89,7 @@
             border-radius: 4px;
             margin-bottom: 15px;
             padding: 8px;
+            font-family: 'Noto Sans Thai', 'THSarabunNew', sans-serif;
         }
 
         .info-table {
@@ -77,6 +114,7 @@
             border-bottom: 1px solid #ddd;
             font-size: 15px;
             text-align: center;
+            font-family: 'THSarabunNew', sans-serif;
         }
 
         .items-table td {
@@ -147,50 +185,67 @@
             text-align: center;
         }
 
-        /* กำหนด font-family สำหรับทุก element */
         * {
             font-family: 'THSarabunNew', sans-serif;
         }
 
-        /* กำหนดเฉพาะสำหรับ th */
         th {
-            font-family: 'THSarabunNew', sans-serif !important;
-            font-weight: normal;
+            font-size: 15px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: 700;
         }
 
-        /* กำหนดเฉพาะสำหรับ strong */
         strong {
-            font-family: 'THSarabunNew', sans-serif !important;
+            font-family: "Noto Sans Thai", sans-serif;
             font-weight: bold;
         }
 
-        /* ปรับแก้ class info-box */
-        .info-box {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            padding: 8px;
-            font-family: 'THSarabunNew', sans-serif;
-        }
-
-        /* ปรับแก้ table headers */
-        .items-table th {
-            background-color: #f8f9fa;
-            padding: 6px;
-            border-bottom: 1px solid #ddd;
-            font-size: 15px;
-            text-align: center;
-            font-family: 'THSarabunNew', sans-serif !important;
-        }
-
-        /* เพิ่ม rule สำหรับ label ใน info-box */
         .info-box label,
         .info-box strong {
-            font-family: 'THSarabunNew', sans-serif !important;
+            font-family: "Noto Sans Thai", sans-serif;
         }
 
         .items-table td {
             vertical-align: middle;
+        }
+
+        .number {
+            font-size: 12px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: normal;
+        }
+
+        .address {
+            font-size: 12px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+
+
+
+        .label {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: normal;
+            font-size: 12px;
+        }
+        .dd {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .t {
+            font-size: 12px;
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+        }
+
+        .tt {
+            font-family: "Noto Sans Thai", sans-serif;
+            font-weight: bold;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -205,9 +260,18 @@
                 </td>
                 <td width="50%">
                     <div class="company-name">ธันย์ทรีรีสอร์ท</div>
-                    <div>52 หมู่15 ตำบลบัวขาว, อำเภอกุฉินารายณ์, จังหวัดกาฬสินธุ์, 46110</div>
-                    <div>โทรศัพท์: 02-xxx-xxxx</div>
-                    <div>เลขประจำตัวผู้เสียภาษี: xxxxxxxxxxxxx</div>
+                    <div>
+                        <span class="label" style="font-weight: bold;">ที่อยู่:</span><br>
+                        <span class="address">52 หมู่15 ตำบลบัวขาว, อำเภอกุฉินารายณ์, จังหวัดกาฬสินธุ์, 46110</span>
+                    </div>
+
+                    <div class="phone-name">
+                        <span class="label">โทรศัพท์:</span> <span class="number">094-002-8212</span>
+                    </div>
+
+                    <div class="phone-name">
+                        <span class="label">เลขประจำตัวผู้เสียภาษี:</span> <span class="number">562-463-892-3021</span>
+                    </div>
                 </td>
                 <td width="35%" style="text-align: right;">
                     <div class="receipt-title">ใบเสร็จรับเงิน</div>
@@ -221,48 +285,51 @@
             <table class="info-table">
                 <tr>
                     <td width="50%">
-                        <strong style="font-family: 'THSarabunNew'; font-weight: normal; font-size: 18px;">ชื่อลูกค้า:</strong> {{ $customer_name }}<br>
-                        <strong style="font-family: 'THSarabunNew'; font-weight: normal; font-size: 18px;">เบอร์โทร:</strong> {{ $customer_phone }}<br>
-                        <strong style="font-family: 'THSarabunNew'; font-weight: normal; font-size: 18px;">หมายเลขการจอง:</strong> {{ $booking->booking_random_id }}
+                        <span class="dd">ชื่อลูกค้า:</span> <span class="info">{{ $customer_name }}</span><br>
+                        <span class="dd">เบอร์โทร:</span> <span class="info">{{ $customer_phone }}</span><br>
+                        <span class="dd">หมายเลขการจอง:</span> <span class="info">{{ $booking->booking_random_id }}</span>
                     </td>
                     <td width="50%" style="text-align: right;">
-                        <strong style="font-family: 'THSarabunNew'; font-weight: normal; font-size: 18px;">เลขที่ใบเสร็จ:</strong> {{ $receipt_number }}<br>
-                        <strong style="font-family: 'THSarabunNew'; font-weight: normal; font-size: 18px;">วันที่ออกใบเสร็จ:</strong> {{ $date }}<br>
+                        <span class="dd">เลขที่ใบเสร็จ:</span> <span class="info">{{ $receipt_number }}</span><br>
+                        <span class="dd">วันที่ออกใบเสร็จ:</span> <span class="info">{{ $date }}</span><br>
                     </td>
                 </tr>
             </table>
         </div>
 
+
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <tr>
-                <th style="width: 65%; border: 1px solid #ccc; padding: 8px; text-align: center;">รายละเอียด</th>
-                <th style="width: 35%; border: 1px solid #ccc; padding: 8px; text-align: center;">ค่าใช้จ่าย</th>
+            <tr class="ttt">
+                <th style="width: 65%; border: 1px solid #ccc; padding: 8px; text-align: center; font-weight: bold;">รายละเอียด</th>
+                <th style="width: 35%; border: 1px solid #ccc; padding: 8px; text-align: center; font-weight: bold;">ค่าใช้จ่าย</th>
             </tr>
+
+
             <tr>
-                <td style="border: 1px solid #ccc; padding: 8px; vertical-align: top;">
+                <td style="border: 1px solid #ccc; padding: 8px; vertical-align: top; font-family: 'THSarabunNew', sans-serif;">
                     <table style="width: 100%; border-collapse: collapse;">
                         @php
                         $totalAmount = 0;
                         @endphp
                         @foreach($booking->bookingDetails as $index => $detail)
-                        <tr>
-                            <td style="width: 35%;">รายละเอียดห้องพัก:</td>
+                        <tr class="room-details">
+                            <td class="label" style="width: 35%; font-weight: bold;">รายละเอียดห้องพัก:</td>
                             <td>{{ $detail->room->name }} ประเภท: {{ $detail->room_type }}</td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td>จำนวนห้อง: {{ $booking->room_quantity }} ห้อง</td>
+                        <tr class="room-details">
+                            <td class="label" style="font-weight: bold;">จำนวนห้อง:</td>
+                            <td>{{ $booking->room_quantity }} ห้อง</td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td>จำนวนเตียงเสริม: {{ $detail->extra_bed_count }} เตียง</td>
+                        <tr class="room-details">
+                            <td class="label" style="font-weight: bold;">จำนวนเตียงเสริม:</td>
+                            <td>{{ $detail->extra_bed_count }} เตียง</td>
                         </tr>
-                        <tr>
-                            <td>วันที่เวลาการเข้าพัก:</td>
+                        <tr class="room-details">
+                            <td class="label" style="font-weight: bold;">วันที่เวลาการเข้าพัก:</td>
                             <td>{{ \Carbon\Carbon::parse($detail->checkin_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($detail->checkout_date)->format('d/m/Y') }}</td>
                         </tr>
-                        <tr>
-                            <td>จำนวนคน:</td>
+                        <tr class="room-details">
+                            <td class="label" style="font-weight: bold;">จำนวนคน:</td>
                             <td>ผู้ใหญ่: {{ $detail->occupancy_person }}
                                 @if($detail->occupancy_child > 0)
                                 เด็ก: {{ $detail->occupancy_child }}
@@ -273,21 +340,25 @@
                             </td>
                         </tr>
                         <tr style="height: 24px;">
-                            <td style="width: 35%;">ค่าห้องทั้งหมด:</td>
-                            <td></td>
+                            <td class="room-cost" style="width: 35%; font-weight: bold;">ค่าห้องทั้งหมด:</td>
+                            <td style="text-align: right;">
+                                <span class="number" style="visibility: hidden;">{{ $room_cost }}</span> <span class="label" style="visibility: hidden;">บาท</span>
+                            </td>
                         </tr>
                         <tr style="height: 24px;">
-                            <td style="width: 35%;">ค่าเตียงเสริมทั้งหมด:</td>
-                            <td></td>
+                            <td class="room-cost" style="width: 35%; font-weight: bold;">ค่าเตียงเสริมทั้งหมด:</td>
+                            <td style="text-align: right;">
+                                <span class="number" style="visibility: hidden;">{{ $extra_bed_cost }}</span> <span class="label" style="visibility: hidden;">บาท</span>
+                            </td>
                         </tr>
                         <tr style="border-top: 1px solid #ccc;">
-                            <td></td>
-                            <td style="text-align: right; padding-top: 0px; padding-bottom: 0px;">ยอดรวมทั้งหมด</td>
+                            <td class="ss text-right" colspan="2">ยอดรวมทั้งหมด:</td>
                         </tr>
+
                         @endforeach
                     </table>
                 </td>
-                <td style="border: 1px solid #ccc; padding: 8px; vertical-align: top;">
+                <td style="border: 1px solid #ccc; padding: 8px; vertical-align: top; font-family: 'THSarabunNew', sans-serif;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr style="height: 150px;">
                             <td></td>
@@ -308,18 +379,28 @@
                             <td style="text-align: right;">&nbsp;</td>
                         </tr>
                         <tr style="height: 24px;">
-                            <td style="text-align: right;">{{ $room_cost }} บาท</td>
+                            <td style="text-align: right;">
+                                <span class="number">{{ $room_cost }}</span> <span class="label">บาท</span>
+                            </td>
                         </tr>
                         <tr style="height: 24px;">
-                            <td style="text-align: right;">{{ $extra_bed_cost }} บาท</td>
+                            <td style="text-align: right;">
+                                <span class="number">{{ $extra_bed_cost }}</span> <span class="label">บาท</span>
+                            </td>
                         </tr>
                         <tr style="height: 24px;">
-                            <td style="text-align: right;">{{ number_format($booking->total_cost, 2) }} บาท</td>
+                            <td style="text-align: right;">
+                                <span class="t">{{ number_format($booking->total_cost, 2) }}</span> <span class="tt">บาท</span>
+                            </td>
                         </tr>
+
+
                     </table>
                 </td>
             </tr>
         </table>
+
+
 
 
         <style>
@@ -328,21 +409,6 @@
                 /* เพิ่มระยะห่างภายในช่อง */
             }
         </style>
-
-        <table class="table-spacing" style="margin-top: 10px; width: 100%;">
-            <tr>
-                <td width="50%" class="text-center">
-                    (...................................................)<br>
-                    ชื่อผู้รับเงิน<br>
-                    <div>วันที่ {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
-                </td>
-                <td width="50%" class="text-center">
-                    (...................................................)<br>
-                    ชื่อลูกค้า<br>
-                    <div>วันที่ {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
-                </td>
-            </tr>
-        </table>
 
         <div style="display: flex; justify-content: space-between;">
             <!-- Notes Section -->

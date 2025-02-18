@@ -128,6 +128,7 @@ Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('clea
 
 Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'showMaintenanceDetail'])->name('maintenancedetail');
+Route::get('repairreport', [MaintenanceceController::class, 'repairreport'])->name('repairreport');
 Route::put('/thing-status/{id}', [MaintenanceceController::class, 'updateThingStatus'])->name('updateThingStatus');
 Route::put('/thing-status/{id}/complete', [MaintenanceceController::class, 'markAsCompleted'])->name('markAsCompleted');
 Route::put('/update-multiple-thing-status', [MaintenanceceController::class, 'updateMultipleThingStatus'])->name('updateMultipleThingStatus');
@@ -205,9 +206,6 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/dashboard/revenue', [DashboardController::class, 'getRevenueData']);
 
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
-    // Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
-    // Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
-
     Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
     Route::get('/promotions/create', [PromotionController::class, 'create'])->name('add_promotion');
     Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');

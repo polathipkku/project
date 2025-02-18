@@ -16,5 +16,6 @@ class Expense extends Model
         'expenses_name',
         'expenses_price',
         'expenses_date',
+        'type',
     ];
 }

@@ -24,15 +24,14 @@ class PaymentTypeController extends Controller
         // ตรวจสอบข้อมูลที่ซ้ำ
         $request->validate([
             'payment_type' => 'required|unique:payment_types,payment_type',
-            'payment_method' => 'required',
             'qr_code' => 'nullable|image|max:2048',
         ]);
     
         // การจัดการข้อมูลหลังจากผ่านการตรวจสอบ
-        $paymentType = new PaymentType();
+        $paymentType = new Payment_type();
         $paymentType->payment_type = $request->payment_type;
-        $paymentType->payment_method = $request->payment_method;
     
+        // ตรวจสอบว่าอัปโหลดไฟล์ QR Code หรือไม่
         if ($request->hasFile('qr_code')) {
             $path = $request->file('qr_code')->store('public/qr_codes');
             $paymentType->qr_code = basename($path);
@@ -42,6 +41,7 @@ class PaymentTypeController extends Controller
     
         return redirect()->route('payment_types.index')->with('success', 'เพิ่มประเภทการชำระเงินสำเร็จ');
     }
+    
     
 
     public function edit($id)

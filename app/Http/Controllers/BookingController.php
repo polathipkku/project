@@ -49,22 +49,52 @@ class BookingController extends Controller
         $rooms = Room::all();
         return view('user.t', compact('rooms',));
     }
-    public function test()
+
+    public function test(Request $request)
     {
-        $bookingDetails = Booking_detail::selectRaw('checkin_date, COUNT(*) as room_count')
-            ->groupBy('checkin_date')
-            ->get();
+        $year = $request->input('year', date('Y'));
+        $holyDays = $this->generateHolyDays($year);
 
-        // เตรียมข้อมูลสำหรับ FullCalendar
-        $events = $bookingDetails->map(function ($detail) {
-            return [
-                'title' => "{$detail->room_count} การจอง",
-                'start' => $detail->checkin_date,
-            ];
-        });
-
-        return view('owner.test', ['events' => $events]);
+        return view('owner.test', compact('holyDays'));
     }
+
+    private function generateHolyDays($year)
+    {
+        $holyDays = collect();
+
+        for ($month = 1; $month <= 12; $month++) {
+            for ($day = 1; $day <= 31; $day++) {
+                try {
+                    $date = Carbon::create($year, $month, $day);
+
+                    // วันขึ้น 15 ค่ำ และแรม 15 ค่ำ
+                    if (in_array($date->day, [1, 15, 16])) {
+                        $holyDays->push((object)[
+                            'date' => $date,
+                            'description' => $this->getHolyDayDescription($date->day)
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    // Skip invalid dates
+                    continue;
+                }
+            }
+        }
+
+        return $holyDays;
+    }
+
+    private function getHolyDayDescription($day)
+    {
+        $descriptions = [
+            1 => 'แรม 1 ค่ำ',
+            15 => 'ขึ้น 15 ค่ำ',
+            16 => 'แรม 15 ค่ำ'
+        ];
+
+        return $descriptions[$day] ?? '';
+    }
+
 
     public function calendar()
     {
@@ -664,33 +694,33 @@ class BookingController extends Controller
             'postcode' => 'required|string|max:10',
             'extra_bed_count' => 'nullable|integer|min:0',
         ]);
-    
+
         $extraBedCount = $request->has('extra_bed_count') ? $request->extra_bed_count : 0;
-    
+
         $room = Room::find($id);
         $isRoomAvailable = $this->isRoomAvailable($room, $request->checkin_date, $request->checkout_date);
-    
+
         if (!$isRoomAvailable || $room->room_status !== 'พร้อมให้บริการ') {
             return redirect()->route('home')->with('error', 'ขออภัย, ห้องนี้ไม่สามารถจองได้ในช่วงเวลาที่ระบุ หรือห้องไม่พร้อมให้บริการ');
         }
-    
+
         if ($request->occupancy_person > $room->room_occupancy) {
             return redirect()->route('home')->with('error', 'ขออภัย, จำนวนคนที่จะเข้าพักเกินกว่าที่ห้องรองรับได้');
         }
-    
+
         $room->room_status = 'ไม่พร้อมให้บริการ';
         $room->save();
-    
+
         // ใช้ Carbon เพื่อแปลงวันที่ให้เป็นรูปแบบ Y-m-d
         $checkinDate = Carbon::createFromFormat('d-m-Y', $request->checkin_date)->format('Y-m-d');
         $checkoutDate = Carbon::createFromFormat('d-m-Y', $request->checkout_date)->format('Y-m-d');
-        
+
         // คำนวณจำนวนวันระหว่าง checkin และ checkout
         $days = Carbon::parse($checkinDate)->diffInDays(Carbon::parse($checkoutDate));
-    
+
         $roomPricePerDay = $request->room_type === 'ห้องพักค้างคืน' ? $room->price_night : $room->price_temporary;
         $totalCost = $days * $roomPricePerDay;
-    
+
         $booking = new Booking();
         $booking->user_id = auth()->user()->id;
         $booking->room_quantity = 1;
@@ -698,7 +728,7 @@ class BookingController extends Controller
         $booking->total_bed = 0;
         $booking->booking_status = 'ชำระเงินเสร็จสิ้น';
         $booking->save();
-    
+
         $bookingDetail = new Booking_detail();
         $bookingDetail->booking_id = $booking->id;
         $bookingDetail->room_id = $room->id;
@@ -711,10 +741,10 @@ class BookingController extends Controller
         $bookingDetail->room_type = $request->room_type;
         $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
         $bookingDetail->save();
-    
+
         $booking->total_bed += $extraBedCount;
         $booking->save();
-    
+
         if ($extraBedCount > 0) {
             $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
             if ($extraBedProduct) {
@@ -724,30 +754,26 @@ class BookingController extends Controller
                 $roomservice->quantity = $extraBedCount;
                 $roomservice->total_price = $extraBedProduct->product_price * $extraBedCount;
                 $roomservice->save();
-    
+
                 $totalCost += $roomservice->total_price;
-    
+
                 $booking->total_cost = $totalCost;
                 $booking->save();
             }
         }
-       
-        // $payment_types = PaymentType::where('payment_type', 'โอนเงิน')->first();
-        // $payment_types ->payment_type ; 
-        // $payment_types ->qr_code;
-
+    
         $payment = new Payment();
         $payment->payment_date = now();
         $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
         $payment->total_price = $totalCost;
         $payment->booking_id = $booking->id;
         $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
-    
+
         // กรณีชำระเงินด้วยเงินสด
         if ($payment->payment_type_id == 2) {
             $payment->pay_price = $request->amount_paid;
             $payment->pay_change = $request->amount_paid - $totalCost;
-    
+
             if ($payment->pay_price < $totalCost) {
                 return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมด');
             }
@@ -756,10 +782,9 @@ class BookingController extends Controller
             $payment->pay_price = 0;
             $payment->pay_change = 0;
         }
-    
+
         // บันทึกข้อมูลการชำระเงิน
         $payment->save();
-
     
         $checkin = new Checkin();
         $checkin->booking_id = $booking->id;
@@ -774,7 +799,7 @@ class BookingController extends Controller
         $checkin->district = $request->district;
         $checkin->postcode = $request->postcode;
         $checkin->save();
-    
+
         return redirect()->route('emroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
 
@@ -808,6 +833,7 @@ class BookingController extends Controller
             }
 
             $bookingDetailId = $bookingDetails->id;
+            $roomId = $bookingDetails->room_id;  // ดึง room_id จาก Booking_detail
 
             // Process predefined damaged items
             foreach ($damagedItems as $itemId) {
@@ -819,6 +845,7 @@ class BookingController extends Controller
                         'totalpriceroom' => $productRoom->productroom_price,
                         'productroom_name' => $productRoom->productroom_name,
                         'booking_detail_id' => $bookingDetailId,
+                        'room_id' => $roomId,  // เพิ่มการบันทึก room_id
                         'thing_status' => 'รอซ่อม',
                         'repairmaintenances_type' => $productRoom->repair_type,
                     ]);
@@ -836,6 +863,7 @@ class BookingController extends Controller
                         'totalpriceroom' => $damage['price'],
                         'productroom_name' => $damage['name'],
                         'booking_detail_id' => $bookingDetailId,
+                        'room_id' => $roomId,  // เพิ่มการบันทึก room_id
                         'thing_status' => 'รอซ่อม',
                         'repairmaintenances_type' => 'แจ้งซ่อม',
                     ]);
@@ -889,6 +917,7 @@ class BookingController extends Controller
             ], 500);
         }
     }
+
 
     public function checkoutuser(Request $request)
     {

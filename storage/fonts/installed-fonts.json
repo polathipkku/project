@@ -1,5 +1,13 @@
 {
     "thsarabunnew": {
         "normal": "thsarabunnew_normal_fb7059e72c3091f03a1cdae1f6c2e226"
+    },
+    "sarabun": {
+        "normal": "C:\\xampp\\htdocs\\project\\storage\\fonts\/sarabun_normal_bcf01d8d70bbc4a458a8b99c089a29e9",
+        "bold": "sarabun_bold_681e04cb4e36d6793599121d224f6f86"
+    },
+    "noto sans thai": {
+        "normal": "C:\\xampp\\htdocs\\project\\storage\\fonts\/noto_sans_thai_normal_be0dac6beb348956ae77235fa2f48dd1",
+        "bold": "noto_sans_thai_bold_56c720c74bd498c3bc4a148df6d01f89"
     }
 }

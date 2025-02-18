@@ -15,20 +15,29 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
+        // กำหนดค่า default ให้กับ expenses_name ถ้าประเภทไม่ใช่ ค่าน้ำ หรือ ค่าไฟ
+        $expenses_name = ($request->type === 'Water_bill' || $request->type === 'Electricity_bill') ? null : $request->expenses_name;
+    
+        // กำหนดกฎการตรวจสอบ
         $request->validate([
-            'expenses_name' => 'required|string|max:255',
+            'expenses_name' => 'nullable|string|max:255', // ปรับให้เป็น nullable
             'expenses_price' => 'required|numeric|min:0',
-            'expenses_date' => 'required|date', // ตรวจสอบรูปแบบวันที่
+            'expenses_date' => 'required|date',
+            'type' => 'required|string',
         ]);
-
+    
+        // บันทึกข้อมูล
         Expense::create([
-            'expenses_name' => $request->expenses_name,
+            'expenses_name' => $expenses_name,
             'expenses_price' => $request->expenses_price,
             'expenses_date' => $request->expenses_date,
+            'type' => $request->type,
         ]);
-
+    
         return redirect()->route('expenses')->with('success', 'เพิ่มค่าใช้จ่ายเรียบร้อย');
     }
+    
+    
     public function edit($id)
     {
         $expense = Expense::findOrFail($id);

@@ -14,12 +14,13 @@ class CheckoutDetail extends Model
         'booking_id',
         'product_room_id',
         'booking_detail_id',
+        'room_id',
         'totalpriceroom',
         'productroom_name',
         'thing_status',
         'repairmaintenances_type',
     ];
-    
+
 
     public function booking()
     {
@@ -30,5 +31,9 @@ class CheckoutDetail extends Model
     {
         return $this->belongsTo(Product_room::class);
     }
-}
 
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'room_id');
+    }
+}
