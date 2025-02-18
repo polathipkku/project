@@ -70,7 +70,7 @@
                                         <th class="py-3 px-6 text-center">ดำเนินการ</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-sm text-gray-600">
                                     @foreach ($expenses as $expense)
                                     <tr class="border-t">
                                         <td class="py-3 px-6 text-center">{{ $expense->type }}</td>
@@ -121,6 +121,7 @@
                                 <option value="ค่าไฟ">ค่าไฟ</option>
                                 <option value="ค่าซ่อม">ค่าซ่อม</option>
                                 <option value="ค่าซื้อเปลี่ยน">ค่าซื้อเปลี่ยน</option>
+                                <option value="ของใช้">ของใช้</option>
                             </select>
                         </div>
 
@@ -160,7 +161,8 @@
                             function toggleExpenseName() {
                                 const selectedType = expenseTypeSelect.value;
 
-                                if (selectedType === 'Repair_cost' || selectedType === 'Replacement_cost') {
+                                // เงื่อนไขที่ใช้เมื่อประเภทค่าใช้จ่ายเป็น "ค่าซ่อม" หรือ "ค่าซื้อเปลี่ยน"
+                                if (selectedType === 'ค่าซ่อม' || selectedType === 'ค่าซื้อเปลี่ยน'|| selectedType === 'ของใช้') {
                                     expenseNameContainer.style.display = 'block'; // แสดงชื่อค่าใช้จ่าย
                                     expenseNameInput.removeAttribute('disabled'); // เปิดฟิลด์ให้กรอก
                                 } else {
@@ -175,8 +177,6 @@
                             expenseTypeSelect.addEventListener('change', toggleExpenseName);
                         });
                     </script>
-
-
 
                 </div>
             </div>

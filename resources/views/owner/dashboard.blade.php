@@ -24,29 +24,37 @@
                     <div class="bg-gray-50 p-6 rounded-lg mb-8">
                         <form action="{{ route('owner.dashboard') }}" method="GET" class="flex flex-wrap gap-6">
                             <div class="flex-1 min-w-[200px]">
-                                <label for="filter_days" class="block text-sm font-medium text-gray-700 mb-2">เลือกช่วงเวลา</label>
-                                <select name="filter_days" id="filter_days" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">กำหนดเอง</option>
-                                    <option value="7" {{ request('filter_days') == '7' ? 'selected' : '' }}>7 วัน</option>
-                                    <option value="14" {{ request('filter_days') == '14' ? 'selected' : '' }}>14 วัน</option>
-                                    <option value="30" {{ request('filter_days') == '30' ? 'selected' : '' }}>1 เดือน</option>
-                                    <option value="90" {{ request('filter_days') == '90' ? 'selected' : '' }}>3 เดือน</option>
+                                <label for="month" class="block text-sm font-medium text-gray-700 mb-2">เดือน</label>
+                                <select name="month" id="month" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="1" {{ Carbon\Carbon::parse($startDate)->month == 1 ? 'selected' : '' }}>มกราคม</option>
+                                    <option value="2" {{ Carbon\Carbon::parse($startDate)->month == 2 ? 'selected' : '' }}>กุมภาพันธ์</option>
+                                    <option value="3" {{ Carbon\Carbon::parse($startDate)->month == 3 ? 'selected' : '' }}>มีนาคม</option>
+                                    <option value="4" {{ Carbon\Carbon::parse($startDate)->month == 4 ? 'selected' : '' }}>เมษายน</option>
+                                    <option value="5" {{ Carbon\Carbon::parse($startDate)->month == 5 ? 'selected' : '' }}>พฤษภาคม</option>
+                                    <option value="6" {{ Carbon\Carbon::parse($startDate)->month == 6 ? 'selected' : '' }}>มิถุนายน</option>
+                                    <option value="7" {{ Carbon\Carbon::parse($startDate)->month == 7 ? 'selected' : '' }}>กรกฎาคม</option>
+                                    <option value="8" {{ Carbon\Carbon::parse($startDate)->month == 8 ? 'selected' : '' }}>สิงหาคม</option>
+                                    <option value="9" {{ Carbon\Carbon::parse($startDate)->month == 9 ? 'selected' : '' }}>กันยายน</option>
+                                    <option value="10" {{ Carbon\Carbon::parse($startDate)->month == 10 ? 'selected' : '' }}>ตุลาคม</option>
+                                    <option value="11" {{ Carbon\Carbon::parse($startDate)->month == 11 ? 'selected' : '' }}>พฤศจิกายน</option>
+                                    <option value="12" {{ Carbon\Carbon::parse($startDate)->month == 12 ? 'selected' : '' }}>ธันวาคม</option>
                                 </select>
                             </div>
 
                             <div class="flex-1 min-w-[200px]">
-                                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">วันที่เริ่มต้น</label>
-                                <input type="text" name="start_date" id="start_date" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ $startDate->format('d/m/Y') }}">
-                            </div>
-
-                            <div class="flex-1 min-w-[200px]">
-                                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">วันที่สิ้นสุด</label>
-                                <input type="text" name="end_date" id="end_date" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ $endDate->format('d/m/Y') }}">
+                                <label for="year" class="block text-sm font-medium text-gray-700 mb-2">ปี</label>
+                                <select name="year" id="year" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    @for ($i = Carbon\Carbon::now()->year; $i >= Carbon\Carbon::now()->year - 5; $i--)
+                                    <option value="{{ $i }}" {{ Carbon\Carbon::parse($startDate)->year == $i ? 'selected' : '' }}>
+                                        {{ $i + 543 }}
+                                    </option>
+                                    @endfor
+                                </select>
                             </div>
 
                             <div class="flex items-end">
                                 <button type="submit" class="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md">
-                                    ค้นหา
+                                    <i class="fas fa-search mr-2"></i>ค้นหา
                                 </button>
                             </div>
                         </form>

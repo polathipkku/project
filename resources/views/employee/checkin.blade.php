@@ -75,7 +75,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">
-                                {{ \Carbon\Carbon::parse($details[0]->checkin_date)->format('d-m-y') }}
+                            {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d/F/Y') }}
                             </td>
 
                             <td class="py-2 px-4">

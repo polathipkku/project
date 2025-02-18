@@ -53,7 +53,7 @@
                                             </td>
                                             <td class="px-4 py-2">{{ $detail->booking_detail_status }}</td>
                                             <td class="px-4 py-2">
-                                                {{ \Carbon\Carbon::parse($detail->checkout_date)->format('d/m/y') }}
+                                            {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d/F/Y') }}
                                             </td>
                                             <td class="px-4 py-2">
                                                 <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}"

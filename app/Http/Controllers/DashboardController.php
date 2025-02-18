@@ -51,19 +51,18 @@ class DashboardController extends Controller
 
     public function dashboard(Request $request)
     {
-        // ตรวจสอบและแปลงวันที่จาก input (ถ้ามีค่าเข้ามา)
-        if ($request->has('filter_days')) {
-            $endDate = Carbon::today();
-            $startDate = Carbon::today()->subDays($request->filter_days);
-        } else {
-            $startDate = $request->has('start_date') ? Carbon::createFromFormat('d/m/Y', $request->start_date) : Carbon::today();
-            $endDate = $request->has('end_date') ? Carbon::createFromFormat('d/m/Y', $request->end_date) : Carbon::today();
-        }
+        // กำหนดค่าเริ่มต้นเป็นเดือนและปีปัจจุบัน
+        $month = $request->input('month', Carbon::now()->month);
+        $year = $request->input('year', Carbon::now()->year);
+
+        // สร้างวันที่เริ่มต้นและสิ้นสุดของเดือนที่เลือก
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
 
         // คำนวณจำนวนห้องที่มีสถานะ "พร้อมให้บริการ"
         $availableRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')->count();
 
-        // คำนวณจำนวนห้องที่ถูกจองในช่วงวันที่เลือก
+        // คำนวณจำนวนห้องที่ถูกจองในเดือนที่เลือก
         $bookedRoomsCount = Room::where('room_status', 'พร้อมให้บริการ')
             ->whereHas('bookingDetails.booking', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('checkin_date', [$startDate, $endDate])
@@ -81,7 +80,7 @@ class DashboardController extends Controller
             })
             ->count();
 
-        // คำนวณรายได้ในช่วงวันที่เลือก (รวม total_damages)
+        // คำนวณรายได้ในเดือนที่เลือก
         $totalRevenue = Booking::whereHas('bookingDetails', function ($query) {
             $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
         })
@@ -97,34 +96,7 @@ class DashboardController extends Controller
         // รวมค่าห้อง + ค่าปรับทั้งหมด
         $totalRevenueWithDamages = $totalRevenue + $totalDamages;
 
-        // รายได้รายเดือน (รวม total_damages)
-        $monthlyRevenue = Booking::whereHas('bookingDetails', function ($query) {
-            $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
-        })
-            ->whereYear('created_at', Carbon::now()->year)
-            ->selectRaw('MONTH(created_at) as month, SUM(total_cost) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
-
-        // เพิ่มรายได้จาก total_damages รายเดือน
-        $monthlyDamages = Checkout::whereYear('created_at', Carbon::now()->year)
-            ->whereHas('booking', function ($query) {
-                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
-            })
-            ->selectRaw('MONTH(created_at) as month, SUM(total_damages) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
-
-        // จัดรูปแบบรายได้รายเดือน (รวม total_damages)
-        $revenueData = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $revenueData[] = ($monthlyRevenue[$i] ?? 0) + ($monthlyDamages[$i] ?? 0);
-        }
-
-
-        // ส่วนที่เหลือของโค้ดยังคงเหมือนเดิม...
+        // รายได้รายวันในเดือนที่เลือก
         $guestData = [];
         $dates = [];
         $currentDate = $startDate->copy();
@@ -142,38 +114,25 @@ class DashboardController extends Controller
 
         $dailyOccupancy = $this->getDailyOccupancy($startDate, $endDate);
 
-        $expensesByMonth = Expense::whereYear('expenses_date', Carbon::now()->year)
-            ->selectRaw('MONTH(expenses_date) as month, SUM(expenses_price) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
+        // คำนวณค่าใช้จ่ายในเดือนที่เลือก
+        $totalExpenses = Expense::whereBetween('expenses_date', [$startDate, $endDate])->sum('expenses_price');
+        $totalEmployeeSalaries = User::sum('salary');
+        $totalExpensesWithSalaries = $totalExpenses + $totalEmployeeSalaries;
 
-        $employeeExpensesByMonth = collect(range(1, 12))->mapWithKeys(function ($month) {
-            return [$month => User::sum('salary')];
-        });
-
-        $expensesData = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $expensesData[] = ($expensesByMonth[$i] ?? 0) + ($employeeExpensesByMonth[$i] ?? 0);
-        }
-
+        // ข้อมูลค่าใช้จ่ายตามประเภท
         $expenseCategories = DB::table('expenses')
-            ->selectRaw('expenses_name, SUM(expenses_price) as total')
-            ->groupBy('expenses_name')
+            ->whereBetween('expenses_date', [$startDate, $endDate])
+            ->selectRaw('type, SUM(expenses_price) as total')
+            ->groupBy('type')
             ->union(
-                DB::table('users')->selectRaw('"ค่าจ้างพนักงาน" as expenses_name, SUM(salary) as total')
+                DB::table('users')->selectRaw('"ค่าจ้างพนักงาน" as type, SUM(salary) as total')
             )
-            ->pluck('total', 'expenses_name')
+            ->pluck('total', 'type')
             ->toArray();
 
-        // คำนวณรายจ่ายรวมในช่วงวันที่เลือก (รวมค่าจ้างพนักงาน)
-        $totalExpenses = Expense::whereBetween('expenses_date', [$startDate, $endDate])->sum('expenses_price');
-
-        // คำนวณค่าจ้างพนักงานรวม
-        $totalEmployeeSalaries = User::sum('salary');
-
-        // รวมค่าใช้จ่ายทั้งหมด
-        $totalExpensesWithSalaries = $totalExpenses + $totalEmployeeSalaries;
+        // รายได้และค่าใช้จ่ายรายเดือนตลอดทั้งปี
+        $revenueData = $this->getMonthlyRevenue($year);
+        $expensesData = $this->getMonthlyExpenses($year);
 
         return view('owner.dashboard', compact(
             'totalRevenueWithDamages',
@@ -189,5 +148,55 @@ class DashboardController extends Controller
             'dailyOccupancy',
             'totalExpensesWithSalaries',
         ));
+    }
+
+    // Helper method สำหรับคำนวณรายได้รายเดือน
+    private function getMonthlyRevenue($year)
+    {
+        $monthlyRevenue = Booking::whereYear('created_at', $year)
+            ->whereHas('bookingDetails', function ($query) {
+                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+            })
+            ->selectRaw('MONTH(created_at) as month, SUM(total_cost) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        $monthlyDamages = Checkout::whereYear('created_at', $year)
+            ->whereHas('booking', function ($query) {
+                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+            })
+            ->selectRaw('MONTH(created_at) as month, SUM(total_damages) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        $revenueData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $revenueData[] = ($monthlyRevenue[$i] ?? 0) + ($monthlyDamages[$i] ?? 0);
+        }
+
+        return $revenueData;
+    }
+
+    // Helper method สำหรับคำนวณค่าใช้จ่ายรายเดือน
+    private function getMonthlyExpenses($year)
+    {
+        $expensesByMonth = Expense::whereYear('expenses_date', $year)
+            ->selectRaw('MONTH(expenses_date) as month, SUM(expenses_price) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month');
+
+        $employeeExpensesByMonth = collect(range(1, 12))->mapWithKeys(function ($month) {
+            return [$month => User::sum('salary')];
+        });
+
+        $expensesData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $expensesData[] = ($expensesByMonth[$i] ?? 0) + ($employeeExpensesByMonth[$i] ?? 0);
+        }
+
+        return $expensesData;
     }
 }
