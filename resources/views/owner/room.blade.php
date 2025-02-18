@@ -35,9 +35,7 @@
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
             <div class="container mx-auto px-6 py-8">
                 <div class="flex justify-between items-center mb-6">
-                    {{-- <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
-                        <i class="fas fa-bars"></i>
-                    </button> --}}
+                 
                     <h3 class="text-3xl font-medium text-gray-700">จัดการห้อง</h3>
                 </div>
 

@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\PaymentType;
 
 
 class BookingController extends Controller
@@ -646,7 +647,6 @@ class BookingController extends Controller
         ]);
     }
 
-
     public function emaddBooking(Request $request, $id)
     {
         $request->validate([
@@ -731,7 +731,11 @@ class BookingController extends Controller
                 $booking->save();
             }
         }
-    
+       
+        // $payment_types = PaymentType::where('payment_type', 'โอนเงิน')->first();
+        // $payment_types ->payment_type ; 
+        // $payment_types ->qr_code;
+
         $payment = new Payment();
         $payment->payment_date = now();
         $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
@@ -755,6 +759,7 @@ class BookingController extends Controller
     
         // บันทึกข้อมูลการชำระเงิน
         $payment->save();
+
     
         $checkin = new Checkin();
         $checkin->booking_id = $booking->id;

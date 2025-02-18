@@ -36,7 +36,7 @@
             <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); ">
                 <div class="max-w-screen-xl mx-auto py-10 ">
                     <div class="px-2 p-2  flex justify-between items-center">
-                        <h1 class="text-4xl mb-10 max-xl:px-4">ห้อง</h1>
+                        <h1 class="text-4xl mb-10 max-xl:px-4">ซ่อมบำรุง</h1>
                         <!-- <button class="relative pr-12 mb-4 group" onclick="window.location.href ='Room_add.html'">
                         <span
                             class="absolute hidden bg-gray-800 text-white px-2 py-1 rounded-md text-xs bottom-10 transition duration-300 ease-in-out opacity-0 group-hover:opacity-100">เพิ่มห้อง</span>

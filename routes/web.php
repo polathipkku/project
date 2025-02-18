@@ -14,6 +14,8 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Middleware\OwnerMiddleware;
+use App\Http\Controllers\PaymentTypeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -150,7 +152,16 @@ Route::get('/booking/{id}/pdf', [BookingController::class, 'generatePdf'])->name
 Route::get('/', [OwnerController::class, 'checkUserType']);
 
 
-
+Route::middleware(['auth', 'owner'])->group(function () {
+    Route::prefix('payment_types')->group(function () {
+        Route::get('/', [PaymentTypeController::class, 'index'])->name('payment_types.index');
+        Route::get('/create', [PaymentTypeController::class, 'create'])->name('payment_types.create');
+        Route::post('/store', [PaymentTypeController::class, 'store'])->name('payment_types.store');
+        Route::get('/edit/{id}', [PaymentTypeController::class, 'edit'])->name('payment_types.edit');
+        Route::put('/{id}', [PaymentTypeController::class, 'update'])->name('payment_types.update');
+        Route::delete('/{id}', [PaymentTypeController::class, 'destroy'])->name('payment_types.destroy');
+    });
+});
 
 Route::middleware(['auth', 'owner'])->group(function () {
 
@@ -194,8 +205,8 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/dashboard/revenue', [DashboardController::class, 'getRevenueData']);
 
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
-    Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
-    Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
+    // Route::get('/payment_types', [PaymentController::class, 'create'])->name('payment_types');
+    // Route::post('/payment_types/add', [PaymentController::class, 'store'])->name('payment_types');
 
     Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions');
     Route::get('/promotions/create', [PromotionController::class, 'create'])->name('add_promotion');

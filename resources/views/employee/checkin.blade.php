@@ -36,7 +36,7 @@
         <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
             <div class="max-w-screen-xl mx-auto py-10">
                 <div class="px-2 p-2 flex justify-between items-center">
-                    <h1 class="text-4xl mb-10 max-xl:px-4">Check-In</h1>
+                    <h1 class="text-4xl mb-10 max-xl:px-4">เช็คอิน</h1>
                     <input id="checkin-date" type="text" class="flatpickr input px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เลือกวันที่เช็คอิน" data-default-date="today" />
                 </div>
                 @if (count($bookings) > 0)

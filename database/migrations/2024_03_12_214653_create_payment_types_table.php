@@ -15,13 +15,12 @@ class CreatePaymentTypesTable extends Migration
     {
         Schema::create('payment_types', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_typecol');
-            $table->string('QrCode')->nullable();
+            $table->string('payment_type'); // แก้ชื่อให้ตรงกับ Model
+            $table->string('qr_code')->nullable(); // แก้ชื่อให้ตรงกับ Model
             $table->timestamps();
             $table->softDeletes();
-
         });
-    }
+    }    
 
     /**
      * Reverse the migrations.
