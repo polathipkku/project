@@ -83,15 +83,21 @@ class PaymentTypeController extends Controller
         ->with('success', 'อัปเดตประเภทการชำระเงินเรียบร้อย');
 }
 
-    public function destroy($id)
-    {
-        $paymentType = Payment_type::findOrFail($id);
-        if ($paymentType->qr_code) {
-            Storage::delete('public/' . $paymentType->qr_code);
-        }
-        $paymentType->delete();
-        return redirect()->route('payment_types.index')->with('success', 'ลบประเภทการชำระเงินเรียบร้อย');
+public function destroy($id)
+{
+    $paymentType = Payment_type::findOrFail($id);
+
+    // ลบ QR Code ถ้ามี
+    if ($paymentType->qr_code) {
+        Storage::delete('public/qr_codes/' . $paymentType->qr_code);
     }
+
+    // ลบถาวร (ถ้าใช้ SoftDeletes)
+    $paymentType->forceDelete();
+
+    return redirect()->route('payment_types.index')->with('success', 'ลบประเภทการชำระเงินเรียบร้อย');
+}
+
 
     
 }

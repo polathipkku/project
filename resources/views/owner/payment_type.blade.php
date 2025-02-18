@@ -51,26 +51,28 @@
                                 <tbody class="text-gray-600 text-sm">
                                     @foreach ($payment_types as $index => $payment_type)
                                     <tr>
-                                        <td class="text-center">{{ $index + 1 }}</td>
-                                        <td class="text-center">{{ $payment_type->payment_type }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center py-3">{{ $index + 1 }}</td>
+                                        <td class="text-center py-3">{{ $payment_type->payment_type }}</td>
+                                        <td class="text-center py-3">
                                             @if($payment_type->qr_code)
-                                            <img src="{{ asset('storage/qr_codes/' . $payment_type->qr_code) }}" alt="QR Code" class="mx-auto w-20">
+                                            <img src="{{ asset('storage/qr_codes/' . $payment_type->qr_code) }}" 
+                                                 alt="QR Code" 
+                                                 class="mx-auto w-32 rounded-lg shadow-md hover:scale-110 transition-transform">
                                             @else
-                                            ไม่มี QR Code
+                                            <span class="text-gray-500 italic">ไม่มี QR Code</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
-                                            <button onclick="openEditModal('{{ $payment_type->id }}', '{{ $payment_type->payment_type }}', '{{ $payment_type->qr_code ? asset('storage/qr_codes/' . $payment_type->qr_code) : null }}')"
-                                                class="bg-yellow-500 text-white px-3 py-1 rounded-lg mr-2">
-                                                <i class="fas fa-edit"></i> แก้ไข
+                                        <td class="text-center py-3">
+                                            <button onclick="openEditModal('{{ $payment_type->id }}', '{{ $payment_type->payment_type }}', '{{ $payment_type->qr_code ? asset('storage/qr_codes/' . $payment_type->qr_code) : null }}')" 
+                                                class="hover:text-blue-500 mr-2">
+                                                <i class="fas fa-edit"></i> 
                                             </button>
                                             <form action="{{ route('payment_types.destroy', $payment_type->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg"
+                                                <button type="submit" class="hover:text-red-500"
                                                     onclick="return confirm('คุณต้องการลบประเภทการชำระเงินนี้ใช่หรือไม่?')">
-                                                    <i class="fas fa-trash"></i> ลบ
+                                                    <i class="fas fa-trash"></i> 
                                                 </button>
                                             </form>
                                         </td>
@@ -78,7 +80,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -122,8 +124,7 @@
                 <input type="hidden" name="id" id="editPaymentTypeId">
                 <div class="mb-4">
                     <label class="block text-gray-700">เลือกประเภทการชำระเงิน:</label>
-                    <select name="payment_type" required id="editPaymentTypeSelect"
-                        class="w-full px-3 py-2 border rounded-lg">
+                    <select name="payment_type" required id="editPaymentTypeSelect" class="w-full px-3 py-2 border rounded-lg">
                         <option value="bank_transfer">โอนเงิน</option>
                         <option value="cash">เงินสด</option>
                     </select>
