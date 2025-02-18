@@ -9,6 +9,8 @@
     <title>Tunthree</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body class="bg-gray-50">
