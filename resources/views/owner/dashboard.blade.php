@@ -254,38 +254,143 @@
                         label: 'ค่าใช้จ่าย (บาท)',
                         data: Object.values(@json($expenseCategories)),
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)'
-                        ]
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(199, 199, 199, 0.7)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverBorderColor: '#fff',
+                        hoverBorderWidth: 3,
+                        hoverOffset: 5
                     }]
                 },
                 options: {
                     responsive: true,
-                    aspectRatio: 3, // ปรับอัตราส่วนให้สูงกว่ากว้างเพื่อให้กราฟใหญ่ขึ้น
+                    aspectRatio: 3,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'รายจ่ายแยกตามหมวดหมู่'
-                        }
-                    },
+                    cutout: '60%',
                     layout: {
                         padding: {
-                            top: 10,
-                            right: 10,
-                            bottom: 10,
-                            left: 10
+                            top: 30,
+                            right: 30,
+                            bottom: 30,
+                            left: 30
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    let label = context.label || '';
+                                    return label + ': ' + value.toLocaleString('th-TH') + ' บาท';
+                                }
+                            }
                         }
                     }
-                }
-            });
+                },
+                plugins: [{
+                    id: 'custom-labels',
+                    afterDraw: function(chart) {
+                        var ctx = chart.ctx;
+                        var width = chart.width;
+                        var height = chart.height;
+                        var centerX = width / 2;
+                        var centerY = height / 2;
 
+                        // คำนวณยอดรวมทั้งหมด
+                        var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        var formattedTotal = total.toLocaleString('th-TH') + ' บาท';
+
+                        // วาดข้อความตรงกลาง
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+
+                        // ข้อความหลัก
+                        ctx.font = 'bold 16px Arial';
+                        ctx.fillStyle = '#333';
+                        ctx.fillText('รายจ่ายแยกหมวดหมู่', centerX, centerY - 10);
+
+                       
+
+                        // วาดข้อความและเส้นเชื่อมสำหรับแต่ละส่วน
+                        chart.data.datasets[0].data.forEach(function(value, i) {
+                            // ข้ามหากมูลค่าเป็น 0
+                            if (value === 0) return;
+
+                            var meta = chart.getDatasetMeta(0);
+                            var slice = meta.data[i];
+
+                            // คำนวณมุมกึ่งกลางของส่วนนั้นๆ
+                            var angle = slice.startAngle + (slice.endAngle - slice.startAngle) / 2;
+
+                            // คำนวณตำแหน่งสำหรับข้อความด้านนอก
+                            var outerRadius = slice.outerRadius + 30;
+                            var x = centerX + Math.cos(angle) * outerRadius;
+                            var y = centerY + Math.sin(angle) * outerRadius;
+
+                            // สร้างข้อความ
+                            var label = chart.data.labels[i];
+                            var formattedValue = value.toLocaleString('th-TH') + ' ฿';
+                            var percent = total > 0 ? Math.round((value / total) * 100) : '';
+
+                            // ปรับตำแหน่งข้อความตามตำแหน่งบนกราฟ
+                            ctx.textAlign = x < centerX ? 'right' : 'left';
+
+                            // วาดเส้นเชื่อม
+                            ctx.beginPath();
+                            ctx.moveTo(
+                                centerX + Math.cos(angle) * slice.outerRadius,
+                                centerY + Math.sin(angle) * slice.outerRadius
+                            );
+                            // จุดหักมุม
+                            var midRadius = slice.outerRadius + 15;
+                            var midX = centerX + Math.cos(angle) * midRadius;
+                            var midY = centerY + Math.sin(angle) * midRadius;
+
+                            ctx.lineTo(midX, midY);
+                            ctx.lineTo(x, y);
+                            ctx.strokeStyle = chart.data.datasets[0].backgroundColor[i];
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+
+                            // วาดจุดเล็กๆ ที่จุดเริ่มต้นของเส้น
+                            ctx.beginPath();
+                            ctx.arc(
+                                centerX + Math.cos(angle) * slice.outerRadius,
+                                centerY + Math.sin(angle) * slice.outerRadius,
+                                2, 0, 2 * Math.PI
+                            );
+                            ctx.fillStyle = chart.data.datasets[0].backgroundColor[i];
+                            ctx.fill();
+
+                            // วาดข้อความ
+                            ctx.fillStyle = '#333';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.fillText(label, x, y - 15);
+
+                            ctx.font = '12px Arial';
+                            ctx.fillText(formattedValue, x, y);
+
+                            ctx.font = 'bold 12px Arial';
+                            ctx.fillText(percent, x, y + 15);
+                        });
+                    }
+                }]
+            });
 
         });
     </script>
