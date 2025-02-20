@@ -15,12 +15,14 @@ class CreateExpensesTable extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('room_id')->nullable()->after('type');
             $table->string('expenses_name')->nullable();
             $table->decimal('expenses_price', 10, 2);
             $table->date('expenses_date'); 
             $table->string('type')->nullable(); 
             $table->softDeletes();
 
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
             $table->timestamps();
         });
     }

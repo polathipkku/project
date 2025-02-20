@@ -16,6 +16,23 @@ class ProductController extends Controller
         $product_types = $this->product_types();
         return view('owner.product', compact('product', 'product_types'));
     }
+    public function add_items()
+    {
+        $product = Product::all();
+        $product_types = $this->product_types();
+        return view('owner.add_items', compact('product', 'product_types'));
+    }
+    public function items()
+    {
+        $product = Product::whereHas('productType', function ($query) {
+            $query->where('product_type_name', 'เครื่องอาบน้ำ');
+        })->get();
+
+        $product_types = $this->product_types();
+        return view('owner.items', compact('product', 'product_types'));
+    }
+
+
     public function add_product()
     {
         $product = Product::all();
@@ -77,6 +94,38 @@ class ProductController extends Controller
         return redirect()->route('product')->with('success', "เพิ่มข้อมูลสำเร็จ");
     }
 
+    public function additem(Request $request)
+    {
+        $request->validate([
+            'product_name' => 'required|unique:products,product_name',
+            'stock_qty' => 'required|integer|min:1',
+        ]);
+
+        // สร้าง Stock
+        $stock = new Stock();
+        $stock->stock_qty = $request->stock_qty;
+        $stock->update_qty = 0;
+        $stock->update_by = auth()->user()->id;
+        $stock->save();
+
+        // ตรวจสอบว่ามี Product Type "เครื่องอาบน้ำ" หรือยัง ถ้ายังไม่มีให้สร้างใหม่
+        $productType = Product_type::firstOrCreate(['product_type_name' => 'เครื่องอาบน้ำ']);
+
+        // สร้าง Product
+        $product = new Product();
+        $product->product_name = $request->product_name;
+        $product->product_status = 'พร้อมให้บริการ';
+
+        // เชื่อมโยงกับ Stock และ Product Type
+        $product->stock()->associate($stock);
+        $product->productType()->associate($productType);
+
+        $product->save();
+
+        return redirect()->route('items')->with('success', "เพิ่มข้อมูลสำเร็จ");
+    }
+
+
     public function editProduct($id)
     {
         $product = Product::findOrFail($id);
@@ -100,17 +149,6 @@ class ProductController extends Controller
         $product->product_price = $request->product_price;
         $product->product_status = $request->product_status;
 
-        // Check if a new image is uploaded
-        if ($request->hasFile('product_img')) {
-            $imageName = time() . '.' . $request->product_img->extension();
-            $request->product_img->move(public_path('images'), $imageName);
-            // Delete the old image
-            if ($product->product_img) {
-                unlink(public_path('images') . '/' . $product->product_img);
-            }
-            $product->product_img = $imageName;
-        }
-
         // อัพเดต Stock และ Product Type
         $product->stock->stock_qty = $request->stock_qty;
         $product->stock->update_by = auth()->user()->id;
@@ -120,7 +158,7 @@ class ProductController extends Controller
         $product->productType()->associate($productType);
 
         $product->save();
-        return redirect()->route('product')->with('success', "อัพเดตข้อมูลสำเร็จ");
+        return redirect()->route('items')->with('success', "อัพเดตข้อมูลสำเร็จ");
     }
     public function deleteProduct($id)
     {

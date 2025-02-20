@@ -144,6 +144,8 @@ Route::put('/expenses/{id}', [ExpenseController::class, 'update'])->name('expens
 
 
 Route::post('/submit_maintenance', [MaintenanceceController::class, 'store'])->name('submit_maintenance');
+Route::post('/repair/update-status/{id}', [MaintenanceceController::class, 'updateRepairStatus'])->name('updateRepairStatus');
+
 Route::get('/maintenanceroom', [MaintenanceceController::class, 'maintenanceroom'])->name('maintenanceroom');
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'maintenancedetail'])->name('maintenancedetail');
 Route::post('/toggleRoomStatus/{id}', [MaintenanceceController::class, 'toggleRoomStatus'])->name('toggleRoomStatus');
@@ -187,13 +189,16 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/add_employee', [OwnerController::class, 'add_employee'])->name('add_employee');
     Route::get('/employeedetail/{id}', [OwnerController::class, 'employeedetail'])->name('employeedetail');
     Route::get('/product', [ProductController::class, 'product'])->name('product');
+    Route::get('/Items', [ProductController::class, 'Items'])->name('Items');
 
     Route::get('/add_productroom', [ProductRoomController::class, 'add_productroom'])->name('add_productroom');
     Route::get('/productroom', [ProductRoomController::class, 'productroom'])->name('productroom');
     Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');
 
     Route::post('/product/add', [ProductController::class, 'addproduct'])->name('addProduct');
-    Route::get('/product_types', [ProductController::class, 'product_types'])->name('product_types');
+    Route::post('/items/add', [ProductController::class, 'additem'])->name('additem');
+    Route::get('/add_items', [ProductController::class, 'add_items'])->name('add_items');
+    Route::get('/items', [ProductController::class, 'items'])->name('items');
     Route::get('/product/edit/{id}', [ProductController::class, 'editProduct']);
     Route::post('/product/update/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
     Route::get('/product/delete/{id}', [ProductController::class, 'deleteProduct']);

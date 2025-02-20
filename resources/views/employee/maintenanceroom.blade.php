@@ -85,17 +85,19 @@
                                 <td class="px-4 py-4 flex justify-center items-center">
                                     <form action="{{ route('toggleRoomStatus', $room->id) }}" method="post">
                                         @csrf
-                                        @if($room->checkoutDetails->isNotEmpty() && $room->checkoutDetails->last()->thing_status === 'ซ่อมสำเร็จ')
-                                        <button class="text-black hover:text-blue-500">
-                                            <i class="fa-solid fa-tools"></i>
+                                        @php
+                                        $lastStatus = $room->checkoutDetails->isNotEmpty() ? $room->checkoutDetails->last()->thing_status : null;
+                                        @endphp
+                                        @if ($lastStatus === 'ซ่อมสำเร็จ' || $lastStatus === 'ซื้อเปลี่ยนสำเร็จ')
+                                        <button type="submit" class="text-black hover:text-blue-500 flex items-center">
+                                            <i class="fa-solid fa-tools mr-1"></i>
+                                            {{ $lastStatus }}
                                         </button>
                                         @else
                                         <span class="text-gray-500">ไม่สามารถกดได้</span>
                                         @endif
                                     </form>
                                 </td>
-
-
 
 
                             </tr>

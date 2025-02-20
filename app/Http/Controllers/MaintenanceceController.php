@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Maintenance;
 use App\Models\CheckoutDetail;
 use App\Models\Booking_detail;
+use App\Models\Expense;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,28 +20,70 @@ class MaintenanceceController extends Controller
         return view('employee.maintenance', compact('room'));
     }
 
+    // public function repairreport()
+    // {
+    //     $repairCounts = CheckoutDetail::select(
+    //         'room_id',
+    //         'product_room_id',
+    //         'productroom_name',
+    //         'repairmaintenances_type',
+    //         DB::raw('SUM(totalpriceroom) as total_price'),
+    //         DB::raw('COUNT(*) as repair_count')
+    //     )
+    //     ->with('room') // Eager load room relationship
+    //     ->whereNotNull('repairmaintenances_type')
+    //     ->groupBy(
+    //         'room_id',
+    //         'product_room_id',
+    //         'productroom_name',
+    //         'repairmaintenances_type'
+    //     )
+    //     ->get();
+
+    //     return view('owner.repairreport', compact('repairCounts'));
+    // }
+
     public function repairreport()
     {
-        $repairCounts = CheckoutDetail::select(
-            'room_id',
-            'product_room_id',
-            'productroom_name',
-            'repairmaintenances_type',
-            DB::raw('SUM(totalpriceroom) as total_price'),
-            DB::raw('COUNT(*) as repair_count')
-        )
-        ->with('room') // Eager load room relationship
-        ->whereNotNull('repairmaintenances_type')
-        ->groupBy(
-            'room_id',
-            'product_room_id',
-            'productroom_name',
-            'repairmaintenances_type'
-        )
-        ->get();
-    
+        // ดึงเฉพาะข้อมูลที่มีสถานะ "ซ่อมสำเร็จ" หรือ "ซื้อเปลี่ยนสำเร็จ"
+        $repairCounts = CheckoutDetail::whereIn('thing_status', ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ'])
+            ->orderBy('thing_status', 'ASC')
+            ->get();
+
         return view('owner.repairreport', compact('repairCounts'));
     }
+
+    public function updateRepairStatus(Request $request, $id)
+    {
+        $checkoutDetail = CheckoutDetail::findOrFail($id);
+
+        // กำหนดค่า type และ status ใหม่
+        if ($checkoutDetail->thing_status === 'ซ่อมสำเร็จ') {
+            $newStatus = 'จ่ายเงินค่าซ่อมสำเร็จ';
+            $type = 'ซ่อมห้อง';
+        } elseif ($checkoutDetail->thing_status === 'ซื้อเปลี่ยนสำเร็จ') {
+            $newStatus = 'จ่ายเงินค่าซื้อเปลี่ยนสำเร็จ';
+            $type = 'เปลี่ยนสินค้าในห้อง';
+        } else {
+            return redirect()->back()->with('error', 'ไม่สามารถเปลี่ยนสถานะได้');
+        }
+
+        // อัปเดตสถานะ
+        $checkoutDetail->thing_status = $newStatus;
+        $checkoutDetail->save();
+
+        // บันทึกลงตาราง expenses
+        Expense::create([
+            'expenses_name' => $checkoutDetail->productroom_name,
+            'expenses_price' => $request->input('expenses_price'),
+            'expenses_date' => now(),
+            'type' => $type,
+            'room_id' => $checkoutDetail->room_id,
+        ]);
+
+        return redirect()->back()->with('success', 'อัปเดตสถานะเรียบร้อยแล้ว');
+    }
+
 
     public function maintenanceroom()
     {
@@ -112,7 +155,7 @@ class MaintenanceceController extends Controller
         $repairType = $thing->repairmaintenances_type ?? 'แจ้งซ่อม';
 
         if ($repairType === 'ซื้อเปลี่ยน') {
-            $thing->thing_status = 'ซ่อมสำเร็จ';
+            $thing->thing_status = 'ซื้อเปลี่ยนสำเร็จ';
         } else {
             $thing->thing_status = 'กำลังซ่อม';
         }
@@ -125,22 +168,22 @@ class MaintenanceceController extends Controller
     public function toggleRepairType($id)
     {
         $thing = CheckoutDetail::find($id);
-    
+
         if (!$thing) {
             return redirect()->back()->with('error', 'ไม่พบข้อมูลสิ่งของ');
         }
-    
+
         if ($thing->repairmaintenances_type === 'แจ้งซ่อม') {
             $thing->repairmaintenances_type = 'ซื้อเปลี่ยน';
         } else {
             $thing->repairmaintenances_type = 'แจ้งซ่อม';
         }
-    
+
         $thing->save();
-    
+
         return redirect()->back()->with('success', 'เปลี่ยนสถานะซ่อมสำเร็จ');
     }
-    
+
 
     public function updateMultipleThingStatus(Request $request)
     {
