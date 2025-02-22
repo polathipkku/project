@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Roomservice;
 use App\Models\Stock;
 use App\Models\Product_room;
+use App\Models\Product_type;
 use App\Models\CheckoutDetail;
 use App\Models\Checkin;
 use App\Models\Checkout;
@@ -247,8 +248,9 @@ class BookingController extends Controller
         $rooms = Room::all();
         $productRooms = Product_room::all();
 
-        return view('employee.checkout', compact('bookings', 'rooms', 'productRooms'));
+        return view('employee.checkout', compact('bookings', 'rooms', 'productRooms', 'bookingDetails'));
     }
+
     public function showRecordDetail($id)
     {
         $booking = Booking::with(['bookingDetails', 'payment', 'promotion'])->findOrFail($id);
@@ -761,7 +763,7 @@ class BookingController extends Controller
                 $booking->save();
             }
         }
-    
+
         $payment = new Payment();
         $payment->payment_date = now();
         $payment->payment_status = 'completed'; // เริ่มต้นสถานะรอการยืนยัน
@@ -785,7 +787,7 @@ class BookingController extends Controller
 
         // บันทึกข้อมูลการชำระเงิน
         $payment->save();
-    
+
         $checkin = new Checkin();
         $checkin->booking_id = $booking->id;
         $checkin->checked_in_by = auth()->user()->id;
@@ -1120,5 +1122,44 @@ class BookingController extends Controller
         $pdf->setPaper('A4');
         return $pdf->stream('receipt.pdf');
         return $pdfs->stream();
+    }
+
+    public function requestSoap($id)
+    {
+        $bookingDetail = Booking_detail::findOrFail($id);
+
+        if (is_null($bookingDetail->soap_requested)) {
+            $bookingDetail->soap_requested = now(); // บันทึกวันที่-เวลาเมื่อขอสบู่
+            $bookingDetail->save();
+
+            // ค้นหาประเภทสินค้า "เครื่องอาบน้ำ"
+            $bathroomProductType = Product_type::where('product_type_name', 'เครื่องอาบน้ำ')->first();
+
+            if ($bathroomProductType) {
+                // ค้นหาสินค้าทั้งหมดที่อยู่ในประเภท "เครื่องอาบน้ำ"
+                $products = Product::where('product_types_id', $bathroomProductType->id)->get();
+
+                foreach ($products as $product) {
+                    // ค้นหาสต็อกของสินค้านั้น
+                    $stock = Stock::find($product->stocks_id);
+
+                    if ($stock && $stock->stock_qty >= 2) {
+                        // ลด stock_qty ลง 2
+                        $stock->stock_qty -= 2;
+
+                        // คำนวณค่า pack_qty ใหม่
+                        if ($stock->items_per_pack > 0) {
+                            $stock->pack_qty = ceil($stock->stock_qty / $stock->items_per_pack);
+                        }
+
+                        $stock->save();
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', 'ขอสบู่เพิ่มเรียบร้อย');
+        }
+
+        return redirect()->back()->with('error', 'คุณขอสบู่ไปแล้ว');
     }
 }

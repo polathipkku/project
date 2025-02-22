@@ -123,6 +123,7 @@ Route::get('/receipt', [BookingController::class, 'receiptpickuprent'])->name('r
 Route::get('/receipt/{id}', [BookingController::class, 'receiptpickuprent'])->name('receipt.pickup');
 Route::get('/tt', [BookingController::class, 'receiptpickuprentt'])->name('tt');
 Route::get('/tt/{id}', [BookingController::class, 'receiptpickuprentt'])->name('tt.pickup');
+Route::post('/booking/request-soap/{id}', [BookingController::class, 'requestSoap'])->name('booking.requestSoap');
 
 Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
 Route::get('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');

@@ -28,6 +28,7 @@ class CreateBookingDetailsTable extends Migration
             $table->date('checkin_date');
             $table->date('checkout_date'); 
             $table->string('room_type')->nullable();
+            $table->dateTime('soap_requested')->nullable();
             $table->integer('extra_bed_count')->default(0);
             
             $table->timestamps();
