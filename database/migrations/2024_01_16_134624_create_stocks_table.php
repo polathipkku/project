@@ -18,6 +18,8 @@ class CreateStocksTable extends Migration
             $table->integer('stock_qty');
             $table->string('update_by');
             $table->integer('update_qty');
+            $table->integer('pack_qty')->nullable();
+            $table->integer('items_per_pack')->nullable();
             $table->timestamps();
             $table->softDeletes();
     

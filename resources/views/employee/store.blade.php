@@ -50,10 +50,7 @@
                     <thead>
                         <tr class="text-l bg-gray-300">
                             <th class="px-4 py-2">ชื่อสินค้า</th>
-                            <th class="px-4 py-2">ราคา</th>
                             <th class="px-4 py-2">จำนวนคงเหลือ</th>
-                            <th class="px-4 py-2">เลือกจำนวน</th>
-                            <th class="px-4 py-2">ซื้อ</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
@@ -62,26 +59,15 @@
                         <tr>
                             <!-- Display product image -->
                             <td class="px-4 py-2">{{ $drink->product_name }}</td>
-                            <td class="px-4 py-2">{{ $drink->product_price }} บาท</td>
                           
                             <td class="px-4 py-2">{{ $drink->stock->stock_qty }} </td>
-                            <td class="px-4 py-2">
-                                <form action="{{ route('buyProduct') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $drink->id }}">
-                                    <input type="number" name="quantity" id="quantityInput_{{ $drink->id }}" class="border border-gray-300 rounded-md text-center w-16" min="1" max="{{ $drink->stock->stock_qty }}" value="1" required>
-                                </form>
-                            </td>
-                            <td class="px-4 py-2">
-                                <button type="button" onclick="openPaymentModal({{ $drink->id }}, {{ $drink->stock->stock_qty }})" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                                    ซื้อ
-                                </button>
-                            </td>
+                           
+                          
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="8" class="px-4 py-2 text-gray-600">ไม่มีสินค้าในหมวดเครื่องดื่ม</td>
+                            <td colspan="8" class="px-4 py-2 text-gray-600">ไม่มีสินค้าในหมวดเครื่องอาบน้ำ</td>
                         </tr>
                         @endif
                     </tbody>

@@ -42,11 +42,15 @@ class ProductController extends Controller
 
     public function store()
     {
-        $drinks = Product::with('stock', 'productType')->whereHas('productType', function ($query) {
-            $query->where('product_type_name', 'เครื่องดื่ม');
-        })->get();
+        $drinks = Product::with('stock', 'productType')
+            ->whereHas('productType', function ($query) {
+                $query->where('product_type_name', 'เครื่องอาบน้ำ'); // เปลี่ยนจาก 'เครื่องดื่ม' เป็น 'เครื่องอาบน้ำ'
+            })
+            ->get();
+
         return view('employee.store', compact('drinks'));
     }
+
 
     public function product_types()
     {
@@ -98,12 +102,22 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|unique:products,product_name',
-            'stock_qty' => 'required|integer|min:1',
+            'stock_qty' => 'nullable|integer|min:1',
+            'pack_qty' => 'nullable|integer|min:1',
+            'items_per_pack' => 'nullable|integer|min:1',
         ]);
+
+        // คำนวณ stock_qty ถ้ามีค่า pack_qty และ items_per_pack
+        $stock_qty = $request->stock_qty;
+        if ($request->pack_qty && $request->items_per_pack) {
+            $stock_qty = $request->pack_qty * $request->items_per_pack;
+        }
 
         // สร้าง Stock
         $stock = new Stock();
-        $stock->stock_qty = $request->stock_qty;
+        $stock->stock_qty = $stock_qty;
+        $stock->pack_qty = $request->pack_qty;
+        $stock->items_per_pack = $request->items_per_pack;
         $stock->update_qty = 0;
         $stock->update_by = auth()->user()->id;
         $stock->save();
@@ -126,12 +140,44 @@ class ProductController extends Controller
     }
 
 
+
+
     public function editProduct($id)
     {
         $product = Product::findOrFail($id);
         $product_types = $this->product_types();
         return view('owner.editproduct', compact('product', 'product_types'));
     }
+
+    public function updateStock(Request $request, $id)
+    {
+        $request->validate([
+            'pack_qty' => 'required|integer|min:1',
+            'items_per_pack' => 'required|integer|min:1',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        // คำนวณ stock ใหม่
+        $additionalStock = $request->pack_qty * $request->items_per_pack;
+        $additionalPackQty = $request->pack_qty;
+
+        if ($product->stock) {
+            // อัปเดต stock & pack_qty
+            $product->stock->increment('stock_qty', $additionalStock);
+            $product->stock->increment('pack_qty', $additionalPackQty);
+        } else {
+            // ถ้ายังไม่มี stock ให้สร้างใหม่
+            $product->stock()->create([
+                'stock_qty' => $additionalStock,
+                'pack_qty' => $additionalPackQty,
+            ]);
+        }
+
+        return back()->with('success', 'Stock และ Pack Qty ถูกเพิ่มเรียบร้อยแล้ว');
+    }
+
+
 
     public function updateProduct(Request $request, $id)
     {

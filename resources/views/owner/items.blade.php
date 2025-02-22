@@ -36,7 +36,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-3xl font-medium text-gray-700">จัดการสินค้า</h3>
                 </div>
-        
+
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -54,14 +54,15 @@
                                 <i class="fas fa-plus mr-2"></i>เพิ่มสินค้า
                             </button>
                         </div>
-        
+
+                        <!-- Table UI -->
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
                                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
-                                        <th class="py-3 px-6 text-center">ประเภท</th>
-                                        <th class="py-3 px-6 text-center">จำนวนแพ็ค ในสต็อก</th>
+                                        <th class="py-3 px-6 text-center">จำนวนแพ็ค</th>
+                                        <th class="py-3 px-6 text-center">จำนวนสินค้า</th>
                                         <th class="py-3 px-6 text-center">ดำเนินการ</th>
                                     </tr>
                                 </thead>
@@ -69,15 +70,20 @@
                                     @foreach($product as $productItem)
                                     <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
                                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->index + 1 }}</td>
-                                        <td class="py-3 px-6 text-left">{{ $productItem->product_name }}</td>
-                                        <td class="py-3 px-6 text-center">{{ $productItem->stock->stock_qty }}</td>
                                         <td class="py-3 px-6 text-center">
-                                            <div class="flex items-center justify-center">
-                                                <a href="{{ url('/product/edit/'.$productItem->id) }}" class="mr-3">
-                                                    <button class="text-black hover:text-blue-500">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                    </button>
-                                                </a>
+                                            <span id="current_pack_qty-{{ $productItem->id }}">{{ $productItem->stock->pack_qty }}</span>
+                                        </td>
+                                        <td class="py-3 px-6 text-center">
+                                            <span id="current_stock-{{ $productItem->id }}">{{ $productItem->stock->stock_qty }}</span>
+                                        </td>
+                                        <td class="py-3 px-6 text-center">
+                                            <div class="flex items-center justify-center gap-4">
+                                                <!-- ปุ่มเพิ่ม Stock -->
+                                                <button onclick="openModal({{ $productItem->id }})" class="text-black hover:text-blue-500 focus:outline-none">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+
+                                                <!-- ปุ่มลบ -->
                                                 <a href="{{ url('/product/delete/'.$productItem->id) }}" class="delete-link">
                                                     <button class="text-black hover:text-red-500" type="button">
                                                         <i class="fa-solid fa-trash"></i>
@@ -85,11 +91,67 @@
                                                 </a>
                                             </div>
                                         </td>
+
                                     </tr>
+
+                                    <!-- Modal เพิ่ม Stock -->
+                                    <div id="modal-{{ $productItem->id }}" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+                                        <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+                                            <h2 class="text-xl font-semibold mb-4 text-center">เพิ่ม Stock</h2>
+                                            <form action="{{ route('updateStock', $productItem->id) }}" method="POST" onsubmit="updateStockDisplay(event, {{ $productItem->id }})">
+                                                @csrf
+                                                <label class="block text-sm font-medium text-gray-700">จำนวนแพ็ค</label>
+                                                <input type="number" id="pack_qty-{{ $productItem->id }}" name="pack_qty" class="w-full border rounded-lg p-2" min="1" required>
+
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
+                                                <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2" min="1" required>
+
+                                                <div class="flex justify-between mt-4">
+                                                    <button type="button" onclick="closeModal({{ $productItem->id }})" class="bg-gray-500 text-white py-2 px-4 rounded-lg">ยกเลิก</button>
+                                                    <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg">เพิ่ม Stock</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+
+
+                        <script>
+                            function openModal(id) {
+                                document.getElementById("modal-" + id).classList.remove("hidden");
+                            }
+
+                            function closeModal(id) {
+                                document.getElementById("modal-" + id).classList.add("hidden");
+                            }
+
+                            function updateStockDisplay(event, id) {
+                                event.preventDefault();
+
+                                let packQty = parseInt(document.getElementById("pack_qty-" + id).value) || 0;
+                                let itemsPerPack = parseInt(document.getElementById("items_per_pack-" + id).value) || 0;
+                                let currentStock = parseInt(document.getElementById("current_stock-" + id).textContent) || 0;
+                                let currentPackQty = parseInt(document.getElementById("current_pack_qty-" + id).textContent) || 0;
+
+                                let additionalStock = packQty * itemsPerPack;
+                                let newStock = currentStock + additionalStock;
+                                let newPackQty = currentPackQty + packQty;
+
+                                document.getElementById("current_stock-" + id).textContent = newStock;
+                                document.getElementById("current_pack_qty-" + id).textContent = newPackQty;
+
+                                closeModal(id);
+
+                                event.target.submit();
+                            }
+                        </script>
+
+
+
                     </div>
                 </div>
             </div>

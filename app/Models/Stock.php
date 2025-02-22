@@ -12,11 +12,13 @@ class Stock extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        "stock_qty",
-        "update_by",
-        "update_qty"
+        'stock_qty',
+        'pack_qty',
+        'items_per_pack',
+        'update_qty',
+        'update_by',
     ];
-
+    
     public function products()
     {
         return $this->hasMany(Product::class, 'stocks_id');

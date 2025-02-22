@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Models\Product;
+use App\Models\Stock;
+use App\Models\Product_type;
 
 class RoomController extends Controller
 {
@@ -24,11 +27,39 @@ class RoomController extends Controller
     }
     public function cleanroom(Request $request, $id)
     {
+        // ค้นหาห้อง
         $room = Room::findOrFail($id);
+
+        // อัปเดตสถานะห้อง
         $room->room_status = 'พร้อมให้บริการ';
         $room->save();
 
-        return redirect()->back()->with('success', 'ยกเลิกการจองเรียบร้อยแล้ว');
+        // ค้นหาประเภทสินค้า "เครื่องอาบน้ำ"
+        $bathroomProductType = Product_type::where('product_type_name', 'เครื่องอาบน้ำ')->first();
+
+        if ($bathroomProductType) {
+            // ค้นหาสินค้าทั้งหมดที่อยู่ในประเภท "เครื่องอาบน้ำ"
+            $products = Product::where('product_types_id', $bathroomProductType->id)->get();
+
+            foreach ($products as $product) {
+                // ค้นหาสต็อกของสินค้านั้น
+                $stock = Stock::find($product->stocks_id);
+
+                if ($stock && $stock->stock_qty >= 2) {
+                    // ลด stock_qty ลง 2
+                    $stock->stock_qty -= 2;
+
+                    // คำนวณค่า pack_qty ใหม่
+                    if ($stock->items_per_pack > 0) {
+                        $stock->pack_qty = ceil($stock->stock_qty / $stock->items_per_pack);
+                    }
+
+                    $stock->save();
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'ทำความสะอาดห้องเรียบร้อย และลดสต็อกสินค้าแล้ว');
     }
 
 

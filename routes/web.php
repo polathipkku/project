@@ -125,6 +125,7 @@ Route::get('/tt', [BookingController::class, 'receiptpickuprentt'])->name('tt');
 Route::get('/tt/{id}', [BookingController::class, 'receiptpickuprentt'])->name('tt.pickup');
 
 Route::post('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
+Route::get('/cleanroom/{id}', [RoomController::class, 'cleanroom'])->name('cleanroom');
 
 Route::post('/maintenances/store', [MaintenanceceController::class, 'store'])->middleware('auth');
 Route::get('/maintenancedetail/{booking_detail_id}', [MaintenanceceController::class, 'showMaintenanceDetail'])->name('maintenancedetail');
@@ -199,6 +200,8 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::post('/items/add', [ProductController::class, 'additem'])->name('additem');
     Route::get('/add_items', [ProductController::class, 'add_items'])->name('add_items');
     Route::get('/items', [ProductController::class, 'items'])->name('items');
+    Route::post('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
+
     Route::get('/product/edit/{id}', [ProductController::class, 'editProduct']);
     Route::post('/product/update/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
     Route::get('/product/delete/{id}', [ProductController::class, 'deleteProduct']);
