@@ -10,9 +10,13 @@ use App\Models\Product_type;
 
 class ProductController extends Controller
 {
+
     public function product()
     {
-        $product = Product::all();
+        $product = Product::whereHas('productType', function ($query) {
+            $query->where('product_type_name', 'เครื่องนอน');
+        })->get();
+
         $product_types = $this->product_types();
         return view('owner.product', compact('product', 'product_types'));
     }
@@ -138,8 +142,6 @@ class ProductController extends Controller
 
         return redirect()->route('items')->with('success', "เพิ่มข้อมูลสำเร็จ");
     }
-
-
 
 
     public function editProduct($id)

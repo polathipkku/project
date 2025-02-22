@@ -45,7 +45,6 @@ class MaintenanceceController extends Controller
 
     public function repairreport()
     {
-        // ดึงเฉพาะข้อมูลที่มีสถานะ "ซ่อมสำเร็จ" หรือ "ซื้อเปลี่ยนสำเร็จ"
         $repairCounts = CheckoutDetail::whereIn('thing_status', ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ'])
             ->orderBy('thing_status', 'ASC')
             ->get();

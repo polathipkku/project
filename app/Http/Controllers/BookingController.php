@@ -1145,7 +1145,7 @@ class BookingController extends Controller
 
                     if ($stock && $stock->stock_qty >= 2) {
                         // ลด stock_qty ลง 2
-                        $stock->stock_qty -= 2;
+                        $stock->stock_qty -= 1;
 
                         // คำนวณค่า pack_qty ใหม่
                         if ($stock->items_per_pack > 0) {

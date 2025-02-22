@@ -69,7 +69,7 @@
                                 <tbody class="text-gray-600 text-sm">
                                     @foreach($product as $productItem)
                                     <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
-                                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->index + 1 }}</td>
+                                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $productItem->product_name }}</td>
                                         <td class="py-3 px-6 text-center">
                                             <span id="current_pack_qty-{{ $productItem->id }}">{{ $productItem->stock->pack_qty }}</span>
                                         </td>
