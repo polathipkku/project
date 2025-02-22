@@ -80,7 +80,7 @@
                                             <div class="flex items-center justify-center gap-4">
                                                 <!-- ปุ่มเพิ่ม Stock -->
                                                 <button onclick="openModal({{ $productItem->id }})" class="text-black hover:text-blue-500 focus:outline-none">
-                                                    <i class="fa-solid fa-plus"></i>
+                                                <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
 
                                                 <!-- ปุ่มลบ -->
