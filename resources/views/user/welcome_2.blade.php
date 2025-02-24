@@ -444,10 +444,10 @@
                 <div class="mb-3">
                     <input id="birthday" name="birthday" type="date" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
                 </div>
-
+{{-- 
                 <div class="mb-3">
                     <input id="address" name="address" type="text" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" placeholder="Address">
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                     <input id="image" name="image" type="file" required class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">

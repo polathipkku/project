@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/hero.css">
 
-    <title>Tunthree - Promotion Management</title>
+    <title>Tunthree - จัดการค่าเสียหายสินค้า</title>
 
     <script>
         function showToast(toastId) {

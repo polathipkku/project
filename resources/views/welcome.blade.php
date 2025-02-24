@@ -46,49 +46,49 @@
 
             <div class="flex items-center space-x-4">
                 @auth
-                <nav class="flex items-center space-x-10 text-base">
-                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
-                            class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                    {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
+                    <nav class="flex items-center space-x-10 text-base">
+                        <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
+                                class="fa-solid fa-clock-rotate-left ml-2"></i></a>
+                        {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
                         class="fa-solid fa-star ml-2"></i></a> --}}
-                    <div class="relative">
-                        <button id="profileButton" type="button"
-                            class="text-black hover:text-blue-400 focus:outline-none">
-                            <i class="fa-solid fa-user"></i>
-                            <span class="sr-only">User Menu</span>
-                        </button>
-                        <div id="profileDropdown"
-                            class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
-                            <div class="py-1">
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
-                                <a href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
+                        <div class="relative">
+                            <button id="profileButton" type="button"
+                                class="text-black hover:text-blue-400 focus:outline-none">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="sr-only">User Menu</span>
+                            </button>
+                            <div id="profileDropdown"
+                                class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
+                                <div class="py-1">
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
+                                </div>
                             </div>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                                @csrf
+                            </form>
                         </div>
-                        <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
-                            @csrf
-                        </form>
-                    </div>
-                </nav>
+                    </nav>
                 @endauth
 
                 <div class="flex flex-col items-end space-y-2 mb-4">
                     <nav class="flex items-center space-x-2">
                         @guest
-                        <a href="#" onclick="showLoginForm()"
-                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                            <span>เข้าสู่ระบบ</span>
-                        </a>
-                        <a href="#" onclick="showRegisterForm()"
-                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                            <i class="fa-solid fa-user"></i>
-                            <span>สมัครสมาชิก</span>
-                        </a>
+                            <a href="#" onclick="showLoginForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>เข้าสู่ระบบ</span>
+                            </a>
+                            <a href="#" onclick="showRegisterForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-user"></i>
+                                <span>สมัครสมาชิก</span>
+                            </a>
                         @endguest
                     </nav>
                     <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
@@ -306,67 +306,67 @@
                 <div class="flex justify-center">
                     <div class="w-full max-w-6xl">
                         @if ($promotions->isEmpty())
-                        <!-- No promotions available message -->
-                        <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
+                            <!-- No promotions available message -->
+                            <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
                         @else
-                        <div class="swiper-container">
-                            <div class="swiper-wrapper">
-                                @foreach ($promotions as $promotion)
-                                <div class="swiper-slide">
-                                    <div
-                                        class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
-                                        <div class="flex justify-center mb-4">
-                                            <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
-                                        </div>
-                                        <h3 class="text-2xl font-bold mb-3 text-gray-800">
-                                            {{ $promotion->campaign_name }}
-                                        </h3>
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    @foreach ($promotions as $promotion)
+                                        <div class="swiper-slide">
+                                            <div
+                                                class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
+                                                <div class="flex justify-center mb-4">
+                                                    <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
+                                                </div>
+                                                <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                                    {{ $promotion->campaign_name }}
+                                                </h3>
 
-                                        <!-- Display discount information -->
-                                        <p class="text-lg mb-2">
-                                            <span class="font-semibold">ส่วนลด:</span>
-                                            <span class="text-blue-500 font-bold">
-                                                @if ($promotion->type === 'percentage')
-                                                {{ $promotion->discount_value }}%
-                                                @else
-                                                {{ $promotion->discount_value }} ฿
+                                                <!-- Display discount information -->
+                                                <p class="text-lg mb-2">
+                                                    <span class="font-semibold">ส่วนลด:</span>
+                                                    <span class="text-blue-500 font-bold">
+                                                        @if ($promotion->type === 'percentage')
+                                                            {{ $promotion->discount_value }}%
+                                                        @else
+                                                            {{ $promotion->discount_value }} ฿
+                                                        @endif
+                                                    </span>
+                                                </p>
+
+                                                <!-- Display minimum conditions, if available -->
+                                                <div class="text-gray-600 mb-4">
+                                                    @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
+                                                        @if ($promotion->minimum_nights)
+                                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ {{ $promotion->minimum_nights }}
+                                                                คืน</p>
+                                                        @endif
+
+                                                        @if ($promotion->minimum_booking_amount)
+                                                            <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
+                                                                บาท</p>
+                                                        @endif
+                                                    @else
+                                                        <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
+                                                        <p>ยอดจองขั้นต่ำ: ไม่มี</p>
+                                                    @endif
+                                                </div>
+
+                                                <!-- Display promo code -->
+                                                @if ($promotion->promo_code)
+                                                    <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
+                                                            class="text-blue-500">{{ $promotion->promo_code }}</strong>
+                                                    </p>
+                                                    <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
+                                                        class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                                        คัดลอกโค้ด
+                                                    </button>
                                                 @endif
-                                            </span>
-                                        </p>
-
-                                        <!-- Display minimum conditions, if available -->
-                                        <div class="text-gray-600 mb-4">
-                                            @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
-                                            @if ($promotion->minimum_nights)
-                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ {{ $promotion->minimum_nights }}
-                                                คืน</p>
-                                            @endif
-
-                                            @if ($promotion->minimum_booking_amount)
-                                            <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
-                                                บาท</p>
-                                            @endif
-                                            @else
-                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
-                                            <p>ยอดจองขั้นต่ำ: ไม่มี</p>
-                                            @endif
+                                            </div>
                                         </div>
-
-                                        <!-- Display promo code -->
-                                        @if ($promotion->promo_code)
-                                        <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
-                                                class="text-blue-500">{{ $promotion->promo_code }}</strong>
-                                        </p>
-                                        <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
-                                            class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                            คัดลอกโค้ด
-                                        </button>
-                                        @endif
-                                    </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
-                        </div>
                         @endif
                     </div>
                 </div>
@@ -633,16 +633,18 @@
                         <label for="birthday"
                             class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Birthday</label>
                         <input id="birthday" name="birthday" type="date" required
-                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4"
+                            onchange="formatDate(this)">
+
                     </div>
                 </div>
 
-                <div class="relative">
+                {{-- <div class="relative">
                     <label for="address"
                         class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Address</label>
                     <input id="address" name="address" type="text"
                         class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 mt-4">
-                </div>
+                </div> --}}
 
                 <div class="relative">
                     <label for="image" class="text-sm text-gray-600 absolute top-0 left-2 px-1 bg-white">Profile
@@ -652,14 +654,14 @@
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
-                <div class="flex items-center mt-4">
-                    <input id="terms" name="terms" type="checkbox"
-                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label for="terms" class="text-xs text-gray-900 ml-2">I agree to the
-                        <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and
-                        <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a>
-                    </label>
-                </div>
+                    <div class="flex items-center mt-4">
+                        <input id="terms" name="terms" type="checkbox"
+                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="terms" class="text-xs text-gray-900 ml-2">I agree to the
+                            <a href="{{ route('terms.show') }}" class="underline">Terms of Service</a> and
+                            <a href="{{ route('policy.show') }}" class="underline">Privacy Policy</a>
+                        </label>
+                    </div>
                 @endif
 
                 <button type="submit"
@@ -681,7 +683,20 @@
     <script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.28/dist/fancybox.umd.js"></script>
     <script src="/js/hero.js"></script>
-
+    <script>
+        function formatDate(input) {
+            let date = new Date(input.value);
+            if (!isNaN(date.getTime())) {
+                let formattedDate = date.toLocaleDateString('th-TH', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                input.value = formattedDate.split('/').reverse().join('-'); // เก็บในรูปแบบ Y-m-d
+                alert("Selected Date: " + formattedDate); // แสดงวันที่เป็น d/m/Y
+            }
+        }
+    </script>
 </body>
 
 </html>

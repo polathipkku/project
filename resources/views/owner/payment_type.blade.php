@@ -96,8 +96,8 @@
                 <div class="mb-4">
                     <label class="block text-gray-700">เลือกประเภทการชำระเงิน:</label>
                     <select name="payment_type" required id="paymentTypeName" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="bank_transfer">โอนเงิน</option>
-                        <option value="cash">เงินสด</option>
+                        <option value="โอนเงิน">โอนเงิน</option>
+                        <option value="เงินสด">เงินสด</option>
                     </select>
                 </div>
                 <div class="mb-4">
@@ -125,8 +125,8 @@
                 <div class="mb-4">
                     <label class="block text-gray-700">เลือกประเภทการชำระเงิน:</label>
                     <select name="payment_type" required id="editPaymentTypeSelect" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="bank_transfer">โอนเงิน</option>
-                        <option value="cash">เงินสด</option>
+                        <option value="โอนเงิน">โอนเงิน</option>
+                        <option value="เงินสด">เงินสด</option>
                     </select>
                 </div>
                 <div class="mb-4">
@@ -176,7 +176,7 @@
             const paymentType = document.querySelector('#addPaymentTypeModal select[name="payment_type"]').value;
             const qrCode = document.querySelector('#addPaymentTypeModal input[name="qr_code"]').files[0];
 
-            if (paymentType === 'bank_transfer' && !qrCode) {
+            if (paymentType === 'โอนเงิน' && !qrCode) {
                 alert('กรุณาอัปโหลด QR Code สำหรับการโอนเงิน');
                 return false;
             }
@@ -188,7 +188,7 @@
             const qrInput = document.getElementById('editPaymentTypeQRCode');
             const currentQRCode = document.getElementById('currentQRCode');
 
-            if (paymentType === 'bank_transfer' && !qrInput.files[0] && !currentQRCode.querySelector('img')) {
+            if (paymentType === 'โอนเงิน' && !qrInput.files[0] && !currentQRCode.querySelector('img')) {
                 alert('กรุณาอัปโหลด QR Code สำหรับการโอนเงิน');
                 return false;
             }

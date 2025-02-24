@@ -62,4 +62,5 @@ class Booking_detail extends Model
     {
         return $this->hasOne(Payment::class, 'booking_id');
     }
+    
 }

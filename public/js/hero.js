@@ -1,34 +1,4 @@
 // เมื่อเอกสารถูกโหลดเสร็จสิ้น
-
-document.addEventListener("DOMContentLoaded", function () {
-  const bookingBtn = document.getElementById('booking-btn');
-  const sidebar = document.getElementById('sidebar');
-  const backdrop = document.getElementById('backdrop');
-
-  // เมื่อคลิกที่ปุ่ม booking-btn ให้สลับแสดง/ซ่อน sidebar และ backdrop
-  bookingBtn.addEventListener('click', function (event) {
-    sidebar.classList.toggle('sidebar-hidden');
-    sidebar.classList.toggle('sidebar-visible');
-    backdrop.classList.toggle('backdrop-hidden');
-    backdrop.classList.toggle('backdrop-visible');
-    event.stopPropagation();
-  });
-
-  // ฟังก์ชันเพื่อปิด sidebar เมื่อคลิกนอก sidebar หรือปุ่ม booking-btn
-  const closeSidebar = (event) => {
-    if (!sidebar.contains(event.target) && !bookingBtn.contains(event.target)) {
-      sidebar.classList.add('sidebar-hidden');
-      sidebar.classList.remove('sidebar-visible');
-      backdrop.classList.add('backdrop-hidden');
-      backdrop.classList.remove('backdrop-visible');
-    }
-  };
-
-  // เมื่อคลิกที่เอกสาร ให้เรียกฟังก์ชัน closeSidebar
-  document.addEventListener('click', closeSidebar);
-});
-
-// เมื่อเอกสารถูกโหลดเสร็จสิ้น
 document.addEventListener("DOMContentLoaded", function () {
   const header = document.querySelector('header');
   const mail = document.getElementById('mail');

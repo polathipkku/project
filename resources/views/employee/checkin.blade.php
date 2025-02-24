@@ -553,7 +553,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 flatpickr("#checkin-date", {
-                    dateFormat: "Y-m-d",
+                    dateFormat: "d-m-Y",
                     defaultDate: "today",
                     onChange: function(selectedDates, dateStr, instance) {
                         filterBookings(dateStr);

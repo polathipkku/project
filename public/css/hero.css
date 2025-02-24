@@ -27,10 +27,45 @@ body {
 header {
     position: fixed;
     top: 20px;
-    left: 0;
     width: 100%;
     z-index: 99;
     transition: top 0.3s ease;
+}
+
+/* Mobile Menu Transitions */
+#mobileMenu {
+    transition: all 0.3s ease;
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
+}
+
+/* Profile Dropdown Transition */
+#profileDropdown {
+    transition: all 0.2s ease-in-out;
+    transform-origin: top right;
+}
+
+/* Custom Scrollbar for Mobile Menu */
+#mobileMenu::-webkit-scrollbar {
+    width: 4px;
+}
+
+#mobileMenu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#mobileMenu::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+}
+
+#mobileMenu::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Header Shadow Animation */
+.shadow-lg {
+    transition: box-shadow 0.3s ease;
 }
 
 #logo {
@@ -150,8 +185,9 @@ header {
     color: white;
     text-align: center;
 }
-#registerForm{
+
+#registerForm {
     z-index: 111;
     padding-top: auto;
-  
+
 }

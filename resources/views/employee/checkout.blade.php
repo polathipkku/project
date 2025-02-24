@@ -216,7 +216,7 @@
                                         </div>
 
                                         <!-- Items Container with fixed height -->
-                                        <div id="itemsContainer" class=" max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50/50 scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400">
+                                        <div id="itemsContainer" class=" max-h-72 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50/50 scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400">
 
                                             <div class="p-4 space-y-4">
                                                 @foreach ($productRooms->groupBy('productroom_category') as $category => $items)
@@ -260,7 +260,7 @@
                                                                 <div class="flex items-center">
                                                                     <span
                                                                         class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                                                                        {{ $item->productroom_qty }} ชิ้น
+                                                                        {{ $item->productroom_qty }} 
                                                                     </span>
                                                                 </div>
                                                             </div>

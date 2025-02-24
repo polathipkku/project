@@ -14,16 +14,6 @@
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
-    <!--owl slider stylesheet -->
-    <!-- <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" /> -->
-    <!-- <link rel="stylesheet" href="css/style-head.css"> -->
-    <!-- Magnific Popup CSS -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css"> -->
-    <!-- jQuery -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
-    <!-- Magnific Popup JS -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script> -->
     <script src="https://kit.fontawesome.com/a7046885ac.js" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
