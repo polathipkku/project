@@ -80,7 +80,7 @@
                                             <div class="flex items-center justify-center gap-4">
                                                 <!-- ปุ่มเพิ่ม Stock -->
                                                 <button onclick="openModal({{ $productItem->id }})" class="text-black hover:text-blue-500 focus:outline-none">
-                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                    <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
 
                                                 <!-- ปุ่มลบ -->
@@ -106,11 +106,18 @@
                                                 <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
                                                 <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2" min="1" required>
 
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">ประเภทแพ็ค</label>
+                                                <select name="package_type" class="w-full border rounded-lg p-2" required>
+                                                    <option value="แพ็คเล็ก">แพ็คเล็ก</option>
+                                                    <option value="แพ็คใหญ่">แพ็คใหญ่</option>
+                                                </select>
+
                                                 <div class="flex justify-between mt-4">
                                                     <button type="button" onclick="closeModal({{ $productItem->id }})" class="bg-gray-500 text-white py-2 px-4 rounded-lg">ยกเลิก</button>
                                                     <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg">เพิ่ม Stock</button>
                                                 </div>
                                             </form>
+
                                         </div>
                                     </div>
 

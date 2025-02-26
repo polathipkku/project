@@ -11,28 +11,30 @@
         <!-- Menu Items -->
         @php
         $lowStockItems = DB::table('products')
-            ->join('stocks', 'products.stocks_id', '=', 'stocks.id')
-            ->join('product_types', 'products.product_types_id', '=', 'product_types.id')
-            ->where('product_types.product_type_name', '=', 'เครื่องอาบน้ำ')
-            ->where('stocks.pack_qty', '=', 1)
-            ->count();
+        ->join('stocks', 'products.stocks_id', '=', 'stocks.id')
+        ->join('stock_packages', 'stocks.id', '=', 'stock_packages.stock_id') // ✅ เชื่อมกับ stock_packages
+        ->join('product_types', 'products.product_types_id', '=', 'product_types.id')
+        ->where('product_types.product_type_name', '=', 'เครื่องอาบน้ำ')
+        ->where('stock_packages.pack_qty', '=', 1) // ✅ ใช้ stock_packages.pack_qty
+        ->count();
+
 
         $repairCounts = DB::table('checkout_details')
-            ->whereIn('thing_status', ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ'])
-            ->count();
+        ->whereIn('thing_status', ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ'])
+        ->count();
 
         $menuItems = [
-            ['id' => 'dashboard', 'label' => 'แดชบอร์ด', 'icon' => 'fa-solid fa-chart-line', 'route' => route('dashboard')],
-            ['id' => 'employee', 'label' => 'พนักงาน', 'icon' => 'fa-users', 'route' => route('employee')],
-            ['id' => 'room', 'label' => 'ห้อง', 'icon' => 'fa-door-open', 'route' => route('room')],
-            ['id' => 'product', 'label' => 'สต็อก', 'icon' => 'fa-house-circle-check', 'route' => route('product')],
-            ['id' => 'promotions', 'label' => 'โปรโมชั่น', 'icon' => 'fa-rectangle-ad', 'route' => route('promotions')],
-            ['id' => 'productroom', 'label' => 'ค่าเสียหาย', 'icon' => 'fa-house-chimney-crack', 'route' => route('productroom')],
-            ['id' => 'expenses', 'label' => 'ค่าใช้จ่าย', 'icon' => 'fas fa-money-bill', 'route' => route('expenses')],
-            ['id' => 'payment_types.index', 'label' => 'ประเภทการจ่าย', 'icon' => 'fa-solid fa-cash-register', 'route' => route('payment_types.index')],
-            ['id' => 'repairreport', 'label' => 'ประวัติการซ่อม', 'icon' => 'fa-solid fa-hammer', 'route' => route('repairreport'), 'badge' => $repairCounts],
-            ['id' => 'record', 'label' => 'ประวัติ', 'icon' => 'fa-database', 'route' => route('record')],
-            ['id' => 'Items', 'label' => 'อุปกรณ์', 'icon' => 'fa-solid fa-box', 'route' => route('Items'), 'badge' => $lowStockItems]
+        ['id' => 'dashboard', 'label' => 'แดชบอร์ด', 'icon' => 'fa-solid fa-chart-line', 'route' => route('dashboard')],
+        ['id' => 'employee', 'label' => 'พนักงาน', 'icon' => 'fa-users', 'route' => route('employee')],
+        ['id' => 'room', 'label' => 'ห้อง', 'icon' => 'fa-door-open', 'route' => route('room')],
+        ['id' => 'product', 'label' => 'สต็อก', 'icon' => 'fa-house-circle-check', 'route' => route('product')],
+        ['id' => 'promotions', 'label' => 'โปรโมชั่น', 'icon' => 'fa-rectangle-ad', 'route' => route('promotions')],
+        ['id' => 'productroom', 'label' => 'ค่าเสียหาย', 'icon' => 'fa-house-chimney-crack', 'route' => route('productroom')],
+        ['id' => 'expenses', 'label' => 'ค่าใช้จ่าย', 'icon' => 'fas fa-money-bill', 'route' => route('expenses')],
+        ['id' => 'payment_types.index', 'label' => 'ประเภทการจ่าย', 'icon' => 'fa-solid fa-cash-register', 'route' => route('payment_types.index')],
+        ['id' => 'repairreport', 'label' => 'ประวัติการซ่อม', 'icon' => 'fa-solid fa-hammer', 'route' => route('repairreport'), 'badge' => $repairCounts],
+        ['id' => 'record', 'label' => 'ประวัติ', 'icon' => 'fa-database', 'route' => route('record')],
+        ['id' => 'Items', 'label' => 'อุปกรณ์', 'icon' => 'fa-solid fa-box', 'route' => route('Items'), 'badge' => $lowStockItems]
         ];
         $currentRoute = Route::currentRouteName();
         @endphp
@@ -44,9 +46,9 @@
             <div class="mr-2 text-base flex items-center">
                 <i class="fa-solid {{ $item['icon'] }} mr-1"></i>{{ $item['label'] }}
                 @if(isset($item['badge']) && $item['badge'] > 0)
-                    <span class="absolute bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-full -top-2 -right-2">
-                        {{ $item['badge'] }}
-                    </span>
+                <span class="absolute bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-full -top-2 -right-2">
+                    {{ $item['badge'] }}
+                </span>
                 @endif
             </div>
         </a>

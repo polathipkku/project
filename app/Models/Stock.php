@@ -18,7 +18,7 @@ class Stock extends Model
         'update_qty',
         'update_by',
     ];
-    
+
     public function products()
     {
         return $this->hasMany(Product::class, 'stocks_id');
@@ -39,5 +39,9 @@ class Stock extends Model
         })->first();
 
         return $stock ? $stock->stock_qty : 0;
+    }
+    public function stockPackages()
+    {
+        return $this->hasMany(StockPackage::class);
     }
 }

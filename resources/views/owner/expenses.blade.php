@@ -119,9 +119,6 @@
                                 <option value="">เลือกประเภท</option>
                                 <option value="ค่าน้ำ">ค่าน้ำ</option>
                                 <option value="ค่าไฟ">ค่าไฟ</option>
-                                <option value="ค่าซ่อม">ค่าซ่อม</option>
-                                <option value="ค่าซื้อเปลี่ยน">ค่าซื้อเปลี่ยน</option>
-                                <option value="ของใช้">ของใช้</option>
                             </select>
                         </div>
 
