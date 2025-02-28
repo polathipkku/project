@@ -121,7 +121,7 @@
                     <a href="{{ route('home') }}" class="">Thunthree</a>
                 </div>
 
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 mr-3">
                     @auth
                         <nav class="flex items-center space-x-10 text-base">
                             <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">

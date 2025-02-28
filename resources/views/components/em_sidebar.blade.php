@@ -11,7 +11,7 @@
 
         <!-- Menu Items -->
         @php
-            $checkinCount = DB::table('booking_details')->where('booking_detail_status', 'รอเช็คอิน')->count();
+            $checkinCount = DB::table('booking_details')->where('booking_detail_status', 'รอเลือกห้อง')->count();
             $checkoutCount = DB::table('booking_details')->where('booking_detail_status', 'เช็คอินแล้ว')->count();
             $maintenanceCount = DB::table('maintenances')->where('maintenances_status', 'กำลังซ่อม')->count();
 

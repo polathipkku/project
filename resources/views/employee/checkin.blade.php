@@ -11,11 +11,15 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
 
-    <link rel="stylesheet" href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
-    <script type="text/javascript" src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+    <link rel="stylesheet"
+        href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
     <title>Tunthree</title>
 
@@ -33,135 +37,262 @@
         @include('components.em_sidebar')
 
 
-        <section class="ml-10 bg-white" id="room-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
-            <div class="max-w-screen-xl mx-auto py-10">
-                <div class="px-2 p-2 flex justify-between items-center">
-                    <h1 class="text-4xl mb-10 max-xl:px-4">เช็คอิน</h1>
-                    <input id="checkin-date" type="text" class="flatpickr input px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="เลือกวันที่เช็คอิน" data-default-date="today" />
+        <section class="bg-white rounded-lg shadow-lg mx-5 w-full my-8">
+            <div class="w-full mx-auto py-8">
+                <!-- Header with responsive design -->
+                <div class="px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <h1 class="text-2xl ml-7 sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-0">เช็คอิน</h1>
+                    <div class="w-full sm:w-auto">
+                        <input id="checkin-date" type="text"
+                            class="flatpickr input w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="เลือกวันที่เช็คอิน" data-default-date="today" />
+                    </div>
                 </div>
+
                 @if (count($bookings) > 0)
-                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-lg">
-                    <thead>
-                        <tr class="text-lg bg-gray-300">
-                            <th class="px-4 py-2">ชื่อผู้จอง</th>
-                            <th class="px-4 py-2">วันที่เช็คอิน</th>
-                            <th class="px-4 py-2">รายละเอียด</th>
-                            <th class="px-4 py-2">สถานะ</th>
-                            <th class="px-4 py-2" style="padding-right: 5%;">เช็คอิน</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" id="booking-rows">
-                        @if(isset($bookings) && $bookings->isNotEmpty())
-                        @php
-                        $groupedBookings = [];
-                        foreach ($bookings as $booking) {
-                        foreach ($booking->bookingDetails->where('room_id', NULL) as $detail) {
-                        $groupedBookings[$detail->booking_id][] = $detail;
-                        }
-                        }
-                        @endphp
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-md">
+                            <thead>
+                                <tr
+                                    class="text-md sm:text-base bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+                                    <th class="px-4 py-3 text-gray-700 font-semibold text-center">ชื่อผู้จอง</th>
+                                    <th class="px-4 py-3 text-gray-700 font-semibold text-center">วันที่เช็คอิน</th>
+                                    <th class="px-4 py-3 text-gray-700 font-semibold text-center">รายละเอียด</th>
+                                    <th class="px-4 py-3 text-gray-700 font-semibold text-center">สถานะ</th>
+                                    <th class="px-4 py-3 text-gray-700 font-semibold text-center">เช็คอิน</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booking-rows">
+                                @if (isset($bookings) && $bookings->isNotEmpty())
+                                    @php
+                                        $groupedBookings = [];
+                                        foreach ($bookings as $booking) {
+                                            foreach ($booking->bookingDetails->where('room_id', null) as $detail) {
+                                                $groupedBookings[$detail->booking_id][] = $detail;
+                                            }
+                                        }
+                                    @endphp
 
-                        @foreach($groupedBookings as $bookingId => $details)
-                        <tr class="border-b border-gray-200 cursor-pointer" onclick="toggleDropdown('{{ $bookingId }}')">
-                            <td class="px-4 py-2">
-                                <span class="font-semibold">{{ $details[0]->booking_name }}</span>
+                                    @foreach ($groupedBookings as $bookingId => $details)
+                                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150"
+                                            onclick="toggleDropdown('{{ $bookingId }}')">
+                                            <td class="px-3 sm:px-4 py-3 text-center">
+                                                <div class="flex flex-col items-center sm:flex-row sm:justify-center">
+                                                    <span
+                                                        class="font-semibold text-gray-800">{{ $details[0]->booking_name }}</span>
+                                                    <div class="flex mt-1 sm:mt-0 sm:ml-2">
+                                                        @if (count($details) == 1 && $details[0]->extra_bed_count > 0)
+                                                            <span
+                                                                class="text-red-500 text-xs px-2 py-1 rounded-full bg-red-50 font-medium">มีเตียงเสริม</span>
+                                                        @endif
 
-                                @if(count($details) == 1 && $details[0]->extra_bed_count > 0)
-                                <span class="text-red-500 text-sm ">มีเตียงเสริม</span>
-                                @endif
-
-                                @if(count($details) > 1)
-                                <span class="text-blue-500 text-sm "> ({{ count($details) }} ห้อง)</span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-2">
-                            {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d/F/Y') }}
-                            </td>
-
-                            <td class="py-2 px-4">
-                                <a href="{{ route('checkindetail', ['id' => $details[0]->booking->id]) }}" class="text-blue-500 hover:text-blue-700 transition duration-300">
-                                    <button class="py-2 px-4 rounded-md hover:underline focus:outline-none focus:shadow-outline-blue active:text-blue-800" type="button">
-                                        รายละเอียด
-                                    </button>
-                                </a>
-                            </td>
-                            <td class="px-4 py-2 text-center">
-                                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                    <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
-                                    {{ $details[0]->booking_detail_status }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2 text-center">
-                                @if(count($details) == 1 && $details[0]->booking_detail_status === 'รอเลือกห้อง')
-                                <button onclick="showModal('{{ $details[0]->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300">
-                                    เช็คอิน
-                                </button>
-                                @else
-                                <button class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed" disabled>
-                                    เช็คอิน
-                                </button>
-                                @endif
-                            </td>
-                        </tr>
-
-                        <!-- หากมีมากกว่า 1 รายการจอง จะแสดง dropdown -->
-                        @if(count($details) > 1)
-                        <tr id="dropdown-{{ $bookingId }}" class="hidden">
-                            <td colspan="5" class="bg-gray-100 p-4 border border-gray-300">
-                                <table class="w-full border-collapse">
-                                    <thead>
-                                        <tr class="bg-gray-200">
-                                            <th class="px-4 py-2">ลำดับที่</th>
-                                            <th class="px-4 py-2">วันที่เช็คอิน</th>
-                                            <th class="px-4 py-2">สถานะ</th>
-                                            <th class="px-4 py-2">เช็คอิน</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($details as $index => $detail)
-                                        <tr class="text-center border-b border-gray-300">
-                                            <td class="px-4 py-2 relative">
-                                                <span class="inline-block">{{ $index + 1 }}</span>
-                                                @if($detail->extra_bed_count > 0)
-                                                <span class="absolute right-6 text-red-500 text-sm mt-0.5">มีเตียงเสริม</span>
-                                                @endif
+                                                        @if (count($details) > 1)
+                                                            <span
+                                                                class="text-blue-500 text-xs px-2 py-1 rounded-full bg-blue-50 font-medium ml-1">{{ count($details) }}
+                                                                ห้อง</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </td>
-                                            <td class="px-4 py-2">
-                                                {{ \Carbon\Carbon::parse($detail->checkin_date)->format('d-m-y') }}
+                                            <td class="px-3 sm:px-4 py-3 text-gray-700 text-center">
+                                                {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d F Y') }}
                                             </td>
-                                            <td class="px-4 py-2">
-                                                <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                                    <span class="w-2 h-2 me-1 bg-yellow-300 rounded-full mr-1"></span>
-                                                    {{ $detail->booking_detail_status }}
+
+                                            <td class="px-3 sm:px-4 py-3 text-center">
+                                                <a href="{{ route('checkindetail', ['id' => $details[0]->booking->id]) }}"
+                                                    class="inline-block text-blue-600 hover:text-blue-800 transition duration-300">
+                                                    <button
+                                                        class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-1.5 px-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                                                        type="button">
+                                                        <div class="flex items-center justify-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            รายละเอียด
+                                                        </div>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td class="px-3 sm:px-4 py-3 text-center">
+                                                <span
+                                                    class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                                                    <span class="w-2 h-2 me-1 bg-yellow-500 rounded-full mr-1"></span>
+                                                    {{ $details[0]->booking_detail_status }}
                                                 </span>
                                             </td>
-                                            <td class="px-4 py-2">
-                                                @if($detail->booking_detail_status === 'รอเลือกห้อง')
-                                                <button onclick="showModal('{{ $detail->booking->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition duration-300">
-                                                    เช็คอิน
-                                                </button>
+                                            <td class="px-3 sm:px-4 py-3 text-center">
+                                                @if (count($details) == 1 && $details[0]->booking_detail_status === 'รอเลือกห้อง')
+                                                    <button
+                                                        onclick="event.stopPropagation(); showModal('{{ $details[0]->booking->id }}')"
+                                                        class=" bg-gradient-to-r from-green-400 to-green-400 hover:from-green-500 hover:to-green-600 text-white px-4 py-2 rounded-md transition duration-300 shadow-sm transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                                        <div class="flex items-center justify-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                            เช็คอิน
+                                                        </div>
+                                                    </button>
                                                 @else
-                                                <span class="text-gray-500">ไม่สามารถเช็คอินได้</span>
+                                                    <button
+                                                        class="bg-gray-200 text-gray-500 px-4 py-2 rounded-md cursor-not-allowed shadow-sm flex items-center justify-center mx-auto"
+                                                        disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        เช็คอิน
+                                                    </button>
                                                 @endif
                                             </td>
                                         </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
 
-                            </td>
-                        </tr>
-                        @endif
-                        @endforeach
-                        @endif
-                    </tbody>
-
-                </table>
+                                        <!-- Dropdown for multiple bookings -->
+                                        @if (count($details) > 1)
+                                            <tr id="dropdown-{{ $bookingId }}" class="hidden">
+                                                <td colspan="5" class="bg-gray-50 p-0 border border-gray-200">
+                                                    <div class="p-4">
+                                                        <table
+                                                            class="w-full border-collapse rounded-md overflow-hidden shadow-sm">
+                                                            <thead>
+                                                                <tr
+                                                                    class="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700">
+                                                                    <th class="px-3 py-2 text-center font-medium">
+                                                                        ลำดับที่</th>
+                                                                    <th class="px-3 py-2 text-center font-medium">
+                                                                        วันที่เช็คอิน</th>
+                                                                    <th class="px-3 py-2 text-center font-medium">สถานะ
+                                                                    </th>
+                                                                    <th class="px-3 py-2 text-center font-medium">
+                                                                        เช็คอิน</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($details as $index => $detail)
+                                                                    <tr
+                                                                        class="text-gray-700 border-b border-gray-200 hover:bg-white transition duration-150">
+                                                                        <td class="px-3 py-2 text-center">
+                                                                            <div
+                                                                                class="flex items-center justify-center">
+                                                                                <span
+                                                                                    class="font-medium">{{ $index + 1 }}</span>
+                                                                                @if ($detail->extra_bed_count > 0)
+                                                                                    <span
+                                                                                        class="ml-2 text-red-500 text-xs px-2 py-0.5 rounded-full bg-red-50 font-medium">มีเตียงเสริม</span>
+                                                                                @endif
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="px-3 py-2 text-center">
+                                                                            {{ \Carbon\Carbon::parse($detail->checkin_date)->format('d M Y') }}
+                                                                        </td>
+                                                                        <td class="px-3 py-2 text-center">
+                                                                            <span
+                                                                                class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                                                                                <span
+                                                                                    class="w-2 h-2 me-1 bg-yellow-500 rounded-full mr-1"></span>
+                                                                                {{ $detail->booking_detail_status }}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td class="px-3 py-2 text-center">
+                                                                            @if ($detail->booking_detail_status === 'รอเลือกห้อง')
+                                                                                <button
+                                                                                    onclick="event.stopPropagation(); showModal('{{ $detail->booking->id }}')"
+                                                                                    class="bg-gradient-to-r from-green-400 to-green-700 hover:from-green-600 hover:to-green-700 text-white px-3 py-1 rounded-md transition duration-300 shadow-sm transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center mx-auto">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-3 w-3 mr-1"
+                                                                                        fill="none"
+                                                                                        viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M5 13l4 4L19 7" />
+                                                                                    </svg>
+                                                                                    เช็คอิน
+                                                                                </button>
+                                                                            @else
+                                                                                <span
+                                                                                    class="text-gray-500 text-sm flex items-center justify-center">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        class="h-3 w-3 mr-1"
+                                                                                        fill="none"
+                                                                                        viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                                    </svg>
+                                                                                    ไม่สามารถเช็คอินได้
+                                                                                </span>
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 @else
-                <p class="text-gray-600"> ไม่พบรายการรอเช็คอิน </p>
+                    <div class="text-center py-10">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                            </path>
+                        </svg>
+                        <h3 class="mt-2 text-lg font-medium text-gray-900">ไม่พบรายการรอเช็คอิน</h3>
+                        <p class="mt-1 text-sm text-gray-500">ขณะนี้ไม่มีการจองที่รอเช็คอิน</p>
+                    </div>
                 @endif
             </div>
         </section>
+
+        <script>
+            // Toggle dropdown visibility for multiple bookings
+            function toggleDropdown(bookingId) {
+                const dropdown = document.getElementById(`dropdown-${bookingId}`);
+                if (dropdown) {
+                    dropdown.classList.toggle('hidden');
+                }
+            }
+
+            // Initialize flatpickr with Thai locale
+            document.addEventListener('DOMContentLoaded', function() {
+                flatpickr("#checkin-date", {
+                    dateFormat: "d/m/Y",
+                    locale: "th",
+                    defaultDate: "today",
+                    onChange: function(selectedDates, dateStr) {
+                        // Add your date filter logic here
+                        console.log("Selected date:", dateStr);
+                        // You could refresh the table with AJAX here
+                    }
+                });
+            });
+
+            // Show check-in modal
+            function showModal(bookingId) {
+                // Implement your modal logic here
+                console.log("Opening check-in modal for booking:", bookingId);
+                // Example: window.location.href = `/checkin/process/${bookingId}`;
+            }
+        </script>
 
         <script>
             function toggleDropdown(bookingName) {
@@ -190,7 +321,7 @@
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="" disabled selected>กรุณาเลือกห้องที่ว่าง</option>
                                 @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
+                                    <option value="{{ $room->id }}">ห้อง {{ $room->room_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -490,7 +621,8 @@
                 create_div.innerHTML =
                     '<hr>' +
                     '<div class="flex justify-end mt-3">' +
-                    '<button class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 flex items-center justify-center shadow-md" type="button" onclick="removediv(' + count + ')">' +
+                    '<button class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all duration-300 flex items-center justify-center shadow-md" type="button" onclick="removediv(' +
+                    count + ')">' +
                     '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" stroke="none">' +
                     '<path d="M5 5h14l-1.5 14H6.5L5 5zm6 2v8h2V7h-2zM9 7v8h2V7H9zm6 0v8h2V7h-2z"/>' +
                     '<path d="M16 4h-4V3h-4v1H4v2h16V4h-4z"/>' +
@@ -499,39 +631,47 @@
                     '</div>' +
                     '<div class="mb-4">' +
                     '<label for="name" class="block text-sm font-medium">ชื่อ:</label>' +
-                    '<input type="text" id="name" name="name_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">' +
+                    '<input type="text" id="name" name="name_[' + count +
+                    ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ชื่อ">' +
                     '</div>' +
                     '<div class="grid grid-cols-2 gap-4 mb-4">' +
                     '<div>' +
                     '<label for="id_card" class="block text-sm font-medium">บัตรประชาชน:</label>' +
-                    '<input type="text" id="id_card" name="id_card_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">' +
+                    '<input type="text" id="id_card" name="id_card_[' + count +
+                    ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บัตรประชาชน">' +
                     '</div>' +
                     '<div>' +
                     '<label for="phone" class="block text-sm font-medium">เบอร์โทร:</label>' +
-                    '<input type="text" id="phone" name="phone_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">' +
+                    '<input type="text" id="phone" name="phone_[' + count +
+                    ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เบอร์โทร">' +
                     '</div>' +
                     '</div>' +
                     '<div class="mb-4">' +
                     '<label for="address" class="block text-sm font-medium">ที่อยู่:</label>' +
-                    '<input type="text" id="address" name="address_[' + count + ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">' +
+                    '<input type="text" id="address" name="address_[' + count +
+                    ']" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="บ้านเลขที่/หมู่บ้าน">' +
                     '</div>' +
                     '<div class="grid grid-cols-3 gap-4 mb-4">' +
                     '<div>' +
                     '<label for="sub_district" class="block text-sm font-medium">ตำบล/แขวง:</label>' +
-                    '<input id="sub_district" name="sub_district_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">' +
+                    '<input id="sub_district" name="sub_district_[' + count +
+                    ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ตำบล">' +
                     '</div>' +
                     '<div>' +
                     '<label for="district" class="block text-sm font-medium">อำเภอ/เขต:</label>' +
-                    '<input id="district" name="district_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">' +
+                    '<input id="district" name="district_[' + count +
+                    ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="อำเภอ">' +
                     '</div>' +
                     '<div>' +
                     '<label for="province" class="block text-sm font-medium">จังหวัด:</label>' +
-                    '<input id="province" name="province_[' + count + ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">' +
+                    '<input id="province" name="province_[' + count +
+                    ']" type="text" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="จังหวัด">' +
                     '</div>' +
                     '</div>' +
                     '<div class="mb-4">' +
                     '<label for="postcode" class="block text-sm font-medium">รหัสไปรษณีย์:</label>' +
-                    '<input id="postcode" name="postcode_[' + count + ']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
+                    '<input id="postcode" name="postcode_[' + count +
+                    ']" type="text" required class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสไปรษณีย์">' +
                     '</div>';
 
                 show_text.appendChild(create_div);
