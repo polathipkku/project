@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
                 <!-- Header Section with improved mobile responsiveness -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h3 class="text-2xl md:text-3xl font-bold text-gray-800">ประวัติการซ่อม</h3>
-                    
+
                     <div class="flex w-full md:w-auto gap-3 flex-col sm:flex-row">
                         <!-- Filter Dropdown -->
                         {{-- <div class="relative">
@@ -38,16 +39,16 @@
                                 </svg>
                             </div>
                         </div> --}}
-                        
+
                         <!-- Search Bar -->
                         <form action="{{ url('/repairreport') }}" method="GET" class="w-full">
                             @csrf
                             <div class="relative w-full">
-                                <input type="text" 
-                                       name="search" 
-                                       placeholder="ค้นหาห้องหรือรายการซ่อม" 
-                                       value="{{ request('search') }}"
-                                       class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 shadow-sm transition duration-200">
+                                <input type="text"
+                                    name="search"
+                                    placeholder="ค้นหาห้องหรือรายการซ่อม"
+                                    value="{{ request('search') }}"
+                                    class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 shadow-sm transition duration-200">
                                 <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -73,7 +74,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white rounded-lg shadow p-5 border border-gray-200">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-green-50 text-green-600">
@@ -87,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white rounded-lg shadow p-5 border border-gray-200">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-amber-50 text-amber-600">
@@ -101,7 +102,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white rounded-lg shadow p-5 border border-gray-200">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-purple-50 text-purple-600">
@@ -157,7 +158,7 @@
                         </svg>
                         ประวัติการซ่อมแยกตามห้อง
                     </h4>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         @foreach($repairCounts->groupBy('room_id')->take(6) as $roomId => $items)
                         @php
@@ -165,7 +166,7 @@
                         $waitingPayment = $items->whereIn('thing_status', ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ'])->count();
                         $paid = $items->whereIn('thing_status', ['จ่ายเงินค่าซ่อมสำเร็จ', 'จ่ายเงินค่าซื้อเปลี่ยนสำเร็จ'])->count();
                         @endphp
-                        
+
                         <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                             <!-- Room Header -->
                             <div class="p-5 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
@@ -198,12 +199,12 @@
                                     </div>
                                 </div>
                             </div>
-                
+
                             <!-- Button to trigger popup -->
                             <div class="p-4">
-                                <button type="button" 
-                                        onclick="openRepairModal('repair-modal-{{ $roomId }}')"
-                                        class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 transition duration-200 rounded-lg font-medium">
+                                <button type="button"
+                                    onclick="openRepairModal('repair-modal-{{ $roomId }}')"
+                                    class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 transition duration-200 rounded-lg font-medium">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                     </svg>
@@ -211,22 +212,22 @@
                                 </button>
                             </div>
                         </div>
-                
+
                         <!-- Modal for repair details -->
-                        <div id="repair-modal-{{ $roomId }}" 
-                             class="fixed inset-0 z-50 hidden overflow-auto"
-                             aria-labelledby="modal-title" 
-                             role="dialog" 
-                             aria-modal="true">
+                        <div id="repair-modal-{{ $roomId }}"
+                            class="fixed inset-0 z-50 hidden overflow-auto"
+                            aria-labelledby="modal-title"
+                            role="dialog"
+                            aria-modal="true">
                             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block">
                                 <!-- Background overlay -->
-                                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
-                                     aria-hidden="true"
-                                     onclick="closeRepairModal('repair-modal-{{ $roomId }}')"></div>
-                
+                                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                                    aria-hidden="true"
+                                    onclick="closeRepairModal('repair-modal-{{ $roomId }}')"></div>
+
                                 <!-- This element centers the modal contents -->
                                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                
+
                                 <!-- Modal panel -->
                                 <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full relative">
                                     <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex justify-between items-center">
@@ -236,15 +237,15 @@
                                             </svg>
                                             รายการซ่อมห้อง {{ $roomName }}
                                         </h3>
-                                        <button type="button" 
-                                                onclick="closeRepairModal('repair-modal-{{ $roomId }}')"
-                                                class="text-white hover:text-gray-200">
+                                        <button type="button"
+                                            onclick="closeRepairModal('repair-modal-{{ $roomId }}')"
+                                            class="text-white hover:text-gray-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </div>
-                                    
+
                                     <div class="max-h-96 overflow-y-auto divide-y divide-gray-100">
                                         @foreach($items as $repair)
                                         <div class="p-4 hover:bg-gray-50 transition-colors duration-200">
@@ -258,7 +259,7 @@
                                                             </svg>
                                                             {{ \Carbon\Carbon::parse($repair->created_at)->format('d/m/Y') }}
                                                         </span>
-                                                        
+
                                                         @if(in_array($repair->thing_status, ['จ่ายเงินค่าซ่อมสำเร็จ', 'จ่ายเงินค่าซื้อเปลี่ยนสำเร็จ']))
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,40 +274,40 @@
                                                         @endif
                                                     </div>
                                                 </div>
-                                                
+
                                                 <!-- แสดงฟอร์มเฉพาะสถานะ ซ่อมสำเร็จ หรือ ซื้อเปลี่ยนสำเร็จ -->
                                                 @if(in_array($repair->thing_status, ['ซ่อมสำเร็จ', 'ซื้อเปลี่ยนสำเร็จ']))
-                                                <form action="{{ route('updateRepairStatus', $repair->id) }}" method="POST" 
-                                                      class="flex gap-2 items-center">
+                                                <form action="{{ route('updateRepairStatus', $repair->id) }}" method="POST" class="flex gap-2 items-center">
                                                     @csrf
                                                     <div class="relative">
                                                         <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                                                             <span class="text-gray-500 text-sm">฿</span>
                                                         </div>
-                                                        <input type="number" 
-                                                               name="expenses_price" 
-                                                               placeholder="ราคา" 
-                                                               required
-                                                               class="pl-6 py-2 w-24 rounded-lg border-gray-200 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                                        <input type="number" name="expenses_price" placeholder="ราคา" required
+                                                            class="pl-6 py-2 w-24 rounded-lg border-gray-200 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                                                     </div>
-                                                    <button type="submit"
-                                                            class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition duration-200 flex items-center">
+
+                                                    <input type="text" name="expenses_note" placeholder="หมายเหตุ (ถ้ามี)"
+                                                        class="py-2 px-3 w-48 rounded-lg border-gray-200 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+                                                    <button type="submit" class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition duration-200 flex items-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                         </svg>
                                                         บันทึก
                                                     </button>
                                                 </form>
+
                                                 @else
                                                 <!-- แสดงค่าใช้จ่ายสำหรับรายการที่ชำระแล้ว -->
                                                 <div class="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 text-sm">
                                                     <p class="text-gray-500 text-xs">ค่าใช้จ่าย</p>
                                                     @php
-                                                        // ค้นหาค่าใช้จ่ายจากตาราง expenses
-                                                        $expense = App\Models\Expense::where('expenses_name', $repair->productroom_name)
-                                                                    ->where('room_id', $repair->room_id)
-                                                                    ->first();
-                                                        $amount = $expense ? $expense->expenses_price : 0;
+                                                    // ค้นหาค่าใช้จ่ายจากตาราง expenses
+                                                    $expense = App\Models\Expense::where('expenses_name', $repair->productroom_name)
+                                                    ->where('room_id', $repair->room_id)
+                                                    ->first();
+                                                    $amount = $expense ? $expense->expenses_price : 0;
                                                     @endphp
                                                     <p class="font-medium">฿{{ number_format($amount) }}</p>
                                                 </div>
@@ -315,11 +316,11 @@
                                         </div>
                                         @endforeach
                                     </div>
-                                    
+
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" 
-                                                onclick="closeRepairModal('repair-modal-{{ $roomId }}')"
-                                                class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                        <button type="button"
+                                            onclick="closeRepairModal('repair-modal-{{ $roomId }}')"
+                                            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                             ปิด
                                         </button>
                                     </div>
@@ -329,19 +330,19 @@
                         @endforeach
                     </div>
                 </div>
-                
+
                 <!-- Add this JavaScript to the bottom of your page or in your layout file -->
                 <script>
                     function openRepairModal(modalId) {
                         document.getElementById(modalId).classList.remove('hidden');
                         document.body.classList.add('overflow-hidden');
                     }
-                    
+
                     function closeRepairModal(modalId) {
                         document.getElementById(modalId).classList.add('hidden');
                         document.body.classList.remove('overflow-hidden');
                     }
-                
+
                     // Close modal when clicking ESC key
                     document.addEventListener('keydown', function(event) {
                         if (event.key === 'Escape') {
@@ -352,43 +353,43 @@
                         }
                     });
                 </script>
-                    
-                    <!-- Pagination Controls -->
-                    @if($repairCounts->groupBy('room_id')->count() > 6)
-                    <div class="mt-6 flex justify-center">
-                        <nav class="flex items-center space-x-2">
-                            <a href="#" class="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
-                                <span class="sr-only">Previous</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </a>
-                            <a href="#" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">1</a>
-                            <a href="#" class="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">2</a>
-                            <a href="#" class="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">3</a>
-                            <a href="#" class="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
-                                <span class="sr-only">Next</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </nav>
-                    </div>
-                    @endif
-                </div>
 
-                <!-- Empty State - Only shown when no data -->
-                @if($repairCounts->count() === 0)
-                <div class="flex flex-col items-center justify-center p-10 bg-white rounded-xl shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <h3 class="text-xl font-medium text-gray-700 mb-1">ไม่พบข้อมูลการซ่อม</h3>
-                    <p class="text-gray-500 mb-4">ไม่มีประวัติการซ่อมบำรุงในระบบ</p>
+                <!-- Pagination Controls -->
+                @if($repairCounts->groupBy('room_id')->count() > 6)
+                <div class="mt-6 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </a>
+                        <a href="#" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium">1</a>
+                        <a href="#" class="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">2</a>
+                        <a href="#" class="px-4 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">3</a>
+                        <a href="#" class="px-3 py-2 rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </nav>
                 </div>
                 @endif
             </div>
-        </main>
+
+            <!-- Empty State - Only shown when no data -->
+            @if($repairCounts->count() === 0)
+            <div class="flex flex-col items-center justify-center p-10 bg-white rounded-xl shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <h3 class="text-xl font-medium text-gray-700 mb-1">ไม่พบข้อมูลการซ่อม</h3>
+                <p class="text-gray-500 mb-4">ไม่มีประวัติการซ่อมบำรุงในระบบ</p>
+            </div>
+            @endif
+    </div>
+    </main>
     </div>
 
     <!-- Add tooltips and progressive enhancement with a small script -->
@@ -419,4 +420,5 @@
         });
     </script>
 </body>
+
 </html>

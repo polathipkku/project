@@ -112,8 +112,9 @@ class ProductController extends Controller
             'package_type' => 'required|in:แพ็คใหญ่,แพ็คเล็ก',
         ]);
 
-        // คำนวณ stock_qty ถ้ามีค่า pack_qty และ items_per_pack
+        // คำนวณ stock_qty และ sumitem
         $stock_qty = $request->pack_qty * $request->items_per_pack;
+        $sumitem = $request->pack_qty * $request->items_per_pack;
 
         // สร้าง Stock
         $stock = new Stock();
@@ -128,6 +129,7 @@ class ProductController extends Controller
         $stockPackage->pack_qty = $request->pack_qty;
         $stockPackage->items_per_pack = $request->items_per_pack;
         $stockPackage->package_type = $request->package_type;
+        $stockPackage->sumitem = $sumitem;
         $stockPackage->save();
 
         // ตรวจสอบว่ามี Product Type "เครื่องอาบน้ำ" หรือยัง ถ้ายังไม่มีให้สร้างใหม่
@@ -148,6 +150,7 @@ class ProductController extends Controller
     }
 
 
+
     public function editProduct($id)
     {
         $product = Product::findOrFail($id);
@@ -162,20 +165,21 @@ class ProductController extends Controller
             'items_per_pack' => 'required|integer|min:1',
             'package_type' => 'required|in:แพ็คใหญ่,แพ็คเล็ก',
         ]);
-
+    
         $product = Product::findOrFail($id);
-
+    
         // คำนวณ stock ใหม่
         $additionalStock = $request->pack_qty * $request->items_per_pack;
-
+    
         // บันทึกข้อมูลลง StockPackage (สร้างแถวใหม่)
         StockPackage::create([
             'stock_id' => $product->stock->id, // เชื่อมกับ stock_id
             'pack_qty' => $request->pack_qty,
             'items_per_pack' => $request->items_per_pack,
+            'sumitem' => $request->pack_qty * $request->items_per_pack, // ✅ คำนวณ sumitem
             'package_type' => $request->package_type, // แพ็คใหญ่/แพ็คเล็ก
         ]);
-
+    
         // อัปเดต stock_qty ใน stocks
         if ($product->stock) {
             $product->stock->increment('stock_qty', $additionalStock);
@@ -187,11 +191,10 @@ class ProductController extends Controller
                 'update_qty' => $additionalStock,
             ]);
         }
-
+    
         return back()->with('success', 'Stock ถูกอัปเดต และบันทึกแพ็คเรียบร้อยแล้ว');
     }
-
-
+    
 
 
     public function updateProduct(Request $request, $id)

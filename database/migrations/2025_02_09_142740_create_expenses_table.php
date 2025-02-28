@@ -20,12 +20,14 @@ class CreateExpensesTable extends Migration
             $table->decimal('expenses_price', 10, 2);
             $table->date('expenses_date'); 
             $table->string('type')->nullable(); 
+            $table->text('expenses_note')->nullable();
             $table->softDeletes();
-
+    
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.

@@ -18,6 +18,7 @@ use App\Models\Checkout;
 use App\Models\Promotion;
 use App\Models\Maintenance;
 use App\Models\Payment;
+use App\Models\StockPackage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -1145,7 +1146,31 @@ class BookingController extends Controller
 
                     if ($stock && $stock->stock_qty >= 2) {
                         // ลด stock_qty ลง 2
-                        $stock->stock_qty -= 1;
+                        $stock->stock_qty -= 2;
+
+                        // จำนวนที่ต้องลด
+                        $remainingToReduce = 2;
+
+                        // ค้นหา stock_packages ของ stock_id นี้ และเรียง id น้อยสุดก่อน
+                        $stockPackages = StockPackage::where('stock_id', $stock->id)
+                            ->orderBy('id') // ✅ ลดจาก id น้อยสุดก่อน
+                            ->get();
+
+                        foreach ($stockPackages as $package) {
+                            if ($remainingToReduce <= 0) {
+                                break;
+                            }
+
+                            if ($package->sumitem >= $remainingToReduce) {
+                                $package->sumitem -= $remainingToReduce;
+                                $remainingToReduce = 0;
+                            } else {
+                                $remainingToReduce -= $package->sumitem;
+                                $package->sumitem = 0;
+                            }
+
+                            $package->save();
+                        }
 
                         // คำนวณค่า pack_qty ใหม่
                         if ($stock->items_per_pack > 0) {

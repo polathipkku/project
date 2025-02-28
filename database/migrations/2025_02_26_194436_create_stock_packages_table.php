@@ -19,6 +19,8 @@ class CreateStockPackagesTable extends Migration
             $table->integer('pack_qty');
             $table->integer('items_per_pack');
             $table->enum('package_type', ['แพ็คใหญ่', 'แพ็คเล็ก']);
+            $table->integer('sumitem')->default(0);
+
             $table->timestamps();
             $table->softDeletes();
 

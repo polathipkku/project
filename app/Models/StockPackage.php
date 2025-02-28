@@ -15,6 +15,8 @@ class StockPackage extends Model
         'pack_qty',
         'items_per_pack',
         'package_type',
+        'sumitem',
+
     ];
 
     public function stock()

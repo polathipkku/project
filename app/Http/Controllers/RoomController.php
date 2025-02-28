@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\StockPackage;
 use App\Models\Product_type;
 
 class RoomController extends Controller
@@ -29,39 +30,63 @@ class RoomController extends Controller
     {
         // ค้นหาห้อง
         $room = Room::findOrFail($id);
-
+    
         // อัปเดตสถานะห้อง
         $room->room_status = 'พร้อมให้บริการ';
         $room->save();
-
+    
         // ค้นหาประเภทสินค้า "เครื่องอาบน้ำ"
         $bathroomProductType = Product_type::where('product_type_name', 'เครื่องอาบน้ำ')->first();
-
+    
         if ($bathroomProductType) {
             // ค้นหาสินค้าทั้งหมดที่อยู่ในประเภท "เครื่องอาบน้ำ"
             $products = Product::where('product_types_id', $bathroomProductType->id)->get();
-
+    
             foreach ($products as $product) {
                 // ค้นหาสต็อกของสินค้านั้น
                 $stock = Stock::find($product->stocks_id);
-
+    
                 if ($stock && $stock->stock_qty >= 2) {
                     // ลด stock_qty ลง 2
                     $stock->stock_qty -= 2;
-
+                    
+                    // จำนวนที่ต้องลด
+                    $remainingToReduce = 2;
+    
+                    // ค้นหา stock_packages ของ stock_id นี้ และเรียง id น้อยสุดก่อน
+                    $stockPackages = StockPackage::where('stock_id', $stock->id)
+                        ->orderBy('id') 
+                        ->get();
+    
+                    foreach ($stockPackages as $package) {
+                        if ($remainingToReduce <= 0) {
+                            break;
+                        }
+    
+                        if ($package->sumitem >= $remainingToReduce) {
+                            $package->sumitem -= $remainingToReduce;
+                            $remainingToReduce = 0;
+                        } else {
+                            $remainingToReduce -= $package->sumitem;
+                            $package->sumitem = 0;
+                        }
+    
+                        $package->save();
+                    }
+    
                     // คำนวณค่า pack_qty ใหม่
                     if ($stock->items_per_pack > 0) {
                         $stock->pack_qty = ceil($stock->stock_qty / $stock->items_per_pack);
                     }
-
+    
                     $stock->save();
                 }
             }
         }
-
+    
         return redirect()->back()->with('success', 'ทำความสะอาดห้องเรียบร้อย และลดสต็อกสินค้าแล้ว');
     }
-
+    
 
     public function add_room()
     {

@@ -55,7 +55,7 @@ class MaintenanceceController extends Controller
     public function updateRepairStatus(Request $request, $id)
     {
         $checkoutDetail = CheckoutDetail::findOrFail($id);
-
+    
         // กำหนดค่า type และ status ใหม่
         if ($checkoutDetail->thing_status === 'ซ่อมสำเร็จ') {
             $newStatus = 'จ่ายเงินค่าซ่อมสำเร็จ';
@@ -66,23 +66,23 @@ class MaintenanceceController extends Controller
         } else {
             return redirect()->back()->with('error', 'ไม่สามารถเปลี่ยนสถานะได้');
         }
-
+    
         // อัปเดตสถานะ
         $checkoutDetail->thing_status = $newStatus;
         $checkoutDetail->save();
-
-        // บันทึกลงตาราง expenses
+    
         Expense::create([
             'expenses_name' => $checkoutDetail->productroom_name,
             'expenses_price' => $request->input('expenses_price'),
             'expenses_date' => now(),
             'type' => $type,
             'room_id' => $checkoutDetail->room_id,
+            'expenses_note' => $request->input('expenses_note'),
         ]);
-
+    
         return redirect()->back()->with('success', 'อัปเดตสถานะเรียบร้อยแล้ว');
     }
-
+    
 
     public function maintenanceroom()
     {
