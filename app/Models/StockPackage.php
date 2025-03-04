@@ -12,11 +12,11 @@ class StockPackage extends Model
 
     protected $fillable = [
         'stock_id',
+        'stockproduct_name',
         'pack_qty',
         'items_per_pack',
-        'package_type',
         'sumitem',
-
+        'package_type',
     ];
 
     public function stock()

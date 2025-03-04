@@ -106,44 +106,60 @@
                                                 @csrf
 
                                                 <label class="block text-sm font-medium text-gray-700 mt-2">เลือกสินค้า</label>
-                                                <select name="stockproduct_name" class="w-full border rounded-lg p-2" required>
+                                                <select id="stockproduct_name-{{ $productItem->id }}" name="stockproduct_name" class="w-full border rounded-lg p-2" required onchange="updatePackageAndItems(this, {{ $productItem->id }})">
+                                                    <option value="" selected disabled>เลือกสินค้า</option>
                                                     @php
-                                                    $uniqueStockProducts = collect($productItem->stock->stockPackages ?? [])
+                                                    $allStockProducts = collect($productItem->stock->stockPackages ?? [])
                                                     ->pluck('stockproduct_name')
-                                                    ->unique();
+                                                    ->unique()
+                                                    ->flatMap(function ($stockproductName) {
+                                                    return [
+                                                        "{$stockproductName} - แพ็คใหญ่ - 12",
+                                                    "{$stockproductName} - แพ็คเล็ก - 6",
+                                                    ];
+                                                    });
                                                     @endphp
 
-                                                    @foreach($uniqueStockProducts as $stockproductName)
-                                                    <option value="{{ $stockproductName }}">{{ $stockproductName }}</option>
+                                                    @foreach($allStockProducts as $stockproductDisplay)
+                                                    <option value="{{ $stockproductDisplay }}">{{ $stockproductDisplay }}</option>
                                                     @endforeach
                                                 </select>
+
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">ประเภทแพ็ค</label>
+                                                <input type="text" id="package_type-{{ $productItem->id }}" name="package_type" class="w-full border rounded-lg p-2 bg-gray-200" required readonly>
+
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
+                                                <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2 bg-gray-200" min="1" required readonly>
+
+                                                <script>
+                                                    function updatePackageAndItems(selectElement, productId) {
+                                                        const packageTypeInput = document.getElementById(`package_type-${productId}`);
+                                                        const itemsPerPackInput = document.getElementById(`items_per_pack-${productId}`);
+
+                                                        if (!selectElement.value) {
+                                                            packageTypeInput.value = "";
+                                                            itemsPerPackInput.value = "";
+                                                            return;
+                                                        }
+
+                                                        // ดึงค่าที่เลือกแล้วแยกประเภทแพ็คและจำนวนของในแพ็ค
+                                                        const selectedText = selectElement.value;
+                                                        const matches = selectedText.match(/แพ็ค(เล็ก|ใหญ่) - (\d+)/);
+
+                                                        if (matches) {
+                                                            packageTypeInput.value = `แพ็ค${matches[1]}`;
+                                                            itemsPerPackInput.value = matches[2];
+                                                        } else {
+                                                            packageTypeInput.value = "";
+                                                            itemsPerPackInput.value = "";
+                                                        }
+                                                    }
+                                                </script>
 
 
                                                 <label class="block text-sm font-medium text-gray-700">จำนวนแพ็ค</label>
                                                 <input type="number" id="pack_qty-{{ $productItem->id }}" name="pack_qty" class="w-full border rounded-lg p-2" min="1" required>
 
-                                                <label class="block text-sm font-medium text-gray-700 mt-2">ประเภทแพ็ค</label>
-                                                <select name="package_type" class="w-full border rounded-lg p-2" required onchange="updateItemsPerPack(this, {{ $productItem->id }})">
-                                                    <option value="" selected disabled>เลือกประเภทแพ็ค</option>
-                                                    <option value="แพ็คใหญ่">แพ็คใหญ่</option>
-                                                    <option value="แพ็คเล็ก">แพ็คเล็ก</option>
-                                                </select>
-
-                                                <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
-                                                <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2" min="1" required readonly>
-
-
-                                                <script>
-                                                    function updateItemsPerPack(selectElement, productId) {
-                                                        const itemsPerPackInput = document.getElementById(`items_per_pack-${productId}`);
-
-                                                        if (selectElement.value === "แพ็คเล็ก") {
-                                                            itemsPerPackInput.value = 6;
-                                                        } else if (selectElement.value === "แพ็คใหญ่") {
-                                                            itemsPerPackInput.value = 12;
-                                                        }
-                                                    }
-                                                </script>
                                                 <div class="flex justify-between mt-4">
                                                     <button type="button" onclick="closeModal({{ $productItem->id }})" class="bg-gray-500 text-white py-2 px-4 rounded-lg">ยกเลิก</button>
                                                     <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg">เพิ่ม Stock</button>

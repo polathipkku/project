@@ -20,6 +20,7 @@ class CreateStockPackagesTable extends Migration
             $table->integer('items_per_pack');
             $table->enum('package_type', ['แพ็คใหญ่', 'แพ็คเล็ก']);
             $table->integer('sumitem')->default(0);
+            $table->string('stockproduct_name')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
