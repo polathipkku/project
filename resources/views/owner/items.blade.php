@@ -71,7 +71,9 @@
                                     <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
                                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $productItem->product_name }}</td>
                                         <td class="py-3 px-6 text-center">
-                                            <span id="current_pack_qty-{{ $productItem->id }}">{{ $productItem->stock->pack_qty }}</span>
+                                            <span id="current_pack_qty-{{ $productItem->id }}">
+                                                {{ $productItem->stock->stockPackages->first()->pack_qty ?? '-' }}
+                                            </span>
                                         </td>
                                         <td class="py-3 px-6 text-center">
                                             <span id="current_stock-{{ $productItem->id }}">{{ $productItem->stock->stock_qty }}</span>
@@ -80,8 +82,10 @@
                                             <div class="flex items-center justify-center gap-4">
                                                 <!-- ปุ่มเพิ่ม Stock -->
                                                 <button onclick="openModal({{ $productItem->id }})" class="text-black hover:text-blue-500 focus:outline-none">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                    <i class="fa-solid fa-plus-square"></i>
                                                 </button>
+
+
 
                                                 <!-- ปุ่มลบ -->
                                                 <a href="{{ url('/product/delete/'.$productItem->id) }}" class="delete-link">
@@ -100,18 +104,46 @@
                                             <h2 class="text-xl font-semibold mb-4 text-center">เพิ่ม Stock</h2>
                                             <form action="{{ route('updateStock', $productItem->id) }}" method="POST" onsubmit="updateStockDisplay(event, {{ $productItem->id }})">
                                                 @csrf
+
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">เลือกสินค้า</label>
+                                                <select name="stockproduct_name" class="w-full border rounded-lg p-2" required>
+                                                    @php
+                                                    $uniqueStockProducts = collect($productItem->stock->stockPackages ?? [])
+                                                    ->pluck('stockproduct_name')
+                                                    ->unique();
+                                                    @endphp
+
+                                                    @foreach($uniqueStockProducts as $stockproductName)
+                                                    <option value="{{ $stockproductName }}">{{ $stockproductName }}</option>
+                                                    @endforeach
+                                                </select>
+
+
                                                 <label class="block text-sm font-medium text-gray-700">จำนวนแพ็ค</label>
                                                 <input type="number" id="pack_qty-{{ $productItem->id }}" name="pack_qty" class="w-full border rounded-lg p-2" min="1" required>
 
-                                                <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
-                                                <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2" min="1" required>
-
                                                 <label class="block text-sm font-medium text-gray-700 mt-2">ประเภทแพ็ค</label>
-                                                <select name="package_type" class="w-full border rounded-lg p-2" required>
-                                                    <option value="แพ็คเล็ก">แพ็คเล็ก</option>
+                                                <select name="package_type" class="w-full border rounded-lg p-2" required onchange="updateItemsPerPack(this, {{ $productItem->id }})">
+                                                    <option value="" selected disabled>เลือกประเภทแพ็ค</option>
                                                     <option value="แพ็คใหญ่">แพ็คใหญ่</option>
+                                                    <option value="แพ็คเล็ก">แพ็คเล็ก</option>
                                                 </select>
 
+                                                <label class="block text-sm font-medium text-gray-700 mt-2">จำนวนของในแพ็ค</label>
+                                                <input type="number" id="items_per_pack-{{ $productItem->id }}" name="items_per_pack" class="w-full border rounded-lg p-2" min="1" required readonly>
+
+
+                                                <script>
+                                                    function updateItemsPerPack(selectElement, productId) {
+                                                        const itemsPerPackInput = document.getElementById(`items_per_pack-${productId}`);
+
+                                                        if (selectElement.value === "แพ็คเล็ก") {
+                                                            itemsPerPackInput.value = 6;
+                                                        } else if (selectElement.value === "แพ็คใหญ่") {
+                                                            itemsPerPackInput.value = 12;
+                                                        }
+                                                    }
+                                                </script>
                                                 <div class="flex justify-between mt-4">
                                                     <button type="button" onclick="closeModal({{ $productItem->id }})" class="bg-gray-500 text-white py-2 px-4 rounded-lg">ยกเลิก</button>
                                                     <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg">เพิ่ม Stock</button>

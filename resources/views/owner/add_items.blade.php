@@ -41,6 +41,12 @@
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-4">
+                        <label for="stockproduct_name" class="block text-sm font-medium text-gray-700">ชื่อสินค้าในสต็อก</label>
+                        <input type="text" name="stockproduct_name" class="w-full p-2 border rounded-lg">
+                        @error('stockproduct_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
 
                     <!-- จำนวนแพ็ค -->
                     <div class="mb-4">

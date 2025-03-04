@@ -320,7 +320,7 @@
                 <!-- Submit -->
                 <div class="text-center">
                     <button type="submit"
-                        class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-full hover:from-yellow-300 hover:to-orange-400 transition duration-300 shadow-lg">
+                        class=" bg-white border border-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-500 hover:text-black transition duration-300 shadow-lg">
                         ยืนยันการจอง
                     </button>
                 </div>

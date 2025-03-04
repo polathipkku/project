@@ -31,11 +31,14 @@ class ProductController extends Controller
     {
         $product = Product::whereHas('productType', function ($query) {
             $query->where('product_type_name', 'เครื่องอาบน้ำ');
-        })->get();
+        })
+            ->with(['stock.stockPackages']) // โหลด StockPackages ที่เกี่ยวข้อง
+            ->get();
 
         $product_types = $this->product_types();
         return view('owner.items', compact('product', 'product_types'));
     }
+
 
 
     public function add_product()
@@ -106,7 +109,7 @@ class ProductController extends Controller
     public function additem(Request $request)
     {
         $request->validate([
-            'product_name' => 'required|unique:products,product_name',
+            'product_name' => 'required',
             'pack_qty' => 'nullable|integer|min:1',
             'items_per_pack' => 'nullable|integer|min:1',
             'package_type' => 'required|in:แพ็คใหญ่,แพ็คเล็ก',
@@ -130,26 +133,30 @@ class ProductController extends Controller
         $stockPackage->items_per_pack = $request->items_per_pack;
         $stockPackage->package_type = $request->package_type;
         $stockPackage->sumitem = $sumitem;
+        $stockPackage->stockproduct_name = $request->product_name;
         $stockPackage->save();
 
         // ตรวจสอบว่ามี Product Type "เครื่องอาบน้ำ" หรือยัง ถ้ายังไม่มีให้สร้างใหม่
         $productType = Product_type::firstOrCreate(['product_type_name' => 'เครื่องอาบน้ำ']);
 
-        // สร้าง Product
-        $product = new Product();
-        $product->product_name = $request->product_name;
-        $product->product_status = 'พร้อมให้บริการ';
+        // ตรวจสอบว่ามี `product_name` นี้อยู่ใน products หรือไม่
+        $existingProduct = Product::where('product_name', $request->product_name)->first();
 
-        // เชื่อมโยงกับ Stock และ Product Type
-        $product->stock()->associate($stock);
-        $product->productType()->associate($productType);
+        if (!$existingProduct) {
+            // ถ้าไม่มี ให้เพิ่ม Product ใหม่
+            $product = new Product();
+            $product->product_name = $request->product_name;
+            $product->product_status = 'พร้อมให้บริการ';
 
-        $product->save();
+            // เชื่อมโยงกับ Stock และ Product Type
+            $product->stock()->associate($stock);
+            $product->productType()->associate($productType);
+
+            $product->save();
+        }
 
         return redirect()->route('items')->with('success', "เพิ่มข้อมูลสำเร็จ");
     }
-
-
 
     public function editProduct($id)
     {
@@ -165,12 +172,12 @@ class ProductController extends Controller
             'items_per_pack' => 'required|integer|min:1',
             'package_type' => 'required|in:แพ็คใหญ่,แพ็คเล็ก',
         ]);
-    
+
         $product = Product::findOrFail($id);
-    
+
         // คำนวณ stock ใหม่
         $additionalStock = $request->pack_qty * $request->items_per_pack;
-    
+
         // บันทึกข้อมูลลง StockPackage (สร้างแถวใหม่)
         StockPackage::create([
             'stock_id' => $product->stock->id, // เชื่อมกับ stock_id
@@ -179,7 +186,7 @@ class ProductController extends Controller
             'sumitem' => $request->pack_qty * $request->items_per_pack, // ✅ คำนวณ sumitem
             'package_type' => $request->package_type, // แพ็คใหญ่/แพ็คเล็ก
         ]);
-    
+
         // อัปเดต stock_qty ใน stocks
         if ($product->stock) {
             $product->stock->increment('stock_qty', $additionalStock);
@@ -191,10 +198,10 @@ class ProductController extends Controller
                 'update_qty' => $additionalStock,
             ]);
         }
-    
+
         return back()->with('success', 'Stock ถูกอัปเดต และบันทึกแพ็คเรียบร้อยแล้ว');
     }
-    
+
 
 
     public function updateProduct(Request $request, $id)
