@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductRoomController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\OwnerMiddleware;
 use App\Http\Controllers\PaymentTypeController;
 
@@ -80,6 +81,12 @@ Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
 Route::get('/employeehome', [RoomController::class, 'employeehome'])->name('employeehome');
 Route::get('/userbooking', [BookingController::class, 'userbooking'])->name('userbooking');
 
+Route::get('/profile/{user}/edit', [UserController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/{user}', [UserController::class, 'update'])->name('profile.update');
+
+
+Route::get('/profile', [UserController::class, 'edit'])->name('user.edit');
+
 Route::get('/t', [BookingController::class, 't'])->name('t');
 Route::get('/reserve', [BookingController::class, 'showReserveForm'])->name('reserve');
 Route::post('/reserve', [BookingController::class, 'reserve'])->name('bookings.reserve');
@@ -141,7 +148,6 @@ Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.st
 Route::get('/expenses/{id}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
 Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 Route::put('/expenses/{id}', [ExpenseController::class, 'update'])->name('expenses.update');
-
 
 
 

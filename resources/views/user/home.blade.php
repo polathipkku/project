@@ -75,34 +75,35 @@
 
                     <!-- Auth Links -->
                     @auth
-                        <div class="space-y-3 border-t border-gray-200 pt-3">
-                            <a href="{{ route('reservation') }}" class="block text-black hover:text-blue-400">
-                                <i class="fa-solid fa-clock-rotate-left mr-2"></i>ประวัติการจอง
-                            </a>
-                            <a href="" class="block text-black hover:text-blue-400">
-                                <i class="fa-solid fa-user mr-2"></i>โปรไฟล์
-                            </a>
-                            <a href="" class="block text-black hover:text-blue-400">
-                                <i class="fa-solid fa-gear mr-2"></i>ตั้งค่า
-                            </a>
-                            <a href="#"
-                                onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
-                                class="block text-black hover:text-blue-400">
-                                <i class="fa-solid fa-sign-out-alt mr-2"></i>ออกจากระบบ
-                            </a>
-                            <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
-                        </div>
+                    <div class="space-y-3 border-t border-gray-200 pt-3">
+                        <a href="{{ route('reservation') }}" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-clock-rotate-left mr-2"></i>ประวัติการจอง
+                        </a>
+                        <a href="{{ route('profile.edit', ['user' => auth()->id()]) }}" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-user mr-2"></i>โปรไฟล์
+                        </a>
+
+                        <a href="" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-gear mr-2"></i>ตั้งค่า
+                        </a>
+                        <a href="#"
+                            onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                            class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                        </a>
+                        <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                            @csrf
+                        </form>
+                    </div>
                     @else
-                        <div class="space-y-3 border-t border-gray-200 pt-3">
-                            <a href="#" onclick="showLoginForm()" class="block hover:text-blue-400">
-                                <i class="fa-solid fa-right-to-bracket mr-2"></i>เข้าสู่ระบบ
-                            </a>
-                            <a href="#" onclick="showRegisterForm()" class="block hover:text-blue-400">
-                                <i class="fa-solid fa-user-plus mr-2"></i>สมัครสมาชิก
-                            </a>
-                        </div>
+                    <div class="space-y-3 border-t border-gray-200 pt-3">
+                        <a href="#" onclick="showLoginForm()" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-right-to-bracket mr-2"></i>เข้าสู่ระบบ
+                        </a>
+                        <a href="#" onclick="showRegisterForm()" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-user-plus mr-2"></i>สมัครสมาชิก
+                        </a>
+                    </div>
                     @endauth
                 </div>
             </div>
@@ -123,49 +124,49 @@
 
                 <div class="flex items-center space-x-4 mr-3">
                     @auth
-                        <nav class="flex items-center space-x-10 text-base">
-                            <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">
-                                ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i>
-                            </a>
-                            <div class="relative">
-                                <button id="profileButton" type="button"
-                                    class="text-black hover:text-blue-400 focus:outline-none">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span class="sr-only">User Menu</span>
-                                </button>
-                                <div id="profileDropdown"
-                                    class="absolute hidden right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
-                                    <div class="py-1">
-                                        <a href=""
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">โปรไฟล์</a>
-                                        <a href=""
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ตั้งค่า</a>
-                                        <a href="#"
-                                            onclick="event.preventDefault(); document.getElementById('desktop-logout-form').submit();"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ออกจากระบบ</a>
-                                    </div>
+                    <nav class="flex items-center space-x-10 text-base">
+                        <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">
+                            ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i>
+                        </a>
+                        <div class="relative">
+                            <button id="profileButton" type="button"
+                                class="text-black hover:text-blue-400 focus:outline-none">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="sr-only">User Menu</span>
+                            </button>
+                            <div id="profileDropdown"
+                                class="absolute hidden right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+                                <div class="py-1">
+                                    <a href="{{ route('profile.edit', auth()->id()) }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">โปรไฟล์</a>
+                                    <a href=""
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ตั้งค่า</a>
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('desktop-logout-form').submit();"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ออกจากระบบ</a>
                                 </div>
-                                <form id="desktop-logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="hidden">
-                                    @csrf
-                                </form>
                             </div>
-                        </nav>
-                    @else
-                        <div class="flex flex-col items-end space-y-2">
-                            <nav class="flex items-center space-x-4">
-                                <a href="#" onclick="showLoginForm()"
-                                    class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                                    <i class="fa-solid fa-right-to-bracket"></i>
-                                    <span>เข้าสู่ระบบ</span>
-                                </a>
-                                <a href="#" onclick="showRegisterForm()"
-                                    class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span>สมัครสมาชิก</span>
-                                </a>
-                            </nav>
+                            <form id="desktop-logout-form" action="{{ route('logout') }}" method="POST"
+                                class="hidden">
+                                @csrf
+                            </form>
                         </div>
+                    </nav>
+                    @else
+                    <div class="flex flex-col items-end space-y-2">
+                        <nav class="flex items-center space-x-4">
+                            <a href="#" onclick="showLoginForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>เข้าสู่ระบบ</span>
+                            </a>
+                            <a href="#" onclick="showRegisterForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-user"></i>
+                                <span>สมัครสมาชิก</span>
+                            </a>
+                        </nav>
+                    </div>
                     @endauth
                 </div>
             </div>
@@ -189,9 +190,9 @@
             }
         });
 
-     
 
-       
+
+
 
         // Header Scroll Behavior
         let lastScroll = 0;
@@ -210,7 +211,7 @@
             lastScroll = currentScroll;
         });
     </script>
-    
+
     <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-[400px] px-4 sm:w-[400px]">
         <div id="bookingButton"
             class="flex items-center bg-gray-700 text-white rounded-lg shadow-lg px-6 py-3 w-full hover:bg-gray-800 transition-all duration-300 cursor-pointer">
@@ -264,6 +265,31 @@
                             class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:outline-none text-white">
                     </div>
                 </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const checkinInput = document.getElementById('checkin');
+                        const checkoutInput = document.getElementById('checkout');
+
+                        // กำหนด Flatpickr ในโหมด range
+                        const datePicker = flatpickr(checkinInput, {
+                            mode: "range", // ใช้โหมด range เพื่อเลือกช่วงวันที่
+                            dateFormat: "Y-m-d",
+                            minDate: "today", // ไม่อนุญาตให้เลือกวันที่ก่อนวันปัจจุบัน
+                            onClose: function(selectedDates, dateStr, instance) {
+                                if (selectedDates.length === 2) {
+                                    // เมื่อผู้ใช้เลือกช่วงวันที่เสร็จสิ้น
+                                    const startDate = selectedDates[0];
+                                    const endDate = selectedDates[1];
+
+                                    // กำหนดค่าให้กับ input เช็คอินและเช็คเอาท์
+                                    checkinInput.value = instance.formatDate(startDate, "Y-m-d");
+                                    checkoutInput.value = instance.formatDate(endDate, "Y-m-d");
+                                }
+                            }
+                        });
+                    });
+                </script>
 
                 <!-- Guests -->
                 <div class="grid grid-cols-3 gap-4">
@@ -327,29 +353,31 @@
         });
 
         // ใช้ flatpickr สำหรับเลือกช่วงวันที่ Check-In และ Check-Out
-        flatpickr("#checkin", {
-            mode: "single", // การเลือกแค่วันเดียว
-            dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
-            minDate: "today", // ไม่ให้เลือกวันในอดีต
-            onChange: function(selectedDates, dateStr, instance) {
-                const formattedDate = instance.formatDate(selectedDates[0], "d-m-Y");
-                document.getElementById("checkin_date").value = formattedDate;
-                const checkout = document.getElementById("checkout");
-                checkout.disabled = false;
-                checkout.focus();
-            }
-        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const checkinInput = document.getElementById('checkin');
+            const checkoutInput = document.getElementById('checkout');
+            const nightsDisplay = document.getElementById('nights');
 
-        flatpickr("#checkout", {
-            mode: "single", // การเลือกแค่วันเดียว
-            dateFormat: "d-m-Y", // รูปแบบวันที่สำหรับ Flatpickr
-            minDate: "today", // ไม่ให้เลือกวันในอดีต
-            onChange: function(selectedDates, dateStr, instance) {
-                const formattedDate = instance.formatDate(selectedDates[0], "d-m-Y");
-                document.getElementById("checkout_date").value = formattedDate;
-            }
-        });
+            flatpickr(checkinInput, {
+                mode: "range",
+                dateFormat: "d-m-Y",
+                minDate: "today",
+                onClose: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        const startDate = selectedDates[0];
+                        const endDate = selectedDates[1];
 
+                        checkinInput.value = instance.formatDate(startDate, "d-m-Y");
+                        checkoutInput.value = instance.formatDate(endDate, "d-m-Y");
+                        checkoutInput.disabled = false;
+
+                        // คำนวณจำนวนคืน
+                        const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                        nightsDisplay.textContent = `จำนวนคืน: ${nights} คืน`;
+                    }
+                }
+            });
+        });
 
         document.getElementById('popup').addEventListener('submit', function(event) {
             event.preventDefault(); // หยุดการส่งฟอร์มเพื่อควบคุมการกระทำด้วย JavaScript
@@ -498,68 +526,69 @@
                 <div class="flex justify-center">
                     <div class="w-full max-w-6xl">
                         @if ($promotions->isEmpty())
-                            <!-- No promotions available message -->
-                            <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
+                        <!-- No promotions available message -->
+                        <p class="text-xl text-gray-500 text-center">ขณะนี้ยังไม่มีโปรโมชั่น</p>
                         @else
-                            <div class="swiper-container">
-                                <div class="swiper-wrapper">
-                                    @foreach ($promotions as $promotion)
-                                        <div class="swiper-slide">
-                                            <div
-                                                class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
-                                                <div class="flex justify-center mb-4">
-                                                    <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
-                                                </div>
-                                                <h3 class="text-2xl font-bold mb-3 text-gray-800">
-                                                    {{ $promotion->campaign_name }}
-                                                </h3>
-
-                                                <!-- Display discount information -->
-                                                <p class="text-lg mb-2">
-                                                    <span class="font-semibold">ส่วนลด:</span>
-                                                    <span class="text-blue-500 font-bold">
-                                                        @if ($promotion->type === 'percentage')
-                                                            {{ $promotion->discount_value }}%
-                                                        @else
-                                                            {{ $promotion->discount_value }} ฿
-                                                        @endif
-                                                    </span>
-                                                </p>
-
-                                                <!-- Display minimum conditions, if available -->
-                                                <div class="text-gray-600 mb-4">
-                                                    @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
-                                                        @if ($promotion->minimum_nights)
-                                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ
-                                                                {{ $promotion->minimum_nights }}
-                                                                คืน</p>
-                                                        @endif
-
-                                                        @if ($promotion->minimum_booking_amount)
-                                                            <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
-                                                                บาท</p>
-                                                        @endif
-                                                    @else
-                                                        <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
-                                                        <p>ยอดจองขั้นต่ำ: ไม่มี</p>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Display promo code -->
-                                                @if ($promotion->promo_code)
-                                                    <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
-                                                            class="text-blue-500">{{ $promotion->promo_code }}</strong>
-                                                    </p>
-                                                    <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
-                                                        class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                                        คัดลอกโค้ด
-                                                    </button>
-                                                @endif
-                                            </div>
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach ($promotions as $promotion)
+                                <div class="swiper-slide">
+                                    <div
+                                        class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 h-full">
+                                        <div class="flex justify-center mb-4">
+                                            <i class="fa-solid fa-gift text-5xl text-blue-500"></i>
                                         </div>
-                                    @endforeach
+                                        <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                            {{ $promotion->campaign_name }}
+                                        </h3>
+
+                                        <!-- Display discount information -->
+                                        <p class="text-lg mb-2">
+                                            <span class="font-semibold">ส่วนลด:</span>
+                                            <span class="text-blue-500 font-bold">
+                                                @if ($promotion->type === 'percentage')
+                                                {{ $promotion->discount_value }}%
+                                                @else
+                                                {{ $promotion->discount_value }} ฿
+                                                @endif
+                                            </span>
+                                        </p>
+
+                                        <!-- Display minimum conditions, if available -->
+                                        <div class="text-gray-600 mb-4">
+                                            @if ($promotion->minimum_nights || $promotion->minimum_booking_amount)
+                                            @if ($promotion->minimum_nights)
+                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ
+                                                {{ $promotion->minimum_nights }}
+                                                คืน
+                                            </p>
+                                            @endif
+
+                                            @if ($promotion->minimum_booking_amount)
+                                            <p>ยอดจองขั้นต่ำ {{ $promotion->minimum_booking_amount }}
+                                                บาท</p>
+                                            @endif
+                                            @else
+                                            <p>เงื่อนไข: เข้าพักขั้นต่ำ ไม่มี</p>
+                                            <p>ยอดจองขั้นต่ำ: ไม่มี</p>
+                                            @endif
+                                        </div>
+
+                                        <!-- Display promo code -->
+                                        @if ($promotion->promo_code)
+                                        <p class="mb-3">ใช้รหัสโปรโมชั่น: <strong
+                                                class="text-blue-500">{{ $promotion->promo_code }}</strong>
+                                        </p>
+                                        <button onclick="copyToClipboard('{{ $promotion->promo_code }}')"
+                                            class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                            คัดลอกโค้ด
+                                        </button>
+                                        @endif
+                                    </div>
                                 </div>
+                                @endforeach
                             </div>
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -778,9 +807,9 @@
     <div id="registerForm"
         class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 hidden">
         @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-                {{ session('success') }}
-            </div>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            {{ session('success') }}
+        </div>
         @endif
         <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm relative">
             <div class="absolute top-2 right-2">
@@ -875,14 +904,14 @@
                 </div>
 
                 @if (config('jetstream.features.terms_and_privacy_policy'))
-                    <div class="flex items-center mt-4">
-                        <input id="terms" name="terms" type="checkbox"
-                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                        <label for="terms" class="text-xs text-gray-900 ml-2">ฉันยอมรับ
-                            <a href="{{ route('terms.show') }}" class="underline">ข้อกำหนดการให้บริการ</a> และ
-                            <a href="{{ route('policy.show') }}" class="underline">นโยบายความเป็นส่วนตัว</a>
-                        </label>
-                    </div>
+                <div class="flex items-center mt-4">
+                    <input id="terms" name="terms" type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="terms" class="text-xs text-gray-900 ml-2">ฉันยอมรับ
+                        <a href="{{ route('terms.show') }}" class="underline">ข้อกำหนดการให้บริการ</a> และ
+                        <a href="{{ route('policy.show') }}" class="underline">นโยบายความเป็นส่วนตัว</a>
+                    </label>
+                </div>
                 @endif
 
                 <button type="submit"
@@ -899,13 +928,13 @@
             </form>
         </div>
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
     </div>
 

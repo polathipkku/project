@@ -35,7 +35,7 @@
                             <tr class="text-md sm:text-base bg-blue-50 border-b border-blue-200">
                                 <th class="px-4 py-2 w-24">หมายเลขห้อง</th>
                                 <th class="px-4 py-2 w-24">สถานะ</th>
-                                <th class="px-4 py-2 w-32">เหลือเวลาเข้าพัก</th>
+                                <th class="px-4 py-2 w-32">วันที่เช็คเอาท์</th>
                                 <th class="px-4 py-2 w-32">รายละเอียด</th>
                                 <th class="px-4 py-2 w-32">ขอสบู่เพิ่ม</th>
                                 <th class="px-4 py-2 w-32">CheckOut</th>

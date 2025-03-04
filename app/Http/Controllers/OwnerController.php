@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 class OwnerController extends Controller
 {
+
+
     public function searchEmployee(Request $request)
     {
         $search = $request->input('search');
