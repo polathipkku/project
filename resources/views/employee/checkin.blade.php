@@ -127,7 +127,8 @@
                                 <td class="px-3 sm:px-4 py-3 text-center">
                                     @if (count($details) == 1 && $details[0]->booking_detail_status === 'รอเลือกห้อง')
                                     <button
-                                        onclick="event.stopPropagation(); showModal('{{ $details[0]->booking->id }}')"
+
+                                        onclick="event.stopPropagation(); showModal('{{ $details[0]->id }}', '{{ $details[0]->booking->id }}', '{{ $details[0]->extra_bed_count ?? 0 }}')"
                                         class=" bg-gradient-to-r from-green-400 to-green-400 hover:from-green-500 hover:to-green-600 text-white px-4 py-2 rounded-md transition duration-300 shadow-sm transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
                                         <div class="flex items-center justify-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
@@ -204,7 +205,7 @@
                                                     <td class="px-3 py-2 text-center">
                                                         @if ($detail->booking_detail_status === 'รอเลือกห้อง')
                                                         <button
-                                                            onclick="event.stopPropagation(); showModal('{{ $detail->booking->id }}')"
+                                                            onclick="event.stopPropagation(); showModal('{{ $details[0]->id }}', '{{ $details[0]->booking->id }}', '{{ $details[0]->extra_bed_count ?? 0 }}')"
                                                             class="bg-gradient-to-r from-green-400 to-green-700 hover:from-green-600 hover:to-green-700 text-white px-3 py-1 rounded-md transition duration-300 shadow-sm transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center mx-auto">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="h-3 w-3 mr-1"
@@ -309,9 +310,18 @@
             class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
             <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full max-h-screen overflow-y-auto">
                 <h2 class="text-2xl font-bold mb-4">กรอกข้อมูลผู้เข้าพัก</h2>
+
+                <!-- Initially hide the Booking ID and Booking Detail ID -->
+                <h1 id="modal_booking_id_text" class="text-xl font-bold text-gray-700 hidden"></h1>
+                <h1 id="modal_booking_detail_id_text" class="text-xl font-bold text-gray-700 hidden"></h1>
+
+
                 <form id="check-in-form" action="{{ route('updateBookingDetail') }}" method="post">
                     @csrf
+                    <!-- Input ซ่อนค่า -->
                     <input type="hidden" name="booking_id" id="modal_booking_id">
+                    <input type="hidden" name="booking_detail_id" id="modal_booking_detail_id">
+
 
                     <div id="guest-forms-container">
 
@@ -383,21 +393,24 @@
                                     placeholder="รหัสไปรษณีย์">
                             </div>
 
-                            <div class="mb-4">
+                            <p id="modal_extra_bed_count_text">ไม่พบข้อมูล</p>
+
+
+                            <div id="extra_bed_radio_group" class="mb-4 hidden">
                                 <label class="block text-sm font-medium">ต้องการเตียงเสริมหรือไม่:</label>
                                 <div class="flex items-center space-x-4">
                                     <label>
-                                        <input type="radio" id="extra_bed_no" name="extra_bed_count"
-                                            value="0" checked class="form-radio">
+                                        <input type="radio" id="extra_bed_no" name="extra_bed_count" value="0" checked class="form-radio">
                                         ไม่เอาเตียงเสริม
                                     </label>
                                     <label>
-                                        <input type="radio" id="extra_bed_yes" name="extra_bed_count"
-                                            value="1" class="form-radio">
+                                        <input type="radio" id="extra_bed_yes" name="extra_bed_count" value="1" class="form-radio">
                                         เอาเตียงเสริม
                                     </label>
                                 </div>
                             </div>
+                            <input type="hidden" name="extra_bed_count" id="modal_extra_bed_count" value="">
+
 
                         </div>
 
@@ -722,10 +735,46 @@
                 filterBookings(flatpickr.formatDate(new Date(), "Y-m-d"));
             });
 
-            function showModal(bookingId) {
+            function showModal(booking_detail_id, bookingId, extra_bed_count) {
+                console.log('booking_detail_id:', booking_detail_id);
+                console.log('bookingId:', bookingId);
+                console.log('extra_bed_count:', extra_bed_count);
+
+                // Set hidden input values
+                document.getElementById('modal_booking_detail_id').value = booking_detail_id;
                 document.getElementById('modal_booking_id').value = bookingId;
+
+                // Handle extra bed count
+                const extraBedText = document.getElementById('modal_extra_bed_count_text');
+                const extraBedRadioGroup = document.getElementById('extra_bed_radio_group');
+                const modalExtraBedCount = document.getElementById('modal_extra_bed_count');
+
+                if (extra_bed_count == 1) {
+                    // Extra bed already set
+                    extraBedText.innerText = "เพิ่มเตียงเสริมไม่ได้";
+                    extraBedRadioGroup.classList.add('hidden');
+                    modalExtraBedCount.value = 1; // Set to 1 to prevent changing
+                } else {
+                    // Can add extra bed
+                    extraBedText.innerText = "สามารถเพิ่มเตียงเสริมได้";
+                    extraBedRadioGroup.classList.remove('hidden');
+
+                    // Reset radio buttons
+                    document.getElementById('extra_bed_no').checked = true;
+                    modalExtraBedCount.value = 0;
+                }
+
+                // Add event listeners to radio buttons
+                document.querySelectorAll('input[name="extra_bed_count"]').forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        modalExtraBedCount.value = this.value;
+                    });
+                });
+
+                // Show the modal
                 document.getElementById('userInformationModal').classList.remove('hidden');
             }
+
 
             function closeModal() {
                 document.getElementById('userInformationModal').classList.add('hidden');

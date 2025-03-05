@@ -32,6 +32,12 @@ class CreateNewUser implements CreatesNewUsers
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ])->validate();
 
+        $imagePath = null;
+        if (isset($input['image'])) {
+            $imagePath = $input['image']->store('public/profile_photos');
+            $imagePath = str_replace('public/', '', $imagePath); // เก็บพาธที่ถูกต้อง
+        }
+
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
@@ -40,11 +46,9 @@ class CreateNewUser implements CreatesNewUsers
             'start_date' => $input['start_date'] ?? null,
             'birthday' => $input['birthday'],
             'address' => $input['address'],
-            'image' => $this->uploadImage($input['image']) ?? '',
+            'image' => $imagePath ?? 'default-avatar.png', // ใช้ default หากไม่มีการอัปโหลด
         ]);
     }
-
-
     /**
      * Upload image and return the path.
      *

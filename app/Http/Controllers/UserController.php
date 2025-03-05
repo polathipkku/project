@@ -17,27 +17,27 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'tel' => ['required', 'string', 'max:255'],
-            'birthday' => ['nullable', 'date'],
-            'address' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        // ตรวจสอบว่ามีการอัปโหลดไฟล์รูปภาพหรือไม่
-        if ($request->hasFile('photo')) {
-            if ($user->photo) {
-                Storage::delete($user->photo); // ลบรูปเก่าหากมี
+        // ตรวจสอบว่ามีการอัปโหลดรูปใหม่หรือไม่
+        if ($request->hasFile('image')) {
+            // ลบรูปเก่าถ้ามี
+            if ($user->image) {
+                Storage::delete('public/' . $user->image);
             }
-            $validatedData['photo'] = $request->file('photo')->store('user_photos', 'public');
+
+            // บันทึกไฟล์ใหม่
+            $path = $request->file('image')->store('profiles', 'public');
+            $validatedData['image'] = $path;
         }
 
-        // อัปเดตข้อมูล
+        // อัปเดตข้อมูลในฐานข้อมูล
         $user->update($validatedData);
 
-        return redirect()->route('profile.edit', ['user' => $user->id])->with('success', 'อัปเดตโปรไฟล์เรียบร้อยแล้ว');
+        return redirect()->route('profile.edit', $user->id)->with('success', 'อัปเดตข้อมูลสำเร็จ!');
     }
 }

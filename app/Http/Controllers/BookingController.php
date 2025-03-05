@@ -971,9 +971,21 @@ class BookingController extends Controller
             'province_*' => 'required|array|min:1',
             'district_*' => 'required|array|min:1',
             'postcode_*' => 'required|array|min:1',
-            'extra_bed_count' => 'required|integer|min:0',
-
+            'extra_bed_count' => 'nullable|in:0,1',
         ]);
+
+        // เพิ่มการตรวจสอบเงื่อนไขพิเศษ
+        $bookingDetail = Booking_detail::where('booking_id', $request->booking_id)
+            ->whereNull('room_id')
+            ->first();
+
+        // ถ้ามีการกำหนดให้เพิ่มเตียงเสริมได้ แต่ไม่ได้เลือก
+        if (
+            $bookingDetail && $bookingDetail->can_add_extra_bed == 1 &&
+            (!$request->has('extra_bed_count') || $request->extra_bed_count === null)
+        ) {
+            return redirect()->back()->with('error', 'กรุณาเลือกเตียงเสริม');
+        }
 
         DB::beginTransaction();
 
@@ -987,52 +999,52 @@ class BookingController extends Controller
 
             $bookingDetail->room_id = $room->id;
             $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
-            $bookingDetail->extra_bed_count = $request->extra_bed_count;
+
+            // กำหนดค่าเตียงเสริมตามเงื่อนไข
+            if ($bookingDetail->can_add_extra_bed == 1) {
+                $bookingDetail->extra_bed_count = $request->extra_bed_count;
+            } else {
+                $bookingDetail->extra_bed_count = 0;
+            }
+
             $bookingDetail->save();
 
             $roomPrice = $room->room_price;
             $booking->total_cost += $roomPrice;
 
-
-
-            if ($request->extra_bed_count > 0) {
+            if ($bookingDetail->extra_bed_count > 0) {
                 $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
                 if ($extraBedProduct) {
-                    $extraBedTotalPrice = $extraBedProduct->product_price * $request->extra_bed_count;
+                    $extraBedTotalPrice = $extraBedProduct->product_price * $bookingDetail->extra_bed_count;
 
                     $roomservice = new Roomservice();
                     $roomservice->product_id = $extraBedProduct->id;
                     $roomservice->booking_id = $booking->id;
-                    $roomservice->quantity = $request->extra_bed_count;
+                    $roomservice->quantity = $bookingDetail->extra_bed_count;
                     $roomservice->total_price = $extraBedTotalPrice;
                     $roomservice->save();
 
-                    // เพิ่มราคาของเตียงเสริมในค่าใช้จ่ายทั้งหมดของการจอง
                     $booking->total_cost += $extraBedTotalPrice;
                     $booking->save();
 
                     if ($extraBedTotalPrice > 0) {
                         $payment = new Payment();
                         $payment->payment_date = now();
-                        $payment->payment_status = 'completed'; // เริ่มต้นสถานะการชำระเงิน
+                        $payment->payment_status = 'completed';
                         $payment->total_price = $extraBedTotalPrice;
                         $payment->booking_id = $booking->id;
                         $payment->amount = $extraBedTotalPrice;
 
-                        // ตรวจสอบประเภทการชำระเงิน (เงินสดหรือโอนเงิน)
                         $payment->payment_type_id = $request->payment_method === 'cash' ? 2 : 1;
 
                         if ($payment->payment_type_id == 2) {
-                            // กรณีชำระเงินสด
                             $payment->pay_price = $request->amount_paid;
                             $payment->pay_change = $request->amount_paid - $extraBedTotalPrice;
 
-                            // ตรวจสอบว่าจำนวนเงินที่ได้รับเพียงพอ
                             if ($payment->pay_price < $extraBedTotalPrice) {
                                 return redirect()->back()->with('error', 'จำนวนเงินที่ได้รับต้องมากกว่าหรือเท่ากับยอดชำระทั้งหมดสำหรับเตียงเสริม');
                             }
                         } else {
-                            // กรณีโอนเงิน
                             $payment->pay_price = 0;
                             $payment->pay_change = 0;
                         }
@@ -1040,7 +1052,6 @@ class BookingController extends Controller
                     }
                 }
             }
-
 
             $booking->save();
 

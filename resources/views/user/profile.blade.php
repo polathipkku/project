@@ -134,33 +134,46 @@
                                     <div class="w-full md:w-1/3">
                                         <div class="flex flex-col items-center space-y-4">
                                             <div class="relative group">
-                                                @if($user->photo)
-                                                <img src="{{ Storage::url($user->photo) }}" alt="{{ $user->name }}" class="h-56 w-56 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-300 transition duration-300 shadow-md">
-                                                <div class="absolute inset-0 bg-blue-600 bg-opacity-0 group-hover:bg-opacity-20 rounded-full transition duration-300 flex items-center justify-center">
-                                                    <i class="fa-solid fa-camera text-white text-3xl opacity-0 group-hover:opacity-100 transform scale-0 group-hover:scale-100 transition duration-300"></i>
-                                                </div>
-                                                @else
-                                                <div class="h-56 w-56 rounded-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center shadow-md group-hover:from-blue-50 group-hover:to-blue-100 transition duration-300">
-                                                    <i class="fa-solid fa-user text-7xl text-gray-400 group-hover:text-blue-400 transition duration-300"></i>
-                                                </div>
-                                                @endif
-                                                <label for="photo" class="absolute bottom-3 right-3 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 transition shadow-lg transform group-hover:scale-110">
+                                                <!-- แสดงรูปโปรไฟล์จากฐานข้อมูล หรือใช้รูป default -->
+                                                <img id="profilePreview"
+                                                    src="{{ $user->image ? asset('storage/' . $user->image) : asset('default-avatar.png') }}"
+                                                    alt="User Image"
+                                                    class="h-56 w-56 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-300 transition duration-300 shadow-md">
+
+                                                <!-- ปุ่มอัปโหลด -->
+                                                <label for="image" class="absolute bottom-3 right-3 bg-blue-600 text-white p-3 rounded-full cursor-pointer hover:bg-blue-700 transition shadow-lg transform group-hover:scale-110">
                                                     <i class="fa-solid fa-camera"></i>
-                                                    <input id="photo" name="photo" type="file" class="hidden" accept="image/*">
+                                                    <input id="image" name="image" type="file" class="hidden" accept="image/*">
                                                 </label>
                                             </div>
+
+                                            <!-- คำอธิบาย -->
                                             <div class="text-sm text-gray-500 text-center">
                                                 <p>คลิกที่ไอคอนกล้องเพื่ออัปโหลดรูปโปรไฟล์ใหม่</p>
                                                 <p class="text-xs mt-1 text-gray-400">รองรับไฟล์ภาพ .jpg, .png, .gif ไม่เกิน 2MB</p>
                                             </div>
-                                            @error('photo')
+
+                                            <!-- แจ้งเตือน error -->
+                                            @error('image')
                                             <span class="text-red-500 text-sm bg-red-50 px-3 py-1 rounded-full">
-                                                <i class="fa-solid fa-circle-exclamation mr-1"></i>
-                                                {{ $message }}
+                                                <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ $message }}
                                             </span>
                                             @enderror
                                         </div>
                                     </div>
+                                    <script>
+                                        document.getElementById('image').addEventListener('change', function(event) {
+                                            const file = event.target.files[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    document.getElementById('profilePreview').src = e.target.result;
+                                                }
+                                                reader.readAsDataURL(file);
+                                            }
+                                        });
+                                    </script>
+
 
                                     <!-- Right Column - Info -->
                                     <div class="w-full md:w-2/3 space-y-5">

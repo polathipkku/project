@@ -107,6 +107,7 @@ Route::post('/update-payment-status', [PaymentController::class, 'updatePaymentS
 Route::get('/check-expired-payments', [PaymentController::class, 'checkAndCancelExpiredPayments']);
 
 Route::get('/checkin', [BookingController::class, 'checkinuser'])->name('checkin');
+
 Route::post('/select-room', [BookingController::class, 'selectRoom'])->name('selectRoom');
 Route::get('/checkindetail/{id}', [BookingController::class, 'checkindetail'])->name('checkindetail');
 Route::get('/checkoutdetail/{id}', [BookingController::class, 'checkoutdetail'])->name('checkoutdetail');
