@@ -1000,19 +1000,28 @@ class BookingController extends Controller
             $bookingDetail->room_id = $room->id;
             $bookingDetail->booking_detail_status = 'เช็คอินแล้ว';
 
-            // กำหนดค่าเตียงเสริมตามเงื่อนไข
-            if ($bookingDetail->can_add_extra_bed == 1) {
-                $bookingDetail->extra_bed_count = $request->extra_bed_count;
-            } else {
-                $bookingDetail->extra_bed_count = 0;
+            // เก็บค่า original_extra_bed_count เพื่อใช้ในการตรวจสอบว่าค่าเปลี่ยนหรือไม่
+            $originalExtraBedCount = $bookingDetail->extra_bed_count;
+
+            // จัดการค่า extra_bed_count
+            // ถ้า extra_bed_count เป็น 1 อยู่แล้ว ให้คงค่าเดิมไว้
+            if ($bookingDetail->extra_bed_count != 1) {
+                // ถ้าไม่ได้เป็น 1 อยู่ก่อน ค่อยอัพเดทตามที่เลือกใหม่
+                if ($bookingDetail->can_add_extra_bed == 1) {
+                    $bookingDetail->extra_bed_count = $request->extra_bed_count;
+                } else {
+                    $bookingDetail->extra_bed_count = 0;
+                }
             }
+            // ถ้าเป็น 1 อยู่แล้ว ไม่ต้องทำอะไร
 
             $bookingDetail->save();
 
             $roomPrice = $room->room_price;
             $booking->total_cost += $roomPrice;
 
-            if ($bookingDetail->extra_bed_count > 0) {
+            // ตรวจสอบว่าถ้ามีการเพิ่มเตียงเสริมใหม่ (เปลี่ยนจาก 0 เป็น 1 เท่านั้น)
+            if ($bookingDetail->extra_bed_count > 0 && $originalExtraBedCount == 0) {
                 $extraBedProduct = Product::where('product_name', 'เตียงเสริม')->first();
                 if ($extraBedProduct) {
                     $extraBedTotalPrice = $extraBedProduct->product_price * $bookingDetail->extra_bed_count;

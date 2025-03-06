@@ -749,27 +749,33 @@
                 const extraBedRadioGroup = document.getElementById('extra_bed_radio_group');
                 const modalExtraBedCount = document.getElementById('modal_extra_bed_count');
 
+                // Always pass the current extra_bed_count value, regardless of UI
+                modalExtraBedCount.value = extra_bed_count;
+
                 if (extra_bed_count == 1) {
-                    // Extra bed already set
-                    extraBedText.innerText = "เพิ่มเตียงเสริมไม่ได้";
+                    // Extra bed already set - show message but still send the value
+                    extraBedText.innerText = "มีเตียงเสริมแล้ว (ไม่สามารถเปลี่ยนแปลงได้)";
                     extraBedRadioGroup.classList.add('hidden');
-                    modalExtraBedCount.value = 1; // Set to 1 to prevent changing
                 } else {
                     // Can add extra bed
                     extraBedText.innerText = "สามารถเพิ่มเตียงเสริมได้";
                     extraBedRadioGroup.classList.remove('hidden');
 
-                    // Reset radio buttons
-                    document.getElementById('extra_bed_no').checked = true;
-                    modalExtraBedCount.value = 0;
-                }
+                    // Set radio buttons based on current value
+                    if (extra_bed_count == 1) {
+                        document.getElementById('extra_bed_yes').checked = true;
+                    } else {
+                        document.getElementById('extra_bed_no').checked = true;
+                    }
 
-                // Add event listeners to radio buttons
-                document.querySelectorAll('input[name="extra_bed_count"]').forEach(radio => {
-                    radio.addEventListener('change', function() {
-                        modalExtraBedCount.value = this.value;
+                    // Add event listeners to radio buttons
+                    document.querySelectorAll('input[name="extra_bed_count"]').forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            modalExtraBedCount.value = this.value;
+                            console.log("Changed extra bed count to:", this.value);
+                        });
                     });
-                });
+                }
 
                 // Show the modal
                 document.getElementById('userInformationModal').classList.remove('hidden');
