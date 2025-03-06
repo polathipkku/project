@@ -119,7 +119,7 @@ class RoomController extends Controller
     public function addroom(Request $request)
     {
         $request->validate([
-            'room_name' => 'required|unique:rooms,room_name',
+            'room_name' => 'required|unique:rooms,room_name,NULL,id,deleted_at,NULL',
             'price_night' => 'required|numeric',
             'price_temporary' => 'required|numeric',
             'room_image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate each image

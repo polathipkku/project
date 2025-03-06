@@ -47,7 +47,7 @@
                                 @csrf
                                 <div class="relative">
                                     <input type="text" name="search" placeholder="ค้นหาโปรโมชั่น" class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
-                                    <div class="absolute top-0 left-0 inline-flex items-center p-2">
+                                    <div class="absolute top-1/2 left-3 transform -translate-y-1/2">
                                         <i class="fas fa-search text-gray-400"></i>
                                     </div>
                                 </div>
@@ -112,16 +112,16 @@
                                         </td>
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex item-center justify-center">
-                                                <button class="transform hover:text-blue-500 hover:scale-110 transition duration-300 ease-in-out mr-3" onclick="showDetails({{ $promotion->id }})">
+                                                <button class="transform text-blue-500 hover:text-blue-600 hover:scale-110 transition duration-300 ease-in-out mr-3" onclick="showDetails({{ $promotion->id }})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <a href="{{ route('editpromotion', $promotion->id) }}" class="transform hover:text-yellow-500 hover:scale-110 transition duration-300 ease-in-out mr-3">
+                                                <a href="{{ route('editpromotion', $promotion->id) }}" class="transform text-yellow-500 hover:text-yellow-600 hover:scale-110 transition duration-300 ease-in-out mr-3">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('promotions.destroy', $promotion->id) }}" method="POST" onsubmit="return confirm('คุณต้องการลบโปรโมชั่นนี้หรือไม่?')" class="inline-block">
+                                                <form action="{{ route('promotions.destroy', $promotion->id) }}" method="POST" id="deleteForm" class="inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="transform hover:text-red-500 hover:scale-110 transition duration-300 ease-in-out">
+                                                    <button type="button" class="transform text-red-500 hover:text-red-600 hover:scale-110 transition duration-300 ease-in-out" onclick="confirmDelete()">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -142,9 +142,7 @@
     @foreach($promotions as $promotion)
     <div id="details-modal-{{ $promotion->id }}" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg p-8 max-w-md w-full m-4 relative">
-            <button onclick="closeDetails({{ $promotion->id }})" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
-                <i class="fas fa-times"></i>
-            </button>
+           
             <h3 class="text-2xl font-bold mb-4">รายละเอียดโปรโมชั่น</h3>
             <div class="mb-4">
                 <p class="text-gray-700 mb-2">
@@ -180,6 +178,27 @@
             document.getElementById('details-modal-' + id).classList.add('hidden');
         }
     </script>
+    <script>
+        function confirmDelete() {
+            Swal.fire({
+                title: "ยืนยันการลบโปรโมชั่น?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "<div class = 'bg-blue-500'", // สีแดงสด
+                cancelButtonColor: "#ffffff", // สีขาว
+                cancelButtonText: "<span style='color: black;'>ยกเลิก</span>", // เปลี่ยนตัวหนังสือเป็นสีดำ
+                confirmButtonText: "ยืนยัน",
+                reverseButtons: true // ปุ่มยืนยันไปอยู่ทางขวา
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ถ้ากดยืนยันให้ submit ฟอร์ม
+                    document.getElementById('deleteForm').submit();
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </body>
 

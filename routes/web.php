@@ -203,6 +203,10 @@ Route::group(['middleware' => [OwnerMiddleware::class]], function () {
     Route::get('/add_productroom', [ProductRoomController::class, 'add_productroom'])->name('add_productroom');
     Route::get('/productroom', [ProductRoomController::class, 'productroom'])->name('productroom');
     Route::post('/productroom/add', [ProductRoomController::class, 'addProductroom'])->name('addProductroom');
+    Route::get('/productroom/edit/{id}', [ProductRoomController::class, 'editProductRoom'])->name('editProductRoom');
+    Route::post('/productroom/update/{id}', [ProductRoomController::class, 'updateProductRoom'])->name('updateProductRoom');
+    Route::delete('/productroom/delete/{id}', [ProductRoomController::class, 'deleteProductRoom'])->name('deleteProductRoom');
+
 
     Route::post('/product/add', [ProductController::class, 'addproduct'])->name('addProduct');
     Route::post('/items/add', [ProductController::class, 'additem'])->name('additem');
