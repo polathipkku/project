@@ -93,7 +93,7 @@
                     <button id="inProgressRepairsBtn" class="flex-1 py-3 px-6 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-blue-500 border border-blue-500">
                         <div class="flex items-center justify-between">
                             <span>รายการสิ่งของที่กำลังซ่อม</span>
-                            <span class="bg-blue-100 px-3 py-1 rounded-full ml-2">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full ml-2">
                                 {{ $progressRepairCount }} รายการ
                             </span>
                         </div>

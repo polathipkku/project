@@ -23,7 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\PaymentType;
+use App\Models\Payment_type;
 
 
 class BookingController extends Controller
@@ -49,7 +49,7 @@ class BookingController extends Controller
     public function t()
     {
         $rooms = Room::all();
-        return view('user.t', compact('rooms',));
+        return view('user.t', compact('rooms', ));
     }
 
     public function test(Request $request)
@@ -71,7 +71,7 @@ class BookingController extends Controller
 
                     // วันขึ้น 15 ค่ำ และแรม 15 ค่ำ
                     if (in_array($date->day, [1, 15, 16])) {
-                        $holyDays->push((object)[
+                        $holyDays->push((object) [
                             'date' => $date,
                             'description' => $this->getHolyDayDescription($date->day)
                         ]);
@@ -161,14 +161,16 @@ class BookingController extends Controller
         // รับค่าพารามิเตอร์จาก URL
         $checkinDate = $request->query('checkin_date');
         $checkoutDate = $request->query('checkout_date');
+        $paymentTypes = Payment_type::all(); // ดึงประเภทการชำระเงินทั้งหมด
 
         // ตรวจสอบว่าค่าพารามิเตอร์ถูกต้องหรือไม่
         if (is_null($checkinDate) || is_null($checkoutDate)) {
             return redirect()->back()->withErrors('Invalid check-in or check-out date.');
         }
 
-        return view('employee.em_reserve', compact('rooms', 'checkinDate', 'checkoutDate'));
+        return view('employee.em_reserve', compact('rooms', 'checkinDate', 'checkoutDate', 'paymentTypes'));
     }
+
 
     public function reservation()
     {
@@ -205,33 +207,45 @@ class BookingController extends Controller
         $bookings = Booking::where('user_id', auth()->user()->id)->get();
         return view('employee.employeehome', compact('bookings'));
     }
-    public function checkinuser()
+    public function checkinuser(Request $request)
     {
-        // อัปเดตสถานะเป็น "ไม่มาเช็คอิน" หากเลยวันเช็คเอาท์แล้วแต่ยังอยู่ใน "รอเลือกห้อง"
+        $selectedDate = $request->input('date', Carbon::today()->format('Y-m-d'));
+        $filterDate = Carbon::parse($selectedDate);
+    
+        // อัปเดตสถานะเป็น "ไม่มาเช็คอิน" หากเลยวันเช็คเอาท์
         Booking_detail::where('booking_detail_status', 'รอเลือกห้อง')
-            ->whereDate('checkout_date', '<=', Carbon::today()) // วันที่ปัจจุบันเกินวันเช็คเอาท์
+            ->whereDate('checkout_date', '<=', Carbon::today())
             ->update(['booking_detail_status' => 'ไม่มาเช็คอิน']);
-
-        // ดึงข้อมูลการจองที่ต้องเช็คอินวันนี้
-        $bookings = Booking::whereHas('bookingDetails', function ($query) {
+    
+        // ดึงข้อมูลการจองที่ต้องเช็คอินตามวันที่เลือก
+        $bookings = Booking::whereHas('bookingDetails', function ($query) use ($filterDate) {
             $query->where('booking_detail_status', 'รอเลือกห้อง')
                 ->whereNull('room_id')
-                ->whereDate('checkin_date', Carbon::today());
+                ->whereDate('checkin_date', $filterDate);
         })->with([
-            'bookingDetails' => function ($query) {
+            'bookingDetails' => function ($query) use ($filterDate) {
                 $query->whereNull('room_id')
-                    ->whereDate('checkin_date', Carbon::today());
+                    ->whereDate('checkin_date', $filterDate);
             }
         ])->get();
-
+    
         $rooms = Room::where('room_status', 'พร้อมให้บริการ')->get();
-
-        return view('employee.checkin', compact('bookings', 'rooms'));
+        return view('employee.checkin', compact('bookings', 'rooms', 'selectedDate'));
     }
+    
     public function checkindetail($id)
     {
         $booking = Booking::find($id);
         $bookings = Booking::where('id', $id)->get();
+        // ดึงข้อมูลจาก Booking_detail ที่มี booking_id ตรงกับ $id
+        $bookingDetail = Booking_detail::where('booking_id', $id)
+            ->with(['payment', 'promotion']) // ใช้กับดึงข้อมูลที่เกี่ยวข้องกับ Payment และ Promotion
+            ->get();
+
+        if ($bookingDetail->isEmpty()) {
+            // ถ้าไม่พบข้อมูลการจอง
+            return redirect()->route('checkin')->with('error', 'ไม่พบข้อมูลการจอง');
+        }
         return view('employee.checkindetail', compact('booking', 'bookings'));
     }
     public function checkoutdetail($id)
@@ -248,9 +262,15 @@ class BookingController extends Controller
         $bookings = Booking::whereIn('id', $bookingIds)->get();
         $rooms = Room::all();
         $productRooms = Product_room::all();
+        $paymentTypes = Payment_type::all(); // ดึงประเภทการชำระเงินทั้งหมด
 
-        return view('employee.checkout', compact('bookings', 'rooms', 'productRooms', 'bookingDetails'));
+        // เลือกประเภทการชำระเงินที่ต้องการ (ตัวอย่างอาจจะเลือกประเภทแรก)
+        $selectedPaymentType = $paymentTypes->first();
+
+        return view('employee.checkout', compact('bookings', 'rooms', 'productRooms', 'bookingDetails', 'paymentTypes', 'selectedPaymentType'));
     }
+
+
 
     public function showRecordDetail($id)
     {
@@ -805,6 +825,7 @@ class BookingController extends Controller
 
         return redirect()->route('emroom')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
     public function submitDamagedItems(Request $request)
     {

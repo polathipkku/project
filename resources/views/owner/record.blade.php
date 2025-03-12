@@ -53,7 +53,7 @@
                         <div class="content">
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                                 <table class="w-full text-x text-left rtl:text-right text-gray-500">
-                                    <thead class="text-md text-gray-700 uppercase bg-gray-50">
+                                    <thead class="text-md text-gray-700 uppercase bg-gradient-to-r from-blue-100 to-indigo-200">
                                         <tr>
                                             <th scope="col" class="px-3 py-3 text-center">รหัสการจอง</th>
                                             <th scope="col" class="px-3 py-3 text-center">ชื่อผู้จอง</th>

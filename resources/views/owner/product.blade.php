@@ -59,10 +59,10 @@
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                        <th class="py-3 px-6 text-left">ลำดับ</th>
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6 text-center">ลำดับ</th>
                                         <th class="py-3 px-6 text-left">รูปสินค้า</th>
-                                        <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
+                                        <th class="py-3 px-6 text-center">ชื่อสินค้า</th>
                                         <th class="py-3 px-6 text-center">ราคา</th>
                                         <th class="py-3 px-6 text-center">ประเภท</th>
                                         <th class="py-3 px-6 text-center">จำนวนในสต็อก</th>
@@ -74,14 +74,14 @@
                                     @foreach ($product as $productItem)
                                         <tr
                                             class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
-                                            <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->index + 1 }}
+                                            <td class="py-3 px-6 text-center whitespace-nowrap">{{ $loop->index + 1 }}
                                             </td>
                                             <td class="py-3 px-6 text-left">
                                                 <img src="{{ asset('images/' . $productItem->product_img) }}"
                                                     alt="{{ $productItem->product_name }}"
                                                     class="w-12 h-12 object-cover rounded">
                                             </td>
-                                            <td class="py-3 px-6 text-left">{{ $productItem->product_name }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $productItem->product_name }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 {{ number_format($productItem->product_price, 2) }} บาท</td>
                                             <td class="py-3 px-6 text-center">

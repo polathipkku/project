@@ -37,19 +37,19 @@
                 <div class="container mx-auto py-8 px-4 flex-1 flex flex-col">
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
                         <!-- Header with improved spacing and styling -->
-                        <div class="p-6 border-b border-gray-200">
+                        <div class="p-6 ">
                             <h1 class="text-3xl font-semibold text-gray-800">ซ่อมบำรุง</h1>
                         </div>
                         
                         <!-- Table with better spacing and responsive design -->
-                        <div class="overflow-x-auto flex-1">
+                        <div class="overflow-x-auto flex-1 mx-5 rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
-                                    <tr>
-                                        <th class="px-6 py-3 bg-gray-50 text-center text-xm font-medium text-gray-500 uppercase tracking-wider">หมายเลขห้อง</th>
-                                        <th class="px-6 py-3 bg-gray-50 text-center text-xm font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
-                                        <th class="px-6 py-3 bg-gray-50 text-center text-xm font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
-                                        <th class="px-6 py-3 bg-gray-50 text-center text-xm font-medium text-gray-500 uppercase tracking-wider">แจ้งซ่อมสำเร็จ</th>
+                                    <tr class=" font-medium uppercase tracking-wider text-gray-700 bg-gradient-to-r from-blue-100 to-indigo-200 border-b">
+                                        <th class="px-6 py-3 text-center text-xm font-medium uppercase tracking-wider">หมายเลขห้อง</th>
+                                        <th class="px-6 py-3  text-center text-xm font-medium  uppercase tracking-wider">สถานะ</th>
+                                        <th class="px-6 py-3  text-center text-xm font-medium uppercase tracking-wider">รายละเอียด</th>
+                                        <th class="px-6 py-3  text-center text-xm font-medium  uppercase tracking-wider">แจ้งซ่อมสำเร็จ</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -123,7 +123,7 @@
                         
                         <!-- Empty state when no rooms are under maintenance -->
                         @if(count($roomsUnderMaintenance) === 0)
-                        <div class="px-6 py-12 text-center flex-1 flex flex-col justify-center">
+                        <div class="px-6 pb-12 mb-40 text-center flex-1 flex flex-col justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>

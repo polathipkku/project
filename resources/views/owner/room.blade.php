@@ -8,17 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/hero.css">
 
-    <title>Tunthree - Promotion Management</title>
+    <title>Tunthree - จัดการห้องพัก</title>
 
-    <script>
-        function showToast(toastId) {
-            var toast = document.getElementById(toastId);
-            toast.classList.add('show');
-            setTimeout(function() {
-                toast.classList.remove('show');
-            }, 3000); // แสดง toast นาน 3 วินาที (3000 มิลลิวินาที)
-        }
-    </script>
+   
 </head>
 
 <body>
@@ -31,12 +23,38 @@
         @include('components.admin_sidebar')
 
 
-        <!-- Promotion Management Table -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
             <div class="container mx-auto px-6 py-8">
-                <div class="flex justify-between items-center mb-6">
-
-                    <h3 class="text-3xl font-medium text-gray-700">จัดการห้อง</h3>
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-100 rounded-xl p-6 mb-6 shadow-sm">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <h1 class="text-2xl md:text-3xl font-medium text-gray-800 mb-4 md:mb-0">
+                            <i class="fas fa-door-open text-indigo-600 mr-2"></i>จัดการห้องพัก
+                        </h1>
+                        <div class="stats flex flex-wrap gap-4">
+                            <div class="stat bg-white p-3 rounded-lg shadow-sm flex items-center">
+                                <div class="p-2 bg-green-100 rounded-full mr-3">
+                                    <i class="fas fa-check text-green-500"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">ห้องพร้อมใช้</div>
+                                    <div class="text-xl font-semibold">
+                                        {{ $rooms->where('room_status', 'พร้อมให้บริการ')->count() }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat bg-white p-3 rounded-lg shadow-sm flex items-center">
+                                <div class="p-2 bg-red-100 rounded-full mr-3">
+                                    <i class="fas fa-times text-red-500"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">ห้องไม่พร้อมใช้</div>
+                                    <div class="text-xl font-semibold">
+                                        {{ $rooms->where('room_status', '!=', 'พร้อมให้บริการ')->count() }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
                 </div>
 
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -63,7 +81,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-center">หมายเลขห้อง</th>
                                         <th class="py-3 px-6 text-center">สถานะ</th>
                                         <th class="py-3 px-6 text-center">รายละเอียด</th>

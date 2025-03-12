@@ -41,7 +41,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-center">ลำดับ</th>
                                         <th class="py-3 px-6 text-center">ประเภทการชำระเงิน</th>
                                         <th class="py-3 px-6 text-center">QR Code</th>
@@ -64,13 +64,13 @@
                                         </td>
                                         <td class="text-center py-3">
                                             <button onclick="openEditModal('{{ $payment_type->id }}', '{{ $payment_type->payment_type }}', '{{ $payment_type->qr_code ? asset('storage/qr_codes/' . $payment_type->qr_code) : null }}')" 
-                                                class="hover:text-blue-500 mr-2">
+                                                class="text-yellow-500 hover:text-yellow-600 mr-2">
                                                 <i class="fas fa-edit"></i> 
                                             </button>
                                             <form action="{{ route('payment_types.destroy', $payment_type->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="hover:text-red-500"
+                                                <button type="submit" class="text-red-500 hover:text-red-600"
                                                     onclick="return confirm('คุณต้องการลบประเภทการชำระเงินนี้ใช่หรือไม่?')">
                                                     <i class="fas fa-trash"></i> 
                                                 </button>

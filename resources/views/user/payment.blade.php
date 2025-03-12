@@ -32,7 +32,7 @@
             <div class="bg-gray-100 p-4 rounded">
                 <h2 class="text-lg font-semibold mb-2">ข้อมูลการจอง</h2>
                 <p><strong>ชื่อผู้เข้าพัก:</strong> {{ $bookingDetail->booking_name }}</p>
-                <p><strong>จำนวนผู้เข้าพัก:</strong> {{$bookingDetail->booking->person_count}}</p>
+                <p><strong>จำนวนผู้เข้าพัก:</strong> {{ $bookingDetail->booking->person_count }}</p>
                 <p><strong>เบอร์โทรศัพท์:</strong> {{ $bookingDetail->phone }}</p>
                 <p class="mr-4"><strong>เช็คอิน:</strong>
                     {{ \Carbon\Carbon::parse($bookingDetail->checkin_date)->format('d-m-Y') }}
@@ -51,12 +51,12 @@
                 <p><strong>ค่าใช้จ่ายทั้งหมด:</strong> {{ $bookingDetail->booking->total_cost }} บาท</p>
 
                 @if (isset($promotionData))
-                <p><strong>รหัสโปรโมชั่น:</strong> {{ $promotionData['promo_code'] }}</p>
-                <p><strong>จำนวนส่วนลด:</strong> {{ $promotionData['discount_value'] }}
-                    {{ $promotionData['type'] === 'percentage' ? '%' : '฿' }}
-                </p>
+                    <p><strong>รหัสโปรโมชั่น:</strong> {{ $promotionData['promo_code'] }}</p>
+                    <p><strong>จำนวนส่วนลด:</strong> {{ $promotionData['discount_value'] }}
+                        {{ $promotionData['type'] === 'percentage' ? '%' : '฿' }}
+                    </p>
                 @else
-                <p><strong>รหัสโปรโมชั่น:</strong> ไม่มีโปรโมชั่น</p>
+                    <p><strong>รหัสโปรโมชั่น:</strong> ไม่มีโปรโมชั่น</p>
                 @endif
 
                 <p><strong>กำหนดชำระภายใน:</strong> <span id="countdowntime-left">15 นาที</span></p>
@@ -97,33 +97,33 @@
     <script>
         const stripe = Stripe("{{ env('STRIPE_KEY') }}");
         let timer;
-    
-        document.addEventListener('DOMContentLoaded', function () {
+
+        document.addEventListener('DOMContentLoaded', function() {
             const expirationTime = new Date("{{ $payment->expiration_time }}");
             const now = new Date();
             let countdown = Math.floor((expirationTime - now) / 1000);
-    
+
             if (countdown > 0) {
                 timer = setInterval(updateTimer, 1000);
             } else {
                 handleTimeout();
             }
-    
+
             function updateTimer() {
                 if (countdown <= 0) {
                     clearInterval(timer);
                     handleTimeout();
                     return;
                 }
-    
+
                 countdown--;
                 const minutes = Math.floor(countdown / 60);
                 const seconds = countdown % 60;
                 document.getElementById('countdown').textContent =
                     `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             }
-    
-           function handleTimeout() {
+
+            function handleTimeout() {
                 document.getElementById('countdown').textContent = 'หมดเวลา';
                 document.getElementById('pay-button').style.display = 'none';
 
@@ -137,36 +137,42 @@
                 });
             }
         });
-    
-        document.getElementById('pay-button').addEventListener('click', async function () {
+
+        document.getElementById('pay-button').addEventListener('click', async function() {
             const bookingId = document.getElementById('booking_id').value;
-    
+
             try {
                 const response = await fetch('/create-payment-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
                     },
-                    body: JSON.stringify({ booking_id: bookingId })
+                    body: JSON.stringify({
+                        booking_id: bookingId
+                    })
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-    
+
                 const data = await response.json();
                 const clientSecret = data.client_secret;
-    
-                const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
+
+                const {
+                    paymentMethod,
+                    error: paymentMethodError
+                } = await stripe.createPaymentMethod({
                     type: 'promptpay',
                     billing_details: {
-                        email: '{{ $userEmail }}',
+                        email: '{{ $bookingDetail->email ?? ($userEmail ?? 'guest@example.com') }}', // Provide a fallback
                         name: '{{ $bookingDetail->booking_name }}',
                         phone: '{{ $bookingDetail->phone }}',
                     }
                 });
-    
+
                 if (paymentMethodError) {
                     Swal.fire({
                         icon: 'error',
@@ -176,11 +182,11 @@
                     });
                     return;
                 }
-    
+
                 const result = await stripe.confirmPromptPayPayment(clientSecret, {
                     payment_method: paymentMethod.id
                 });
-    
+
                 if (result.error) {
                     Swal.fire({
                         icon: 'error',
@@ -200,66 +206,68 @@
                 });
             }
         });
-    
+
         function updatePaymentStatus(bookingId) {
             fetch('/update-payment-status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    booking_id: bookingId,
-                    payment_status: 'succeeded',
-                    booking_detail_status: 'รอเลือกห้อง',
-                    booking_status: 'ชำระเงินเสร็จสิ้น'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        booking_id: bookingId,
+                        payment_status: 'succeeded',
+                        booking_detail_status: 'รอเลือกห้อง',
+                        booking_status: 'ชำระเงินเสร็จสิ้น'
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ชำระเงินสำเร็จ',
+                            text: 'การชำระเงินสำเร็จแล้ว!',
+                            confirmButtonText: 'ตกลง'
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    }
+                })
+                .catch(error => {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'ชำระเงินสำเร็จ',
-                        text: 'การชำระเงินสำเร็จแล้ว!',
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถอัปเดตสถานะการชำระเงินได้',
                         confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        window.location.href = '/';
                     });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถอัปเดตสถานะการชำระเงินได้',
-                    confirmButtonText: 'ตกลง'
                 });
-            });
         }
-    
+
         function cancelBooking(bookingId) {
             fetch('/cancel-booking/' + bookingId, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ payment_status: 'cancel' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ยกเลิกสำเร็จ',
-                        text: 'การยกเลิกการจองและการชำระเงินสำเร็จแล้ว',
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        window.location.href = '/';
-                    });
-                }
-            });
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        payment_status: 'cancel'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ยกเลิกสำเร็จ',
+                            text: 'การยกเลิกการจองและการชำระเงินสำเร็จแล้ว',
+                            confirmButtonText: 'ตกลง'
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    }
+                });
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

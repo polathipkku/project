@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/hero.css">
 
-    <title>Tunthree - Promotion Management</title>
+    <title>Tunthree - จัดการสินค้าt</title>
 
     <script>
         function showToast(toastId) {
@@ -59,7 +59,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
                                         <th class="py-3 px-6 text-center">จำนวนแพ็ค</th>
                                         <th class="py-3 px-6 text-center">จำนวนสินค้า</th>
@@ -81,7 +81,7 @@
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex items-center justify-center gap-4">
                                                 <!-- ปุ่มเพิ่ม Stock -->
-                                                <button onclick="openModal({{ $productItem->id }})" class="text-black hover:text-blue-500 focus:outline-none">
+                                                <button onclick="openModal({{ $productItem->id }})" class="text-green-500 hover:text-green-600 focus:outline-none">
                                                     <i class="fa-solid fa-plus-square"></i>
                                                 </button>
 
@@ -89,7 +89,7 @@
 
                                                 <!-- ปุ่มลบ -->
                                                 <a href="{{ url('/product/delete/'.$productItem->id) }}" class="delete-link">
-                                                    <button class="text-black hover:text-red-500" type="button">
+                                                    <button class="text-red-500 hover:text-red-600" type="button">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </a>

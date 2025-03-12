@@ -288,10 +288,17 @@
                         <!-- ฟิลด์สำหรับการโอนเงิน -->
                         <div id="bankTransferFields" style="display: none;">
                             <div class="text-center">
-                                <label class="block text-sm font-medium text-[#042a48] mb-4">สแกน QR Code เพื่อชำระเงิน</label>
-                                <img src="{{ asset('images/qrcodeimage.png') }}" alt="QR Code" class="w-48 h-48 mx-auto">
+                                <label class="block text-sm font-medium text-[#042a48] mb-4">
+                                    สแกน QR Code เพื่อชำระเงิน
+                                </label>
+                                @foreach($paymentTypes as $paymentType)
+                                    @if($paymentType->qr_code)
+                                        <img src="{{ asset('storage/qr_codes/' . $paymentType->qr_code) }}" 
+                                             alt="QR Code" class="w-48 h-48 mx-auto mb-2">
+                                    @endif
+                                @endforeach
                             </div>
-                        </div>                        
+                        </div>                                                                
                     </div>
 
 

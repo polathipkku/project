@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/src/hero.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <title>Tunthree - employee Management</title>
+    <title>Tunthree - จัดการค่าใช้จ่าย</title>
 
     <script>
         function showToast(toastId) {
@@ -48,9 +48,9 @@
                                 <div class="relative">
                                     <input type="text" name="search" placeholder="ค้นหาค่าใช้จ่าย"
                                         class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
-                                    <div class="absolute top-0 left-0 inline-flex items-center p-2">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
+                                        <div class="absolute inset-y-0 left-3 flex items-center">
+                                            <i class="fas fa-search text-gray-400"></i>
+                                        </div>
                                 </div>
                             </form>
                             <button onclick="openModal()"
@@ -63,7 +63,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-center">ชื่อ</th>
                                         <th class="py-3 px-6 text-center">ราคา (บาท)</th>
                                         <th class="py-3 px-6 text-center">วันที่</th>
@@ -72,30 +72,32 @@
                                 </thead>
                                 <tbody class="text-sm text-gray-600">
                                     @foreach ($expenses as $expense)
-                                    <tr class="border-t">
-                                        <td class="py-3 px-6 text-center">{{ $expense->type }}</td>
-                                        <td class="py-3 px-6 text-center">
-                                            {{ number_format($expense->expenses_price, 2) }}
-                                        </td>
-                                        <td class="py-3 px-6 text-center">{{ \Carbon\Carbon::parse($expense->expenses_date)->format('d/m/y') }}</td>
+                                        <tr class="border-t">
+                                            <td class="py-3 px-6 text-center">{{ $expense->expenses_name }}</td>
+                                            <td class="py-3 px-6 text-center">
+                                                {{ number_format($expense->expenses_price, 2) }}
+                                            </td>
+                                            <td class="py-3 px-6 text-center">
+                                                {{ \Carbon\Carbon::parse($expense->expenses_date)->format('d/m/y') }}
+                                            </td>
 
-                                        <td class="py-3 px-6 text-center">
-                                            <button
-                                                onclick="openEditModal({{ $expense->id }}, '{{ $expense->expenses_name }}', {{ $expense->expenses_price }}, '{{ $expense->expenses_date }}')"
-                                                class="hover:text-blue-500 hover:underline mr-3">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                            <form action="{{ route('expenses.destroy', $expense->id) }}"
-                                                method="POST" class="inline"
-                                                onsubmit="return confirmDelete(event)">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="hover:text-red-500 hover:underline">
-                                                    <i class="fa-solid fa-trash"></i>
+                                            <td class="py-3 px-6 text-center">
+                                                <button
+                                                    onclick="openEditModal({{ $expense->id }}, '{{ $expense->expenses_name }}', {{ $expense->expenses_price }}, '{{ $expense->expenses_date }}')"
+                                                    class="text-yellow-500 hover:text-yellow-600 hover:underline mr-3">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                                <form action="{{ route('expenses.destroy', $expense->id) }}"
+                                                    method="POST" class="inline" onsubmit="confirmDelete(event, this)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="text-red-500 hover:text-red-600 hover:underline">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -124,22 +126,27 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700">ราคา (บาท)</label>
-                            <input type="number" name="expenses_price" required class="w-full px-4 py-2 border rounded-lg">
+                            <input type="number" name="expenses_price" required
+                                class="w-full px-4 py-2 border rounded-lg">
                         </div>
 
                         <div class="mb-4 relative">
                             <label class="block text-gray-700">วันที่</label>
-                            <input type="text" name="expenses_date" required class="datepicker w-full px-4 py-2 border rounded-lg pr-10">
-                            <i class="fas fa-calendar absolute right-3 top-1/2 transform -translate-y-1/2 mt-3 text-gray-500"></i>
+                            <input type="text" name="expenses_date" required
+                                class="datepicker w-full px-4 py-2 border rounded-lg pr-10">
+                            <i
+                                class="fas fa-calendar absolute right-3 top-1/2 transform -translate-y-1/2 mt-3 text-gray-500"></i>
                         </div>
 
                         <div class="mb-4" id="expenseNameContainer">
                             <label class="block text-gray-700">ชื่อค่าใช้จ่าย</label>
-                            <input type="text" name="expenses_name" required class="w-full px-4 py-2 border rounded-lg">
+                            <input type="text" name="expenses_name" required
+                                class="w-full px-4 py-2 border rounded-lg">
                         </div>
 
                         <div class="flex justify-between">
-                            <button type="button" onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded-lg">
+                            <button type="button" onclick="closeModal()"
+                                class="bg-gray-400 text-white px-4 py-2 rounded-lg">
                                 ยกเลิก
                             </button>
                             <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
@@ -159,7 +166,7 @@
                                 const selectedType = expenseTypeSelect.value;
 
                                 // เงื่อนไขที่ใช้เมื่อประเภทค่าใช้จ่ายเป็น "ค่าซ่อม" หรือ "ค่าซื้อเปลี่ยน"
-                                if (selectedType === 'ค่าซ่อม' || selectedType === 'ค่าซื้อเปลี่ยน'|| selectedType === 'ของใช้') {
+                                if (selectedType === 'ค่าซ่อม' || selectedType === 'ค่าซื้อเปลี่ยน' || selectedType === 'ของใช้') {
                                     expenseNameContainer.style.display = 'block'; // แสดงชื่อค่าใช้จ่าย
                                     expenseNameInput.removeAttribute('disabled'); // เปิดฟิลด์ให้กรอก
                                 } else {
@@ -179,6 +186,7 @@
             </div>
 
 
+
             <!-- Edit Expense Modal -->
             <div id="edit-expense-modal"
                 class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
@@ -192,8 +200,14 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700">ชื่อค่าใช้จ่าย</label>
-                            <input type="text" id="edit-expense-name" name="expenses_name" required
-                                class="w-full px-4 py-2 border rounded-lg">
+                            <div class="mb-4">
+
+                                <select id="edit-expense-name" name="type" required class="w-full px-4 py-2 border rounded-lg">
+                                    <option value="">เลือกประเภท</option>
+                                    <option value="ค่าน้ำ">ค่าน้ำ</option>
+                                    <option value="ค่าไฟ">ค่าไฟ</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -206,8 +220,6 @@
                             <label class="block text-gray-700">วันที่</label>
                             <input type="text" id="edit-expense-date" name="expenses_date" required
                                 class="datepicker w-full px-4 py-2 border rounded-lg">
-                            <i class="fas fa-calendar absolute right-3 top-1/2 transform -translate-y-1/2 mt-3 text-gray-500"></i>
-
                         </div>
 
                         <div class="flex justify-between">
@@ -223,6 +235,65 @@
                 </div>
             </div>
 
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let editDatePicker = flatpickr("#edit-expense-date", {
+                        dateFormat: "Y-m-d",
+                        altInput: true,
+                        altFormat: "d/m/Y",
+                        locale: "th",
+                        allowInput: false
+                    });
+
+                    window.openEditModal = function(id, name, price, date) {
+                        document.getElementById("edit-expense-id").value = id;
+                        document.getElementById("edit-expense-name").value = name;
+                        document.getElementById("edit-expense-price").value = price;
+
+                        // กำหนดค่าใหม่ให้ editDatePicker ทุกครั้ง
+                        let editDatePicker = flatpickr("#edit-expense-date", {
+                            dateFormat: "Y-m-d",
+                            altInput: true,
+                            altFormat: "d/m/Y",
+                            locale: "th",
+                            allowInput: false
+                        });
+
+                        // ตั้งค่าค่าวันที่ให้ flatpickr
+                        if (date) {
+                            editDatePicker.setDate(date, true);
+                        }
+
+                        document.getElementById("edit-expense-form").action = `/expenses/${id}`;
+                        document.getElementById("edit-expense-modal").classList.remove("hidden");
+                    };
+
+
+
+                    window.closeEditModal = function() {
+                        document.getElementById("edit-expense-modal").classList.add("hidden");
+                    };
+
+                    window.confirmDelete = function(event, form) {
+                        event.preventDefault();
+                        Swal.fire({
+                            title: "ยืนยันการลบค่าใช้จ่าย?",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonColor: "bg-blue-500", // สีแดง
+                            cancelButtonColor: "#ffffff", // ปุ่มยกเลิกสีขาว
+                            cancelButtonText: "<span style='color: black;'>ยกเลิก</span>", // ตัวหนังสือสีดำ
+                            confirmButtonText: "ลบเลย!",
+                            reverseButtons: true // ปรับให้ปุ่มยืนยันอยู่ด้านขวา
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    };
+                });
+            </script>
 
 
 
@@ -257,28 +328,7 @@
                         document.getElementById("expense-modal").classList.add("hidden");
                     };
 
-                    // ฟังก์ชันเปิด Modal แก้ไขค่าใช้จ่าย
-                    window.openEditModal = function(id, name, price, date) {
-                        document.getElementById("edit-expense-id").value = id;
-                        document.getElementById("edit-expense-name").value = name;
-                        document.getElementById("edit-expense-price").value = price;
 
-                        // อัปเดตค่า flatpickr
-                        editDatePicker.setDate(date, true);
-
-                        document.getElementById("edit-expense-form").action = `/expenses/${id}`;
-                        document.getElementById("edit-expense-modal").classList.remove("hidden");
-                    };
-
-                    window.closeEditModal = function() {
-                        document.getElementById("edit-expense-modal").classList.add("hidden");
-                    };
-
-                    window.confirmDelete = function(event) {
-                        if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบค่าใช้จ่ายนี้?")) {
-                            event.preventDefault();
-                        }
-                    };
                 });
             </script>
 

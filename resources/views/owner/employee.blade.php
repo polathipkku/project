@@ -65,7 +65,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full border border-gray-200">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-center">ลำดับ</th>
                                         <th class="py-3 px-6 text-center">ชื่อ</th>
                                         <th class="py-3 px-6 text-center">วันสมัคร</th>

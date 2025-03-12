@@ -120,7 +120,7 @@
 
                 <!-- Payment Status Overview -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 mb-6">
-                    <div class="p-5 bg-blue-600 text-white">
+                    <div class="p-5 bg-gradient-to-r from-blue-100 to-indigo-200  text-black">
                         <h3 class="font-semibold text-lg">สรุปสถานะการชำระเงิน</h3>
                     </div>
                     <div class="p-5">
@@ -151,7 +151,7 @@
                     </div>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-6 ">
                     <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -159,7 +159,7 @@
                         ประวัติการซ่อมแยกตามห้อง
                     </h4>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 ">
                         @foreach($repairCounts->groupBy('room_id')->take(6) as $roomId => $items)
                         @php
                         $roomName = $items->first()->room->room_name ?? 'ไม่มีข้อมูล';
@@ -380,7 +380,7 @@
 
             <!-- Empty State - Only shown when no data -->
             @if($repairCounts->count() === 0)
-            <div class="flex flex-col items-center justify-center p-10 bg-white rounded-xl shadow-md">
+            <div class="flex flex-col mx-8 items-center justify-center p-10 bg-white rounded-xl shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>

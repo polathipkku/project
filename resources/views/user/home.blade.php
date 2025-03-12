@@ -190,10 +190,6 @@
             }
         });
 
-
-
-
-
         // Header Scroll Behavior
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
@@ -994,9 +990,7 @@
             if (!image) errors.push("กรุณาเลือกรูปโปรไฟล์");
 
             // แสดงข้อผิดพลาดหรือส่งฟอร์ม
-            if (errors.length > 0) {
-                alert("พบข้อผิดพลาด:\n" + errors.join("\n"));
-            } else {
+             else {
                 alert("สมัครสมาชิกสำเร็จ!");
                 event.target.submit(); // ส่งฟอร์ม
             }

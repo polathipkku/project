@@ -41,76 +41,179 @@
 
     <div class="flex items-center justify-between h-5  text-white" style="background-color: #042a48" id="mail">
     </div>
-    <header class="bg-white shadow-lg pt-3">
-        <div class="container mx-auto flex items-center justify-between h-24 px-5">
-            <nav class="text-base">
-                <div class="container mx-auto flex justify-center space-x-10 py-3">
-                    <a href="gallery" class="hover:text-blue-400">แกลเลอรี่</a>
-                    <a href="travel" class="hover:text-blue-400">สถานที่ท่องเที่ยว</a>
-                    <a href="contact" class="hover:text-blue-400">ติดต่อ</a>
-                </div>
-            </nav>
+      <!-- Main Header -->
+      <header class="bg-white shadow-lg pt-3">
+        <div class="container mx-auto px-4">
+            <!-- Mobile Header -->
+            <div class="md:hidden flex items-center justify-between h-16">
+                <!-- Hamburger Button -->
+                <button id="mobileMenuBtn" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
 
-            <div class="mx-auto" id="logo">
-                <a href="home" class="">Thunthree</a>
+                <!-- Center Logo -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 mb-12" id="logo">
+                    <a href="{{ route('home') }}" class="text-2xl">Thunthree</a>
+                </div>
+
+                <!-- Empty div for spacing -->
+                <div class="w-6"></div>
             </div>
 
-            <div class="flex items-center space-x-4">
-                @auth
-                <nav class="flex items-center space-x-10 text-base">
-                    <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">ประวัติการจอง<i
-                            class="fa-solid fa-clock-rotate-left ml-2"></i></a>
-                    {{-- <a href="{{ route('review.index') }}" class="text-black hover:text-blue-400">รีวิว<i
-                        class="fa-solid fa-star ml-2"></i></a> --}}
-                    <div class="relative">
-                        <button id="profileButton" type="button"
-                            class="text-black hover:text-blue-400 focus:outline-none">
-                            <i class="fa-solid fa-user"></i>
-                            <span class="sr-only">User Menu</span>
-                        </button>
-                        <div id="profileDropdown"
-                            class="absolute hidden right-0 mt-2 w-24 bg-white rounded-md shadow-lg">
-                            <div class="py-1">
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Profile</a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Settings</a>
-                                <a href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">Logout</a>
-                            </div>
-                        </div>
-                        <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobileMenu" class="hidden md:hidden bg-white absolute left-0 right-0 shadow-lg z-50">
+                <div class="px-4 py-3 space-y-4">
+                    <!-- Navigation Links -->
+                    <div class="space-y-3">
+                        <a href="{{ route('gallery') }}" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-images mr-2"></i>แกลเลอรี่
+                        </a>
+                        <a href="{{ route('travel') }}" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-map-location-dot mr-2"></i>สถานที่ท่องเที่ยว
+                        </a>
+                        <a href="{{ route('contact') }}" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-envelope mr-2"></i>ติดต่อ
+                        </a>
+                    </div>
+
+                    <!-- Auth Links -->
+                    @auth
+                    <div class="space-y-3 border-t border-gray-200 pt-3">
+                        <a href="{{ route('reservation') }}" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-clock-rotate-left mr-2"></i>ประวัติการจอง
+                        </a>
+                        <a href="{{ route('profile.edit', ['user' => auth()->id()]) }}" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-user mr-2"></i>โปรไฟล์
+                        </a>
+
+                        <a href="" class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-gear mr-2"></i>ตั้งค่า
+                        </a>
+                        <a href="#"
+                            onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                            class="block text-black hover:text-blue-400">
+                            <i class="fa-solid fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                        </a>
+                        <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
                         </form>
                     </div>
+                    @else
+                    <div class="space-y-3 border-t border-gray-200 pt-3">
+                        <a href="#" onclick="showLoginForm()" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-right-to-bracket mr-2"></i>เข้าสู่ระบบ
+                        </a>
+                        <a href="#" onclick="showRegisterForm()" class="block hover:text-blue-400">
+                            <i class="fa-solid fa-user-plus mr-2"></i>สมัครสมาชิก
+                        </a>
+                    </div>
+                    @endauth
+                </div>
+            </div>
+
+            <!-- Desktop Header -->
+            <div class="hidden md:flex items-center justify-between h-24">
+                <nav class="text-base">
+                    <div class="container mx-auto flex justify-center space-x-10 py-3">
+                        <a href="{{ route('gallery') }}" class="hover:text-blue-400">แกลเลอรี่</a>
+                        <a href="{{ route('travel') }}" class="hover:text-blue-400">สถานที่ท่องเที่ยว</a>
+                        <a href="{{ route('contact') }}" class="hover:text-blue-400">ติดต่อ</a>
+                    </div>
                 </nav>
-                @endauth
 
-                <div class="flex flex-col items-end space-y-2 mb-4">
-                    <nav class="flex items-center space-x-2">
-                        @guest
-                        <a href="#" onclick="showLoginForm()"
-                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                            <span>เข้าสู่ระบบ</span>
+                <div class="mx-auto" id="logo">
+                    <a href="{{ route('home') }}" class="">Thunthree</a>
+                </div>
+
+                <div class="flex items-center space-x-4 mr-3">
+                    @auth
+                    <nav class="flex items-center space-x-10 text-base">
+                        <a href="{{ route('reservation') }}" class="text-black hover:text-blue-400">
+                            ประวัติการจอง<i class="fa-solid fa-clock-rotate-left ml-2"></i>
                         </a>
-                        <a href="#" onclick="showRegisterForm()"
-                            class="flex items-center space-x-1 hover:text-blue-400 text-sm">
-                            <i class="fa-solid fa-user"></i>
-                            <span>สมัครสมาชิก</span>
-                        </a>
-                        @endguest
+                        <div class="relative">
+                            <button id="profileButton" type="button"
+                                class="text-black hover:text-blue-400 focus:outline-none">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="sr-only">User Menu</span>
+                            </button>
+                            <div id="profileDropdown"
+                                class="absolute hidden right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+                                <div class="py-1">
+                                    <a href="{{ route('profile.edit', auth()->id()) }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">โปรไฟล์</a>
+                                    <a href=""
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ตั้งค่า</a>
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('desktop-logout-form').submit();"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ออกจากระบบ</a>
+                                </div>
+                            </div>
+                            <form id="desktop-logout-form" action="{{ route('logout') }}" method="POST"
+                                class="hidden">
+                                @csrf
+                            </form>
+                        </div>
                     </nav>
-                    <a class="bg-blue-500 text-white px-8 py-3 border border-blue-500 rounded hover:bg-white hover:border-blue-500 hover:text-blue-500 text-sm w-full text-center transition duration-300 ease-in-out"
-                        href="{{ route('userbooking') }}" id="userbooking">
-                        เช็คห้องว่าง
-                    </a>
-
+                    @else
+                    <div class="flex flex-col items-end space-y-2">
+                        <nav class="flex items-center space-x-4">
+                            <a href="#" onclick="showLoginForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>เข้าสู่ระบบ</span>
+                            </a>
+                            <a href="#" onclick="showRegisterForm()"
+                                class="flex items-center space-x-1 hover:text-blue-400 text-sm">
+                                <i class="fa-solid fa-user"></i>
+                                <span>สมัครสมาชิก</span>
+                            </a>
+                        </nav>
+                    </div>
+                    @endauth
                 </div>
             </div>
         </div>
     </header>
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close Mobile Menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+            if (mobileMenu && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Header Scroll Behavior
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll <= 0) {
+                header.style.top = '20px';
+            } else if (currentScroll > lastScroll) {
+                header.style.top = '-100px'; // Hide header when scrolling down
+            } else {
+                header.style.top = '0'; // Show header when scrolling up
+            }
+
+            lastScroll = currentScroll;
+        });
+    </script>
+    
     <div class="mx-auto pt-2 pb-2 ">
         <p class="text-gray-600 text-l max-xl:px-4 pt-8" style="margin-left: 7%;">
             <a href="{{ route('home') }}" class="text-black hover:text-blue-400">Home</a>

@@ -61,7 +61,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">ลำดับ</th>
                                         <th class="py-3 px-6 text-left">ชื่อโปรโมชั่น</th>
                                         <th class="py-3 px-6 text-left">โค้ดโปรโมชั่น</th>

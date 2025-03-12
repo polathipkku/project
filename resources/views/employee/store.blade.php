@@ -28,51 +28,71 @@
         @include('components.em_sidebar')
 
 
-        <section class="ml-10 bg-white" id="drink-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
-
-            <div class="max-w-screen-xl mx-auto py-10">
-                <div class="px-2 p-2 flex justify-between items-center">
-                    <h1 class="text-4xl mb-10 max-xl:px-4">รายการเครื่องดื่ม</h1>
+        <section class="ml-10 bg-white rounded-lg" id="drink-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div class="max-w-screen-xl mx-auto py-6">
+                <div class="px-2 p-2 flex justify-between items-center border-b border-gray-200 pb-4">
+                    <h1 class="text-3xl font-semibold text-black max-xl:px-4">รายการเครื่องดื่ม</h1>
+                    <div class="flex items-center">
+                        <i class="fas fa-coffee text-blue-600 mr-2 text-xl"></i>
+                        <span class="text-gray-600">สินค้าทั้งหมด: {{ $drinks->count() ?? 0 }}</span>
+                    </div>
                 </div>
+                
                 @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                    {{ session('success') }}
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded my-4 shadow-sm">
+                    <div class="flex">
+                        <div class="py-1"><i class="fas fa-check-circle text-green-500 mr-2"></i></div>
+                        <div>{{ session('success') }}</div>
+                    </div>
                 </div>
                 @endif
-
+        
                 @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                    {{ session('error') }}
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded my-4 shadow-sm">
+                    <div class="flex">
+                        <div class="py-1"><i class="fas fa-exclamation-circle text-red-500 mr-2"></i></div>
+                        <div>{{ session('error') }}</div>
+                    </div>
                 </div>
                 @endif
-
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="text-l bg-gray-300">
-                            <th class="px-4 py-2">ชื่อสินค้า</th>
-                            <th class="px-4 py-2">จำนวนคงเหลือ</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        @if($drinks->isNotEmpty())
-                        @foreach($drinks as $drink)
-                        <tr>
-                            <!-- Display product image -->
-                            <td class="px-4 py-2">{{ $drink->product_name }}</td>
-                          
-                            <td class="px-4 py-2">{{ $drink->stock->stock_qty }} </td>
-                           
-                          
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr>
-                            <td colspan="8" class="px-4 py-2 text-gray-600">ไม่มีสินค้าในหมวดเครื่องอาบน้ำ</td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
-
+        
+                <div class="mt-6 overflow-hidden rounded-lg border border-gray-200">
+                    <table class="w-full border-collapse bg-white">
+                        <thead>
+                            <tr class="text-sm font-medium uppercase tracking-wider text-gray-700 bg-gradient-to-r from-blue-100 to-indigo-200 border-b">
+                                <th class="px-6 py-3 text-center">ชื่อสินค้า</th>
+                                <th class="px-6 py-3 text-center">จำนวนคงเหลือ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @if($drinks->isNotEmpty())
+                            @foreach($drinks as $drink)
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 whitespace-nowrap text-center"> <!-- เพิ่ม text-center ที่นี่ -->
+                                    <div class="flex items-center justify-center"> <!-- เพิ่ม justify-center ที่นี่ -->
+                                        <span class="font-medium text-gray-900">{{ $drink->product_name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $drink->stock->stock_qty > 10 ? 'bg-green-100 text-green-800' : ($drink->stock->stock_qty > 5 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                                        {{ $drink->stock->stock_qty }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @else
+                            <tr>
+                                <td colspan="2" class="px-6 py-4 text-center text-gray-500 italic">
+                                    <div class="flex flex-col items-center justify-center py-4">
+                                        <i class="fas fa-coffee text-gray-400 text-3xl mb-2"></i>
+                                        ไม่มีสินค้าในหมวดเครื่องดื่ม
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>                        
+                    </table>
+                </div>
             </div>
         </section>
 

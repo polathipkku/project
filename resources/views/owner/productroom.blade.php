@@ -72,7 +72,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full table-auto">
                                 <thead>
-                                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr class="bg-gradient-to-r from-blue-100 to-indigo-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">ลำดับ</th>
                                         <th class="py-3 px-6 text-left">ชื่อสินค้า</th>
                                         <th class="py-3 px-6 text-left">ราคา (บาท)</th>

@@ -17,14 +17,14 @@ class PaymentController extends Controller
         $bookingDetail = Booking_detail::with(['booking.user', 'booking.promotion'])
             ->where('booking_id', $id)
             ->first();
-
+    
         if (!$bookingDetail) {
             return redirect()->route('home')->with('error', 'ข้อมูลการจองไม่พบ');
         }
-
+    
         // Check if payment exists
         $payment = Payment::where('booking_id', $id)->first();
-
+    
         if ($payment) {
             // Check if the payment is expired
             if (Carbon::now()->greaterThan($payment->expiration_time)) {
@@ -39,14 +39,16 @@ class PaymentController extends Controller
                 'expiration_time' => now()->addMinutes(15),
             ]);
         }
-
-        $userEmail = $bookingDetail->booking->user->email ?? null;
+    
+        // Get email from user if logged in, or from the booking_detail's email field if not
+        $userEmail = $bookingDetail->booking->user->email ?? $bookingDetail->email ?? null;
+    
         $promotionData = $bookingDetail->booking->promotion ? [
             'promo_code' => $bookingDetail->booking->promotion->promo_code,
             'discount_value' => $bookingDetail->booking->promotion->discount_value,
             'type' => $bookingDetail->booking->promotion->type,
         ] : null;
-
+    
         return view('user.payment', compact('bookingDetail', 'userEmail', 'promotionData', 'payment'));
     }
 

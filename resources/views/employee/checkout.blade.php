@@ -30,105 +30,143 @@
 
                 </div>
                 @if (count($bookings) > 0)
-                    <table class="w-full border-collapse bg-white rounded-lg overflow-hidden">
-                        <thead>
-                            <tr class="text-md sm:text-base bg-blue-50 border-b border-blue-200">
-                                <th class="px-4 py-2 w-24">หมายเลขห้อง</th>
-                                <th class="px-4 py-2 w-24">สถานะ</th>
-                                <th class="px-4 py-2 w-32">วันที่เช็คเอาท์</th>
-                                <th class="px-4 py-2 w-32">รายละเอียด</th>
-                                <th class="px-4 py-2 w-32">ขอสบู่เพิ่ม</th>
-                                <th class="px-4 py-2 w-32">CheckOut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($bookings as $booking)
-                                @foreach ($booking->bookingDetails as $detail)
-                                    @if ($detail->booking_detail_status == 'เช็คอินแล้ว' && $detail->booking_detail_status !== 'เช็คเอาท์')
-                                        <tr class="hover:bg-gray-50 border-b transition-colors">
-                                            <td class="px-4 py-2 w-24 text-center">{{ $detail->room->room_name ?? '-' }}</td>
-                                            <td class="px-4 py-2 w-24 text-center">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    {{ $detail->booking_detail_status }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-2 w-32 text-center">
-                                                {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d/F/Y') }}
-                                            </td>
-                                            <td class="px-4 py-2 w-32 text-center">
-                                                <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}">
-                                                    <button class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-blue-500 to-blue-600 p-0.5 text-sm font-medium text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
-                                                        <span class="relative flex items-center gap-1 rounded-md bg-blue-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            รายละเอียด
-                                                        </span>
-                                                    </button>
-                                                </a>
-                                            </td>
-                                            <td class="px-4 py-2 w-32 text-center">
-                                                @if (is_null($detail->soap_requested))
-                                                    <form action="{{ route('booking.requestSoap', $detail->id) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5 text-sm font-medium text-white hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2">
-                                                            <span class="relative flex items-center gap-1 rounded-md bg-indigo-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    <div class="overflow-x-auto mx-5">
+
+                        <table class="w-full border-collapse bg-white rounded-lg overflow-hidden">
+                            <thead>
+                                <tr
+                                    class="text-md sm:text-base bg-gradient-to-r from-blue-100 to-indigo-200 border-b border-blue-200">
+                                    <th class="px-4 py-2 w-24">หมายเลขห้อง</th>
+                                    <th class="px-4 py-2 w-24">สถานะ</th>
+                                    <th class="px-4 py-2 w-32">วันที่เช็คเอาท์</th>
+                                    <th class="px-4 py-2 w-32">รายละเอียด</th>
+                                    <th class="px-4 py-2 w-32">ขอสบู่เพิ่ม</th>
+                                    <th class="px-4 py-2 w-32">CheckOut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($bookings as $booking)
+                                    @foreach ($booking->bookingDetails as $detail)
+                                        @if ($detail->booking_detail_status == 'เช็คอินแล้ว' && $detail->booking_detail_status !== 'เช็คเอาท์')
+                                            <tr class="hover:bg-gray-50 border-b transition-colors">
+                                                <td class="px-4 py-2 w-24 text-center">
+                                                    {{ $detail->room->room_name ?? '-' }}
+                                                </td>
+                                                <td class="px-4 py-2 w-24 text-center">
+                                                    <span
+                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        {{ $detail->booking_detail_status }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-2 w-32 text-center">
+                                                    {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d F Y') }}
+                                                </td>
+                                                <td class="px-4 py-2 w-32 text-center">
+                                                    <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}">
+                                                        <button
+                                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-blue-500 to-blue-600 p-0.5 text-sm font-medium text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+                                                            <span
+                                                                class="relative flex items-center gap-1 rounded-md bg-blue-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                                    fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                 </svg>
-                                                                ขอสบู่เพิ่ม
+                                                                รายละเอียด
                                                             </span>
                                                         </button>
-                                                    </form>
-                                                @else
-                                                    <span class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                        ขอสบู่ไปแล้ว
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 w-32 text-center">
-                                                @if ($detail->booking_detail_status === 'เช็คอินแล้ว')
-                                                    <button class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-red-500 to-pink-600 p-0.5 text-sm font-medium text-white hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2" onclick="showCheckoutPopup('{{ $booking->id }}')">
-                                                        <span class="relative flex items-center gap-1 rounded-md bg-red-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </a>
+                                                </td>
+                                                <td class="px-4 py-2 w-32 text-center">
+                                                    @if (is_null($detail->soap_requested))
+                                                        <form action="{{ route('booking.requestSoap', $detail->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <button type="submit"
+                                                                class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5 text-sm font-medium text-white hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2">
+                                                                <span
+                                                                    class="relative flex items-center gap-1 rounded-md bg-indigo-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        class="h-4 w-4" fill="none"
+                                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                                    </svg>
+                                                                    ขอสบู่เพิ่ม
+                                                                </span>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <span
+                                                            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M5 13l4 4L19 7" />
                                                             </svg>
-                                                            เช็คเอาท์
+                                                            ขอสบู่ไปแล้ว
                                                         </span>
-                                                    </button>
-                                                    <form id="checkoutForm-{{ $booking->id }}" action="{{ route('checkoutuser') }}" method="post" class="hidden">
-                                                        @csrf
-                                                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                                                    </form>
-                                                @else
-                                                    <span class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                                        </svg>
-                                                        ไม่สามารถเช็คเอาท์ได้
-                                                    </span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endif
+                                                    @endif
+                                                </td>
+                                                <td class="px-4 py-2 w-32 text-center">
+                                                    @if ($detail->booking_detail_status === 'เช็คอินแล้ว')
+                                                        <button
+                                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-red-500 to-pink-600 p-0.5 text-sm font-medium text-white hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                                                            onclick="showCheckoutPopup('{{ $booking->id }}')">
+                                                            <span
+                                                                class="relative flex items-center gap-1 rounded-md bg-red-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                                    fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                                </svg>
+                                                                เช็คเอาท์
+                                                            </span>
+                                                        </button>
+                                                        <form id="checkoutForm-{{ $booking->id }}"
+                                                            action="{{ route('checkoutuser') }}" method="post"
+                                                            class="hidden">
+                                                            @csrf
+                                                            <input type="hidden" name="booking_id"
+                                                                value="{{ $booking->id }}">
+                                                        </form>
+                                                    @else
+                                                        <span
+                                                            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                            </svg>
+                                                            ไม่สามารถเช็คเอาท์ได้
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-                        </tbody>
-                    @else
-                        <div class=" p-8 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <h3 class="text-xl font-medium text-gray-900 mb-2">ไม่พบการจองที่รอเช็คเอาท์</h3>
-                            <p class="text-gray-500">ขณะนี้ไม่มีรายการที่รอการเช็คเอาท์</p>
-                        </div>
+                            </tbody>
+                        @else
+                            <div class=" p-8 text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 class="text-xl font-medium text-gray-900 mb-2">ไม่พบการจองที่รอเช็คเอาท์</h3>
+                                <p class="text-gray-500">ขณะนี้ไม่มีรายการที่รอการเช็คเอาท์</p>
+                            </div>
                 @endif
-
+                </dive>
 
             </div>
         </section>
@@ -389,17 +427,23 @@
                 </div>
 
                 <!-- QR Code Payment -->
-                <div id="transferPaymentFields" class="hidden text-center">
+                <div id="transferPaymentFields" class="text-center">
                     <p class="text-gray-700 font-medium mb-4">
                         สแกน QR Code เพื่อชำระเงิน
                     </p>
                     <div class="flex justify-center items-center">
                         <div
                             class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-200 w-60 h-60 flex items-center justify-center">
-                            <img src="{{ asset('images/qrcodeimage.png') }}" alt="QR Code" class="w-48 h-48">
+                            @if (isset($selectedPaymentType) && $selectedPaymentType->qr_code)
+                                <img src="{{ asset('storage/qr_codes/' . $selectedPaymentType->qr_code) }}"
+                                    alt="QR Code" class="w-48 h-48">
+                            @else
+                                <p class="text-red-500">ไม่มี QR Code สำหรับวิธีชำระเงินนี้</p>
+                            @endif
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- Action Buttons -->

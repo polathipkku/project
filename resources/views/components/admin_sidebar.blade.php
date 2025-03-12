@@ -33,8 +33,8 @@
         ['id' => 'expenses', 'label' => 'ค่าใช้จ่าย', 'icon' => 'fas fa-money-bill', 'route' => route('expenses')],
         ['id' => 'payment_types.index', 'label' => 'ประเภทการจ่าย', 'icon' => 'fa-solid fa-cash-register', 'route' => route('payment_types.index')],
         ['id' => 'repairreport', 'label' => 'ประวัติการซ่อม', 'icon' => 'fa-solid fa-hammer', 'route' => route('repairreport'), 'badge' => $repairCounts],
-        ['id' => 'record', 'label' => 'ประวัติ', 'icon' => 'fa-database', 'route' => route('record')],
-        ['id' => 'Items', 'label' => 'อุปกรณ์', 'icon' => 'fa-solid fa-box', 'route' => route('Items'), 'badge' => $lowStockItems]
+        ['id' => 'record', 'label' => 'ประวัติการจอง', 'icon' => 'fa-database', 'route' => route('record')],
+        ['id' => 'Items', 'label' => 'จัดการสินค้า', 'icon' => 'fa-solid fa-box', 'route' => route('Items'), 'badge' => $lowStockItems]
         ];
         $currentRoute = Route::currentRouteName();
         @endphp
