@@ -31,10 +31,10 @@
         <section class="ml-10 bg-white rounded-lg" id="drink-table" style="width:1100px; padding-left: 2.5%; padding-right: 2.5%; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <div class="max-w-screen-xl mx-auto py-6">
                 <div class="px-2 p-2 flex justify-between items-center border-b border-gray-200 pb-4">
-                    <h1 class="text-3xl font-semibold text-black max-xl:px-4">รายการเครื่องดื่ม</h1>
+                    <h1 class="text-3xl font-semibold text-black max-xl:px-4">สต็อกสินค้า</h1>
                     <div class="flex items-center">
                         <i class="fas fa-coffee text-blue-600 mr-2 text-xl"></i>
-                        <span class="text-gray-600">สินค้าทั้งหมด: {{ $drinks->count() ?? 0 }}</span>
+                        <span class="text-gray-600">สต็อกสินค้าทั้งหมด: {{ $drinks->count() ?? 0 }}</span>
                     </div>
                 </div>
                 
@@ -84,8 +84,8 @@
                             <tr>
                                 <td colspan="2" class="px-6 py-4 text-center text-gray-500 italic">
                                     <div class="flex flex-col items-center justify-center py-4">
-                                        <i class="fas fa-coffee text-gray-400 text-3xl mb-2"></i>
-                                        ไม่มีสินค้าในหมวดเครื่องดื่ม
+                                        <i class="fa-solid fa-soap text-gray-400 text-3xl mb-2"></i>
+                                        ไม่มีสินค้า
                                     </div>
                                 </td>
                             </tr>
