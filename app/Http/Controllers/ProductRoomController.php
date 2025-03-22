@@ -47,7 +47,7 @@ class ProductRoomController extends Controller
     }
     public function index()
     {
-        $productroom = ProductRoom::paginate(10); // 10 items per page
+        $productroom = Product_room::paginate(10); // 10 items per page
         return view('owner.productroom', compact('productroom'));
     }
     public function updateProductRoom(Request $request, $id)

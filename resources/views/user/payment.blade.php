@@ -171,7 +171,7 @@
                         name: '{{ $bookingDetail->booking_name }}',
                         phone: '{{ $bookingDetail->phone }}',
                     }
-                });
+                }); 
 
                 if (paymentMethodError) {
                     Swal.fire({

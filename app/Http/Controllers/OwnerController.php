@@ -39,11 +39,19 @@ class OwnerController extends Controller
         $employee = User::where('userType', '1')->get();
         return view('owner.add_employee', compact('employee'));
     }
-    public function employeedetail()
+    public function employeedetail($id)
     {
-        $employeedetail = User::where('userType', '1')->get();
-        return view('owner.employeedetail', compact('employeedetail'));
+        $employee = User::find($id);  // ค้นหาพนักงานที่มี id ตรงกับ $id
+
+        // ถ้าไม่พบพนักงานที่มี id นี้ ให้แสดงข้อความหรือ redirect
+        if (!$employee) {
+            return redirect()->route('employee.index')->with('error', 'ไม่พบพนักงาน');
+        }
+
+        return view('owner.employeedetail', compact('employee'));
     }
+
+
 
     public function checkUserType()
     {
@@ -67,7 +75,8 @@ class OwnerController extends Controller
 
     public function createUser(Request $request)
     {
-        $request->validate([
+        // เพิ่มการตรวจสอบข้อมูลตามสัญชาติ
+        $validationRules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::defaults()],
@@ -79,12 +88,27 @@ class OwnerController extends Controller
             'work_shift' => 'required|string',
             'position' => 'required|string',
             'payment_date' => 'required|date_format:d/m/Y',
-        ]);
+            'nationality' => 'required|string|in:thai,foreign',
+        ];
+
+        // เพิ่มกฎการตรวจสอบตามสัญชาติ
+        if ($request->nationality == 'thai') {
+            $validationRules['id_card'] = 'required|string|size:13'; // บัตรประชาชนต้องมี 13 หลัก
+        } else if ($request->nationality == 'foreign') {
+            $validationRules['passport_number'] = 'required|string|max:20';
+            $validationRules['country'] = 'required|string|max:50';
+            $validationRules['work_permit_number'] = 'required|string|max:50';
+            $validationRules['permit_expiry_date'] = 'required|date_format:d/m/Y';
+            $validationRules['visa_type'] = 'required|string';
+        }
+
+        $request->validate($validationRules);
 
         $imageName = time() . '.' . $request->file('image')->extension();
         $request->file('image')->move(public_path('images'), $imageName);
 
-        User::create([
+        // สร้างข้อมูลพื้นฐาน
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -98,7 +122,21 @@ class OwnerController extends Controller
             'work_shift' => $request->work_shift,
             'position' => $request->position,
             'payment_date' => Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('d'),
-        ]);
+            'nationality' => $request->nationality,
+        ];
+
+        // เพิ่มข้อมูลตามสัญชาติ
+        if ($request->nationality == 'thai') {
+            $userData['id_card'] = $request->id_card;
+        } else if ($request->nationality == 'foreign') {
+            $userData['passport_number'] = $request->passport_number;
+            $userData['country'] = $request->country;
+            $userData['work_permit_number'] = $request->work_permit_number;
+            $userData['permit_expiry_date'] = Carbon::createFromFormat('d/m/Y', $request->permit_expiry_date)->format('Y-m-d');
+            $userData['visa_type'] = $request->visa_type;
+        }
+
+        User::create($userData);
 
         return redirect()->route('employee')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }

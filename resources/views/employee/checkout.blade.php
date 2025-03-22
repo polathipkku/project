@@ -30,145 +30,247 @@
 
                 </div>
                 @if (count($bookings) > 0)
-                    <div class="overflow-x-auto mx-5">
+                <div class="overflow-x-auto mx-5">
 
-                        <table class="w-full border-collapse bg-white rounded-lg overflow-hidden">
-                            <thead>
-                                <tr
-                                    class="text-md sm:text-base bg-gradient-to-r from-blue-100 to-indigo-200 border-b border-blue-200">
-                                    <th class="px-4 py-2 w-24">หมายเลขห้อง</th>
-                                    <th class="px-4 py-2 w-24">สถานะ</th>
-                                    <th class="px-4 py-2 w-32">วันที่เช็คเอาท์</th>
-                                    <th class="px-4 py-2 w-32">รายละเอียด</th>
-                                    <th class="px-4 py-2 w-32">ขอสบู่เพิ่ม</th>
-                                    <th class="px-4 py-2 w-32">CheckOut</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($bookings as $booking)
-                                    @foreach ($booking->bookingDetails as $detail)
-                                        @if ($detail->booking_detail_status == 'เช็คอินแล้ว' && $detail->booking_detail_status !== 'เช็คเอาท์')
-                                            <tr class="hover:bg-gray-50 border-b transition-colors">
-                                                <td class="px-4 py-2 w-24 text-center">
-                                                    {{ $detail->room->room_name ?? '-' }}
-                                                </td>
-                                                <td class="px-4 py-2 w-24 text-center">
-                                                    <span
-                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        {{ $detail->booking_detail_status }}
-                                                    </span>
-                                                </td>
-                                                <td class="px-4 py-2 w-32 text-center">
+                    <table class="w-full border-collapse bg-white rounded-lg overflow-hidden">
+                        <thead>
+                            <tr
+                                class="text-md sm:text-base bg-gradient-to-r from-blue-100 to-indigo-200 border-b border-blue-200">
+                                <th class="px-4 py-2 w-24">หมายเลขห้อง</th>
+                                <th class="px-4 py-2 w-24">สถานะ</th>
+                                <th class="px-4 py-2 w-32">วันที่เช็คเอาท์</th>
+                                <th class="px-4 py-2 w-32">รายละเอียด</th>
+                                <th class="px-4 py-2 w-32">ขอสบู่เพิ่ม</th>
+                                <th class="px-4 py-2 w-32">CheckOut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($bookings as $booking)
+                            @foreach ($booking->bookingDetails as $detail)
+                            @if ($detail->booking_detail_status == 'เช็คอินแล้ว' && $detail->booking_detail_status !== 'เช็คเอาท์')
+                            <tr class="hover:bg-gray-50 border-b transition-colors">
+                                <td class="px-4 py-2 w-24 text-center">
+                                    {{ $detail->room->room_name ?? '-' }}
+                                </td>
+                                <td class="px-4 py-2 w-24 text-center">
+                                    @php
+                                    $now = \Carbon\Carbon::now();
+                                    $isLate = false;
+
+                                    if ($detail->room_type == 'ห้องพักชั่วคราว') {
+                                    $endTime = \Carbon\Carbon::parse($detail->created_at)->addHours(4);
+                                    $remainingTime = $now->diffInSeconds($endTime, false);
+
+                                    if ($remainingTime <= 0) {
+                                        $isLate=true;
+                                        }
+                                        } else {
+                                        $checkoutDate=\Carbon\Carbon::parse($detail->checkout_date)->setTime(12, 0, 0);
+                                        $remainingTime = $now->diffInSeconds($checkoutDate, false);
+
+                                        if ($remainingTime <= 0) {
+                                            $isLate=true;
+                                            }
+                                            }
+                                            @endphp
+
+                                            <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $isLate ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                            {{ $isLate ? 'เช็คเอาท์ล่าช้า' : 'เช็คอินแล้ว' }}
+                                            </span>
+                                </td>
+                                <td class="px-4 py-2 w-32">
+                                    @php
+                                    if ($detail->room_type == 'ห้องพักชั่วคราว') {
+                                    // ห้องพักชั่วคราว: นับเวลาถอยหลัง 4 ชั่วโมงจาก created_at
+                                    $endTime = \Carbon\Carbon::parse($detail->created_at)->addHours(4);
+                                    $remainingTime = $now->diffInSeconds($endTime, false);
+
+                                    if ($remainingTime <= 0) {
+                                        $statusClass='bg-red-100 text-red-800' ;
+                                        // คำนวณเวลาที่เกินมา
+                                        $lateTime=abs($remainingTime);
+                                        $lateHours=floor($lateTime / 3600);
+                                        $lateMinutes=floor(($lateTime % 3600) / 60);
+                                        $timeText="{$lateHours} ชม. {$lateMinutes} นาที" ;
+                                        $icon='clock-x' ;
+                                        } elseif ($remainingTime < 1800) { // น้อยกว่า 30 นาที
+                                        $statusClass='bg-red-100 text-red-800' ;
+                                        $hours=floor($remainingTime / 3600);
+                                        $minutes=floor(($remainingTime % 3600) / 60);
+                                        $timeText="{$hours} ชม. {$minutes} นาที" ;
+                                        $icon='clock-exclamation' ;
+                                        } else {
+                                        $statusClass='bg-blue-100 text-blue-800' ;
+                                        $hours=floor($remainingTime / 3600);
+                                        $minutes=floor(($remainingTime % 3600) / 60);
+                                        $timeText="{$hours} ชม. {$minutes} นาที" ;
+                                        $icon='clock' ;
+                                        }
+                                        } else {
+                                        // ห้องพักค้างคืน: นับเวลาถอยหลังถึงบ่าย 2 โมงของวันที่ checkout
+                                        $checkoutDate=\Carbon\Carbon::parse($detail->checkout_date)->setTime(14, 0, 0);
+                                        $remainingTime = $now->diffInSeconds($checkoutDate, false);
+
+                                        if ($remainingTime <= 0) {
+                                            $statusClass='bg-red-100 text-red-800' ;
+                                            // คำนวณเวลาที่เกินมา
+                                            $lateTime=abs($remainingTime);
+                                            $lateHours=floor($lateTime / 3600);
+                                            $lateMinutes=floor(($lateTime % 3600) / 60);
+                                            $timeText="{$lateHours} ชม. {$lateMinutes} นาที" ;
+                                            $icon='clock-x' ;
+                                            } elseif ($remainingTime < 7200) { // น้อยกว่า 2 ชั่วโมง
+                                            $statusClass='bg-orange-100 text-orange-800' ;
+                                            $hours=floor(($remainingTime % 86400) / 3600);
+                                            $minutes=floor(($remainingTime % 3600) / 60);
+                                            $timeText="{$hours} ชม. {$minutes} นาที" ;
+                                            $icon='clock-exclamation' ;
+                                            } else {
+                                            $statusClass='bg-green-100 text-green-800' ;
+                                            $days=floor($remainingTime / 86400);
+                                            $hours=floor(($remainingTime % 86400) / 3600);
+                                            $minutes=floor(($remainingTime % 3600) / 60);
+
+                                            if ($days> 0) {
+                                            $timeText = "{$days} วัน {$hours} ชม. {$minutes} นาที";
+                                            } else {
+                                            $timeText = "{$hours} ชม. {$minutes} นาที";
+                                            }
+                                            $icon = 'clock';
+                                            }
+                                            }
+                                            @endphp
+
+                                            <div class="flex flex-col items-center">
+
+                                                <div class="inline-flex items-center px-2 py-1 rounded-full {{ $statusClass }} text-sm font-medium">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        @if ($icon == 'clock')
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        @elseif ($icon == 'clock-exclamation')
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        @else
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        @endif
+                                                    </svg>
+                                                    {{ $timeText }}
+                                                </div>
+                                                @if ($detail->room_type != 'ห้องพักชั่วคราว')
+                                                <div class="text-xs text-gray-500 mt-1">
                                                     {{ \Carbon\Carbon::parse($detail->checkout_date)->locale('th')->translatedFormat('d F Y') }}
-                                                </td>
-                                                <td class="px-4 py-2 w-32 text-center">
-                                                    <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}">
-                                                        <button
-                                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-blue-500 to-blue-600 p-0.5 text-sm font-medium text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
-                                                            <span
-                                                                class="relative flex items-center gap-1 rounded-md bg-blue-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-                                                                    fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg>
-                                                                รายละเอียด
-                                                            </span>
-                                                        </button>
-                                                    </a>
-                                                </td>
-                                                <td class="px-4 py-2 w-32 text-center">
-                                                    @if (is_null($detail->soap_requested))
-                                                        <form action="{{ route('booking.requestSoap', $detail->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <button type="submit"
-                                                                class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5 text-sm font-medium text-white hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2">
-                                                                <span
-                                                                    class="relative flex items-center gap-1 rounded-md bg-indigo-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                        class="h-4 w-4" fill="none"
-                                                                        viewBox="0 0 24 24" stroke="currentColor">
-                                                                        <path stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                                                    </svg>
-                                                                    ขอสบู่เพิ่ม
-                                                                </span>
-                                                            </button>
-                                                        </form>
-                                                    @else
-                                                        <span
-                                                            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
-                                                                fill="none" viewBox="0 0 24 24"
-                                                                stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                            ขอสบู่ไปแล้ว
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td class="px-4 py-2 w-32 text-center">
-                                                    @if ($detail->booking_detail_status === 'เช็คอินแล้ว')
-                                                        <button
-                                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-red-500 to-pink-600 p-0.5 text-sm font-medium text-white hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
-                                                            onclick="showCheckoutPopup('{{ $booking->id }}')">
-                                                            <span
-                                                                class="relative flex items-center gap-1 rounded-md bg-red-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-                                                                    fill="none" viewBox="0 0 24 24"
-                                                                    stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                                                </svg>
-                                                                เช็คเอาท์
-                                                            </span>
-                                                        </button>
-                                                        <form id="checkoutForm-{{ $booking->id }}"
-                                                            action="{{ route('checkoutuser') }}" method="post"
-                                                            class="hidden">
-                                                            @csrf
-                                                            <input type="hidden" name="booking_id"
-                                                                value="{{ $booking->id }}">
-                                                        </form>
-                                                    @else
-                                                        <span
-                                                            class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
-                                                                fill="none" viewBox="0 0 24 24"
-                                                                stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                                            </svg>
-                                                            ไม่สามารถเช็คเอาท์ได้
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                @endforeach
-                            </tbody>
+                                                </div>
+                                                @endif
+                                            </div>
+                                </td>
+                                <td class="px-4 py-2 w-32 text-center">
+                                    <a href="{{ route('checkoutdetail', ['id' => $booking->id]) }}">
+                                        <button
+                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-blue-500 to-blue-600 p-0.5 text-sm font-medium text-white hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+                                            <span
+                                                class="relative flex items-center gap-1 rounded-md bg-blue-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                    fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                รายละเอียด
+                                            </span>
+                                        </button>
+                                    </a>
+                                </td>
+                                <td class="px-4 py-2 w-32 text-center">
+                                    @if (is_null($detail->soap_requested))
+                                    <form action="{{ route('booking.requestSoap', $detail->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5 text-sm font-medium text-white hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2">
+                                            <span
+                                                class="relative flex items-center gap-1 rounded-md bg-indigo-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                                ขอสบู่เพิ่ม
+                                            </span>
+                                        </button>
+                                    </form>
+                                    @else
+                                    <span
+                                        class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                            fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        ขอสบู่ไปแล้ว
+                                    </span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2 w-32 text-center">
+                                    @if ($detail->booking_detail_status === 'เช็คอินแล้ว')
+                                    <button
+                                        class="group relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-red-500 to-pink-600 p-0.5 text-sm font-medium text-white hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                                        onclick="showCheckoutPopup('{{ $booking->id }}')">
+                                        <span
+                                            class="relative flex items-center gap-1 rounded-md bg-red-500 px-3 py-1.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            เช็คเอาท์
+                                        </span>
+                                    </button>
+                                    <form id="checkoutForm-{{ $booking->id }}"
+                                        action="{{ route('checkoutuser') }}" method="post"
+                                        class="hidden">
+                                        @csrf
+                                        <input type="hidden" name="booking_id"
+                                            value="{{ $booking->id }}">
+                                    </form>
+                                    @else
+                                    <span
+                                        class="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                            fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        ไม่สามารถเช็คเอาท์ได้
+                                    </span>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+                            @endforeach
+                        </tbody>
                         @else
-                            <div class=" p-8 text-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <h3 class="text-xl font-medium text-gray-900 mb-2">ไม่พบการจองที่รอเช็คเอาท์</h3>
-                                <p class="text-gray-500">ขณะนี้ไม่มีรายการที่รอการเช็คเอาท์</p>
-                            </div>
-                @endif
-                </dive>
+                        <div class=" p-8 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h3 class="text-xl font-medium text-gray-900 mb-2">ไม่พบการจองที่รอเช็คเอาท์</h3>
+                            <p class="text-gray-500">ขณะนี้ไม่มีรายการที่รอการเช็คเอาท์</p>
+                        </div>
+                        @endif
+                        </dive>
 
-            </div>
+                </div>
         </section>
 
         <!-- Popup for checkout confirmation -->
@@ -254,9 +356,9 @@
                                             class="w-full rounded-lg border-slate-200 bg-slate-50 pl-10 pr-4 py-2.5 text-sm text-slate-800 shadow-sm transition-colors hover:border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
                                             <option value="">ทั้งหมด</option>
                                             @foreach ($productRooms->groupBy('productroom_category') as $category => $items)
-                                                <option value="{{ $category }}">
-                                                    {{ $category }}
-                                                </option>
+                                            <option value="{{ $category }}">
+                                                {{ $category }}
+                                            </option>
                                             @endforeach
                                         </select>
                                         <svg class="absolute left-3 top-1/3 -translate-y-1/2 h-5 w-5 text-slate-400"
@@ -290,50 +392,50 @@
 
                                 <div class="p-4 space-y-4">
                                     @foreach ($productRooms->groupBy('productroom_category') as $category => $items)
-                                        <div class="category-group" data-category="{{ $category }}">
-                                            <div
-                                                class="top-0 z-10 -mx-4 -mt-4 bg-slate-50/95 px-4 py-2 backdrop-blur-sm border-y border-slate-200">
-                                                <h3
-                                                    class=" text-sm font-semibold uppercase tracking-wider text-slate-500">
-                                                    {{ $category }}
-                                                </h3>
-                                            </div>
-                                            <div class="pt-2 space-y-3">
-                                                @foreach ($items as $item)
-                                                    <div
-                                                        class="group rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 hover:shadow-md">
-                                                        <div class="flex items-center justify-between">
-                                                            <div class="flex items-center space-x-4">
-                                                                <div class="relative flex h-5 items-center">
-                                                                    <input type="checkbox"
-                                                                        id="item-{{ $item->id }}"
-                                                                        name="damaged_items[]"
-                                                                        value="{{ $item->id }}"
-                                                                        data-price="{{ $item->productroom_price }}"
-                                                                        class="h-4 w-4 rounded-sm border-slate-300 text-blue-600 transition-colors focus:ring-2 focus:ring-blue-500/20"
-                                                                        onchange="updateTotalAmount()">
-                                                                </div>
-                                                                <label for="item-{{ $item->id }}"
-                                                                    class="flex-1 cursor-pointer">
-                                                                    <p class="font-medium text-slate-900">
-                                                                        {{ $item->productroom_name }}
-                                                                    </p>
-                                                                    <p class="mt-0.5 text-sm text-slate-500">
-                                                                        ฿{{ number_format($item->productroom_price, 2) }}
-                                                                    </p>
-                                                                </label>
-                                                            </div>
-                                                            <div class="flex items-center">
-                                                                <span
-                                                                    class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                                                                    {{ $item->productroom_qty }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
+                                    <div class="category-group" data-category="{{ $category }}">
+                                        <div
+                                            class="top-0 z-10 -mx-4 -mt-4 bg-slate-50/95 px-4 py-2 backdrop-blur-sm border-y border-slate-200">
+                                            <h3
+                                                class=" text-sm font-semibold uppercase tracking-wider text-slate-500">
+                                                {{ $category }}
+                                            </h3>
                                         </div>
+                                        <div class="pt-2 space-y-3">
+                                            @foreach ($items as $item)
+                                            <div
+                                                class="group rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 hover:shadow-md">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center space-x-4">
+                                                        <div class="relative flex h-5 items-center">
+                                                            <input type="checkbox"
+                                                                id="item-{{ $item->id }}"
+                                                                name="damaged_items[]"
+                                                                value="{{ $item->id }}"
+                                                                data-price="{{ $item->productroom_price }}"
+                                                                class="h-4 w-4 rounded-sm border-slate-300 text-blue-600 transition-colors focus:ring-2 focus:ring-blue-500/20"
+                                                                onchange="updateTotalAmount()">
+                                                        </div>
+                                                        <label for="item-{{ $item->id }}"
+                                                            class="flex-1 cursor-pointer">
+                                                            <p class="font-medium text-slate-900">
+                                                                {{ $item->productroom_name }}
+                                                            </p>
+                                                            <p class="mt-0.5 text-sm text-slate-500">
+                                                                ฿{{ number_format($item->productroom_price, 2) }}
+                                                            </p>
+                                                        </label>
+                                                    </div>
+                                                    <div class="flex items-center">
+                                                        <span
+                                                            class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                                            {{ $item->productroom_qty }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -435,10 +537,10 @@
                         <div
                             class="bg-white p-6 rounded-lg shadow-xl border-2 border-gray-200 w-60 h-60 flex items-center justify-center">
                             @if (isset($selectedPaymentType) && $selectedPaymentType->qr_code)
-                                <img src="{{ asset('storage/qr_codes/' . $selectedPaymentType->qr_code) }}"
-                                    alt="QR Code" class="w-48 h-48">
+                            <img src="{{ asset('storage/qr_codes/' . $selectedPaymentType->qr_code) }}"
+                                alt="QR Code" class="w-48 h-48">
                             @else
-                                <p class="text-red-500">ไม่มี QR Code สำหรับวิธีชำระเงินนี้</p>
+                            <p class="text-red-500">ไม่มี QR Code สำหรับวิธีชำระเงินนี้</p>
                             @endif
                         </div>
                     </div>

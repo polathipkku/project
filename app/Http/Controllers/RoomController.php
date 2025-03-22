@@ -30,39 +30,39 @@ class RoomController extends Controller
     {
         // ค้นหาห้อง
         $room = Room::findOrFail($id);
-    
+
         // อัปเดตสถานะห้อง
         $room->room_status = 'พร้อมให้บริการ';
         $room->save();
-    
+
         // ค้นหาประเภทสินค้า "เครื่องอาบน้ำ"
         $bathroomProductType = Product_type::where('product_type_name', 'เครื่องอาบน้ำ')->first();
-    
+
         if ($bathroomProductType) {
             // ค้นหาสินค้าทั้งหมดที่อยู่ในประเภท "เครื่องอาบน้ำ"
             $products = Product::where('product_types_id', $bathroomProductType->id)->get();
-    
+
             foreach ($products as $product) {
                 // ค้นหาสต็อกของสินค้านั้น
                 $stock = Stock::find($product->stocks_id);
-    
+
                 if ($stock && $stock->stock_qty >= 2) {
                     // ลด stock_qty ลง 2
                     $stock->stock_qty -= 2;
-                    
+
                     // จำนวนที่ต้องลด
                     $remainingToReduce = 2;
-    
+
                     // ค้นหา stock_packages ของ stock_id นี้ และเรียง id น้อยสุดก่อน
                     $stockPackages = StockPackage::where('stock_id', $stock->id)
-                        ->orderBy('id') 
+                        ->orderBy('id')
                         ->get();
-    
+
                     foreach ($stockPackages as $package) {
                         if ($remainingToReduce <= 0) {
                             break;
                         }
-    
+
                         if ($package->sumitem >= $remainingToReduce) {
                             $package->sumitem -= $remainingToReduce;
                             $remainingToReduce = 0;
@@ -70,23 +70,23 @@ class RoomController extends Controller
                             $remainingToReduce -= $package->sumitem;
                             $package->sumitem = 0;
                         }
-    
+
                         $package->save();
                     }
-    
+
                     // คำนวณค่า pack_qty ใหม่
                     if ($stock->items_per_pack > 0) {
                         $stock->pack_qty = ceil($stock->stock_qty / $stock->items_per_pack);
                     }
-    
+
                     $stock->save();
                 }
             }
         }
-    
+
         return redirect()->back()->with('success', 'ทำความสะอาดห้องเรียบร้อย และลดสต็อกสินค้าแล้ว');
     }
-    
+
 
     public function add_room()
     {
@@ -129,29 +129,32 @@ class RoomController extends Controller
             'room_bathroom' => 'required',
         ]);
 
-        // Process each uploaded image
-        $images = [];
-        if ($request->hasfile('room_image')) {
-            foreach ($request->file('room_image') as $file) {
-                $originalName = $file->getClientOriginalName(); // Keep original name
-                $file->move(public_path('images'), $originalName);
-                $images[] = $originalName; // Store image names in an array
-            }
-        }
-
         $room = new Room;
         $room->room_name = $request->input('room_name');
         $room->price_night = $request->input('price_night');
         $room->price_temporary = $request->input('price_temporary');
-        $room->room_image = json_encode($images); // Save as JSON
         $room->room_status = $request->input('room_status');
         $room->room_occupancy = $request->input('room_occupancy');
         $room->room_bed = $request->input('room_bed');
         $room->room_bathroom = $request->input('room_bathroom');
+
+        // ตรวจสอบว่ามีการอัปโหลดไฟล์หรือไม่
+        $imagePaths = [];
+        if ($request->hasFile('room_image')) {
+            foreach ($request->file('room_image') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->extension();
+                $image->move(public_path('images'), $imageName);
+                $imagePaths[] = $imageName;
+            }
+        }
+
+        // บันทึก path ของรูปภาพลงในฐานข้อมูล
+        $room->room_image = json_encode($imagePaths);
         $room->save();
 
         return redirect()->route('room')->with('success', 'บันทึกข้อมูลสำเร็จ');
     }
+
 
 
     public function edit($id)

@@ -81,10 +81,14 @@ class DashboardController extends Controller
             ->count();
 
         // คำนวณรายได้ในเดือนที่เลือก
-        $totalRevenue = Booking::whereHas('bookingDetails', function ($query) {
-            $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+        // ใช้ subquery เพื่อแก้ปัญหาการนับซ้ำใน total_cost
+        $totalRevenue = DB::table(function ($query) use ($startDate, $endDate) {
+            $query->select(DB::raw('DISTINCT bookings.id, bookings.total_cost'))
+                ->from('booking_details')
+                ->join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
+                ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น')
+                ->whereBetween('booking_details.checkin_date', [$startDate, $endDate]);
         })
-            ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('total_cost');
 
         $totalDamages = Checkout::whereBetween('created_at', [$startDate, $endDate])
@@ -102,15 +106,18 @@ class DashboardController extends Controller
         $currentDate = $startDate->copy();
 
         while ($currentDate <= $endDate) {
-            $guests = Booking_detail::join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
-                ->whereDate('booking_details.checkin_date', $currentDate)
-                ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น')
-                ->sum('bookings.room_quantity');
+            // นับจำนวนการจอง (booking_detail_id) ในแต่ละวัน
+            $guestCount = Booking_detail::join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
+                ->whereDate('booking_details.checkin_date', $currentDate) // กรองวันที่ checkin_date
+                ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น') // เฉพาะการจองที่ชำระเงินเสร็จ
+                ->count('booking_details.id'); // นับจำนวน booking_detail_id
 
-            $guestData[] = $guests;
-            $dates[] = $currentDate->locale('th')->isoFormat('D MMM');
-            $currentDate->addDay();
+            $guestData[] = $guestCount;
+            $dates[] = $currentDate->locale('th')->isoFormat('D MMM'); // แสดงวันที่ในรูปแบบไทย
+            $currentDate->addDay(); // เพิ่มวันไปวันถัดไป
         }
+
+
 
         $dailyOccupancy = $this->getDailyOccupancy($startDate, $endDate);
 
@@ -134,6 +141,7 @@ class DashboardController extends Controller
         $revenueData = $this->getMonthlyRevenue($year);
         $expensesData = $this->getMonthlyExpenses($year);
 
+      
         return view('owner.dashboard', compact(
             'totalRevenueWithDamages',
             'revenueData',
@@ -150,27 +158,42 @@ class DashboardController extends Controller
         ));
     }
 
-    // Helper method สำหรับคำนวณรายได้รายเดือน
     private function getMonthlyRevenue($year)
     {
-        $monthlyRevenue = Booking::whereYear('created_at', $year)
-            ->whereHas('bookingDetails', function ($query) {
-                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
-            })
-            ->selectRaw('MONTH(created_at) as month, SUM(total_cost) as total')
+        // คำนวณรายได้จากการชำระเงิน (amount และ total_price ตาม payment_type_id)
+        $monthlyRevenue = DB::table(function ($query) use ($year) {
+            $query->select(DB::raw('DISTINCT bookings.id, MONTH(booking_details.checkin_date) as month'))
+                ->from('booking_details')
+                ->join('bookings', 'booking_details.booking_id', '=', 'bookings.id')
+                ->join('payments', 'bookings.id', '=', 'payments.booking_id')  // join payment table
+                ->whereYear('booking_details.checkin_date', $year)
+                ->where('bookings.booking_status', 'ชำระเงินเสร็จสิ้น')
+                ->whereNull('bookings.deleted_at')
+                ->whereNull('booking_details.deleted_at')
+                ->where(function ($query) {
+                    // เฉพาะ payment_type_id 1 หรือ NULL (เงินสด)
+                    $query->where('payments.payment_type_id', 1)
+                        ->orWhereNull('payments.payment_type_id');
+                });
+        })
+            ->select(DB::raw('month, SUM(payments.amount + payments.total_price) as total'))  // รวม amount + total_price
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('total', 'month');
 
+        // คำนวณค่าปรับ (การเสียหาย) ตาม created_at
         $monthlyDamages = Checkout::whereYear('created_at', $year)
             ->whereHas('booking', function ($query) {
-                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น');
+                $query->where('booking_status', 'ชำระเงินเสร็จสิ้น')
+                    ->whereNull('deleted_at');
             })
+            ->whereNull('deleted_at')
             ->selectRaw('MONTH(created_at) as month, SUM(total_damages) as total')
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('total', 'month');
 
+        // รวมรายได้จากการชำระเงินและค่าปรับ (เสียหาย)
         $revenueData = [];
         for ($i = 1; $i <= 12; $i++) {
             $revenueData[] = ($monthlyRevenue[$i] ?? 0) + ($monthlyDamages[$i] ?? 0);

@@ -47,14 +47,14 @@
                             <form action="#" method="GET" class="w-full md:w-auto mb-4 md:mb-0">
                                 @csrf
                                 <div class="relative">
-                                    <input type="text" name="search" placeholder="ค้นหาพนักงาน" 
+                                    <input type="text" name="search" placeholder="ค้นหาพนักงาน"
                                         class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
-                                
+
                                     <div class="absolute inset-y-0 left-3 flex items-center">
                                         <i class="fas fa-search text-gray-400"></i>
                                     </div>
                                 </div>
-                                
+
                             </form>
                             <button onclick="window.location.href='{{ route('add_employee') }}'" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110">
                                 <i class="fas fa-plus mr-2"></i>เพิ่มพนักงาน
@@ -80,8 +80,9 @@
                                         <td class="py-3 px-6 text-center">{{ $employee->name }}</td>
                                         <td class="py-3 px-6 text-center">{{ $employee->created_at->format('d-m-Y') }}</td>
                                         <td class="py-3 px-6 text-blue-500 hover:text-blue-700 text-center">
-                                            <a href="{{ url('/employeedetail/'.$employee->id) }}">รายละเอียด</a>
+                                            <a href="{{ route('employeedetail', ['id' => $employee->id]) }}">รายละเอียด</a>
                                         </td>
+
                                         <td class="py-3 px-6 text-center">
                                             <div class="flex items-center justify-center">
                                                 <a href="{{ url('/employee/edit/'.$employee->id) }}" class="mr-3">
@@ -89,10 +90,10 @@
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>
                                                 </a>
-                                                <button class="text-red-500 hover:text-red-600" type="button" 
-                                                onclick="confirmDelete({{ $employee->id }})">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
+                                                <button class="text-red-500 hover:text-red-600" type="button"
+                                                    onclick="confirmDelete({{ $employee->id }})">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>

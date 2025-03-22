@@ -70,6 +70,86 @@
                         </div>
                     </div>
 
+                    <!-- เพิ่มส่วนสัญชาติ -->
+                    <div class="mb-6">
+                        <label for="nationality" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">สัญชาติ</label>
+                        <select id="nationality" name="nationality"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            required>
+                            <option value="">เลือกสัญชาติ</option>
+                            <option value="thai">ไทย</option>
+                            <option value="foreign">ต่างชาติ</option>
+                        </select>
+                    </div>
+
+                    <!-- สำหรับคนไทย -->
+                    <div id="thai-section" class="hidden mb-6">
+                        <div class="p-4 border rounded-lg bg-blue-50 dark:bg-gray-700">
+                            <label for="id_card" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เลขบัตรประชาชน</label>
+                            <input type="text" id="id_card" name="id_card" maxlength="13" pattern="[0-9]{13}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="กรอกเลขบัตรประชาชน 13 หลัก" />
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">กรุณากรอกเลขบัตรประชาชน 13 หลักให้ถูกต้อง</p>
+                        </div>
+                    </div>
+
+                    <!-- สำหรับต่างชาติ -->
+                    <div id="foreign-section" class="hidden mb-6">
+                        <div class="p-4 border rounded-lg bg-yellow-50 dark:bg-gray-700">
+                            <div class="grid gap-6 mb-4 md:grid-cols-2">
+                                <div>
+                                    <label for="passport_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">หมายเลขพาสปอร์ต</label>
+                                    <input type="text" id="passport_number" name="passport_number"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                </div>
+                                <div>
+                                    <label for="country" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ประเทศ</label>
+                                    <input type="text" id="country" name="country"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                </div>
+                            </div>
+
+                            <div class="grid gap-6 mb-4 md:grid-cols-2">
+                                <div>
+                                    <label for="work_permit_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">เลขที่ใบอนุญาตทำงาน</label>
+                                    <input type="text" id="work_permit_number" name="work_permit_number"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                </div>
+                                <div>
+                                    <label for="permit_expiry_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">วันหมดอายุใบอนุญาต</label>
+                                    <div class="relative">
+                                        <input type="text" id="permit_expiry_date" name="permit_expiry_date"
+                                            class="datepicker block w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="เลือกวันที่หมดอายุ" />
+                                        <svg class="absolute left-3 top-3 w-5 h-5 text-gray-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3M16 7V3M3 10h18M5 20h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="visa_type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ประเภทวีซ่า</label>
+                                <select id="visa_type" name="visa_type"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="">เลือกประเภทวีซ่า</option>
+                                    <option value="tourist">ท่องเที่ยว (Tourist)</option>
+                                    <option value="business">ธุรกิจ (Business)</option>
+                                    <option value="education">การศึกษา (Education)</option>
+                                    <option value="work">ทำงาน (Work)</option>
+                                    <option value="retirement">เกษียณอายุ (Retirement)</option>
+                                    <option value="other">อื่นๆ (Other)</option>
+                                </select>
+                            </div>
+
+                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
+                                <strong>หมายเหตุ:</strong> พนักงานต่างชาติต้องมีเอกสารที่ถูกต้องตามกฎหมายการทำงานของคนต่างด้าวในประเทศไทย
+                                ซึ่งประกอบด้วยใบอนุญาตทำงาน (Work Permit) และวีซ่าประเภททำงาน (Non-Immigrant Visa B)
+                            </p>
+                        </div>
+                    </div>
 
                     <div class="grid gap-6 mb-6 md:grid-cols-3">
                         <div>
@@ -187,6 +267,42 @@
                             class="text-white bg-gray-400 hover:bg-gray-500 rounded-lg text-sm px-5 py-2.5">ยกเลิก</button>
                     </a>
                 </form>
+
+                <script>
+                    // JavaScript เพื่อแสดง/ซ่อนฟอร์มตามสัญชาติ
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const nationalitySelect = document.getElementById('nationality');
+                        const thaiSection = document.getElementById('thai-section');
+                        const foreignSection = document.getElementById('foreign-section');
+
+                        nationalitySelect.addEventListener('change', function() {
+                            // ซ่อนทั้งสองส่วนก่อน
+                            thaiSection.classList.add('hidden');
+                            foreignSection.classList.add('hidden');
+
+                            // แสดงส่วนที่เลือก
+                            if (this.value === 'thai') {
+                                thaiSection.classList.remove('hidden');
+                            } else if (this.value === 'foreign') {
+                                foreignSection.classList.remove('hidden');
+                            }
+                        });
+
+                        // สำหรับตรวจสอบเลขบัตรประชาชน
+                        const idCardInput = document.getElementById('id_card');
+                        if (idCardInput) {
+                            idCardInput.addEventListener('input', function() {
+                                // อนุญาตให้กรอกเฉพาะตัวเลขเท่านั้น
+                                this.value = this.value.replace(/[^0-9]/g, '');
+
+                                // จำกัดความยาวไม่เกิน 13 หลัก
+                                if (this.value.length > 13) {
+                                    this.value = this.value.slice(0, 13);
+                                }
+                            });
+                        }
+                    });
+                </script>
 
             </div>
         </section>

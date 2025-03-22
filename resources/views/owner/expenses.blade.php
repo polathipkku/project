@@ -48,9 +48,9 @@
                                 <div class="relative">
                                     <input type="text" name="search" placeholder="ค้นหาค่าใช้จ่าย"
                                         class="w-full md:w-80 pl-10 pr-4 py-2 rounded-lg border focus:border-blue-300 focus:outline-none focus:shadow-outline">
-                                        <div class="absolute inset-y-0 left-3 flex items-center">
-                                            <i class="fas fa-search text-gray-400"></i>
-                                        </div>
+                                    <div class="absolute inset-y-0 left-3 flex items-center">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
                                 </div>
                             </form>
                             <button onclick="openModal()"
@@ -72,32 +72,38 @@
                                 </thead>
                                 <tbody class="text-sm text-gray-600">
                                     @foreach ($expenses as $expense)
-                                        <tr class="border-t">
-                                            <td class="py-3 px-6 text-center">{{ $expense->expenses_name }}</td>
-                                            <td class="py-3 px-6 text-center">
-                                                {{ number_format($expense->expenses_price, 2) }}
-                                            </td>
-                                            <td class="py-3 px-6 text-center">
-                                                {{ \Carbon\Carbon::parse($expense->expenses_date)->format('d/m/y') }}
-                                            </td>
+                                    <tr class="border-t">
+                                        <td class="py-3 px-6 text-center">
+                                            @if($expense->expenses_name)
+                                            {{ $expense->expenses_name }}
+                                            @else
+                                            {{ $expense->type }}
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-6 text-center">
+                                            {{ number_format($expense->expenses_price, 2) }}
+                                        </td>
+                                        <td class="py-3 px-6 text-center">
+                                            {{ \Carbon\Carbon::parse($expense->expenses_date)->format('d/m/y') }}
+                                        </td>
 
-                                            <td class="py-3 px-6 text-center">
-                                                <button
-                                                    onclick="openEditModal({{ $expense->id }}, '{{ $expense->expenses_name }}', {{ $expense->expenses_price }}, '{{ $expense->expenses_date }}')"
-                                                    class="text-yellow-500 hover:text-yellow-600 hover:underline mr-3">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                        <td class="py-3 px-6 text-center">
+                                            <button
+                                                onclick="openEditModal({{ $expense->id }}, '{{ $expense->expenses_name }}', {{ $expense->expenses_price }}, '{{ $expense->expenses_date }}')"
+                                                class="text-yellow-500 hover:text-yellow-600 hover:underline mr-3">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <form action="{{ route('expenses.destroy', $expense->id) }}"
+                                                method="POST" class="inline" onsubmit="confirmDelete(event, this)">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="text-red-500 hover:text-red-600 hover:underline">
+                                                    <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <form action="{{ route('expenses.destroy', $expense->id) }}"
-                                                    method="POST" class="inline" onsubmit="confirmDelete(event, this)">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="text-red-500 hover:text-red-600 hover:underline">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                            </form>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

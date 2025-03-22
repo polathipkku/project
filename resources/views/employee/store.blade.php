@@ -33,9 +33,9 @@
                 <div class="px-2 p-2 flex justify-between items-center border-b border-gray-200 pb-4">
                     <h1 class="text-3xl font-semibold text-black max-xl:px-4">สต็อกสินค้า</h1>
                     <div class="flex items-center">
-                        <i class="fas fa-coffee text-blue-600 mr-2 text-xl"></i>
+                        <i class="fa-solid fa-soap text-blue-600 mr-2 text-xl"></i>
                         <span class="text-gray-600">สต็อกสินค้าทั้งหมด: {{ $drinks->count() ?? 0 }}</span>
-                    </div>
+                    </div>  
                 </div>
                 
                 @if(session('success'))

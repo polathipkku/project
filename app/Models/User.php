@@ -37,6 +37,7 @@ class User extends Authenticatable
         'work_shift',
         'position',
         'payment_date',
+        'id_card',
 
     ];
     public function bookings()
